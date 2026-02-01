@@ -322,87 +322,6 @@ body {
     color: #fef3c7;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-/* Responsive: stack inputs on small screens */
-@media (max-width: 640px) {
-    .form-row {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-.tabs {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 15px;
-}
-
-.tabs button {
-    background: none;
-    border: none;
-    font-weight: 600;
-    color: #1f2937;
-    cursor: pointer;
-    padding-bottom: 5px;
-}
-
-.tabs button.active {
-    border-bottom: 2px solid #1f2937;
-}
-
-.tabs button:not(.active) {
-    color: #2563eb;
-}
-
-
-/* ========== CONTROLS ========== */
-.controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.left-controls {
-    display: flex;
-    gap: 8px;
-}
-
-.search-input {
-    padding: 7px 10px;
-    border-radius: 5px;
-    border: 1px solid #d1d5db;
-    width: 150px;
-}
-
-.btn {
-    border: none;
-    padding: 7px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.btn-search,
-.btn-filter,
-.btn-add {
-    background: #0f9d58;
-}
-
 /* ========== TABLE ========== */
 table {
     width: 100%;
@@ -446,4 +365,176 @@ tbody tr {
     border-radius: 6px;
     border: none;
     font-size: 11px;
+}
+
+
+.containerz {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header .logo img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 28px;
+    color: #181D82;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Styling for sections */
+.section {
+    margin-bottom: 40px;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #181D82;
+    border-bottom: 2px solid #181D82;
+    padding-bottom: 5px;
+}
+
+/* Form Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="number"],
+input[type="month"],
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.add-btn {
+    margin-top: 1em;
+    background-color: #007bff;
+}
+
+.add-btn:hover {
+    background-color: #0056b3;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 500px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content input,
+.modal-content select {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.modal-content button {
+    width: 100%;
+}
+
+#family-member-modal,
+#org-member-modal {
+    display: none;
 }
