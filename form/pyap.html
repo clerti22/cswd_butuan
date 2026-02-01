@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCIMS Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="pyap.css">
+</head>
+
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="cswd-logo.png" alt="" width="130" height="110">
+                <p class="sidebar-title">CCIMS Dashboard</p>
+                <button class="close-btn" id="closeSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#" class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-people nav-icon" viewBox="0 0 16 16">
+                        <path
+                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                    </svg>
+                    <span class="nav-text">Encoders Management</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-people nav-icon" viewBox="0 0 16 16">
+                        <path
+                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                    </svg>
+                    <span class="nav-text">Clients Management</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="#ffff" d="M864 409.6a192 192 0 0 1-37.888 349.44A256.064 256.064 0 0 1 576 960h-96a32 32 0 1 1 0-64h96a192.064 192.064 0 0 0 181.12-128H736a32 32 0 0 1-32-32V416a32 32 0 0 1 32-32h32c10.368 0 20.544.832 30.528 2.432a288 288 0 0 0-573.056 0A193.235 193.235 0 0 1 256 384h32a32 32 0 0 1 32 32v320a32 32 0 0 1-32 32h-32a192 192 0 0 1-96-358.4a352 352 0 0 1 704 0zM256 448a128 128 0 1 0 0 256V448zm640 128a128 128 0 0 0-128-128v256a128 128 0 0 0 128-128z"/></svg>
+                    <span class="nav-text">Program & Services</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#ffffff" d="M12 6a1 1 0 0 0-1 1v10a1 1 0 0 0 2 0V7a1 1 0 0 0-1-1Zm-5 6a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0v-4a1 1 0 0 0-1-1Zm10-2a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1Zm2-8H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3Zm1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z"/></svg> 
+                    
+                    <span class="nav-text">Report</span>
+
+                </a>
+
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span class="nav-text">Feedback</span>
+                    <span class="nav-badge">12</span>
+                </a>
+
+
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-door-open nav-icon" viewBox="0 0 16 16">
+                        <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
+                        <path
+                            d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
+                    </svg>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="topbar">
+                <button class="menu-btn" id="openSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h2 class="topbar-title" style="font-weight: bold;">Client Management</h2>
+            </header>
+
+            <main class="content">
+                <div>
+                    <button class="back_button">Back</button>
+                </div>
+                <div class="form-container">
+                    <header class="form-header"><img src="butuanseal.png" alt="" width="60" height="60">
+                    <div class="header-text">
+                        <p>Republic of the Philippines</p>
+                        <p style="font-weight: bold;">CITY GOVERNMENT OF BUTUAN</p>
+                        <p style="font-weight: bold;">City Social Welfare and Development Department</p>
+                        <p>City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
+                    </div>
+                    <img src="cswd-logo.png" alt="" width="70" height="60">
+                    </header>
+                    <div class="form-title">
+                        <h3>PAG-ASA YOUTH ASSOCIATION OF THE PHILIPPINES</h3>
+                        <h4>MEMBERSHIP INFORMATION SHEET</h4>
+                    </div>
+                    <p style="color: navy;"> <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="none" stroke="navy" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20.75a1 1 0 0 0 1-1v-1.246c.004-2.806-3.974-5.004-8-5.004s-8 2.198-8 5.004v1.246a1 1 0 0 0 1 1zM15.604 6.854a3.604 3.604 0 1 1-7.208 0a3.604 3.604 0 0 1 7.208 0"/></svg> 
+                        Identifying Information</p>
+
+                    <form class="registration-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="middleName">Middle Name</label>
+                            <input type="text" id="middleName">
+                            </div>
+                            <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="suffix">Suffix</label>
+                            <input type="text" id="suffix" placeholder="Jr., Sr., III">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="birthdate">Date of Birth</label>
+                            <input type="date" id="birthdate" placeholder="YYYY-MM-DD" aria-describedby="birth-hint" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="birthplace">Place of Birth</label>
+                                <input type="text" id="birthplace" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nationality">Nationality</label>
+                                <input type="text" id="nationality" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" min="18" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="religion">Religion</label>
+                            <input type="text" id="religion" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Sex</label>
+                                <select id="gender" required>
+                                <option value="">Select gender</option>
+                                <option></option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="inschoolyouth">In School Youth</label>
+                                <input type="text" id="inschoolyouth" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="outofschoolyouth">Out of School Youth</label>
+                                <input type="text" id="outofschoolyouth" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="otherdisadvantageyouth">Other Disadvantage Youth</label>
+
+                                <input type="text" id="otherdisadvantageyouth" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ips">IP's</label>
+                                <input type="text" id="ips" placeholder="" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="occupation">Occupation</label>
+                                <input type="text" id="occupation" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="civilstatus">Civil Status</label>
+                                <select name="" id="civilstatus">
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                    <option value="widowed">Widowed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactnumber">Contact Number</label>
+                                <input type="text" id="contactnumber" placeholder="+63" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="schoollastattend">School Last Attend</label>
+                                <input type="text" id="schoollastattend" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="monthyear">Month & Year</label>
+                                <input type="date" id="monthyear" placeholder="YYYY-MM" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trainingattend">Training Attend</label>
+                                <input type="text" id="trainingattend" placeholder="" required>
+                            </div>    
+                            <div class="form-group">
+                                <label for="skills">Skills/Interest/Hobbies</label>
+                                <input type="text" id="skills" placeholder="" required>
+                            </div>
+                        </div>
+                        </form>
+                <div class="familycomposition">
+                        <p style="color: navy"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="navy" d="m12 1.198l10 8.334V22H2V9.532l10-8.334ZM10 20h4v-5h-4v5Zm6 0h4v-9.532l-8-6.666l-8 6.666V20h4v-7h8v7Z"/></svg>Family Composition</p>
+
+                        <button type="submit" class="add-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 32 32"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 25V7m-9 9h18"/></svg>Add</button>
+                    
+                        <div>
+                        <table class="family-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Relationship</th>
+                                    <th>Gender</th>
+                                    <th>Age</th>
+                                    <th>Grade Yr.</th>
+                                    <th>ISY</th>
+                                    <th>OSY</th>
+                                    <th>Work/Labor Experience</th>
+                                    <th>Income</th>
+                        </div>
+                        
+                    </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Juan Dela Cruz</td>
+                                    <td>Father</td>
+                                    <td>Male</td>
+                                    <td>50</td>
+                                    <td>NA</td>
+                                    <td>NA</td>
+                                    <td>NA</td>
+                                    <td>Farmer</td>
+                                    <td>5,000</td>
+                                </tr>    
+                            </tbody>
+                            </table>
+                    
+                </div>
+                <div class="assistance">
+                    <p style="color: navy">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="navy" d="M10 13Zm-7 9q-.825 0-1.413-.588T1 20V6q0-.825.588-1.413T3 4h8v2H3v14h14v-6h2v6q0 .825-.588 1.413T17 22H3Zm2-4h2v-7H5v7Zm4 0h2V8H9v10Zm4 0h2v-4h-2v4Zm5-6q-.75 0-1.475-.225t-1.35-.65l-.375.35q-.3.275-.713.275t-.687-.275q-.275-.275-.275-.7t.275-.7l.4-.4q-.4-.6-.6-1.275T13 7q0-2.075 1.463-3.537T18 2h5v5q0 2.075-1.463 3.538T18 12Zm0-2q1.25 0 2.125-.875T21 7V4h-3q-1.25 0-2.125.875T15 7q0 .325.063.625t.187.6l2.6-2.6q.275-.275.7-.275t.7.275q.3.3.3.713t-.3.712l-2.6 2.6q.325.15.663.25T18 10Zm-.15-2.975Z"/></svg>Assistance & Intervention Received from CSWS & other Agencies</p>
+
+                        <div class="assistancereceived">
+                            <label for="sap">Social Amelioration Program</label>
+                            <input type="checkbox" id="sap" name="assistance" value="sap">
+                            <label for="fs">Food Subsidy</label>
+                            <input type="checkbox" id="fs" name="assistance" value="fs">
+                            <label for="sj">Summer Job</label>
+                            <input type="checkbox" id="sj" name="assistance" value="sj">
+                            <label for="tp">Teenage Pregnancy</label>
+                            <input type="checkbox" id="tp" name="assistance" value="tp">
+                            <label for="da">Drug Awareness</label>
+                            <input type="checkbox" id="da" name="assistance" value="da">
+                            <label for="gop">Government Outreach Program</label>
+                            <input type="checkbox" id="gop" name="assistance" value="gop">
+                            <label for="lp">Livelihood Program</label>
+                            <input type="checkbox" id="lp" name="assistance" value="lp">
+                            <label for="iop">Internal Outreach Program</label>
+                            <input type="checkbox" id="iop" name="assistance" value="iop">
+                            <label for="mha">Mental Health Awareness</label>
+                            <input type="checkbox" id="mha" name="assistance" value="mha">
+                            <label for="lp">Leadership Training</label>
+                            <input type="checkbox" id="lt" name="assistance" value="lt">
+                            <label for="specific">Please Specify:</label>
+                            <input type="text" id="specific" name="specific">
+                        </div>
+                </div>
+                <div class="intervention">
+                    <p><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="navy" d="M10 13Zm-7 9q-.825 0-1.413-.588T1 20V6q0-.825.588-1.413T3 4h8v2H3v14h14v-6h2v6q0 .825-.588 1.413T17 22H3Zm2-4h2v-7H5v7Zm4 0h2V8H9v10Zm4 0h2v-4h-2v4Zm5-6q-.75 0-1.475-.225t-1.35-.65l-.375.35q-.3.275-.713.275t-.687-.275q-.275-.275-.275-.7t.275-.7l.4-.4q-.4-.6-.6-1.275T13 7q0-2.075 1.463-3.537T18 2h5v5q0 2.075-1.463 3.538T18 12Zm0-2q1.25 0 2.125-.875T21 7V4h-3q-1.25 0-2.125.875T15 7q0 .325.063.625t.187.6l2.6-2.6q.275-.275.7-.275t.7.275q.3.3.3.713t-.3.712l-2.6 2.6q.325.15.663.25T18 10Zm-.15-2.975Z"/></svg>Intervention needed</p>
+                    <div class="interventionneeded">
+                        <label for="st">Skills Training</label>
+                        <input type="checkbox" id="st" name="intervention" value="st">
+                        <label for="livelihood">Livelihood</label>
+                        <input type="checkbox" id="livelihood" name="intervention" value="livelihood">
+                        <label for="specific">Please Specific:</label>
+                        <input type="text" id="specific" name="specific">
+                    </div>
+
+                </div>
+                <div class="membership">
+                    <p style="color: navy;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="navy" d="M5.5 7a3 3 0 1 1 6 0a3 3 0 0 1-6 0Zm3-5a5 5 0 1 0 0 10a5 5 0 0 0 0-10Zm7 0h-1v2h1a3 3 0 1 1 0 6h-1v2h1a5 5 0 0 0 0-10ZM0 19a5 5 0 0 1 5-5h7a5 5 0 0 1 5 5v2h-2v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2H0v-2Zm24 0a5 5 0 0 0-5-5h-1v2h1a3 3 0 0 1 3 3v2h2v-2Z"/></svg>Membership on Organization, Clubs, Society</p>
+
+                        <button type="submit" class="add-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 32 32"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 25V7m-9 9h18"/></svg>Add</button>
+
+                        <table class="member-table">
+                            <thead>
+                                <tr>
+                                    <th>Name of Organization</th>
+                                    <th>Position Held, if any</th>
+                                    <th>Year</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Example Organization</td>
+                                    <td>Member</td>
+                                    <td>2020-2021</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+                <div class="consent">
+                    <h4 style="font-weight: bold; justify-items: center; text-align: center; margin-top: 20px;">
+                        Data Privacy Consent
+                    </h4>
+                    <p style="text-align: center;">I confirm that information I have provided in this form is true and represents accurate information. I understand that the data collected from this report will be processed and maintained in a secure database by the City Social Welfare and Development (CSWD). Such data will used to serve as basis for research and in the development and implementation of Social Protection and Services, to promote and interest of the Out of School Youth and other Disadvantage Youth.</p>
+                    <p style="text-align: center;">I authorized CSWD to manage the information, including personal data obtained from this assessment/ case study and allow the processing aand controlled disclosure of transfer of data to its development partners and the provisions of Republic Act. No. 10173 of the Data Policy Act (DPA) of 2012</p>
+
+                </div>            
+                        
+                        <button type="submit" class="submit-button">Submit</button>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        openBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar when clicking nav items on mobile
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (window.innerWidth < 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                closeSidebar();
+            }
+        });
+        
+    </script>
+</body>
+
+</html>
