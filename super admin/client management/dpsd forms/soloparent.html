@@ -340,6 +340,20 @@
                         Note: Include family member and other members of the household especially minor children.
                     </p>
                 </section>
+                <section class="form-section">
+                    <div class="field field--span-4">
+                        <label for="solo-classification">
+                            Classification/Circumstances of being a solo parent(Dahilan bakit naging solo parent?):
+                        </label>
+                        <textarea id="solo-classification" rows="4"></textarea>
+                    </div>
+                    <div class="field field--span-4">
+                        <label for="solo-needs">
+                            Needs/Problems of being a solo parent(Kinakailangan/Problema ng isang solo parent?):
+                        </label>
+                        <textarea id="solo-needs" rows="4"></textarea>
+                    </div>
+                </section>
             </main>
         </div>
     </div>
@@ -352,48 +366,54 @@
                     &times;
                 </button>
             </div>
-            <table class="table modal-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Sex</th>
-                        <th>Relationship</th>
-                        <th>Age</th>
-                        <th>Birthdate</th>
-                        <th>Civil</th>
-                        <th>Educational</th>
-                        <th>Occupation</th>
-                        <th>Monthly</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input id="householdName" type="text" placeholder="Full name" /></td>
-                        <td>
-                            <select id="householdSex">
-                                <option value="" selected></option>
-                                <option>Male</option>
-                                <option>Female</option>
-                            </select>
-                        </td>
-                        <td><input id="householdRelationship" type="text" placeholder="Relationship" /></td>
-                        <td><input id="householdAge" type="text" placeholder="Age" /></td>
-                        <td><input id="householdBirthdate" type="date" /></td>
-                        <td>
-                            <select id="householdCivil">
-                                <option value="" selected></option>
-                                <option>Single</option>
-                                <option>Married</option>
-                                <option>Separated</option>
-                                <option>Widowed</option>
-                            </select>
-                        </td>
-                        <td><input id="householdEducational" type="text" placeholder="Educational" /></td>
-                        <td><input id="householdOccupation" type="text" placeholder="Occupation" /></td>
-                        <td><input id="householdMonthly" type="text" placeholder="Monthly" /></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="modal-form-grid">
+                <div class="field">
+                    <label for="householdName">Name</label>
+                    <input id="householdName" type="text" placeholder="Full name" />
+                </div>
+                <div class="field">
+                    <label for="householdSex">Sex</label>
+                    <select id="householdSex">
+                        <option value="" selected></option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="householdRelationship">Relationship</label>
+                    <input id="householdRelationship" type="text" placeholder="Relationship" />
+                </div>
+                <div class="field">
+                    <label for="householdAge">Age</label>
+                    <input id="householdAge" type="text" placeholder="Age" />
+                </div>
+                <div class="field">
+                    <label for="householdBirthdate">Birthdate</label>
+                    <input id="householdBirthdate" type="date" />
+                </div>
+                <div class="field">
+                    <label for="householdCivil">Civil Status</label>
+                    <select id="householdCivil">
+                        <option value="" selected></option>
+                        <option>Single</option>
+                        <option>Married</option>
+                        <option>Separated</option>
+                        <option>Widowed</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="householdEducational">Educational</label>
+                    <input id="householdEducational" type="text" placeholder="Educational" />
+                </div>
+                <div class="field">
+                    <label for="householdOccupation">Occupation</label>
+                    <input id="householdOccupation" type="text" placeholder="Occupation" />
+                </div>
+                <div class="field">
+                    <label for="householdMonthly">Monthly Income</label>
+                    <input id="householdMonthly" type="text" placeholder="Monthly" />
+                </div>
+            </div>
             <div class="modal-actions">
                 <button class="modal-submit" type="button" id="submitHousehold">Submit</button>
             </div>
