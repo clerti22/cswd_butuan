@@ -484,12 +484,7 @@ table {
     border-collapse: collapse;
 }
 
-th,
-td {
-    padding: 15px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
+
 
 th {
     background-color: #f4f4f4;
@@ -796,14 +791,14 @@ th {
 }
 
 .form2-content .modal-toggle {
-    position: absolute;
+
     opacity: 0;
     pointer-events: none;
 }
 
 .form2-content .add-button::after {
     content: "";
-    position: absolute;
+ 
     inset: 0;
     background: rgba(255, 255, 255, 0.25);
     opacity: 0;
