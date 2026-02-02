@@ -298,7 +298,125 @@
                         </div>
                     </div>
                 </section>
+                <section class="form-section">
+                    <div class="section-title section-title--with-action">
+                        <div class="section-title__content">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M12 3.172 2.5 11.25h1.5V21h6v-6h4v6h6v-9.75h1.5L12 3.172Zm-1 7.578V19.5H6V12.75l6-5.109 6 5.109V19.5h-5V12.75h-2Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Household Composition</h2>
+                        </div>
+                        <button class="add-household-btn" type="button" id="openHouseholdModal">
+                            <i class="bi bi-person-plus-fill" aria-hidden="true"></i>
+                            Add Household
+                        </button>
+                    </div>
+
+                    <table class="table household-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Sex</th>
+                                <th>Relationship</th>
+                                <th>Age</th>
+                                <th>Birthdate</th>
+                                <th>Civil</th>
+                                <th>Educational</th>
+                                <th>Occupation</th>
+                                <th>Monthly</th>
+                            </tr>
+                        </thead>
+                        <tbody id="householdTableBody">
+                            <tr class="household-empty-row">
+                                <td colspan="9">No household members added yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="household-note">
+                        Note: Include family member and other members of the household especially minor children.
+                    </p>
+                </section>
+                <section class="form-section">
+                    <div class="field field--span-4">
+                        <label for="solo-classification">
+                            Classification/Circumstances of being a solo parent(Dahilan bakit naging solo parent?):
+                        </label>
+                        <textarea id="solo-classification" rows="4"></textarea>
+                    </div>
+                    <div class="field field--span-4">
+                        <label for="solo-needs">
+                            Needs/Problems of being a solo parent(Kinakailangan/Problema ng isang solo parent?):
+                        </label>
+                        <textarea id="solo-needs" rows="4"></textarea>
+                    </div>
+                </section>
             </main>
+        </div>
+    </div>
+
+    <div class="modal" id="householdModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Household Composition</h2>
+                <button class="modal-close" type="button" id="closeHouseholdModal" aria-label="Close modal">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-form-grid">
+                <div class="field">
+                    <label for="householdName">Name</label>
+                    <input id="householdName" type="text" placeholder="Full name" />
+                </div>
+                <div class="field">
+                    <label for="householdSex">Sex</label>
+                    <select id="householdSex">
+                        <option value="" selected></option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="householdRelationship">Relationship</label>
+                    <input id="householdRelationship" type="text" placeholder="Relationship" />
+                </div>
+                <div class="field">
+                    <label for="householdAge">Age</label>
+                    <input id="householdAge" type="text" placeholder="Age" />
+                </div>
+                <div class="field">
+                    <label for="householdBirthdate">Birthdate</label>
+                    <input id="householdBirthdate" type="date" />
+                </div>
+                <div class="field">
+                    <label for="householdCivil">Civil Status</label>
+                    <select id="householdCivil">
+                        <option value="" selected></option>
+                        <option>Single</option>
+                        <option>Married</option>
+                        <option>Separated</option>
+                        <option>Widowed</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="householdEducational">Educational</label>
+                    <input id="householdEducational" type="text" placeholder="Educational" />
+                </div>
+                <div class="field">
+                    <label for="householdOccupation">Occupation</label>
+                    <input id="householdOccupation" type="text" placeholder="Occupation" />
+                </div>
+                <div class="field">
+                    <label for="householdMonthly">Monthly Income</label>
+                    <input id="householdMonthly" type="text" placeholder="Monthly" />
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-submit" type="button" id="submitHousehold">Submit</button>
+            </div>
         </div>
     </div>
     <script src="soloparent.js"></script>
