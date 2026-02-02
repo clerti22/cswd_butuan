@@ -151,3 +151,83 @@ if (submitHouseholdButton) {
         toggleHouseholdModal(false);
     });
 }
+
+const submitFormButton = document.getElementById('submitSoloParent');
+
+const clearInvalidStates = (elements) => {
+    elements.forEach((element) => {
+        const wrapper = element.closest('.field');
+        if (wrapper) {
+            wrapper.classList.remove('field--invalid');
+        }
+    });
+};
+
+const markInvalid = (element) => {
+    const wrapper = element.closest('.field');
+    if (wrapper) {
+        wrapper.classList.add('field--invalid');
+    }
+};
+
+const validateSoloParentForm = () => {
+    const formFields = Array.from(document.querySelectorAll('.form-page input, .form-page select, .form-page textarea'))
+        .filter((element) => !element.disabled)
+        .filter((element) => !element.closest('#householdModal'))
+        .filter((element) => element.type !== 'button' && element.type !== 'submit');
+
+    clearInvalidStates(formFields);
+
+    const radioGroups = {};
+    const nonRadioFields = [];
+
+    formFields.forEach((field) => {
+        if (field.type === 'radio') {
+            const name = field.name || '__unnamed__';
+            if (!radioGroups[name]) {
+                radioGroups[name] = [];
+            }
+            radioGroups[name].push(field);
+            return;
+        }
+        nonRadioFields.push(field);
+    });
+
+    let firstInvalidField = null;
+    let isValid = true;
+
+    nonRadioFields.forEach((field) => {
+        if (!field.value.trim()) {
+            isValid = false;
+            markInvalid(field);
+            if (!firstInvalidField) {
+                firstInvalidField = field;
+            }
+        }
+    });
+
+    Object.values(radioGroups).forEach((group) => {
+        const hasSelection = group.some((radio) => radio.checked);
+        if (!hasSelection) {
+            isValid = false;
+            if (!firstInvalidField) {
+                firstInvalidField = group[0];
+            }
+        }
+    });
+
+    if (!isValid) {
+        alert('Please fill out all required fields before submitting.');
+        if (firstInvalidField) {
+            firstInvalidField.focus();
+        }
+    }
+
+    return isValid;
+};
+
+if (submitFormButton) {
+    submitFormButton.addEventListener('click', () => {
+        validateSoloParentForm();
+    });
+}

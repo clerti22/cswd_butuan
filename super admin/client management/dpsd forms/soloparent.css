@@ -528,6 +528,28 @@ button:hover {
   min-height: 100px;
 }
 
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.submit-form-btn {
+  background-color: #28a745;
+  min-width: 180px;
+}
+
+.submit-form-btn:hover {
+  background-color: #218838;
+}
+
+.field--invalid input,
+.field--invalid select,
+.field--invalid textarea {
+  border-color: #dc2626;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
