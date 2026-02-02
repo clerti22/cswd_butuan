@@ -382,27 +382,101 @@
                         </div>
                     </section>
 
-                    <section class="section">
-                        <div class="section-title">
-                            <span class="title-icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z" />
-                                </svg>
-                            </span>
-                            <h2>Intervention needed:</h2>
-                        </div>
+                    <div class="section-row">
+                        <section class="section">
+                            <div class="section-title">
+                                <span class="title-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z" />
+                                    </svg>
+                                </span>
+                                <h2>Intervention needed:</h2>
+                            </div>
 
-                        <div class="checkbox-grid two-columns">
-                            <label><input type="checkbox"> Skills Training</label>
-                            <label><input type="checkbox"> Livelihood</label>
-                        </div>
+                            <div class="checkbox-grid two-columns">
+                                <label><input type="checkbox"> Skills Training</label>
+                                <label><input type="checkbox"> Livelihood</label>
+                            </div>
 
-                        <div class="specify">
-                            <label for="intervention-specify">Please Specify:</label>
-                            <input id="intervention-specify" type="text">
-                        </div>
-                    </section>
+                            <div class="specify">
+                                <label for="intervention-specify">Please Specify:</label>
+                                <input id="intervention-specify" type="text">
+                            </div>
+                        </section>
+
+                        <section class="section membership-section">
+                            <div class="section-title">
+                                <span class="title-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z" />
+                                    </svg>
+                                </span>
+                                <h2>Membership on Organization, Clubs, Society:</h2>
+                            </div>
+
+                            <div class="table-card">
+                                <table class="membership-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name of Organization</th>
+                                            <th>Position Held, if any</th>
+                                            <th>Year</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" placeholder="Organization name"></td>
+                                            <td><input type="text" placeholder="Position held"></td>
+                                            <td><input type="text" placeholder="Year"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <input class="modal-toggle" type="checkbox" id="membership-modal-toggle">
+                            <label class="add-button" for="membership-modal-toggle">
+                                <span class="button-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" />
+                                    </svg>
+                                </span>
+                                Add
+                            </label>
+
+                            <div class="modal">
+                                <label class="modal-backdrop" for="membership-modal-toggle"></label>
+                                <div class="modal-card" role="dialog" aria-modal="true"
+                                    aria-labelledby="membership-modal-title">
+                                    <div class="modal-header">
+                                        <h3 id="membership-modal-title">Add Membership</h3>
+                                        <label class="modal-close" for="membership-modal-toggle"
+                                            aria-label="Close modal">✕</label>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label class="modal-field">
+                                            <span>Name of Organization</span>
+                                            <input type="text" placeholder="Organization name">
+                                        </label>
+                                        <label class="modal-field">
+                                            <span>Position Held, if any</span>
+                                            <input type="text" placeholder="Position held">
+                                        </label>
+                                        <label class="modal-field">
+                                            <span>Year</span>
+                                            <input type="text" placeholder="Year">
+                                        </label>
+                                    </div>
+                                    <div class="modal-actions">
+                                        <label class="modal-button ghost" for="membership-modal-toggle">Cancel</label>
+                                        <button class="modal-button" type="button">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </main>
         </div>

@@ -706,6 +706,17 @@ th {
     margin-bottom: 36px;
 }
 
+.form2-content .section-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+}
+
+.form2-content .section-row .section {
+    margin-bottom: 0;
+}
+
 .form2-content .section-title {
     display: flex;
     align-items: center;
@@ -741,14 +752,16 @@ th {
     position: relative;
 }
 
-.form2-content .family-table {
+.form2-content .family-table,
+.form2-content .membership-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 8px 6px;
     table-layout: fixed;
 }
 
-.form2-content .family-table th {
+.form2-content .family-table th,
+.form2-content .membership-table th {
     font-size: 12px;
     color: #3e3e3e;
     font-weight: 600;
@@ -756,11 +769,14 @@ th {
 }
 
 .form2-content .family-table td,
-.form2-content .family-table th {
+.form2-content .family-table th,
+.form2-content .membership-table td,
+.form2-content .membership-table th {
     padding: 0;
 }
 
-.form2-content .family-table input {
+.form2-content .family-table input,
+.form2-content .membership-table input {
     width: 100%;
     padding: 6px 8px;
     border-radius: 5px;
@@ -769,8 +785,19 @@ th {
     font-size: 12px;
 }
 
-.form2-content .family-table input::placeholder {
+.form2-content .family-table input::placeholder,
+.form2-content .membership-table input::placeholder {
     color: #9aa0a6;
+}
+
+.form2-content .membership-table th {
+    background: #dedede;
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+.form2-content .membership-table td {
+    padding-top: 4px;
 }
 
 .form2-content .add-button {
@@ -968,25 +995,36 @@ th {
 }
 
 @media (max-width: 900px) {
-    .form2-content .family-table {
+    .form2-content .family-table,
+    .form2-content .membership-table {
         display: block;
     }
 
     .form2-content .family-table thead,
     .form2-content .family-table tbody,
-    .form2-content .family-table tr {
+    .form2-content .family-table tr,
+    .form2-content .membership-table thead,
+    .form2-content .membership-table tbody,
+    .form2-content .membership-table tr {
         display: grid;
         grid-template-columns: repeat(3, minmax(120px, 1fr));
         gap: 8px;
     }
 
-    .form2-content .family-table thead {
+    .form2-content .family-table thead,
+    .form2-content .membership-table thead {
         margin-bottom: 6px;
     }
 
     .form2-content .family-table td,
-    .form2-content .family-table th {
+    .form2-content .family-table th,
+    .form2-content .membership-table td,
+    .form2-content .membership-table th {
         display: block;
+    }
+
+    .form2-content .section-row {
+        grid-template-columns: 1fr;
     }
 
     .form2-content .modal-body {
