@@ -69,3 +69,85 @@ const registerRadioToggle = (radios, input) => {
 
 registerRadioToggle(pantawidRadios, pantawidInput);
 registerRadioToggle(indigenousRadios, indigenousInput);
+
+const householdModal = document.getElementById('householdModal');
+const openHouseholdModalButton = document.getElementById('openHouseholdModal');
+const closeHouseholdModalButton = document.getElementById('closeHouseholdModal');
+const submitHouseholdButton = document.getElementById('submitHousehold');
+const householdTableBody = document.getElementById('householdTableBody');
+
+const householdInputs = {
+    name: document.getElementById('householdName'),
+    sex: document.getElementById('householdSex'),
+    relationship: document.getElementById('householdRelationship'),
+    age: document.getElementById('householdAge'),
+    birthdate: document.getElementById('householdBirthdate'),
+    civil: document.getElementById('householdCivil'),
+    educational: document.getElementById('householdEducational'),
+    occupation: document.getElementById('householdOccupation'),
+    monthly: document.getElementById('householdMonthly')
+};
+
+const toggleHouseholdModal = (isOpen) => {
+    if (!householdModal) {
+        return;
+    }
+
+    householdModal.style.display = isOpen ? 'flex' : 'none';
+    householdModal.setAttribute('aria-hidden', String(!isOpen));
+};
+
+const resetHouseholdInputs = () => {
+    Object.values(householdInputs).forEach((input) => {
+        if (!input) {
+            return;
+        }
+        input.value = '';
+    });
+};
+
+if (openHouseholdModalButton) {
+    openHouseholdModalButton.addEventListener('click', () => toggleHouseholdModal(true));
+}
+
+if (closeHouseholdModalButton) {
+    closeHouseholdModalButton.addEventListener('click', () => toggleHouseholdModal(false));
+}
+
+if (householdModal) {
+    householdModal.addEventListener('click', (event) => {
+        if (event.target === householdModal) {
+            toggleHouseholdModal(false);
+        }
+    });
+}
+
+if (submitHouseholdButton) {
+    submitHouseholdButton.addEventListener('click', () => {
+        if (!householdTableBody) {
+            return;
+        }
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${householdInputs.name?.value || ''}</td>
+            <td>${householdInputs.sex?.value || ''}</td>
+            <td>${householdInputs.relationship?.value || ''}</td>
+            <td>${householdInputs.age?.value || ''}</td>
+            <td>${householdInputs.birthdate?.value || ''}</td>
+            <td>${householdInputs.civil?.value || ''}</td>
+            <td>${householdInputs.educational?.value || ''}</td>
+            <td>${householdInputs.occupation?.value || ''}</td>
+            <td>${householdInputs.monthly?.value || ''}</td>
+        `;
+
+        const emptyRow = householdTableBody.querySelector('.household-empty-row');
+        if (emptyRow) {
+            emptyRow.remove();
+        }
+
+        householdTableBody.appendChild(row);
+        resetHouseholdInputs();
+        toggleHouseholdModal(false);
+    });
+}
