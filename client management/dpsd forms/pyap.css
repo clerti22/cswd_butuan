@@ -599,6 +599,13 @@ th {
     font-size: 13px;
     font-weight: 600;
     color: #2563eb;
+}
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 12px;
 }
 
@@ -750,8 +757,6 @@ th {
 }
 
 .add-button {
-    margin-top: 12px;
-    margin-left: auto;
     display: inline-flex;
     align-items: center;
     gap: 6px;
