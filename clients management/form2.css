@@ -58,23 +58,26 @@ body {
     position: relative;
 }
 
-.table-header {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr 0.8fr 0.6fr 0.8fr 0.5fr 0.5fr 1.2fr 0.7fr;
-    gap: 8px;
+.family-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 8px 6px;
+    table-layout: fixed;
+}
+
+.family-table th {
     font-size: 12px;
     color: #3e3e3e;
-    padding: 4px 6px 8px;
+    font-weight: 600;
+    text-align: left;
 }
 
-.table-row {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr 0.8fr 0.6fr 0.8fr 0.5fr 0.5fr 1.2fr 0.7fr;
-    gap: 8px;
-    padding: 4px 6px 2px;
+.family-table td,
+.family-table th {
+    padding: 0;
 }
 
-.table-row input {
+.family-table input {
     width: 100%;
     padding: 6px 8px;
     border-radius: 5px;
@@ -83,7 +86,7 @@ body {
     font-size: 12px;
 }
 
-.table-row input::placeholder {
+.family-table input::placeholder {
     color: #9aa0a6;
 }
 
@@ -282,9 +285,25 @@ body {
 }
 
 @media (max-width: 900px) {
-    .table-header,
-    .table-row {
+    .family-table {
+        display: block;
+    }
+
+    .family-table thead,
+    .family-table tbody,
+    .family-table tr {
+        display: grid;
         grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 8px;
+    }
+
+    .family-table thead {
+        margin-bottom: 6px;
+    }
+
+    .family-table td,
+    .family-table th {
+        display: block;
     }
 
     .modal-body {
