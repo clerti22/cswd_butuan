@@ -35,3 +35,37 @@ window.addEventListener('resize', () => {
         closeSidebar();
     }
 })
+
+const pantawidInput = document.getElementById('pantawid-household');
+const pantawidRadios = document.querySelectorAll('input[name="pantawid-beneficiary"]');
+const indigenousInput = document.getElementById('indigenous-affiliation');
+const indigenousRadios = document.querySelectorAll('input[name="indigenous-person"]');
+
+const toggleRadioInput = (radios, input) => {
+    if (!input || !radios.length) {
+        return;
+    }
+
+    const isYesSelected = Array.from(radios).some((radio) => radio.checked && radio.value === 'yes');
+    input.disabled = !isYesSelected;
+    input.placeholder = isYesSelected ? '' : 'Disabled';
+
+    if (!isYesSelected) {
+        input.value = '';
+    }
+};
+
+const registerRadioToggle = (radios, input) => {
+    if (!input || !radios.length) {
+        return;
+    }
+
+    radios.forEach((radio) => {
+        radio.addEventListener('change', () => toggleRadioInput(radios, input));
+    });
+
+    toggleRadioInput(radios, input);
+};
+
+registerRadioToggle(pantawidRadios, pantawidInput);
+registerRadioToggle(indigenousRadios, indigenousInput);
