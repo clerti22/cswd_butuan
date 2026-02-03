@@ -54,10 +54,6 @@ body {
     background-clip: text;
 }
 
-
-
-
-
 .nav-menu {
     flex: 1;
     padding: 1rem;
@@ -132,38 +128,6 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.user-profile {
-    display: flex;
-    align-items: center;
-    padding: 0.875rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 0.75rem;
-    backdrop-filter: blur(10px);
-}
-
-.user-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
-    background: linear-gradient(45deg, #03045E, #0077B6);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.75rem;
-    font-weight: 700;
-    font-size: 0.875rem;
-}
-
-.user-info h4 {
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.user-info p {
-    font-size: 0.75rem;
-    opacity: 0.8;
-}
-
 /* Main content */
 .main-content {
     flex: 1;
@@ -171,6 +135,7 @@ body {
     flex-direction: column;
     margin-left: 0;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
 }
 
 .topbar {
@@ -201,44 +166,6 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
     color: #1e293b;
-}
-
-.content {
-    flex: 1;
-    padding: 2rem;
-    overflow-y: auto;
-}
-
-.card {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 15px;
-}
-
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.feature-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    text-align: center;
-}
-
-.feature-icon {
-    width: 3rem;
-    height: 3rem;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
 }
 
 /* Overlay for mobile */
@@ -305,114 +232,15 @@ body {
     animation: slideIn 0.5s ease-out;
 }
 
-.back_button {
-    background-color: red;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.back_button:hover {
-    background-color: #b91c1c;
-    color: #fef3c7;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Responsive: stack inputs on small screens */
-@media (max-width: 640px) {
-    .form-row {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-.tabs {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 15px;
-}
-
-.tabs button {
-    background: none;
-    border: none;
-    font-weight: 600;
-    color: #1f2937;
-    cursor: pointer;
-    padding-bottom: 5px;
-}
-
-.tabs button.active {
-    border-bottom: 2px solid #1f2937;
-}
-
-.tabs button:not(.active) {
-    color: #2563eb;
-}
-
-
-/* ========== CONTROLS ========== */
-.controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.left-controls {
-    display: flex;
-    gap: 8px;
-}
-
-.search-input {
-    padding: 7px 10px;
-    border-radius: 5px;
-    border: 1px solid #d1d5db;
-    width: 150px;
-}
-
-.btn {
-    border: none;
-    padding: 7px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.btn-search,
-.btn-filter,
-.btn-add {
-    background: #0f9d58;
-}
-
-/* ========== TABLE ========== */
-table {
+.table {
     width: 100%;
+    margin-top: 20px;
     border-collapse: collapse;
-    font-size: 12px;
 }
 
-thead {
-    background: #6b7280;
-    color: white;
+th {
+    background-color: #f4f4f4;
+    color: #333;
 }
 
 th, td {
@@ -424,26 +252,115 @@ tbody tr {
     border-bottom: 1px solid #e5e7eb;
 }
 
-/* ========== ACTION BUTTONS ========== */
-.action-btns {
-    display: flex;
-    gap: 6px;
-}
-
-.btn-edit {
-    background: #facc15;
-    color: black;
-    padding: 4px 10px;
-    border-radius: 6px;
-    border: none;
-    font-size: 11px;
-}
-
-.btn-show {
-    background: #1d4ed8;
+/* Buttons */
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
     color: white;
-    padding: 4px 10px;
-    border-radius: 6px;
     border: none;
-    font-size: 11px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.add-btn {
+    margin-top: 1em;
+    background-color: #007bff;
+}
+
+.add-btn:hover {
+    background-color: #0056b3;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 500px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content input,
+.modal-content select {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.modal-content button {
+    width: 100%;
+}
+
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11.5px;
+    color: #111827;
+}
+
+.field input,
+.field select {
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #d5dbe7;
+    padding: 0 10px;
+    font-size: 11.5px;
+    background: #ffffff;
+    outline: none;
+}
+
+@media (max-width: 720px) {
+    .form-page {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
