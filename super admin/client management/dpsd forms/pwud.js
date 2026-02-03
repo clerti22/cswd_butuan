@@ -34,4 +34,28 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const householdModal = document.getElementById('householdModal');
+const openHouseholdModal = document.getElementById('openHouseholdModal');
+const closeHouseholdModal = document.getElementById('closeHouseholdModal');
+
+function showHouseholdModal() {
+    householdModal.classList.add('show');
+    householdModal.setAttribute('aria-hidden', 'false');
+}
+
+function hideHouseholdModal() {
+    householdModal.classList.remove('show');
+    householdModal.setAttribute('aria-hidden', 'true');
+}
+
+if (openHouseholdModal && closeHouseholdModal && householdModal) {
+    openHouseholdModal.addEventListener('click', showHouseholdModal);
+    closeHouseholdModal.addEventListener('click', hideHouseholdModal);
+    householdModal.addEventListener('click', (event) => {
+        if (event.target === householdModal) {
+            hideHouseholdModal();
+        }
+    });
+}

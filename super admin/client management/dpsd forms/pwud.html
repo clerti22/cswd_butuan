@@ -207,7 +207,79 @@
                         </label>
                     </div>
                 </section>
+
+                <section class="form-section">
+                    <div class="section-title">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Household Members</span>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="info-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Relationship</th>
+                                    <th>Occupation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button class="add-button" type="button" id="openHouseholdModal">
+                        <span class="button-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" />
+                            </svg>
+                        </span>
+                        Add
+                    </button>
+                </section>
             </main>
+        </div>
+    </div>
+
+    <div class="modal" id="householdModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Household Member</h2>
+                <button class="modal-close" type="button" id="closeHouseholdModal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-form-grid">
+                <label class="modal-field">
+                    <span>Name</span>
+                    <input type="text" placeholder="Name" />
+                </label>
+                <label class="modal-field">
+                    <span>Age</span>
+                    <input type="text" placeholder="Age" />
+                </label>
+                <label class="modal-field">
+                    <span>Gender</span>
+                    <select>
+                        <option value="" selected></option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </label>
+                <label class="modal-field">
+                    <span>Relationship</span>
+                    <input type="text" placeholder="Relationship" />
+                </label>
+                <label class="modal-field span-2">
+                    <span>Occupation</span>
+                    <input type="text" placeholder="Occupation" />
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-submit" type="button">Save</button>
+            </div>
         </div>
     </div>
     <script src="pwud.js"></script>
