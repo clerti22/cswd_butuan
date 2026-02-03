@@ -34,4 +34,25 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const tabs = document.querySelectorAll('.tab');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+
+        tabs.forEach(button => {
+            button.classList.remove('active');
+            button.setAttribute('aria-selected', 'false');
+        });
+
+        tabPanels.forEach(panel => {
+            panel.classList.toggle('active', panel.dataset.tabContent === target);
+        });
+
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+    });
+});
