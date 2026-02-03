@@ -335,6 +335,60 @@ button:hover {
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
 }
 
+.form-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.header-logos {
+    display: grid;
+    grid-template-columns: 90px 1fr 90px;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-logos img {
+    width: 74px;
+    height: 74px;
+    object-fit: contain;
+    justify-self: center;
+}
+
+.header-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #111827;
+}
+
+.header-text .strong {
+    font-weight: 700;
+}
+
+.form-header h2 {
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.form-section {
+    margin-top: 10px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-bottom: 12px;
+}
+
+.section-title i {
+    font-size: 16px;
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -360,6 +414,24 @@ button:hover {
     outline: none;
 }
 
+.field textarea {
+    border-radius: 8px;
+    border: 1px solid #d5dbe7;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    background: #ffffff;
+    outline: none;
+    resize: none;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+.span-4 {
+    grid-column: span 4;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
@@ -370,5 +442,9 @@ button:hover {
 
     .form-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .span-4 {
+        grid-column: span 2;
     }
 }
