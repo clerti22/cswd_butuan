@@ -38,6 +38,20 @@ window.addEventListener('resize', () => {
 
 const tabs = document.querySelectorAll('.tab');
 const tabPanels = document.querySelectorAll('.tab-panel');
+const addClientBtn = document.getElementById('addClientBtn');
+const addClientMenu = document.getElementById('addClientMenu');
+const addClientOptions = {
+    dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
+    pssd: ['Senior Citizen', 'PWD'],
+    rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU']
+};
+
+function setAddClientMenu(tabKey) {
+    const options = addClientOptions[tabKey] || [];
+    addClientMenu.innerHTML = options
+        .map(option => `<button type="button" class="menu-item" role="menuitem">${option}</button>`)
+        .join('');
+}
 
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -54,5 +68,22 @@ tabs.forEach(tab => {
 
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
+        setAddClientMenu(target);
+        addClientMenu.classList.remove('open');
+        addClientBtn.setAttribute('aria-expanded', 'false');
     });
 });
+
+addClientBtn.addEventListener('click', () => {
+    const isOpen = addClientMenu.classList.toggle('open');
+    addClientBtn.setAttribute('aria-expanded', String(isOpen));
+});
+
+document.addEventListener('click', event => {
+    if (!addClientMenu.contains(event.target) && !addClientBtn.contains(event.target)) {
+        addClientMenu.classList.remove('open');
+        addClientBtn.setAttribute('aria-expanded', 'false');
+    }
+});
+
+setAddClientMenu('dpsd');

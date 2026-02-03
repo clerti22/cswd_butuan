@@ -313,6 +313,49 @@ body {
     background: #0a7d0a;
 }
 
+.add-client {
+    position: relative;
+    margin-left: auto;
+}
+
+.add-client .btn-add {
+    margin-left: 0;
+}
+
+.add-client-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 0.4rem 0.5rem;
+    display: none;
+    min-width: 160px;
+    z-index: 10;
+}
+
+.add-client-menu.open {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.menu-item {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    color: #1e293b;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: #f1f5f9;
+}
+
 .table-card {
     background: #f7f7f7;
     padding: 0.5rem;
