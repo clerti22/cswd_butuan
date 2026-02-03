@@ -105,7 +105,484 @@
             </header>
 
             <main class="form-page">
-               
+                <section class="client-management">
+                    <div class="tabs" role="tablist" aria-label="Client categories">
+                        <button class="tab active" type="button" role="tab" aria-selected="true" data-tab="dpsd">
+                            DPSD
+                        </button>
+                        <button class="tab" type="button" role="tab" aria-selected="false" data-tab="pssd">
+                            PSSD
+                        </button>
+                        <button class="tab" type="button" role="tab" aria-selected="false" data-tab="rpsd">
+                            RPSD
+                        </button>
+                    </div>
+
+                    <div class="toolbar">
+                        <input class="search-input" type="text" placeholder="">
+                        <button class="btn btn-search" type="button">
+                            <i class="bi bi-search"></i>
+                            Search
+                        </button>
+                        <button class="btn btn-filter" type="button">
+                            <i class="bi bi-funnel"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-add" type="button">
+                            <i class="bi bi-plus-lg"></i>
+                            Add Client
+                        </button>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="client-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Age</th>
+                                    <th>Sex</th>
+                                    <th>Address</th>
+                                    <th>Services Availed</th>
+                                    <th>Sector</th>
+                                    <th>Contact Details</th>
+                                    <th>Date of Service</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tab-panel active" data-tab-content="dpsd">
+                                <tr>
+                                    <td>Trevor Phillips</td>
+                                    <td>32</td>
+                                    <td>M</td>
+                                    <td>Ampayon</td>
+                                    <td>PYAP Monitoring</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09663059855</td>
+                                    <td>09-19-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Michael Townley</td>
+                                    <td>30</td>
+                                    <td>M</td>
+                                    <td>Doongan</td>
+                                    <td>Availment of As.</td>
+                                    <td>PWD</td>
+                                    <td>09348652928</td>
+                                    <td>09-19-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tanjiro Kamado</td>
+                                    <td>25</td>
+                                    <td>M</td>
+                                    <td>Libertad</td>
+                                    <td>Renewed ID</td>
+                                    <td>Solo Parent</td>
+                                    <td>09357607934</td>
+                                    <td>12-01-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Nezuko Kamado</td>
+                                    <td>23</td>
+                                    <td>F</td>
+                                    <td>Libertad</td>
+                                    <td>PYAP Monitoring</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09663059855</td>
+                                    <td>12-01-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Zenitsu Agatsuma</td>
+                                    <td>25</td>
+                                    <td>M</td>
+                                    <td>Baan KM3</td>
+                                    <td>Renewed ID</td>
+                                    <td>Solo Parent</td>
+                                    <td>09663059855</td>
+                                    <td>08-13-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Inosuke Hashibira</td>
+                                    <td>25</td>
+                                    <td>M</td>
+                                    <td>Tandang S.</td>
+                                    <td>PYAP Monitoring</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09663059855</td>
+                                    <td>01-20-2023</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Giyu Tomioka</td>
+                                    <td>33</td>
+                                    <td>M</td>
+                                    <td>Babag</td>
+                                    <td>PYAP Monitoring</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09663059855</td>
+                                    <td>11-29-2023</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Muichiro Tokito</td>
+                                    <td>25</td>
+                                    <td>M</td>
+                                    <td>Libertad</td>
+                                    <td>PYAP Monitoring</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09663059855</td>
+                                    <td>11-28-2023</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Shinobu Kocho</td>
+                                    <td>32</td>
+                                    <td>F</td>
+                                    <td>Ampayon</td>
+                                    <td>Provided SCSR</td>
+                                    <td>Solo Parent</td>
+                                    <td>09770439059</td>
+                                    <td>05-30-2022</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mitsuri Kanroji</td>
+                                    <td>32</td>
+                                    <td>F</td>
+                                    <td>Libertad</td>
+                                    <td>Physical Therapy</td>
+                                    <td>PWD</td>
+                                    <td>09514319909</td>
+                                    <td>05-20-2021</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody class="tab-panel" data-tab-content="pssd">
+                                <tr>
+                                    <td>Kanao Tsuyuri</td>
+                                    <td>22</td>
+                                    <td>F</td>
+                                    <td>Ambago</td>
+                                    <td>Family Counseling</td>
+                                    <td>Women</td>
+                                    <td>09170011223</td>
+                                    <td>06-10-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Kei Shinazugawa</td>
+                                    <td>41</td>
+                                    <td>M</td>
+                                    <td>San Vicente</td>
+                                    <td>Livelihood Grant</td>
+                                    <td>Senior</td>
+                                    <td>09181234567</td>
+                                    <td>04-22-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Aoi Kanzaki</td>
+                                    <td>28</td>
+                                    <td>F</td>
+                                    <td>Mahogany</td>
+                                    <td>Psychosocial Support</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09991234560</td>
+                                    <td>03-15-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Genya Shinazugawa</td>
+                                    <td>27</td>
+                                    <td>M</td>
+                                    <td>Masao</td>
+                                    <td>Food Assistance</td>
+                                    <td>PWD</td>
+                                    <td>09228887766</td>
+                                    <td>02-08-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Akaza Kibutsuji</td>
+                                    <td>35</td>
+                                    <td>M</td>
+                                    <td>Buhangin</td>
+                                    <td>Employment Referral</td>
+                                    <td>Solo Parent</td>
+                                    <td>09456667788</td>
+                                    <td>01-12-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Makio Uzui</td>
+                                    <td>29</td>
+                                    <td>F</td>
+                                    <td>Lemon</td>
+                                    <td>Medical Mission</td>
+                                    <td>Women</td>
+                                    <td>09075554433</td>
+                                    <td>12-20-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Suma Uzui</td>
+                                    <td>26</td>
+                                    <td>F</td>
+                                    <td>Antongalon</td>
+                                    <td>Nutrition Program</td>
+                                    <td>Women</td>
+                                    <td>09209998877</td>
+                                    <td>11-05-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Hinatsuru Uzui</td>
+                                    <td>30</td>
+                                    <td>F</td>
+                                    <td>Dagohoy</td>
+                                    <td>Skills Training</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09173334455</td>
+                                    <td>10-18-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Obanai Iguro</td>
+                                    <td>34</td>
+                                    <td>M</td>
+                                    <td>Golden Ribbon</td>
+                                    <td>Relief Assistance</td>
+                                    <td>Senior</td>
+                                    <td>09221234555</td>
+                                    <td>09-22-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Sanemi Shinazugawa</td>
+                                    <td>38</td>
+                                    <td>M</td>
+                                    <td>Baan Riverside</td>
+                                    <td>Case Management</td>
+                                    <td>Solo Parent</td>
+                                    <td>09331230000</td>
+                                    <td>08-14-2024</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody class="tab-panel" data-tab-content="rpsd">
+                                <tr>
+                                    <td>Rengoku Kyojuro</td>
+                                    <td>36</td>
+                                    <td>M</td>
+                                    <td>Silogan</td>
+                                    <td>Fire Safety Seminar</td>
+                                    <td>Senior</td>
+                                    <td>09550001122</td>
+                                    <td>07-11-2025</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tengen Uzui</td>
+                                    <td>29</td>
+                                    <td>M</td>
+                                    <td>Ampayon</td>
+                                    <td>Renewed ID</td>
+                                    <td>Solo Parent</td>
+                                    <td>09663059855</td>
+                                    <td>07-10-2019</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Franklin Clinton</td>
+                                    <td>26</td>
+                                    <td>M</td>
+                                    <td>Lemon</td>
+                                    <td>PYAP Monitoring</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09298395345</td>
+                                    <td>03-18-2019</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Benimaru Shinmon</td>
+                                    <td>31</td>
+                                    <td>M</td>
+                                    <td>Kasunayan</td>
+                                    <td>Case Conference</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09441112223</td>
+                                    <td>02-14-2019</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Maki Oze</td>
+                                    <td>27</td>
+                                    <td>F</td>
+                                    <td>Caraga</td>
+                                    <td>Relief Assistance</td>
+                                    <td>PWD</td>
+                                    <td>09556667777</td>
+                                    <td>01-05-2019</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Iris Shiba</td>
+                                    <td>24</td>
+                                    <td>F</td>
+                                    <td>Bit-os</td>
+                                    <td>Women Wellness</td>
+                                    <td>Women</td>
+                                    <td>09198887766</td>
+                                    <td>12-12-2018</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Takehisa Hinawa</td>
+                                    <td>40</td>
+                                    <td>M</td>
+                                    <td>Little Baguio</td>
+                                    <td>Case Management</td>
+                                    <td>Senior</td>
+                                    <td>09081234456</td>
+                                    <td>11-11-2018</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tamaki Kotatsu</td>
+                                    <td>21</td>
+                                    <td>F</td>
+                                    <td>Sumilihon</td>
+                                    <td>Nutrition Support</td>
+                                    <td>Children</td>
+                                    <td>09225556660</td>
+                                    <td>10-06-2018</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Vulcan Joseph</td>
+                                    <td>33</td>
+                                    <td>M</td>
+                                    <td>Libertad</td>
+                                    <td>Medical Assistance</td>
+                                    <td>PWD</td>
+                                    <td>09199990001</td>
+                                    <td>09-09-2018</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Arthur Boyle</td>
+                                    <td>28</td>
+                                    <td>M</td>
+                                    <td>Pagatpatan</td>
+                                    <td>Volunteer Program</td>
+                                    <td>Youth Welf.</td>
+                                    <td>09335556661</td>
+                                    <td>08-01-2018</td>
+                                    <td>
+                                        <button class="pill edit" type="button">Edit</button>
+                                        <button class="pill show" type="button">Show</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination">
+                        <button class="pager-btn" type="button">Prev</button>
+                        <button class="pager-btn" type="button">Next</button>
+                    </div>
+                </section>
             </main>
         </div>
     </div>
