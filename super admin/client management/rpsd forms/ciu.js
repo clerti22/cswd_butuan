@@ -35,3 +35,27 @@ window.addEventListener('resize', () => {
         closeSidebar();
     }
 })
+
+const familyModal = document.getElementById('familyModal');
+const openFamilyModalBtn = document.getElementById('openFamilyModal');
+const closeFamilyModalBtn = document.getElementById('closeFamilyModal');
+
+function openFamilyModal() {
+    familyModal.classList.add('active');
+    familyModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeFamilyModal() {
+    familyModal.classList.remove('active');
+    familyModal.setAttribute('aria-hidden', 'true');
+}
+
+if (openFamilyModalBtn && closeFamilyModalBtn && familyModal) {
+    openFamilyModalBtn.addEventListener('click', openFamilyModal);
+    closeFamilyModalBtn.addEventListener('click', closeFamilyModal);
+    familyModal.addEventListener('click', (event) => {
+        if (event.target === familyModal) {
+            closeFamilyModal();
+        }
+    });
+}

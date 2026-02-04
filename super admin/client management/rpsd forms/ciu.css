@@ -300,12 +300,31 @@ button:hover {
     align-items: center;
 }
 
+.modal.active {
+    display: flex;
+}
+
 .modal-content {
     background-color: white;
     padding: 30px;
     border-radius: 10px;
     width: 500px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6b7280;
 }
 
 .modal-content h2 {
@@ -326,6 +345,161 @@ button:hover {
     width: 100%;
 }
 
+.modal-form {
+    display: grid;
+    gap: 12px;
+}
+
+.modal-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: #111827;
+}
+
+.form-page {
+    margin: 24px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px 28px 32px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+
+.ciu-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.ciu-logos {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    align-items: center;
+    gap: 16px;
+}
+
+.ciu-logos img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.ciu-title {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #1f2937;
+}
+
+.ciu-header h2 {
+    margin-top: 16px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.ciu-body {
+    margin-top: 16px;
+}
+
+.ciu-section {
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 24px;
+    max-width: 360px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 24px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #111827;
+}
+
+.checkbox-item input {
+    width: 14px;
+    height: 14px;
+}
+
+.others-field {
+    max-width: 360px;
+}
+
+.family-section {
+    gap: 16px;
+}
+
+.family-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.family-add-btn {
+    background: #15803d;
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.family-add-btn:hover {
+    background: #166534;
+}
+
+.family-add-icon {
+    font-weight: 700;
+}
+
+.family-table {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.family-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+
+.family-table th {
+    background: #e5e7eb;
+    color: #1f2937;
+    font-weight: 600;
+    padding: 8px;
+    text-align: left;
+}
+
+.family-table td {
+    padding: 16px 8px;
+    border-top: 1px solid #e5e7eb;
+}
 
 .form-grid {
     display: grid;
@@ -352,6 +526,30 @@ button:hover {
     outline: none;
 }
 
+.field input[type="date"] {
+    padding-right: 6px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 11.5px;
+    color: #111827;
+}
+
+.radio-group input {
+    margin-right: 6px;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+.span-3 {
+    grid-column: span 3;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
@@ -362,5 +560,14 @@ button:hover {
 
     .form-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ciu-logos {
+        grid-template-columns: 1fr;
+    }
+
+    .checkbox-grid,
+    .services-grid {
+        grid-template-columns: 1fr;
     }
 }
