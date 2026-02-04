@@ -34,4 +34,51 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const familyModal = document.getElementById('familyModal');
+const openFamilyModalBtn = document.getElementById('openFamilyModal');
+const closeFamilyModalBtn = document.getElementById('closeFamilyModal');
+const familyForm = document.getElementById('familyForm');
+const familyTableBody = document.querySelector('.family-table__body');
+
+function openFamilyModal() {
+    familyModal.classList.add('active');
+    familyModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeFamilyModal() {
+    familyModal.classList.remove('active');
+    familyModal.setAttribute('aria-hidden', 'true');
+    familyForm.reset();
+}
+
+openFamilyModalBtn.addEventListener('click', openFamilyModal);
+closeFamilyModalBtn.addEventListener('click', closeFamilyModal);
+
+familyModal.addEventListener('click', (event) => {
+    if (event.target === familyModal) {
+        closeFamilyModal();
+    }
+});
+
+familyForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(familyForm);
+    const row = document.createElement('div');
+    row.className = 'family-table__row';
+    row.innerHTML = `
+        <span>${data.get('name')}</span>
+        <span>${data.get('age')}</span>
+        <span>${data.get('relationship')}</span>
+        <span>${data.get('education')}</span>
+        <span>${data.get('occupation')}</span>
+        <span>${data.get('income')}</span>
+    `;
+    const emptyRow = familyTableBody.querySelector('.family-table__row--empty');
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+    familyTableBody.appendChild(row);
+    closeFamilyModal();
+});
