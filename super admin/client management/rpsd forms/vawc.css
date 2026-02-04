@@ -636,6 +636,72 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
+.field input:focus,
+.field select:focus {
+    border-color: #93b2ff;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.input-icon input[type="date"] {
+    padding-right: 36px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: grayscale(1);
+}
+
+.field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    padding-right: 34px;
+}
+
+.field--span-2 {
+    grid-column: span 2;
+}
+
+.field--span-4 {
+    grid-column: span 4;
+}
+
+.clientele-label {
+    font-weight: 600;
+}
+
+.clientele-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 26px;
+}
+
+.clientele-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.radio-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #111827;
+}
+
+.radio-option input {
+    accent-color: #1d4ed8;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
