@@ -608,6 +608,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     min-height: 50px;
 }
 
+.form-textarea {
+    width: 100%;
+    min-height: 96px;
+    border-radius: 8px;
+    border: 1px solid #d5dbe7;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    resize: vertical;
+    background: #ffffff;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #93b2ff;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.description-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.description-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 12.5px;
+    color: #111827;
+}
+
+.description-field textarea {
+    width: 100%;
+    min-height: 96px;
+    border-radius: 8px;
+    border: 1px solid #d5dbe7;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    resize: vertical;
+    background: #ffffff;
+}
+
+.description-field textarea:focus {
+    outline: none;
+    border-color: #93b2ff;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
