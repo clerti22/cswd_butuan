@@ -152,7 +152,7 @@
                                 <input type="text" name="age">
                             </label>
 
-                            <div class="field">
+                            <div class="field span-2">
                                 Sex:
                                 <div class="radio-group">
                                     <label><input type="radio" name="sex" value="male"> Male</label>
@@ -257,9 +257,84 @@
                                 </label>
                             </div>
                         </div>
+
+                        <div class="ciu-section family-section">
+                            <div class="family-header">
+                                <p class="section-title">Family Composition</p>
+                                <button class="family-add-btn" type="button" id="openFamilyModal">
+                                    <span class="family-add-icon">+</span> Add
+                                </button>
+                            </div>
+                            <div class="family-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Age</th>
+                                            <th>Gender</th>
+                                            <th>Relationship to the client</th>
+                                            <th>Educational Attainment</th>
+                                            <th>Occupation</th>
+                                            <th>Income</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="7"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="submit-btn" type="submit">Submit</button>
+                        </div>
                     </form>
                 </section>
             </main>
+        </div>
+    </div>
+
+    <div class="modal" id="familyModal" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Family Composition Details</h2>
+                <button class="modal-close" type="button" id="closeFamilyModal">&times;</button>
+            </div>
+            <form class="modal-form">
+                <label>
+                    Name
+                    <input type="text" name="family_name">
+                </label>
+                <label>
+                    Age
+                    <input type="number" name="family_age" min="0">
+                </label>
+                <label>
+                    Gender
+                    <select name="family_gender">
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+                <label>
+                    Relationship to the client
+                    <input type="text" name="family_relationship">
+                </label>
+                <label>
+                    Educational Attainment
+                    <input type="text" name="family_education">
+                </label>
+                <label>
+                    Occupation
+                    <input type="text" name="family_occupation">
+                </label>
+                <label>
+                    Income
+                    <input type="text" name="family_income">
+                </label>
+                <button class="submit-btn" type="button" id="saveFamilyEntry">Save</button>
+            </form>
         </div>
     </div>
     <script src="ciu.js"></script>
