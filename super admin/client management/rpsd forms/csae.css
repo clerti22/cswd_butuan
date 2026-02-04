@@ -608,6 +608,37 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     min-height: 50px;
 }
 
+.treatment-table {
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.treatment-table__header,
+.treatment-table__row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr 0.9fr 1.3fr 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #111827;
+}
+
+.treatment-table__header {
+    background: #e5e7eb;
+    font-weight: 600;
+}
+
+.treatment-table__body {
+    min-height: 50px;
+}
+
+.treatment-table__row--empty {
+    min-height: 50px;
+}
+
 .form-textarea {
     width: 100%;
     min-height: 96px;
@@ -655,6 +686,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.form-submit-btn {
+    background-color: #16a34a;
+    min-width: 160px;
+}
+
+.form-submit-btn:hover {
+    background-color: #15803d;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
@@ -678,6 +724,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     .family-table__header,
     .family-table__row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 8px;
+    }
+
+    .treatment-table__header,
+    .treatment-table__row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         row-gap: 8px;
     }
