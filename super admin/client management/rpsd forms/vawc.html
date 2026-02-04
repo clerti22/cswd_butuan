@@ -342,6 +342,67 @@
                             </label>
                         </div>
                     </section>
+                    <section class="form-section">
+                        <div class="section-title section-title--with-action">
+                            <div class="section-title__content">
+                                <span class="section-title__icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                        <path
+                                            d="M4 12a8 8 0 0 1 14.5-4.7l1.2-1.2a1 1 0 1 1 1.4 1.4l-1.2 1.2A8 8 0 1 1 4 12Zm8-4a1 1 0 0 0-1 1v2H9a1 1 0 0 0 0 2h2v2a1 1 0 0 0 2 0v-2h2a1 1 0 0 0 0-2h-2V9a1 1 0 0 0-1-1Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <h2>Initial Treatment</h2>
+                            </div>
+                            <button class="add-btn family-add-btn" type="button" id="openTreatmentModal">
+                                <svg aria-hidden="true" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 5.75a1 1 0 0 1 1 1v4.25H17a1 1 0 1 1 0 2h-4v4.25a1 1 0 1 1-2 0V13h-4a1 1 0 1 1 0-2h4V6.75a1 1 0 0 1 1-1Z"
+                                        fill="currentColor" />
+                                </svg>
+                                Add
+                            </button>
+                        </div>
+
+                        <div class="treatment-table">
+                            <div class="treatment-table__header">
+                                <span>Objectives</span>
+                                <span>Activities</span>
+                                <span>Responsible Person</span>
+                                <span>Resources Needed</span>
+                                <span>Expected Output</span>
+                            </div>
+                            <div class="treatment-table__body">
+                                <div class="treatment-table__row treatment-table__row--empty">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="section-title">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M12 2.5a9.5 9.5 0 1 0 9.5 9.5 9.51 9.51 0 0 0-9.5-9.5Zm0 2a7.5 7.5 0 0 1 6.9 10.6l-1.7-.7a3.5 3.5 0 0 0-4.7-3.2V7.5a1 1 0 0 0-2 0v5.2a3.5 3.5 0 0 0 4.2 3.4l2.1.9A7.5 7.5 0 1 1 12 4.5Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M9.5 13h-1a1 1 0 0 0 0 2h1v1a1 1 0 0 0 2 0v-1h1a1 1 0 0 0 0-2h-1v-1a1 1 0 0 0-2 0v1Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Recommendation</h2>
+                        </div>
+                        <textarea class="form-textarea" name="recommendation" rows="4"></textarea>
+                        <div class="form-actions">
+                            <button class="form-submit-btn" type="button">Submit</button>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
@@ -378,6 +439,41 @@
                 <div class="field">
                     <label for="family-income">Income:</label>
                     <input id="family-income" name="income" type="text" required>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-submit" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal" id="treatmentModal" aria-hidden="true">
+        <div class="modal-content family-modal">
+            <div class="family-modal__header">
+                <h2>Initial Treatment</h2>
+                <button class="family-modal__close" type="button" id="closeTreatmentModal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <form class="modal-form-grid" id="treatmentForm">
+                <div class="field">
+                    <label for="treatment-objectives">Objectives:</label>
+                    <input id="treatment-objectives" name="objectives" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="treatment-activities">Activities:</label>
+                    <input id="treatment-activities" name="activities" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="treatment-responsible">Responsible Person:</label>
+                    <input id="treatment-responsible" name="responsible" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="treatment-resources">Resources Needed:</label>
+                    <input id="treatment-resources" name="resources" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="treatment-output">Expected Output:</label>
+                    <input id="treatment-output" name="output" type="text" required>
                 </div>
                 <div class="modal-actions">
                     <button class="modal-submit" type="submit">Save</button>
