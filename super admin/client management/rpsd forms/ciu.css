@@ -510,7 +510,7 @@ button:hover {
 .field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 1em;
     font-size: 11.5px;
     color: #111827;
 }
