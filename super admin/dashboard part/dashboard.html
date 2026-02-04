@@ -18,7 +18,7 @@
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <img src="../../images-logo/cswd-logo.png" alt="" width="130" height="110">
+        <img src="../images-logo/cswd-logo.png" alt="" width="130" height="110">
         <p class="sidebar-title">CCIMS Dashboard</p>
         <button class="close-btn" id="closeSidebar">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -38,7 +38,7 @@
           <span class="nav-text">Encoders Management</span>
         </a>
 
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" onclick="clientMng()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-people nav-icon" viewBox="0 0 16 16">
             <path
@@ -46,7 +46,11 @@
           </svg>
           <span class="nav-text">Clients Management</span>
         </a>
-
+        <script>
+          function clientMng(){
+            window.location.href = '../client management/index.html'
+          }
+        </script>
         <a href="#" class="nav-item">
           <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024">
             <path fill="#ffff"
