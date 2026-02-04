@@ -34,4 +34,69 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const familyModal = document.getElementById('familyModal');
+const openFamilyModal = document.getElementById('openFamilyModal');
+const closeFamilyModal = document.getElementById('closeFamilyModal');
+const familyForm = document.getElementById('familyForm');
+const familyTableBody = document.getElementById('familyTableBody');
+
+const toggleFamilyModal = (isOpen) => {
+    if (!familyModal) {
+        return;
+    }
+    familyModal.classList.toggle('active', isOpen);
+    familyModal.setAttribute('aria-hidden', String(!isOpen));
+};
+
+if (openFamilyModal) {
+    openFamilyModal.addEventListener('click', () => toggleFamilyModal(true));
+}
+
+if (closeFamilyModal) {
+    closeFamilyModal.addEventListener('click', () => toggleFamilyModal(false));
+}
+
+if (familyModal) {
+    familyModal.addEventListener('click', (event) => {
+        if (event.target === familyModal) {
+            toggleFamilyModal(false);
+        }
+    });
+}
+
+if (familyForm) {
+    familyForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(familyForm);
+        const values = [
+            formData.get('name'),
+            formData.get('age'),
+            formData.get('relationship'),
+            formData.get('education'),
+            formData.get('occupation'),
+            formData.get('income')
+        ];
+
+        if (familyTableBody) {
+            const emptyRow = familyTableBody.querySelector('.family-table__row--empty');
+            if (emptyRow) {
+                emptyRow.remove();
+            }
+
+            const row = document.createElement('div');
+            row.className = 'family-table__row';
+            values.forEach((value) => {
+                const cell = document.createElement('span');
+                cell.textContent = value || '';
+                row.appendChild(cell);
+            });
+            familyTableBody.appendChild(row);
+        }
+
+        familyForm.reset();
+        toggleFamilyModal(false);
+    });
+}
