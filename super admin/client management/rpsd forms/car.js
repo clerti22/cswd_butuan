@@ -34,4 +34,118 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const householdModal = document.getElementById('householdModal');
+const openHouseholdModalBtn = document.getElementById('openHouseholdModal');
+const closeHouseholdModalBtn = document.getElementById('closeHouseholdModal');
+const householdForm = document.getElementById('householdForm');
+const householdTableBody = document.getElementById('householdTableBody');
+
+function openHouseholdModal() {
+    if (!householdModal) return;
+    householdModal.style.display = 'flex';
+    householdModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeHouseholdModal() {
+    if (!householdModal) return;
+    householdModal.style.display = 'none';
+    householdModal.setAttribute('aria-hidden', 'true');
+    householdForm?.reset();
+}
+
+openHouseholdModalBtn?.addEventListener('click', openHouseholdModal);
+closeHouseholdModalBtn?.addEventListener('click', closeHouseholdModal);
+
+householdModal?.addEventListener('click', (event) => {
+    if (event.target === householdModal) {
+        closeHouseholdModal();
+    }
+});
+
+householdForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const values = [
+        document.getElementById('hm-name')?.value.trim(),
+        document.getElementById('hm-age')?.value.trim(),
+        document.getElementById('hm-gender')?.value.trim(),
+        document.getElementById('hm-status')?.value.trim(),
+        document.getElementById('hm-relation')?.value.trim(),
+        document.getElementById('hm-work')?.value.trim(),
+        document.getElementById('hm-income')?.value.trim(),
+        document.getElementById('hm-remarks')?.value.trim()
+    ];
+
+    const emptyRow = householdTableBody?.querySelector('.household-empty-row');
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+
+    const row = document.createElement('tr');
+    values.forEach(value => {
+        const cell = document.createElement('td');
+        cell.textContent = value || '';
+        row.appendChild(cell);
+    });
+
+    householdTableBody?.appendChild(row);
+    closeHouseholdModal();
+});
+
+
+const treatmentModal = document.getElementById('treatmentModal');
+const openTreatmentModalBtn = document.getElementById('openTreatmentModal');
+const closeTreatmentModalBtn = document.getElementById('closeTreatmentModal');
+const treatmentForm = document.getElementById('treatmentForm');
+const treatmentTableBody = document.getElementById('treatmentTableBody');
+
+function openTreatmentModal() {
+    if (!treatmentModal) return;
+    treatmentModal.style.display = 'flex';
+    treatmentModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeTreatmentModal() {
+    if (!treatmentModal) return;
+    treatmentModal.style.display = 'none';
+    treatmentModal.setAttribute('aria-hidden', 'true');
+    treatmentForm?.reset();
+}
+
+openTreatmentModalBtn?.addEventListener('click', openTreatmentModal);
+closeTreatmentModalBtn?.addEventListener('click', closeTreatmentModal);
+
+treatmentModal?.addEventListener('click', (event) => {
+    if (event.target === treatmentModal) {
+        closeTreatmentModal();
+    }
+});
+
+treatmentForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const values = [
+        document.getElementById('tm-objectives')?.value.trim(),
+        document.getElementById('tm-activities')?.value.trim(),
+        document.getElementById('tm-responsible')?.value.trim(),
+        document.getElementById('tm-resources')?.value.trim(),
+        document.getElementById('tm-output')?.value.trim()
+    ];
+
+    const emptyRow = treatmentTableBody?.querySelector('.household-empty-row');
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+
+    const row = document.createElement('tr');
+    values.forEach((value) => {
+        const cell = document.createElement('td');
+        cell.textContent = value || '';
+        row.appendChild(cell);
+    });
+
+    treatmentTableBody?.appendChild(row);
+    closeTreatmentModal();
+});
