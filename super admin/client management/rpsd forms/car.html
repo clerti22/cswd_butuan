@@ -105,7 +105,173 @@
             </header>
 
             <main class="form-page">
-               
+                <div class="form-sheet">
+                    <header class="form-header">
+                        <img class="form-header__logo" src="../../images-logo/cswd-logo.png" alt="CSWD logo">
+                        <div class="form-header__text">
+                            <p class="form-header__line">Republic of the Philippines</p>
+                            <p class="form-header__line form-header__line--bold">CITY GOVERNMENT OF BUTUAN</p>
+                            <p class="form-header__line form-header__line--bold">City Social Welfare and Development Department</p>
+                            <p class="form-header__line">City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
+                        </div>
+                        <img class="form-header__logo" src="../../images-logo/butuanseal.png" alt="Butuan City logo">
+                    </header>
+
+                    <h1 class="form-title">CAR Intake Sheet</h1>
+
+                    <section class="form-section">
+                        <form class="form-grid">
+                            <div class="field field--span-2">
+                                <label for="interview-date">Petsa Nga Gi Interbyu:</label>
+                                <div class="input-icon">
+                                    <input id="interview-date" type="date">
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="section-title">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M12 12.75a4.25 4.25 0 1 0-4.25-4.25A4.26 4.26 0 0 0 12 12.75Zm0 1.5c-3.65 0-6.75 1.88-6.75 4.25V20h13.5v-1.5c0-2.37-3.1-4.25-6.75-4.25Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Personal Information</h2>
+                        </div>
+
+                        <form class="form-grid">
+                            <div class="field">
+                                <label for="first-name">First Name:</label>
+                                <input id="first-name" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="middle-name">Middle Name:</label>
+                                <input id="middle-name" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="last-name">Last Name:</label>
+                                <input id="last-name" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="suffix">Suffix:</label>
+                                <input id="suffix" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="nickname">Nickname:</label>
+                                <input id="nickname" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="birth-date">Birthdate:</label>
+                                <div class="input-icon">
+                                    <input id="birth-date" type="date">
+                                </div>
+                            </div>
+                            <div class="field field--span-2">
+                                <label for="birth-place">Lugar nga natawhan:</label>
+                                <input id="birth-place" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="religion">Relihiyon:</label>
+                                <select id="religion">
+                                    <option value="" selected></option>
+                                    <option>Roman Catholic</option>
+                                    <option>Islam</option>
+                                    <option>Protestant</option>
+                                    <option>Others</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="civil-status">Civil Status:</label>
+                                <select id="civil-status">
+                                    <option value="" selected></option>
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="age">Age:</label>
+                                <input id="age" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="sex">Sex:</label>
+                                <select id="sex">
+                                    <option value="" selected></option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </div>
+
+                            <div class="field field--span-4">
+                                <label for="education">Edukasyon:</label>
+                                <input id="education" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section">
+                        <form class="form-grid">
+                            <div class="field field--span-4">
+                                <label for="present-address">Kasamtangan nga Address:</label>
+                                <input id="present-address" type="text">
+                            </div>
+
+                            <div class="field field--span-4">
+                                <label for="permanent-address">Permanenteng Address:</label>
+                                <input id="permanent-address" type="text">
+                            </div>
+
+                            <div class="field field--span-4 field--spouse-name">
+                                <label for="spouse-first-name">Kung Minyo nga Babae(full name):</label>
+                            </div>
+
+                            <div class="field">
+                                <input id="spouse-first-name" type="text">
+                                <span class="field-note">First Name</span>
+                            </div>
+                            <div class="field">
+                                <input id="spouse-middle-name" type="text">
+                                <span class="field-note">Middle Name</span>
+                            </div>
+                            <div class="field">
+                                <input id="spouse-last-name" type="text">
+                                <span class="field-note">Last Name</span>
+                            </div>
+                            <div class="field">
+                                <input id="spouse-suffix" type="text">
+                                <span class="field-note">Suffix</span>
+                            </div>
+
+                            <div class="field">
+                                <label for="years-together">Gibana-bana nga binulan nga kita:</label>
+                                <input id="years-together" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="number-children">Tinubdan sa Kita:</label>
+                                <input id="number-children" type="text">
+                            </div>
+                            <div class="field field--span-2 field--radio-inline">
+                                <label>4Ps/PWD/PhilHealth(?):</label>
+                                <div class="radio-group radio-group--wide">
+                                    <label class="radio-option">
+                                        <input type="radio" name="assistance-status">
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="assistance-status">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                </div>
             </main>
         </div>
     </div>
