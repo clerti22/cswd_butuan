@@ -753,6 +753,51 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 18px;
 }
 
+
+.section-title--treatment h2,
+.section-title--recommendation h2 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.section-title--treatment .section-title__icon,
+.section-title--recommendation .section-title__icon {
+    width: 24px;
+    height: 24px;
+}
+
+.treatment-head-row {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.treatment-head-row label {
+    font-size: 12.5px;
+    color: #111827;
+}
+
+.treatment-table thead th,
+.treatment-table tbody td {
+    font-size: 11px;
+}
+
+.treatment-table tbody td {
+    text-align: left;
+}
+
+.final-submit-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.final-submit-btn {
+    min-width: 130px;
+    justify-self: center;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
@@ -827,5 +872,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .household-save-btn {
         grid-column: auto;
         justify-self: stretch;
+    }
+
+
+    .treatment-head-row {
+        align-items: stretch;
+        flex-direction: column;
     }
 }

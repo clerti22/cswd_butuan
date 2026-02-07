@@ -93,3 +93,59 @@ householdForm?.addEventListener('submit', (event) => {
     householdTableBody?.appendChild(row);
     closeHouseholdModal();
 });
+
+
+const treatmentModal = document.getElementById('treatmentModal');
+const openTreatmentModalBtn = document.getElementById('openTreatmentModal');
+const closeTreatmentModalBtn = document.getElementById('closeTreatmentModal');
+const treatmentForm = document.getElementById('treatmentForm');
+const treatmentTableBody = document.getElementById('treatmentTableBody');
+
+function openTreatmentModal() {
+    if (!treatmentModal) return;
+    treatmentModal.style.display = 'flex';
+    treatmentModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeTreatmentModal() {
+    if (!treatmentModal) return;
+    treatmentModal.style.display = 'none';
+    treatmentModal.setAttribute('aria-hidden', 'true');
+    treatmentForm?.reset();
+}
+
+openTreatmentModalBtn?.addEventListener('click', openTreatmentModal);
+closeTreatmentModalBtn?.addEventListener('click', closeTreatmentModal);
+
+treatmentModal?.addEventListener('click', (event) => {
+    if (event.target === treatmentModal) {
+        closeTreatmentModal();
+    }
+});
+
+treatmentForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const values = [
+        document.getElementById('tm-objectives')?.value.trim(),
+        document.getElementById('tm-activities')?.value.trim(),
+        document.getElementById('tm-responsible')?.value.trim(),
+        document.getElementById('tm-resources')?.value.trim(),
+        document.getElementById('tm-output')?.value.trim()
+    ];
+
+    const emptyRow = treatmentTableBody?.querySelector('.household-empty-row');
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+
+    const row = document.createElement('tr');
+    values.forEach((value) => {
+        const cell = document.createElement('td');
+        cell.textContent = value || '';
+        row.appendChild(cell);
+    });
+
+    treatmentTableBody?.appendChild(row);
+    closeTreatmentModal();
+});
