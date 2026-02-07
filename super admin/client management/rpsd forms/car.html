@@ -428,8 +428,106 @@
                             </div>
                         </form>
                     </section>
+
+                    <section class="form-section form-section--problem">
+                        <div class="section-title section-title--problem">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M12 2.25a1 1 0 0 1 .87.5l9.1 15.75A1 1 0 0 1 21.1 20H2.9a1 1 0 0 1-.87-1.5l9.1-15.75a1 1 0 0 1 .87-.5Zm0 5.25a1 1 0 0 0-1 1V13a1 1 0 1 0 2 0V8.5a1 1 0 0 0-1-1Zm0 8.5a1.1 1.1 0 1 0 0 2.2a1.1 1.1 0 0 0 0-2.2Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Problema nga gipresentar</h2>
+                        </div>
+                        <div class="field">
+                            <textarea id="presented-problem" class="form-textarea" rows="3"></textarea>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-section--household">
+                        <div class="section-title section-title--household">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M16 11a3 3 0 1 0-2.96-3.5h-2.08a3 3 0 1 0 0 1h2.08A3 3 0 0 0 16 11Zm-8 0a3 3 0 1 0-2.95-3.5h-2.05a1 1 0 1 0 0 2h2.05A3 3 0 0 0 8 11Zm8 2c-2.24 0-4.16.99-5.27 2.39A5.94 5.94 0 0 0 8 14c-3.31 0-6 1.79-6 4v1a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-1c0-2.84-2.69-5-6-5ZM4 18c0-1.68 1.84-3 4-3c1.73 0 3.2.84 3.76 2.01l.2.41c.09.2.2.39.32.58H4Zm16 0h-5.92a4.88 4.88 0 0 1-.18-.31l-.2-.43C13.14 16.08 14.47 15 16 15c2.16 0 4 1.32 4 3Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Komposisyon sa panimalay</h2>
+                        </div>
+
+                        <div class="household-actions">
+                            <button type="button" class="household-add-btn" id="openHouseholdModal">
+                                <span aria-hidden="true">+</span> Add
+                            </button>
+                        </div>
+
+                        <div class="household-table-wrap">
+                            <table class="household-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pangalan</th>
+                                        <th>Edad</th>
+                                        <th>Gender</th>
+                                        <th>Status Sibil</th>
+                                        <th>Relasyon sa Kliyente</th>
+                                        <th>Trabaho</th>
+                                        <th>Binulan nga kita</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="householdTableBody">
+                                    <tr class="household-empty-row">
+                                        <td colspan="8"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
                 </div>
             </main>
+        </div>
+    </div>
+
+    <div class="modal" id="householdModal" aria-hidden="true">
+        <div class="modal-content household-modal">
+            <div class="household-modal__header">
+                <h2>Komposisyon sa panimalay</h2>
+                <button class="household-modal__close" type="button" id="closeHouseholdModal" aria-label="Close">&times;</button>
+            </div>
+            <form id="householdForm" class="household-modal-grid">
+                <div class="field">
+                    <label for="hm-name">Pangalan:</label>
+                    <input id="hm-name" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-age">Edad:</label>
+                    <input id="hm-age" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-gender">Gender:</label>
+                    <input id="hm-gender" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-status">Status Sibil:</label>
+                    <input id="hm-status" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-relation">Relasyon sa Kliyente:</label>
+                    <input id="hm-relation" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-work">Trabaho:</label>
+                    <input id="hm-work" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-income">Binulan nga kita:</label>
+                    <input id="hm-income" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-remarks">Remarks:</label>
+                    <input id="hm-remarks" type="text">
+                </div>
+
+                <button type="submit" class="household-save-btn">Save</button>
+            </form>
         </div>
     </div>
     <script src="car.js"></script>
