@@ -468,6 +468,47 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     grid-column: span 4;
 }
 
+
+.field-note {
+    font-size: 13px;
+    font-style: italic;
+    text-align: center;
+    margin-top: -2px;
+}
+
+.field--spouse-name {
+    margin-top: 8px;
+}
+
+.field--radio-inline {
+    justify-content: flex-start;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    min-height: 36px;
+}
+
+.radio-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #111827;
+}
+
+.radio-option input {
+    width: 16px;
+    height: 16px;
+    accent-color: #1d4ed8;
+}
+
+.radio-group--wide {
+    gap: 44px;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
