@@ -407,6 +407,24 @@ button:hover {
     height: 100%;
 }
 
+.form-section--expenses {
+    margin-top: 2px;
+}
+
+.section-title--expenses h2 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.section-title--expenses .section-title__icon {
+    width: 22px;
+    height: 22px;
+}
+
+.label-small {
+    font-size: 12.5px;
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -519,5 +537,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     .form-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section-title--expenses h2 {
+        font-size: 22px;
+    }
+
+    .section-title--expenses .section-title__icon {
+        width: 24px;
+        height: 24px;
     }
 }
