@@ -575,6 +575,40 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     max-width: 330px;
 }
 
+
+.form-section--abuse-classification {
+    margin-top: 6px;
+}
+
+.abuse-classification-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-left: 54px;
+    max-width: 420px;
+}
+
+.abuse-other-field {
+    margin-top: 2px;
+    max-width: 240px;
+}
+
+.section-title--offense h2 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.section-title--offense .section-title__icon {
+    width: 24px;
+    height: 24px;
+}
+
+.offense-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px 22px;
+}
+
 @media (max-width: 720px) {
     .form-page {
         width: 100%;
@@ -621,5 +655,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .classification-other-field {
         grid-column: auto;
         max-width: 100%;
+    }
+
+
+    .abuse-classification-form {
+        padding-left: 0;
+        max-width: 100%;
+    }
+
+    .offense-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
     }
 }

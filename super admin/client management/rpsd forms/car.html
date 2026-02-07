@@ -364,6 +364,70 @@
                             </div>
                         </form>
                     </section>
+
+                    <section class="form-section form-section--abuse-classification">
+                        <div class="section-title section-title--classification">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M4 2.75A1.75 1.75 0 0 0 2.25 4.5v15A1.75 1.75 0 0 0 4 21.25h8.5a.75.75 0 0 0 0-1.5H4a.25.25 0 0 1-.25-.25V4.5A.25.25 0 0 1 4 4.25h6.19a.25.25 0 0 1 .18.07l2.81 2.82a.25.25 0 0 1 .07.18V9a.75.75 0 0 0 1.5 0V7.32a1.75 1.75 0 0 0-.51-1.24L11.43 3.26a1.75 1.75 0 0 0-1.24-.51Zm11.25 1.5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5ZM8 8.75h2.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Zm0 4h4.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Zm0 4h4.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Classification sa pangabuso</h2>
+                        </div>
+
+                        <form class="abuse-classification-form">
+                            <label class="check-option"><input type="checkbox">Pisikal</label>
+                            <label class="check-option"><input type="checkbox">Emosyonal</label>
+                            <label class="check-option"><input type="checkbox">Mental</label>
+                            <label class="check-option"><input type="checkbox">Sexual</label>
+                            <label class="check-option"><input type="checkbox">Pinansyal</label>
+
+                            <div class="field abuse-other-field">
+                                <label for="abuse-other">Others, please specify:</label>
+                                <input id="abuse-other" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section form-section--offense">
+                        <div class="section-title section-title--offense">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M12 3.25a2.25 2.25 0 1 0 0 4.5a2.25 2.25 0 0 0 0-4.5ZM5 9.25a.75.75 0 0 0-.53 1.28L8 14.06V20a1.25 1.25 0 0 0 2.5 0v-3.5h3V20a1.25 1.25 0 0 0 2.5 0v-5.94l3.53-3.53A.75.75 0 1 0 18.47 9.47L15.25 12.7h-6.5L5.53 9.47A.75.75 0 0 0 5 9.25Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            <h2>Offense committed by the child</h2>
+                        </div>
+
+                        <form class="offense-grid">
+                            <div class="field">
+                                <label for="type-offense">Type of Offense:</label>
+                                <input id="type-offense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="date-apprehension">Date of Apprehension:</label>
+                                <input id="date-apprehension" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="by-whom">By Whom:</label>
+                                <input id="by-whom" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="date-offense">Date of Offense Committed:</label>
+                                <input id="date-offense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="source-info">Source of Information:</label>
+                                <input id="source-info" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="complainant">Complainant:</label>
+                                <input id="complainant" type="text">
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </main>
         </div>
