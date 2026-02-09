@@ -118,7 +118,7 @@
                     <h2>PWUD Intake Form</h2>
                 </section>
 
-                <form id="pwudForm" novalidate>
+                <form id="pwudForm" method="POST" novalidate>
                     <section class="form-section">
                         <div class="section-title">
                             <i class="bi bi-person-circle"></i>
