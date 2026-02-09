@@ -91,17 +91,16 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
         <div class="main-content">
             <header class="topbar">
-                <button class="menu-btn" id="openSidebar">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                <button class="menu-btn" id="openSidebar" aria-label="Open sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <h3 class="topbar-title" style="font-weight: bold;">Clients Management</h3>
+                <h1 class="topbar-title">Program & Services / PWUD</h1>
             </header>
 
             <main class="form-page">
@@ -119,128 +118,135 @@
                     <h2>PWUD Intake Form</h2>
                 </section>
 
-                <section class="form-section">
-                    <div class="section-title">
-                        <i class="bi bi-person-circle"></i>
-                        <span>Identifying Information</span>
-                    </div>
+                <form id="pwudForm" novalidate>
+                    <section class="form-section">
+                        <div class="section-title">
+                            <i class="bi bi-person-circle"></i>
+                            <span>Identifying Information</span>
+                        </div>
 
-                    <div class="form-grid">
-                        <label class="field">
-                            First Name:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Middle Name:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Last Name:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Suffix:
-                            <input type="text" />
-                        </label>
+                        <div class="form-grid">
+                            <label class="field">
+                                First Name:
+                                <input type="text" name="first_name" id="firstName" required />
+                            </label>
+                            <label class="field">
+                                Middle Name:
+                                <input type="text" name="middle_name" id="middleName" />
+                            </label>
+                            <label class="field">
+                                Last Name:
+                                <input type="text" name="last_name" id="lastName" required />
+                            </label>
+                            <label class="field">
+                                Suffix:
+                                <input type="text" name="suffix" id="suffix" />
+                            </label>
 
-                        <label class="field">
-                            Date of Birth:
-                            <input type="date" />
-                        </label>
-                        <label class="field span-2">
-                            Place of Birth:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Age:
-                            <input type="text" />
-                        </label>
+                            <label class="field">
+                                Date of Birth:
+                                <input type="date" name="date_of_birth" id="dateOfBirth" required />
+                            </label>
+                            <label class="field span-2">
+                                Place of Birth:
+                                <input type="text" name="place_of_birth" id="placeOfBirth" required />
+                            </label>
+                            <label class="field">
+                                Age:
+                                <input type="number" min="0" name="age" id="age" required />
+                            </label>
 
-                        <label class="field span-2">
-                            Address:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Religion:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Sex:
-                            <select>
-                                <option value="" selected></option>
-                                <option>Male</option>
-                                <option>Female</option>
-                            </select>
-                        </label>
+                            <label class="field span-2">
+                                Address:
+                                <input type="text" name="address" id="address" required />
+                            </label>
+                            <label class="field">
+                                Religion:
+                                <input type="text" name="religion" id="religion" required />
+                            </label>
+                            <label class="field">
+                                Sex:
+                                <select name="sex" id="sex" required>
+                                    <option value="" selected></option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </label>
 
-                        <label class="field span-2">
-                            Educational Attainment:
-                            <input type="text" />
-                        </label>
-                        <label class="field span-2">
-                            Occupation:
-                            <input type="text" />
-                        </label>
+                            <label class="field span-2">
+                                Educational Attainment:
+                                <input type="text" name="educational_attainment" id="educationalAttainment" required />
+                            </label>
+                            <label class="field span-2">
+                                Occupation:
+                                <input type="text" name="occupation" id="occupation" required />
+                            </label>
 
-                        <label class="field">
-                            Monthly Income:
-                            <input type="text" />
-                        </label>
-                        <label class="field">
-                            Civil Status:
-                            <select>
-                                <option value="" selected></option>
-                                <option>Single</option>
-                                <option>Married</option>
-                                <option>Separated</option>
-                                <option>Widowed</option>
-                            </select>
-                        </label>
-                        <label class="field span-2">
-                            Contact Number:
-                            <input type="text" />
-                        </label>
+                            <label class="field">
+                                Monthly Income:
+                                <input type="number" min="0" step="0.01" name="monthly_income" id="monthlyIncome" required />
+                            </label>
+                            <label class="field">
+                                Civil Status:
+                                <select name="civil_status" id="civilStatus" required>
+                                    <option value="" selected></option>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Separated">Separated</option>
+                                    <option value="Widowed">Widowed</option>
+                                </select>
+                            </label>
+                            <label class="field span-2">
+                                Contact Number:
+                                <input type="text" name="contact_number" id="contactNumber" required />
+                            </label>
 
-                        <label class="field span-4">
-                            Services Needed:
-                            <textarea rows="4"></textarea>
-                        </label>
-                    </div>
-                </section>
+                            <label class="field span-4">
+                                Services Needed:
+                                <textarea rows="4" name="services_needed" id="servicesNeeded" required></textarea>
+                            </label>
+                        </div>
+                    </section>
 
-                <section class="form-section">
-                    <div class="section-title">
-                        <i class="bi bi-people-fill"></i>
-                        <span>Household Members</span>
-                    </div>
+                    <section class="form-section">
+                        <div class="section-title">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Household Members</span>
+                        </div>
 
-                    <div class="table-card">
-                        <table class="info-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Age</th>
-                                    <th>Gender</th>
-                                    <th>Relationship</th>
-                                    <th>Occupation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        <div class="table-card">
+                            <table class="info-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th>Relationship</th>
+                                        <th>Occupation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="householdMembersBody">
+                                    <tr class="placeholder-row">
+                                        <td colspan="5">No household member added yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <button class="add-button" type="button" id="openHouseholdModal">
-                        <span class="button-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" />
-                            </svg>
-                        </span>
-                        Add
-                    </button>
-                </section>
+                        <button class="add-button" type="button" id="openHouseholdModal">
+                            <span class="button-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" />
+                                </svg>
+                            </span>
+                            Add
+                        </button>
+                        <button class="submit-form-button" type="submit" id="submitPwudForm">Submit</button>
+                        <p id="formMessage" class="form-message" role="alert"></p>
+                    </section>
+                    <input type="hidden" name="household_members" id="householdMembersInput" value="[]" />
+                </form>
             </main>
         </div>
     </div>
@@ -251,34 +257,34 @@
                 <h2>Add Household Member</h2>
                 <a class="modal-close" type="button" id="closeHouseholdModal" aria-label="Close modal">✕</a>
             </div>
-            <div class="modal-form-grid">
+            <div class="modal-form-grid" id="householdModalForm">
                 <label class="modal-field">
                     <span>Name</span>
-                    <input type="text" placeholder="Name" />
+                    <input type="text" name="household_name" id="householdName" placeholder="Name" required />
                 </label>
                 <label class="modal-field">
                     <span>Age</span>
-                    <input type="text" placeholder="Age" />
+                    <input type="number" min="0" name="household_age" id="householdAge" placeholder="Age" required />
                 </label>
                 <label class="modal-field">
                     <span>Gender</span>
-                    <select>
+                    <select name="household_gender" id="householdGender" required>
                         <option value="" selected></option>
-                        <option>Male</option>
-                        <option>Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </select>
                 </label>
                 <label class="modal-field">
                     <span>Relationship</span>
-                    <input type="text" placeholder="Relationship" />
+                    <input type="text" name="household_relationship" id="householdRelationship" placeholder="Relationship" required />
                 </label>
                 <label class="modal-field span-2">
                     <span>Occupation</span>
-                    <input type="text" placeholder="Occupation" />
+                    <input type="text" name="household_occupation" id="householdOccupation" placeholder="Occupation" required />
                 </label>
             </div>
             <div class="modal-actions">
-                <button class="modal-submit" type="button">Save</button>
+                <button class="modal-submit" type="button" id="saveHouseholdMember">Save</button>
             </div>
         </div>
     </div>
