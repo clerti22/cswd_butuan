@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS pwud_table (
+    key_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    date_of_birth DATE NOT NULL,
+    place_of_birth VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    religion VARCHAR(100) NOT NULL,
+    sex ENUM('Male', 'Female') NOT NULL,
+    educational_attainment VARCHAR(255) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    monthly_income DECIMAL(12,2) NOT NULL,
+    civil_status ENUM('Single', 'Married', 'Separated', 'Widowed') NOT NULL,
+    contact_number VARCHAR(30) NOT NULL,
+    services_needed TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS pwud_household_table (
+    household_id INT AUTO_INCREMENT PRIMARY KEY,
+    pwud_key_id INT NOT NULL,
+    member_name VARCHAR(150) NOT NULL,
+    member_age INT NOT NULL,
+    member_gender ENUM('Male', 'Female') NOT NULL,
+    relationship_to_pwud VARCHAR(150) NOT NULL,
+    member_occupation VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_pwud_household_person
+        FOREIGN KEY (pwud_key_id) REFERENCES pwud_table(key_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
