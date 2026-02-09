@@ -46,10 +46,35 @@ const addClientOptions = {
     rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU']
 };
 
+const addClientRoutes = {
+    dpsd: {
+        'PYAP': 'dpsd forms/pyap.html',
+        'Solo Parent': 'dpsd forms/soloparent.html',
+        'PWUD': 'dpsd forms/pwud.html'
+    },
+    pssd: {
+        'Senior Citizen': 'pssd forms/snrctizen.html',
+        'PWD': 'pssd forms/pwd.html'
+    },
+    rpsd: {
+        'VAWC': 'rpsd forms/vawc.html',
+        'CSAE': 'rpsd forms/csae.html',
+        'CAR': 'rpsd forms/car.html',
+        'CICL': 'rpsd forms/cicl.html',
+        'CIU': 'rpsd forms/ciu.html'
+    }
+};
+
+
 function setAddClientMenu(tabKey) {
     const options = addClientOptions[tabKey] || [];
+    const routes = addClientRoutes[tabKey] || {};
+
     addClientMenu.innerHTML = options
-        .map(option => `<button type="button" class="menu-item" role="menuitem">${option}</button>`)
+        .map(option => {
+            const route = routes[option] || '#';
+            return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
+        })
         .join('');
 }
 
@@ -84,6 +109,22 @@ document.addEventListener('click', event => {
         addClientMenu.classList.remove('open');
         addClientBtn.setAttribute('aria-expanded', 'false');
     }
+});
+
+addClientMenu.addEventListener('click', event => {
+    const menuItem = event.target.closest('.menu-item');
+
+    if (!menuItem) {
+        return;
+    }
+
+    const route = menuItem.dataset.route;
+
+    if (!route || route === '#') {
+        return;
+    }
+
+    window.location.href = route;
 });
 
 setAddClientMenu('dpsd');
