@@ -61,7 +61,7 @@ if (count($householdMembers) === 0) {
     exit;
 }
 
-$connection = new mysqli('localhost', 'root', '', 'cswd_db');
+$connection = new mysqli('localhost', 'root', '', 'cswd_butuan');
 
 if ($connection->connect_error) {
     http_response_code(500);

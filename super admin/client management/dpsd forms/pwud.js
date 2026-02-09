@@ -122,25 +122,27 @@ if (openHouseholdModal && closeHouseholdModal && householdModal) {
     });
 }
 
-saveHouseholdMemberButton.addEventListener('click', () => {
-    if (!validateModalFields()) {
-        alert('Please complete all household member fields before saving.');
-        return;
-    }
+if (saveHouseholdMemberButton) {
+    saveHouseholdMemberButton.addEventListener('click', () => {
+        if (!validateModalFields()) {
+            alert('Please complete all household member fields before saving.');
+            return;
+        }
 
-    householdMembers.push({
-        household_name: householdFields.household_name.value.trim(),
-        household_age: householdFields.household_age.value.trim(),
-        household_gender: householdFields.household_gender.value.trim(),
-        household_relationship: householdFields.household_relationship.value.trim(),
-        household_occupation: householdFields.household_occupation.value.trim()
+        householdMembers.push({
+            household_name: householdFields.household_name.value.trim(),
+            household_age: householdFields.household_age.value.trim(),
+            household_gender: householdFields.household_gender.value.trim(),
+            household_relationship: householdFields.household_relationship.value.trim(),
+            household_occupation: householdFields.household_occupation.value.trim()
+        });
+
+        renderHouseholdMembers();
+        updateHouseholdInput();
+        clearModalInputs();
+        hideHouseholdModal();
     });
-
-    renderHouseholdMembers();
-    updateHouseholdInput();
-    clearModalInputs();
-    hideHouseholdModal();
-});
+}
 
 function validateMainForm() {
     let isValid = true;
@@ -196,10 +198,18 @@ pwudForm.addEventListener('submit', async (event) => {
             body: formData
         });
 
-        const result = await response.json();
+        const responseType = response.headers.get('content-type') || '';
+        const responseBody = await response.text();
+        const result = responseType.includes('application/json') && responseBody
+            ? JSON.parse(responseBody)
+            : null;
 
-        if (!response.ok || !result.success) {
-            throw new Error(result.message || 'Failed to save PWUD record.');
+        if (response.status === 405) {
+            throw new Error('Submit endpoint is not accepting POST requests. Please run this page in a PHP-enabled server (e.g., XAMPP/Apache or php -S).');
+        }
+
+        if (!response.ok || !result || !result.success) {
+            throw new Error((result && result.message) || 'Failed to save PWUD record.');
         }
 
         formMessage.textContent = 'PWUD record saved successfully.';
