@@ -37,16 +37,16 @@ window.addEventListener('resize', () => {
 });
 
 const pantawidInput = document.getElementById('pantawid-household');
-const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"]');
+const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]');
 const indigenousInput = document.getElementById('indigenous-affiliation');
-const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"]');
+const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]');
 
 const toggleRadioInput = (radios, input) => {
     if (!input || !radios.length) {
         return;
     }
 
-    const isYesSelected = Array.from(radios).some((radio) => radio.checked && radio.value === 'yes');
+    const isYesSelected = Array.from(radios).some((radio) => radio.checked && String(radio.value).toLowerCase() === 'yes');
     input.disabled = !isYesSelected;
     input.placeholder = isYesSelected ? '' : 'Disabled';
 
