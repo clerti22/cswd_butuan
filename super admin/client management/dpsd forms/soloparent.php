@@ -124,68 +124,69 @@
                         <h2>Identifying Information</h2>
                     </div>
 
-                    <form class="form-grid">
+                    <form id="soloParentForm" method="post" action="soloparent_submit.php">
+                        <div class="form-grid">
                         <div class="field">
                             <label for="first-name">First Name:</label>
-                            <input id="first-name" type="text" />
+                            <input id="first-name" name="first_name" type="text" />
                         </div>
                         <div class="field">
                             <label for="middle-name">Middle Name:</label>
-                            <input id="middle-name" type="text" />
+                            <input id="middle-name" name="middle_name" type="text" />
                         </div>
                         <div class="field">
                             <label for="last-name">Last Name:</label>
-                            <input id="last-name" type="text" />
+                            <input id="last-name" name="last_name" type="text" />
                         </div>
                         <div class="field">
                             <label for="suffix">Suffix:</label>
-                            <input id="suffix" type="text" />
+                            <input id="suffix" name="suffix" type="text" />
                         </div>
 
                         <div class="field">
                             <label for="birth-date">Date of Birth:</label>
                             <div class="input-icon">
-                                <input id="birth-date" type="date" />
+                                <input id="birth-date" name="date_of_birth" type="date" />
                             </div>
                         </div>
                         <div class="field field--span-2">
                             <label for="birth-place">Place of Birth:</label>
-                            <input id="birth-place" type="text" />
+                            <input id="birth-place" name="place_of_birth" type="text" />
                         </div>
                         <div class="field">
                             <label for="age">Age:</label>
-                            <input id="age" type="text" />
+                            <input id="age" name="age" type="text" />
                         </div>
 
                         <div class="field field--span-2">
                             <label for="address">Address:</label>
-                            <input id="address" type="text" />
+                            <input id="address" name="address" type="text" />
                         </div>
                         <div class="field">
                             <label for="religion">Religion:</label>
-                            <input id="religion" type="text" />
+                            <input id="religion" name="religion" type="text" />
                         </div>
                         <div class="field">
                             <label for="sex">Sex:</label>
-                            <input id="sex" type="text" />
+                            <input id="sex" name="sex" type="text" />
                         </div>
 
                         <div class="field field--span-2">
                             <label for="education">Educational Attainment:</label>
-                            <input id="education" type="text" />
+                            <input id="education" name="educational_attainment" type="text" />
                         </div>
                         <div class="field">
                             <label for="occupation">Occupation:</label>
-                            <input id="occupation" type="text" />
+                            <input id="occupation" name="occupation" type="text" />
                         </div>
 
                         <div class="field">
                             <label for="company">Company/Agency:</label>
-                            <input id="company" type="text" />
+                            <input id="company" name="company_agency" type="text" />
                         </div>
                         <div class="field">
                             <label for="civil-status">Civil Status:</label>
-                            <select id="civil-status">
+                            <select id="civil-status" name="civil_status">
                                 <option value="" selected></option>
                                 <option>Single</option>
                                 <option>Married</option>
@@ -197,15 +198,15 @@
                             <label>Employment Status:</label>
                             <div class="radio-group">
                                 <label class="radio-option">
-                                    <input type="radio" name="employment" />
+                                    <input type="radio" name="employment_status" value="Employed" />
                                     Employed
                                 </label>
                                 <label class="radio-option">
-                                    <input type="radio" name="employment" />
+                                    <input type="radio" name="employment_status" value="Self-Employed" />
                                     Self-Employed
                                 </label>
                                 <label class="radio-option">
-                                    <input type="radio" name="employment" />
+                                    <input type="radio" name="employment_status" value="Not Employed" />
                                     Not - Employed
                                 </label>
                             </div>
@@ -213,22 +214,22 @@
 
                         <div class="field">
                             <label for="contact">Contact Number:</label>
-                            <input id="contact" type="text" />
+                            <input id="contact" name="contact_number" type="text" />
                         </div>
                         <div class="field">
                             <label for="income">Monthly Income:</label>
-                            <input id="income" type="text" />
+                            <input id="income" name="monthly_income" type="text" />
                         </div>
                         <div class="field">
                             <label for="philsy">Philsys Card Number:</label>
-                            <input id="philsy" type="text" />
+                            <input id="philsy" name="philsys_card_number" type="text" />
                         </div>
 
                         <div class="field field--span-4">
                             <label for="email">Email Address:</label>
-                            <input id="email" type="email" />
+                            <input id="email" name="email_address" type="email" />
                         </div>
-                    </form>
+                        </div>
 
                     <div class="eligibility-section">
                         <div class="eligibility-grid">
@@ -236,11 +237,11 @@
                                 <p class="eligibility-title">Pantawid Beneficiary(?):</p>
                                 <div class="radio-group">
                                     <label class="radio-option">
-                                        <input type="radio" name="pantawid-beneficiary" value="yes" />
+                                        <input type="radio" name="pantawid_beneficiary" value="yes" />
                                         Yes
                                     </label>
                                     <label class="radio-option">
-                                        <input type="radio" name="pantawid-beneficiary" value="no" />
+                                        <input type="radio" name="pantawid_beneficiary" value="no" />
                                         No
                                     </label>
                                 </div>
@@ -249,11 +250,11 @@
                                 <p class="eligibility-title">Indigenous Person(?):</p>
                                 <div class="radio-group">
                                     <label class="radio-option">
-                                        <input type="radio" name="indigenous-person" value="yes" />
+                                        <input type="radio" name="indigenous_person" value="yes" />
                                         Yes
                                     </label>
                                     <label class="radio-option">
-                                        <input type="radio" name="indigenous-person" value="no" />
+                                        <input type="radio" name="indigenous_person" value="no" />
                                         No
                                     </label>
                                 </div>
@@ -262,11 +263,11 @@
                                 <p class="eligibility-title">LGBTQ+(?):</p>
                                 <div class="radio-group">
                                     <label class="radio-option">
-                                        <input type="radio" name="lgbtq" value="yes" />
+                                        <input type="radio" name="lgbtq_plus" value="yes" />
                                         Yes
                                     </label>
                                     <label class="radio-option">
-                                        <input type="radio" name="lgbtq" value="no" />
+                                        <input type="radio" name="lgbtq_plus" value="no" />
                                         No
                                     </label>
                                 </div>
@@ -275,11 +276,11 @@
                                 <p class="eligibility-title">PWD(?):</p>
                                 <div class="radio-group">
                                     <label class="radio-option">
-                                        <input type="radio" name="pwd" value="yes" />
+                                        <input type="radio" name="pwd_status" value="yes" />
                                         Yes
                                     </label>
                                     <label class="radio-option">
-                                        <input type="radio" name="pwd" value="no" />
+                                        <input type="radio" name="pwd_status" value="no" />
                                         No
                                     </label>
                                 </div>
@@ -289,11 +290,11 @@
                         <div class="eligibility-inputs">
                             <div class="field">
                                 <label for="pantawid-household">Pantawid Beneficiary,if yes (Household ID#):</label>
-                                <input id="pantawid-household" type="text" placeholder="Disabled" disabled />
+                                <input id="pantawid-household" name="pantawid_household_id" type="text" placeholder="Disabled" disabled />
                             </div>
                             <div class="field">
                                 <label for="indigenous-affiliation">Name of Affliation,if yes (Household ID#):</label>
-                                <input id="indigenous-affiliation" type="text" placeholder="Disabled" disabled />
+                                <input id="indigenous-affiliation" name="indigenous_affiliation_name" type="text" placeholder="Disabled" disabled />
                             </div>
                         </div>
                     </div>
@@ -345,18 +346,20 @@
                         <label for="solo-classification">
                             Classification/Circumstances of being a solo parent(Dahilan bakit naging solo parent?):
                         </label>
-                        <textarea id="solo-classification" rows="4"></textarea>
+                        <textarea id="solo-classification" name="solo_classification" rows="4"></textarea>
                     </div>
                     <div class="field field--span-4" style="margin-top: 4em;">
                         <label for="solo-needs">
                             Needs/Problems of being a solo parent(Kinakailangan/Problema ng isang solo parent?):
                         </label>
-                        <textarea id="solo-needs" rows="4"></textarea>
+                        <textarea id="solo-needs" name="solo_needs" rows="4"></textarea>
+                        <input id="household-members-payload" type="hidden" name="household_members" value="[]" />
                     </div>
                     <div class="form-actions">
-                        <button class="submit-form-btn" type="button" id="submitSoloParent">Submit</button>
+                        <button class="submit-form-btn" type="submit" id="submitSoloParent">Submit</button>
                     </div>
                 </section>
+                    </form>
             </main>
         </div>
     </div>
@@ -372,11 +375,11 @@
             <div class="modal-form-grid">
                 <div class="field">
                     <label for="householdName">Name</label>
-                    <input id="householdName" type="text" placeholder="Full name" />
+                    <input id="householdName" name="household_name" type="text" placeholder="Full name" />
                 </div>
                 <div class="field">
                     <label for="householdSex">Sex</label>
-                    <select id="householdSex">
+                    <select id="householdSex" name="household_sex">
                         <option value="" selected></option>
                         <option>Male</option>
                         <option>Female</option>
@@ -384,19 +387,19 @@
                 </div>
                 <div class="field">
                     <label for="householdRelationship">Relationship</label>
-                    <input id="householdRelationship" type="text" placeholder="Relationship" />
+                    <input id="householdRelationship" name="household_relationship" type="text" placeholder="Relationship" />
                 </div>
                 <div class="field">
                     <label for="householdAge">Age</label>
-                    <input id="householdAge" type="text" placeholder="Age" />
+                    <input id="householdAge" name="household_age" type="text" placeholder="Age" />
                 </div>
                 <div class="field">
                     <label for="householdBirthdate">Birthdate</label>
-                    <input id="householdBirthdate" type="date" />
+                    <input id="householdBirthdate" name="household_birthdate" type="date" />
                 </div>
                 <div class="field">
                     <label for="householdCivil">Civil Status</label>
-                    <select id="householdCivil">
+                    <select id="householdCivil" name="household_civil_status">
                         <option value="" selected></option>
                         <option>Single</option>
                         <option>Married</option>
@@ -406,15 +409,15 @@
                 </div>
                 <div class="field">
                     <label for="householdEducational">Educational</label>
-                    <input id="householdEducational" type="text" placeholder="Educational" />
+                    <input id="householdEducational" name="household_educational" type="text" placeholder="Educational" />
                 </div>
                 <div class="field">
                     <label for="householdOccupation">Occupation</label>
-                    <input id="householdOccupation" type="text" placeholder="Occupation" />
+                    <input id="householdOccupation" name="household_occupation" type="text" placeholder="Occupation" />
                 </div>
                 <div class="field">
                     <label for="householdMonthly">Monthly Income</label>
-                    <input id="householdMonthly" type="text" placeholder="Monthly" />
+                    <input id="householdMonthly" name="household_monthly_income" type="text" placeholder="Monthly" />
                 </div>
             </div>
             <div class="modal-actions">
