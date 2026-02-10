@@ -92,7 +92,7 @@ foreach ($householdMembers as $member) {
     }
 }
 
-$connection = new mysqli('localhost', 'root', '', 'cwsd_db');
+$connection = new mysqli('localhost', 'root', '', 'cswd_db');
 if ($connection->connect_error) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $connection->connect_error]);
