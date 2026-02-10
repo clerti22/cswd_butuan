@@ -50,7 +50,7 @@ const addClientRoutes = {
     dpsd: {
         'PYAP': 'dpsd forms/pyap.html',
         'Solo Parent': 'dpsd forms/soloparent.html',
-        'PWUD': 'dpsd forms/pwud.php'
+        'PWUD': 'dpsd forms/pwud.html'
     },
     pssd: {
         'Senior Citizen': 'pssd forms/snrctizen.html',
