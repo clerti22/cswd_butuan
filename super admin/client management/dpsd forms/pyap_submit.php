@@ -194,7 +194,7 @@ try {
     );
 
     if (!$insertPyap->execute()) {
-        throw new Exception('Failed to insert PYAP record.');
+        throw new Exception('Failed to insert PYAP record: ' . $insertPyap->error);
     }
 
     $pyapId = $connection->insert_id;
@@ -235,7 +235,7 @@ try {
         );
 
         if (!$insertFamily->execute()) {
-            throw new Exception('Failed to insert family composition record.');
+            throw new Exception('Failed to insert family composition record: ' . $insertFamily->error);
         }
     }
 
@@ -258,7 +258,7 @@ try {
             $insertMembership->bind_param('isss', $pyapId, $organizationName, $positionHeld, $year);
 
             if (!$insertMembership->execute()) {
-                throw new Exception('Failed to insert membership record.');
+                throw new Exception('Failed to insert membership record: ' . $insertMembership->error);
             }
         }
     }

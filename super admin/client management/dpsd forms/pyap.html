@@ -121,7 +121,7 @@
                     <h2>MEMBERSHIP INFORMATION SHEET</h2>
                 </section>
 
-                <form id="pyapForm" method="post" action="pyap_submit.php">
+                <form id="pyapForm" method="POST" action="pyap_submit.php">
                     <section class="form-section">
                         <div class="section-title">
                             <span class="title-icon">
@@ -196,15 +196,15 @@
                                 <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="family-modal-title">
                                     <div class="modal-header"><h3 id="family-modal-title">Add Family Composition</h3><label class="modal-close" for="family-modal-toggle" aria-label="Close modal">✕</label></div>
                                     <div class="modal-body">
-                                        <label class="modal-field"><span>Name</span><input id="family_name" type="text" placeholder="Name"></label>
-                                        <label class="modal-field"><span>Relationship</span><input id="family_relationship" type="text" placeholder="Relationship"></label>
-                                        <label class="modal-field"><span>Gender</span><input id="family_gender" type="text" placeholder="Gender"></label>
-                                        <label class="modal-field"><span>Age</span><input id="family_age" type="number" min="0" placeholder="Age"></label>
-                                        <label class="modal-field"><span>Grade Yr.</span><input id="family_grade_year" type="text" placeholder="Grade Yr."></label>
-                                        <label class="modal-field"><span>ISY</span><input id="family_isy" type="text" placeholder="ISY"></label>
-                                        <label class="modal-field"><span>OSY</span><input id="family_osy" type="text" placeholder="OSY"></label>
-                                        <label class="modal-field span-2"><span>Work/Labor Experience</span><input id="family_work_labor_experience" type="text" placeholder="Work/Labor Experience"></label>
-                                        <label class="modal-field"><span>Income</span><input id="family_income" type="text" placeholder="Income"></label>
+                                        <label class="modal-field"><span>Name</span><input id="family_name" name="family_name" type="text" placeholder="Name"></label>
+                                        <label class="modal-field"><span>Relationship</span><input id="family_relationship" name="family_relationship" type="text" placeholder="Relationship"></label>
+                                        <label class="modal-field"><span>Gender</span><input id="family_gender" name="family_gender" type="text" placeholder="Gender"></label>
+                                        <label class="modal-field"><span>Age</span><input id="family_age" name="family_age" type="number" min="0" placeholder="Age"></label>
+                                        <label class="modal-field"><span>Grade Yr.</span><input id="family_grade_year" name="family_grade_year" type="text" placeholder="Grade Yr."></label>
+                                        <label class="modal-field"><span>ISY</span><input id="family_isy" name="family_isy" type="text" placeholder="ISY"></label>
+                                        <label class="modal-field"><span>OSY</span><input id="family_osy" name="family_osy" type="text" placeholder="OSY"></label>
+                                        <label class="modal-field span-2"><span>Work/Labor Experience</span><input id="family_work_labor_experience" name="family_work_labor_experience" type="text" placeholder="Work/Labor Experience"></label>
+                                        <label class="modal-field"><span>Income</span><input id="family_income" name="family_income" type="text" placeholder="Income"></label>
                                     </div>
                                     <div class="modal-actions"><label class="modal-button ghost" for="family-modal-toggle">Cancel</label><button class="modal-button" id="saveFamilyBtn" type="button">Save</button></div>
                                 </div>
@@ -250,9 +250,9 @@
                                     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="membership-modal-title">
                                         <div class="modal-header"><h3 id="membership-modal-title">Add Membership</h3><label class="modal-close" for="membership-modal-toggle" aria-label="Close modal">✕</label></div>
                                         <div class="modal-body">
-                                            <label class="modal-field"><span>Name of Organization</span><input id="membership_organization_name" type="text" placeholder="Organization name"></label>
-                                            <label class="modal-field"><span>Position Held, if any</span><input id="membership_position_held" type="text" placeholder="Position held"></label>
-                                            <label class="modal-field"><span>Year</span><input id="membership_year" type="text" placeholder="Year"></label>
+                                            <label class="modal-field"><span>Name of Organization</span><input id="membership_organization_name" name="membership_organization_name" type="text" placeholder="Organization name"></label>
+                                            <label class="modal-field"><span>Position Held, if any</span><input id="membership_position_held" name="membership_position_held" type="text" placeholder="Position held"></label>
+                                            <label class="modal-field"><span>Year</span><input id="membership_year" name="membership_year" type="text" placeholder="Year"></label>
                                         </div>
                                         <div class="modal-actions"><label class="modal-button ghost" for="membership-modal-toggle">Cancel</label><button class="modal-button" id="saveMembershipBtn" type="button">Save</button></div>
                                     </div>
