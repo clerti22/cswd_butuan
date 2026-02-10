@@ -84,3 +84,66 @@ CREATE TABLE IF NOT EXISTS household_members_soloparent (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS pyap_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    date_of_birth DATE NOT NULL,
+    place_of_birth VARCHAR(255) NOT NULL,
+    nationality VARCHAR(100) NOT NULL,
+    age INT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    religion VARCHAR(100) NOT NULL,
+    sex VARCHAR(20) NOT NULL,
+    in_school_youth VARCHAR(150) NOT NULL,
+    out_of_school_youth VARCHAR(150) NOT NULL,
+    other_disadvantage_youth VARCHAR(150) NOT NULL,
+    ips VARCHAR(150) NULL,
+    occupation VARCHAR(255) NOT NULL,
+    civil_status VARCHAR(80) NOT NULL,
+    contact_number VARCHAR(30) NOT NULL,
+    school_last_attended VARCHAR(255) NOT NULL,
+    school_last_attended_month_year VARCHAR(20) NOT NULL,
+    trainings_attended TEXT NOT NULL,
+    skills_interest_hobbies TEXT NOT NULL,
+    assistance_received TEXT NOT NULL,
+    assistance_specify TEXT NOT NULL,
+    intervention_needed TEXT NOT NULL,
+    intervention_specify TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS pyap_family_composition_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pyap_id INT NOT NULL,
+    member_name VARCHAR(150) NOT NULL,
+    relationship VARCHAR(150) NOT NULL,
+    gender VARCHAR(50) NOT NULL,
+    age INT NOT NULL,
+    grade_year VARCHAR(100) NOT NULL,
+    isy VARCHAR(100) NOT NULL,
+    osy VARCHAR(100) NOT NULL,
+    work_labor_experience VARCHAR(255) NOT NULL,
+    income VARCHAR(120) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_pyap_family_person
+        FOREIGN KEY (pyap_id) REFERENCES pyap_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS pyap_membership_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pyap_id INT NOT NULL,
+    organization_name VARCHAR(255) NOT NULL,
+    position_held VARCHAR(255) NOT NULL,
+    year VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_pyap_membership_person
+        FOREIGN KEY (pyap_id) REFERENCES pyap_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
