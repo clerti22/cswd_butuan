@@ -82,34 +82,35 @@ foreach ($familyCompositions as $member) {
     }
 }
 
-$memberships = [];
 $membershipPayload = trim((string) ($_POST['memberships'] ?? ''));
-if ($membershipPayload !== '') {
-    $decodedMemberships = json_decode($membershipPayload, true);
-    if (!is_array($decodedMemberships)) {
+if ($membershipPayload === '') {
+    http_response_code(422);
+    echo json_encode(['success' => false, 'message' => 'At least one membership entry is required.']);
+    exit;
+}
+
+$memberships = json_decode($membershipPayload, true);
+if (!is_array($memberships) || count($memberships) === 0) {
+    http_response_code(422);
+    echo json_encode(['success' => false, 'message' => 'At least one membership entry is required.']);
+    exit;
+}
+
+$membershipRequired = ['organization_name', 'position_held', 'year'];
+foreach ($memberships as $membership) {
+    if (!is_array($membership)) {
         http_response_code(422);
-        echo json_encode(['success' => false, 'message' => 'Invalid memberships payload.']);
+        echo json_encode(['success' => false, 'message' => 'Invalid membership entry.']);
         exit;
     }
 
-    $membershipRequired = ['organization_name', 'position_held', 'year'];
-    foreach ($decodedMemberships as $membership) {
-        if (!is_array($membership)) {
+    foreach ($membershipRequired as $field) {
+        if (!isset($membership[$field]) || trim((string) $membership[$field]) === '') {
             http_response_code(422);
-            echo json_encode(['success' => false, 'message' => 'Invalid membership entry.']);
+            echo json_encode(['success' => false, 'message' => 'Incomplete membership data.']);
             exit;
         }
-
-        foreach ($membershipRequired as $field) {
-            if (!isset($membership[$field]) || trim((string) $membership[$field]) === '') {
-                http_response_code(422);
-                echo json_encode(['success' => false, 'message' => 'Incomplete membership data.']);
-                exit;
-            }
-        }
     }
-
-    $memberships = $decodedMemberships;
 }
 
 $connection = new mysqli('localhost', 'root', '', 'cswd_db');
@@ -239,27 +240,25 @@ try {
         }
     }
 
-    if (count($memberships) > 0) {
-        $insertMembership = $connection->prepare(
-            'INSERT INTO pyap_membership_table (
-                pyap_id, organization_name, position_held, year
-            ) VALUES (?, ?, ?, ?)'
-        );
+    $insertMembership = $connection->prepare(
+        'INSERT INTO pyap_membership_table (
+            pyap_id, organization_name, position_held, year
+        ) VALUES (?, ?, ?, ?)'
+    );
 
-        if (!$insertMembership) {
-            throw new Exception('Failed to prepare membership insert statement.');
-        }
+    if (!$insertMembership) {
+        throw new Exception('Failed to prepare membership insert statement.');
+    }
 
-        foreach ($memberships as $membership) {
-            $organizationName = trim((string) $membership['organization_name']);
-            $positionHeld = trim((string) $membership['position_held']);
-            $year = trim((string) $membership['year']);
+    foreach ($memberships as $membership) {
+        $organizationName = trim((string) $membership['organization_name']);
+        $positionHeld = trim((string) $membership['position_held']);
+        $year = trim((string) $membership['year']);
 
-            $insertMembership->bind_param('isss', $pyapId, $organizationName, $positionHeld, $year);
+        $insertMembership->bind_param('isss', $pyapId, $organizationName, $positionHeld, $year);
 
-            if (!$insertMembership->execute()) {
-                throw new Exception('Failed to insert membership record: ' . $insertMembership->error);
-            }
+        if (!$insertMembership->execute()) {
+            throw new Exception('Failed to insert membership record: ' . $insertMembership->error);
         }
     }
 
