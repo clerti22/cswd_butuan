@@ -48,8 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const familyToggle = document.getElementById('family-modal-toggle');
     const membershipToggle = document.getElementById('membership-modal-toggle');
 
-    if (!pyapForm || !formMessage || !familyTableBody || !membershipTableBody || !familyInput || !membershipInput) {
+    if (!pyapForm || !familyTableBody || !membershipTableBody || !familyInput || !membershipInput) {
         return;
+    }
+
+    function setMessage(text, type = '') {
+        if (!formMessage) return;
+        formMessage.textContent = text;
+        formMessage.className = type ? `form-message ${type}` : 'form-message';
     }
 
     const familyFields = {
@@ -150,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = validateFieldGroup(familyFields);
 
             if (result !== 'valid') {
-                formMessage.textContent = 'All family composition fields are required before saving.';
-                formMessage.className = 'form-message error-message';
+                setMessage('All family composition fields are required before saving.', 'error-message');
+                alert('Please fill in all Family Composition fields before clicking Save.');
                 return;
             }
 
@@ -163,8 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderFamilyRows();
             clearFields(familyFields);
             if (familyToggle) familyToggle.checked = false;
-            formMessage.textContent = '';
-            formMessage.className = 'form-message';
+            setMessage('');
         });
     }
 
@@ -179,8 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (result !== 'valid') {
-                formMessage.textContent = 'Complete all membership fields or leave them all blank.';
-                formMessage.className = 'form-message error-message';
+                setMessage('Complete all membership fields or leave them all blank.', 'error-message');
                 return;
             }
 
@@ -192,8 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderMembershipRows();
             clearFields(membershipFields);
             if (membershipToggle) membershipToggle.checked = false;
-            formMessage.textContent = '';
-            formMessage.className = 'form-message';
+            setMessage('');
         });
     }
 
@@ -221,26 +224,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (!familyCompositions.length) {
-            formMessage.textContent = 'Please add at least one complete family composition entry.';
-            formMessage.className = 'form-message error-message';
+            setMessage('Please add at least one complete family composition entry.', 'error-message');
             return false;
         }
 
         if (!validateCheckboxGroup('assistance_received[]')) {
-            formMessage.textContent = 'Please select at least one Assistance & Intervention Received option.';
-            formMessage.className = 'form-message error-message';
+            setMessage('Please select at least one Assistance & Intervention Received option.', 'error-message');
             return false;
         }
 
         if (!validateCheckboxGroup('intervention_needed[]')) {
-            formMessage.textContent = 'Please select at least one Intervention needed option.';
-            formMessage.className = 'form-message error-message';
+            setMessage('Please select at least one Intervention needed option.', 'error-message');
             return false;
         }
 
         if (!valid) {
-            formMessage.textContent = 'Please complete all required fields before submitting.';
-            formMessage.className = 'form-message error-message';
+            setMessage('Please complete all required fields before submitting.', 'error-message');
         }
 
         return valid;
@@ -255,8 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        formMessage.textContent = 'Submitting...';
-        formMessage.className = 'form-message';
+        setMessage('Submitting...');
 
         const formData = new FormData(pyapForm);
 
@@ -274,8 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error((result && result.message) || 'Failed to save PYAP record.');
             }
 
-            formMessage.textContent = 'PYAP record saved successfully.';
-            formMessage.className = 'form-message success-message';
+            setMessage('PYAP record saved successfully.', 'success-message');
             pyapForm.reset();
             familyCompositions.length = 0;
             memberships.length = 0;
@@ -283,8 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderFamilyRows();
             renderMembershipRows();
         } catch (error) {
-            formMessage.textContent = error.message;
-            formMessage.className = 'form-message error-message';
+            setMessage(error.message, 'error-message');
         }
     });
 
