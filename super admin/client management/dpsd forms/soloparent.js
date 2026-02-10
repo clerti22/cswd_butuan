@@ -34,12 +34,12 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
 
 const pantawidInput = document.getElementById('pantawid-household');
-const pantawidRadios = document.querySelectorAll('input[name="pantawid-beneficiary"]');
+const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"]');
 const indigenousInput = document.getElementById('indigenous-affiliation');
-const indigenousRadios = document.querySelectorAll('input[name="indigenous-person"]');
+const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"]');
 
 const toggleRadioInput = (radios, input) => {
     if (!input || !radios.length) {
@@ -75,6 +75,11 @@ const openHouseholdModalButton = document.getElementById('openHouseholdModal');
 const closeHouseholdModalButton = document.getElementById('closeHouseholdModal');
 const submitHouseholdButton = document.getElementById('submitHousehold');
 const householdTableBody = document.getElementById('householdTableBody');
+const soloParentForm = document.getElementById('soloParentForm');
+const householdPayloadInput = document.getElementById('household-members-payload');
+const submitFormButton = document.getElementById('submitSoloParent');
+
+const householdMembers = [];
 
 const householdInputs = {
     name: document.getElementById('householdName'),
@@ -106,6 +111,14 @@ const resetHouseholdInputs = () => {
     });
 };
 
+const syncHouseholdPayload = () => {
+    if (!householdPayloadInput) {
+        return;
+    }
+
+    householdPayloadInput.value = JSON.stringify(householdMembers);
+};
+
 if (openHouseholdModalButton) {
     openHouseholdModalButton.addEventListener('click', () => toggleHouseholdModal(true));
 }
@@ -128,17 +141,39 @@ if (submitHouseholdButton) {
             return;
         }
 
+        const householdEntry = {
+            household_name: householdInputs.name?.value.trim() || '',
+            household_sex: householdInputs.sex?.value.trim() || '',
+            household_relationship: householdInputs.relationship?.value.trim() || '',
+            household_age: householdInputs.age?.value.trim() || '',
+            household_birthdate: householdInputs.birthdate?.value.trim() || '',
+            household_civil_status: householdInputs.civil?.value.trim() || '',
+            household_educational: householdInputs.educational?.value.trim() || '',
+            household_occupation: householdInputs.occupation?.value.trim() || '',
+            household_monthly_income: householdInputs.monthly?.value.trim() || ''
+        };
+
+        const missingHouseholdField = Object.values(householdEntry).some((value) => !value);
+
+        if (missingHouseholdField) {
+            alert('Please fill out all household member fields before adding.');
+            return;
+        }
+
+        householdMembers.push(householdEntry);
+        syncHouseholdPayload();
+
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${householdInputs.name?.value || ''}</td>
-            <td>${householdInputs.sex?.value || ''}</td>
-            <td>${householdInputs.relationship?.value || ''}</td>
-            <td>${householdInputs.age?.value || ''}</td>
-            <td>${householdInputs.birthdate?.value || ''}</td>
-            <td>${householdInputs.civil?.value || ''}</td>
-            <td>${householdInputs.educational?.value || ''}</td>
-            <td>${householdInputs.occupation?.value || ''}</td>
-            <td>${householdInputs.monthly?.value || ''}</td>
+            <td>${householdEntry.household_name}</td>
+            <td>${householdEntry.household_sex}</td>
+            <td>${householdEntry.household_relationship}</td>
+            <td>${householdEntry.household_age}</td>
+            <td>${householdEntry.household_birthdate}</td>
+            <td>${householdEntry.household_civil_status}</td>
+            <td>${householdEntry.household_educational}</td>
+            <td>${householdEntry.household_occupation}</td>
+            <td>${householdEntry.household_monthly_income}</td>
         `;
 
         const emptyRow = householdTableBody.querySelector('.household-empty-row');
@@ -151,8 +186,6 @@ if (submitHouseholdButton) {
         toggleHouseholdModal(false);
     });
 }
-
-const submitFormButton = document.getElementById('submitSoloParent');
 
 const clearInvalidStates = (elements) => {
     elements.forEach((element) => {
@@ -171,10 +204,15 @@ const markInvalid = (element) => {
 };
 
 const validateSoloParentForm = () => {
-    const formFields = Array.from(document.querySelectorAll('.form-page input, .form-page select, .form-page textarea'))
+    if (!soloParentForm) {
+        return false;
+    }
+
+    const optionalFieldNames = ['middle_name', 'suffix', 'email_address'];
+    const formFields = Array.from(soloParentForm.querySelectorAll('input, select, textarea'))
         .filter((element) => !element.disabled)
-        .filter((element) => !element.closest('#householdModal'))
-        .filter((element) => element.type !== 'button' && element.type !== 'submit');
+        .filter((element) => element.type !== 'button' && element.type !== 'submit' && element.type !== 'hidden')
+        .filter((element) => !optionalFieldNames.includes(element.name || ''));
 
     clearInvalidStates(formFields);
 
@@ -216,8 +254,15 @@ const validateSoloParentForm = () => {
         }
     });
 
+    if (householdMembers.length === 0) {
+        isValid = false;
+        if (!firstInvalidField && openHouseholdModalButton) {
+            firstInvalidField = openHouseholdModalButton;
+        }
+    }
+
     if (!isValid) {
-        alert('Please fill out all required fields before submitting.');
+        alert('Please fill out all required fields, including at least one household member, before submitting.');
         if (firstInvalidField) {
             firstInvalidField.focus();
         }
@@ -226,8 +271,45 @@ const validateSoloParentForm = () => {
     return isValid;
 };
 
-if (submitFormButton) {
-    submitFormButton.addEventListener('click', () => {
-        validateSoloParentForm();
+if (soloParentForm) {
+    soloParentForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        if (!validateSoloParentForm()) {
+            return;
+        }
+
+        syncHouseholdPayload();
+
+        const formData = new FormData(soloParentForm);
+
+        try {
+            submitFormButton.disabled = true;
+
+            const response = await fetch(soloParentForm.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Unable to submit solo parent form.');
+            }
+
+            alert(result.message || 'Solo parent information submitted successfully.');
+            soloParentForm.reset();
+            householdMembers.length = 0;
+            syncHouseholdPayload();
+            if (householdTableBody) {
+                householdTableBody.innerHTML = '<tr class="household-empty-row"><td colspan="9">No household members added yet.</td></tr>';
+            }
+            toggleRadioInput(pantawidRadios, pantawidInput);
+            toggleRadioInput(indigenousRadios, indigenousInput);
+        } catch (error) {
+            alert(error.message || 'An error occurred while submitting the form.');
+        } finally {
+            submitFormButton.disabled = false;
+        }
     });
 }
