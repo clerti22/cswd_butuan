@@ -33,3 +33,54 @@ CREATE TABLE IF NOT EXISTS pwud_household_table (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS soloparent_info_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    date_of_birth DATE NOT NULL,
+    place_of_birth VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    religion VARCHAR(100) NOT NULL,
+    sex VARCHAR(50) NOT NULL,
+    educational_attainment VARCHAR(255) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    company_agency VARCHAR(255) NOT NULL,
+    civil_status VARCHAR(50) NOT NULL,
+    employment_status VARCHAR(50) NOT NULL,
+    contact_number VARCHAR(30) NOT NULL,
+    monthly_income DECIMAL(12,2) NOT NULL,
+    philsys_card_number VARCHAR(100) NOT NULL,
+    email_address VARCHAR(150) NULL,
+    pantawid_beneficiary ENUM('yes', 'no') NOT NULL,
+    pantawid_household_id VARCHAR(100) NULL,
+    indigenous_person ENUM('yes', 'no') NOT NULL,
+    indigenous_affiliation_name VARCHAR(255) NULL,
+    lgbtq_plus ENUM('yes', 'no') NOT NULL,
+    pwd_status ENUM('yes', 'no') NOT NULL,
+    solo_classification TEXT NOT NULL,
+    solo_needs TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS household_members_soloparent (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    solo_parent_id INT NOT NULL,
+    household_name VARCHAR(150) NOT NULL,
+    household_sex VARCHAR(20) NOT NULL,
+    household_relationship VARCHAR(120) NOT NULL,
+    household_age INT NOT NULL,
+    household_birthdate DATE NOT NULL,
+    household_civil_status VARCHAR(50) NOT NULL,
+    household_educational VARCHAR(255) NOT NULL,
+    household_occupation VARCHAR(255) NOT NULL,
+    household_monthly_income DECIMAL(12,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_household_members_soloparent
+        FOREIGN KEY (solo_parent_id) REFERENCES soloparent_info_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
