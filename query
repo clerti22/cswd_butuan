@@ -230,3 +230,72 @@ CREATE TABLE IF NOT EXISTS car_initial_treatment_plan_table (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS csae_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    nickname VARCHAR(100) NULL,
+    sex VARCHAR(20) NOT NULL,
+    birth_date DATE NOT NULL,
+    age INT NOT NULL,
+    birth_place VARCHAR(255) NOT NULL,
+    present_address VARCHAR(255) NOT NULL,
+    permanent_address VARCHAR(255) NOT NULL,
+    education VARCHAR(255) NOT NULL,
+    school_last_attended VARCHAR(255) NOT NULL,
+    school_address VARCHAR(255) NOT NULL,
+    health_condition VARCHAR(255) NULL,
+    contact_number VARCHAR(30) NOT NULL,
+    is_4ps VARCHAR(10) NOT NULL,
+    philhealth VARCHAR(10) NOT NULL,
+    offense_type VARCHAR(255) NOT NULL,
+    incident_date DATE NOT NULL,
+    perpetrator_name VARCHAR(255) NOT NULL,
+    referral_date DATE NOT NULL,
+    referring_party VARCHAR(255) NOT NULL,
+    case_status VARCHAR(255) NOT NULL,
+    criminal_case_no VARCHAR(255) NOT NULL,
+    info_source VARCHAR(255) NOT NULL,
+    complainant VARCHAR(255) NOT NULL,
+    presenting_problem TEXT NOT NULL,
+    background_child TEXT NOT NULL,
+    background_family TEXT NOT NULL,
+    background_community TEXT NOT NULL,
+    assessment TEXT NULL,
+    recommendation TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS csae_family_information_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    csae_id INT NOT NULL,
+    member_name VARCHAR(150) NOT NULL,
+    member_age INT NOT NULL,
+    relationship VARCHAR(150) NOT NULL,
+    education_attainment VARCHAR(255) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    monthly_income VARCHAR(120) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_csae_family_person
+        FOREIGN KEY (csae_id) REFERENCES csae_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS csae_treatment_plan_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    csae_id INT NOT NULL,
+    objectives TEXT NULL,
+    activities TEXT NULL,
+    timeframe VARCHAR(120) NULL,
+    responsible_person VARCHAR(255) NULL,
+    remarks TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_csae_treatment_person
+        FOREIGN KEY (csae_id) REFERENCES csae_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
