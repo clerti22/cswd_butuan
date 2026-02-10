@@ -48,8 +48,8 @@ const addClientOptions = {
 
 const addClientRoutes = {
     dpsd: {
-        'PYAP': 'dpsd forms/pyap.html',
-        'Solo Parent': 'dpsd forms/soloparent.html',
+        'PYAP': 'dpsd forms/pyap.php',
+        'Solo Parent': 'dpsd forms/soloparent.php',
         'PWUD': 'dpsd forms/pwud.php'
     },
     pssd: {
