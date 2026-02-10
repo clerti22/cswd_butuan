@@ -57,11 +57,11 @@ const addClientRoutes = {
         'PWD': 'pssd forms/pwd.php'
     },
     rpsd: {
-        'VAWC': 'rpsd forms/vawc.html',
-        'CSAE': 'rpsd forms/csae.html',
-        'CAR': 'rpsd forms/car.html',
-        'CICL': 'rpsd forms/cicl.html',
-        'CIU': 'rpsd forms/ciu.html'
+        'VAWC': 'rpsd forms/vawc.php',
+        'CSAE': 'rpsd forms/csae.php',
+        'CAR': 'rpsd forms/car.php',
+        'CICL': 'rpsd forms/cicl.php',
+        'CIU': 'rpsd forms/ciu.php'
     }
 };
 
