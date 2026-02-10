@@ -86,12 +86,17 @@ const registerRadioToggle = (radios, input) => {
     toggleRadioInput(radios, input);
 };
 
-const initializeEligibilityToggles = () => {
-    const pantawidInput = document.getElementById('pantawid-household');
-    const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]');
-    const indigenousInput = document.getElementById('indigenous-affiliation');
-    const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]');
+const pantawidInput = document.getElementById('pantawid-household');
+const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]');
+const indigenousInput = document.getElementById('indigenous-affiliation');
+const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]');
 
+const refreshEligibilityToggleStates = () => {
+    toggleRadioInput(pantawidRadios, pantawidInput);
+    toggleRadioInput(indigenousRadios, indigenousInput);
+};
+
+const initializeEligibilityToggles = () => {
     registerRadioToggle(pantawidRadios, pantawidInput);
     registerRadioToggle(indigenousRadios, indigenousInput);
 };
@@ -336,8 +341,7 @@ if (soloParentForm) {
             if (householdTableBody) {
                 householdTableBody.innerHTML = '<tr class="household-empty-row"><td colspan="9">No household members added yet.</td></tr>';
             }
-            toggleRadioInput(pantawidRadios, pantawidInput);
-            toggleRadioInput(indigenousRadios, indigenousInput);
+            refreshEligibilityToggleStates();
         } catch (error) {
             alert(error.message || 'An error occurred while submitting the form.');
         } finally {
