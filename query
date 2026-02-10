@@ -147,3 +147,86 @@ CREATE TABLE IF NOT EXISTS pyap_membership_table (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS car_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    interview_date DATE NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    nickname VARCHAR(100) NOT NULL,
+    birth_date DATE NOT NULL,
+    birth_place VARCHAR(255) NOT NULL,
+    religion VARCHAR(100) NOT NULL,
+    civil_status VARCHAR(50) NOT NULL,
+    age INT NOT NULL,
+    sex VARCHAR(20) NOT NULL,
+    education VARCHAR(255) NOT NULL,
+    present_address VARCHAR(255) NOT NULL,
+    permanent_address VARCHAR(255) NOT NULL,
+    spouse_first_name VARCHAR(100) NULL,
+    spouse_middle_name VARCHAR(100) NULL,
+    spouse_last_name VARCHAR(100) NULL,
+    spouse_suffix VARCHAR(50) NULL,
+    monthly_income_estimate VARCHAR(120) NOT NULL,
+    income_source VARCHAR(255) NOT NULL,
+    assistance_status VARCHAR(20) NOT NULL,
+    food_expense VARCHAR(120) NOT NULL,
+    house_lot_expense VARCHAR(120) NOT NULL,
+    education_expense VARCHAR(120) NOT NULL,
+    transport_expense VARCHAR(120) NOT NULL,
+    misc_expense VARCHAR(120) NOT NULL,
+    total_expenses VARCHAR(120) NOT NULL,
+    total_income VARCHAR(120) NOT NULL,
+    net_income VARCHAR(120) NOT NULL,
+    classification_tags TEXT NOT NULL,
+    classification_other VARCHAR(255) NULL,
+    abuse_tags TEXT NOT NULL,
+    abuse_other VARCHAR(255) NULL,
+    type_of_offense VARCHAR(255) NOT NULL,
+    date_of_apprehension DATE NOT NULL,
+    by_whom VARCHAR(255) NOT NULL,
+    date_of_offense DATE NOT NULL,
+    source_of_information VARCHAR(255) NOT NULL,
+    complainant VARCHAR(255) NOT NULL,
+    presented_problem TEXT NOT NULL,
+    family_environment TEXT NOT NULL,
+    community_description TEXT NOT NULL,
+    family_history_background TEXT NOT NULL,
+    recommendation TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS car_family_composition_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    car_id INT NOT NULL,
+    member_name VARCHAR(150) NOT NULL,
+    member_age INT NOT NULL,
+    member_gender VARCHAR(30) NOT NULL,
+    member_status VARCHAR(50) NOT NULL,
+    member_relation VARCHAR(150) NOT NULL,
+    member_work VARCHAR(255) NOT NULL,
+    member_income VARCHAR(120) NOT NULL,
+    member_remarks VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_car_family_person
+        FOREIGN KEY (car_id) REFERENCES car_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS car_initial_treatment_plan_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    car_id INT NOT NULL,
+    objectives TEXT NOT NULL,
+    activities TEXT NOT NULL,
+    responsible_person VARCHAR(255) NOT NULL,
+    resources_needed VARCHAR(255) NOT NULL,
+    expected_output TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_car_treatment_person
+        FOREIGN KEY (car_id) REFERENCES car_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
