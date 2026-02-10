@@ -52,11 +52,6 @@ window.addEventListener('resize', () => {
     }
 });
 
-const pantawidInput = document.getElementById('pantawid-household');
-const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]');
-const indigenousInput = document.getElementById('indigenous-affiliation');
-const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]');
-
 const toggleRadioInput = (radios, input) => {
     if (!input || !radios.length) {
         return;
@@ -64,6 +59,13 @@ const toggleRadioInput = (radios, input) => {
 
     const isYesSelected = Array.from(radios).some((radio) => radio.checked && String(radio.value).toLowerCase() === 'yes');
     input.disabled = !isYesSelected;
+
+    if (isYesSelected) {
+        input.removeAttribute('disabled');
+    } else {
+        input.setAttribute('disabled', 'disabled');
+    }
+
     input.placeholder = isYesSelected ? '' : 'Disabled';
 
     if (!isYesSelected) {
@@ -78,35 +80,27 @@ const registerRadioToggle = (radios, input) => {
 
     radios.forEach((radio) => {
         radio.addEventListener('change', () => toggleRadioInput(radios, input));
+        radio.addEventListener('click', () => toggleRadioInput(radios, input));
     });
 
     toggleRadioInput(radios, input);
 };
 
-registerRadioToggle(pantawidRadios, pantawidInput);
-registerRadioToggle(indigenousRadios, indigenousInput);
+const initializeEligibilityToggles = () => {
+    const pantawidInput = document.getElementById('pantawid-household');
+    const pantawidRadios = document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]');
+    const indigenousInput = document.getElementById('indigenous-affiliation');
+    const indigenousRadios = document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]');
 
-document.addEventListener('change', (event) => {
-    const target = event.target;
+    registerRadioToggle(pantawidRadios, pantawidInput);
+    registerRadioToggle(indigenousRadios, indigenousInput);
+};
 
-    if (!(target instanceof HTMLInputElement) || target.type !== 'radio') {
-        return;
-    }
-
-    if (target.name === 'pantawid_beneficiary' || target.name === 'pantawid-beneficiary') {
-        toggleRadioInput(
-            document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]'),
-            pantawidInput
-        );
-    }
-
-    if (target.name === 'indigenous_person' || target.name === 'indigenous-person') {
-        toggleRadioInput(
-            document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]'),
-            indigenousInput
-        );
-    }
-});
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeEligibilityToggles);
+} else {
+    initializeEligibilityToggles();
+}
 
 const householdModal = document.getElementById('householdModal');
 const openHouseholdModalButton = document.getElementById('openHouseholdModal');
