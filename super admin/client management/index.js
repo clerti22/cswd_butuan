@@ -53,8 +53,8 @@ const addClientRoutes = {
         'PWUD': 'dpsd forms/pwud.php'
     },
     pssd: {
-        'Senior Citizen': 'pssd forms/snrctizen.html',
-        'PWD': 'pssd forms/pwd.html'
+        'Senior Citizen': 'pssd forms/snrctizen.php',
+        'PWD': 'pssd forms/pwd.php'
     },
     rpsd: {
         'VAWC': 'rpsd forms/vawc.html',
