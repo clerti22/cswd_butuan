@@ -596,3 +596,38 @@ button:hover {
         grid-column: span 1;
     }
 }
+
+.submit-form-button {
+    margin-top: 12px;
+    margin-left: 8px;
+    background: #0b5ed7;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+}
+
+.submit-form-button:hover {
+    background: #084298;
+}
+
+.placeholder-row td {
+    text-align: center;
+    color: #64748b;
+}
+
+.invalid-input {
+    border-color: #dc2626 !important;
+}
+
+.form-message {
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.error-message {
+    color: #b91c1c;
+}
+
+.success-message {
+    color: #15803d;
+}
