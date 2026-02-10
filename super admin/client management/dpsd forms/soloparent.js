@@ -4,20 +4,36 @@ const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
 
 function openSidebar() {
+    if (!sidebar || !overlay) {
+        return;
+    }
+
     sidebar.classList.add('open');
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeSidebar() {
+    if (!sidebar || !overlay) {
+        return;
+    }
+
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
     document.body.style.overflow = '';
 }
 
-openBtn.addEventListener('click', openSidebar);
-closeBtn.addEventListener('click', closeSidebar);
-overlay.addEventListener('click', closeSidebar);
+if (openBtn) {
+    openBtn.addEventListener('click', openSidebar);
+}
+
+if (closeBtn) {
+    closeBtn.addEventListener('click', closeSidebar);
+}
+
+if (overlay) {
+    overlay.addEventListener('click', closeSidebar);
+}
 
 // Close sidebar when clicking nav items on mobile
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -69,6 +85,28 @@ const registerRadioToggle = (radios, input) => {
 
 registerRadioToggle(pantawidRadios, pantawidInput);
 registerRadioToggle(indigenousRadios, indigenousInput);
+
+document.addEventListener('change', (event) => {
+    const target = event.target;
+
+    if (!(target instanceof HTMLInputElement) || target.type !== 'radio') {
+        return;
+    }
+
+    if (target.name === 'pantawid_beneficiary' || target.name === 'pantawid-beneficiary') {
+        toggleRadioInput(
+            document.querySelectorAll('input[name="pantawid_beneficiary"], input[name="pantawid-beneficiary"]'),
+            pantawidInput
+        );
+    }
+
+    if (target.name === 'indigenous_person' || target.name === 'indigenous-person') {
+        toggleRadioInput(
+            document.querySelectorAll('input[name="indigenous_person"], input[name="indigenous-person"]'),
+            indigenousInput
+        );
+    }
+});
 
 const householdModal = document.getElementById('householdModal');
 const openHouseholdModalButton = document.getElementById('openHouseholdModal');
