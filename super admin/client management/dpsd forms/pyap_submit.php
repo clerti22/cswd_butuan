@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $requiredFields = [
     'first_name',
     'last_name',
-    'date_of_birth',
+    'income_data',
     'place_of_birth',
     'nationality',
     'age',
@@ -125,7 +125,7 @@ $connection->begin_transaction();
 try {
     $insertPyap = $connection->prepare(
         'INSERT INTO pyap_table (
-            first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, nationality, age,
+            first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,
             address, religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
             occupation, civil_status, contact_number, school_last_attended, school_last_attended_month_year,
             trainings_attended, skills_interest_hobbies, assistance_received, assistance_specify,
@@ -141,7 +141,7 @@ try {
     $middleName = trim((string) ($_POST['middle_name'] ?? ''));
     $lastName = trim((string) $_POST['last_name']);
     $suffix = trim((string) ($_POST['suffix'] ?? ''));
-    $dateOfBirth = trim((string) $_POST['date_of_birth']);
+    $dateOfBirth = trim((string) $_POST['income_data']);
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $nationality = trim((string) $_POST['nationality']);
     $age = (int) $_POST['age'];
