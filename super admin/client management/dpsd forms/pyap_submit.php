@@ -26,9 +26,7 @@ $requiredFields = [
     'school_last_attended',
     'school_last_attended_month_year',
     'trainings_attended',
-    'skills_interest_hobbies',
-    'assistance_specify',
-    'intervention_specify'
+    'skills_interest_hobbies'
 ];
 
 foreach ($requiredFields as $field) {
@@ -83,33 +81,37 @@ foreach ($familyCompositions as $member) {
 }
 
 $membershipPayload = trim((string) ($_POST['memberships'] ?? ''));
-if ($membershipPayload === '') {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'At least one membership entry is required.']);
-    exit;
-}
+$memberships = [];
 
-$memberships = json_decode($membershipPayload, true);
-if (!is_array($memberships) || count($memberships) === 0) {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'At least one membership entry is required.']);
-    exit;
-}
+if ($membershipPayload !== '') {
+    $decodedMemberships = json_decode($membershipPayload, true);
 
-$membershipRequired = ['organization_name', 'position_held', 'year'];
-foreach ($memberships as $membership) {
-    if (!is_array($membership)) {
+    if (!is_array($decodedMemberships)) {
         http_response_code(422);
-        echo json_encode(['success' => false, 'message' => 'Invalid membership entry.']);
+        echo json_encode(['success' => false, 'message' => 'Invalid membership payload.']);
         exit;
     }
 
-    foreach ($membershipRequired as $field) {
-        if (!isset($membership[$field]) || trim((string) $membership[$field]) === '') {
+    foreach ($decodedMemberships as $membership) {
+        if (!is_array($membership)) {
             http_response_code(422);
-            echo json_encode(['success' => false, 'message' => 'Incomplete membership data.']);
+            echo json_encode(['success' => false, 'message' => 'Invalid membership entry.']);
             exit;
         }
+
+        $organizationName = trim((string) ($membership['organization_name'] ?? ''));
+        $positionHeld = trim((string) ($membership['position_held'] ?? ''));
+        $year = trim((string) ($membership['year'] ?? ''));
+
+        if ($organizationName === '' && $positionHeld === '' && $year === '') {
+            continue;
+        }
+
+        $memberships[] = [
+            'organization_name' => $organizationName,
+            'position_held' => $positionHeld,
+            'year' => $year,
+        ];
     }
 }
 

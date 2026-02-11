@@ -183,11 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (result !== 'valid') {
-                setMessage('Complete all membership fields or leave them all blank.', 'error-message');
-                return;
-            }
-
             memberships.push(Object.fromEntries(
                 Object.entries(membershipFields).map(([key, field]) => [key, field ? field.value.trim() : ''])
             ));
@@ -206,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validateMainForm() {
-        const optionalFields = new Set(['middle_name', 'suffix', 'ips', 'family_name', 'family_relationship', 'family_gender', 'family_age', 'family_grade_year', 'family_isy', 'family_osy', 'family_work_labor_experience', 'family_income', 'membership_organization_name', 'membership_position_held', 'membership_year']);
+        const optionalFields = new Set(['middle_name', 'suffix', 'ips', 'assistance_specify', 'intervention_specify', 'family_name', 'family_relationship', 'family_gender', 'family_age', 'family_grade_year', 'family_isy', 'family_osy', 'family_work_labor_experience', 'family_income', 'membership_organization_name', 'membership_position_held', 'membership_year']);
         let valid = true;
 
         pyapForm.querySelectorAll('input[name], select[name], textarea[name]').forEach((field) => {
@@ -225,11 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!familyCompositions.length) {
             setMessage('Please add at least one complete family composition entry.', 'error-message');
-            return false;
-        }
-
-        if (!memberships.length) {
-            setMessage('Please add at least one complete membership entry.', 'error-message');
             return false;
         }
 
