@@ -357,3 +357,53 @@ CREATE TABLE IF NOT EXISTS vawc_initial_treatment_plan_table (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS ciu_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    birth_date DATE NOT NULL,
+    birth_place VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    sex VARCHAR(20) NOT NULL,
+    civil_status VARCHAR(50) NOT NULL,
+    contact_number VARCHAR(30) NOT NULL,
+    monthly_income VARCHAR(120) NOT NULL,
+    religion VARCHAR(100) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    education VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    member_senior VARCHAR(10) NOT NULL,
+    member_solo_parent VARCHAR(10) NOT NULL,
+    member_pwd VARCHAR(10) NOT NULL,
+    member_4ps VARCHAR(10) NOT NULL,
+    member_others VARCHAR(255) NOT NULL,
+    service_prescribed_medicine VARCHAR(10) NOT NULL,
+    service_certificate_minor VARCHAR(10) NOT NULL,
+    service_hospital_bill VARCHAR(10) NOT NULL,
+    service_tesda_certificate VARCHAR(10) NOT NULL,
+    service_burial VARCHAR(10) NOT NULL,
+    service_laboratory VARCHAR(10) NOT NULL,
+    service_legal_assistance VARCHAR(10) NOT NULL,
+    service_others VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ciu_family_composition_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ciu_id INT NOT NULL,
+    member_name VARCHAR(150) NOT NULL,
+    member_age INT NOT NULL,
+    member_gender VARCHAR(30) NOT NULL,
+    relationship_to_client VARCHAR(150) NOT NULL,
+    education_attainment VARCHAR(255) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    income VARCHAR(120) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ciu_family_person
+        FOREIGN KEY (ciu_id) REFERENCES ciu_table(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
