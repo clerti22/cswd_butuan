@@ -34,4 +34,43 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const metricElements = {
+    total_clients: document.getElementById('totalClientsValue'),
+    served_this_week: document.getElementById('servedThisWeekValue'),
+    served_this_month: document.getElementById('servedThisMonthValue'),
+    served_today: document.getElementById('servedTodayValue')
+};
+
+function formatCount(value) {
+    return Number(value || 0).toLocaleString();
+}
+
+function setMetricValues(data) {
+    Object.entries(metricElements).forEach(([key, element]) => {
+        if (!element) {
+            return;
+        }
+
+        element.textContent = formatCount(data[key]);
+    });
+}
+
+async function loadReportTotals() {
+    try {
+        const response = await fetch('get_report_totals.php');
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load report totals.');
+        }
+
+        setMetricValues(payload.data || {});
+    } catch (error) {
+        console.error('Failed to fetch report totals:', error);
+        setMetricValues({});
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadReportTotals);
