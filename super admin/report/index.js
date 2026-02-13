@@ -43,6 +43,18 @@ const metricElements = {
     served_today: document.getElementById('servedTodayValue')
 };
 
+const chartTabs = document.querySelectorAll('[data-chart-tab]');
+const mainChartTitle = document.getElementById('mainChartTitle');
+
+let reportChartsPayload = {
+    barangay: [],
+    program: {},
+    gender: { Male: 0, Female: 0 }
+};
+
+let mainChart = null;
+let genderChart = null;
+
 function formatCount(value) {
     return Number(value || 0).toLocaleString();
 }
@@ -73,4 +85,122 @@ async function loadReportTotals() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadReportTotals);
+function renderMainChart(tab) {
+    if (typeof CanvasJS === 'undefined') {
+        return;
+    }
+
+    const isProgram = tab === 'program';
+    const title = isProgram
+        ? 'Total Served Clients per Program chart'
+        : 'Total Served Clients per Barangay Chart';
+
+    if (mainChartTitle) {
+        mainChartTitle.textContent = title;
+    }
+
+    const dataPoints = isProgram
+        ? Object.entries(reportChartsPayload.program).map(([label, value]) => ({ label, y: Number(value || 0) }))
+        : (reportChartsPayload.barangay || []).map((entry) => ({
+            label: entry.label,
+            y: Number(entry.count || 0)
+        }));
+
+    if (!mainChart) {
+        mainChart = new CanvasJS.Chart('mainChartContainer', {
+            animationEnabled: true,
+            zoomEnabled: true,
+            theme: 'light1',
+            axisY: {
+                includeZero: true,
+                title: 'Total Served Clients'
+            },
+            axisX: {
+                interval: 1,
+                labelAngle: -50,
+                labelFontSize: 11
+            },
+            data: [{
+                type: 'column',
+                color: '#6d28d9',
+                dataPoints: []
+            }]
+        });
+    }
+
+    mainChart.options.data[0].dataPoints = dataPoints;
+    mainChart.render();
+}
+
+function renderGenderChart() {
+    if (typeof CanvasJS === 'undefined') {
+        return;
+    }
+
+    const male = Number(reportChartsPayload.gender.Male || 0);
+    const female = Number(reportChartsPayload.gender.Female || 0);
+
+    if (!genderChart) {
+        genderChart = new CanvasJS.Chart('genderChartContainer', {
+            animationEnabled: true,
+            theme: 'light1',
+            legend: {
+                verticalAlign: 'bottom',
+                horizontalAlign: 'center'
+            },
+            data: [{
+                type: 'pie',
+                startAngle: 90,
+                indexLabel: '{label}: {y}',
+                showInLegend: true,
+                legendText: '{label}',
+                dataPoints: []
+            }]
+        });
+    }
+
+    genderChart.options.data[0].dataPoints = [
+        { label: 'Male', y: male, color: '#1d4ed8' },
+        { label: 'Female', y: female, color: '#db2777' }
+    ];
+    genderChart.render();
+}
+
+async function loadReportCharts() {
+    try {
+        const response = await fetch('get_report_charts.php');
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load chart data.');
+        }
+
+        reportChartsPayload = {
+            barangay: payload.data?.barangay || [],
+            program: payload.data?.program || {},
+            gender: payload.data?.gender || { Male: 0, Female: 0 }
+        };
+    } catch (error) {
+        console.error('Failed to fetch report chart data:', error);
+    }
+
+    renderMainChart('barangay');
+    renderGenderChart();
+}
+
+chartTabs.forEach((tabButton) => {
+    tabButton.addEventListener('click', () => {
+        chartTabs.forEach((btn) => {
+            const isActive = btn === tabButton;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        renderMainChart(tabButton.dataset.chartTab || 'barangay');
+    });
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadReportTotals();
+    await loadReportCharts();
+});
