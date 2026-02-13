@@ -396,13 +396,13 @@ button:hover {
 }
 
 .card-icon {
-    font-size: 1.9rem;
+    font-size: 2rem;
     color: #202020;
     line-height: 1;
 }
 
 .card-value {
-    font-size: 1.35rem;
+    font-size: 1.9rem;
     font-weight: 500;
     color: #202020;
 }
@@ -422,121 +422,3 @@ button:hover {
 .card-day {
     border-bottom-color: #dc2626;
 }
-
-.charts-grid {
-    margin-top: 1rem;
-    display: grid;
-    grid-template-columns: 2fr 1.05fr;
-    gap: 0.65rem;
-}
-
-.chart-panel {
-    background: #f8f8f8;
-    border-radius: 12px;
-    padding: 0.65rem;
-}
-
-.clients-chart-panel {
-    min-width: 0;
-}
-
-.chart-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-}
-
-.chart-title {
-    font-size: 1.35rem;
-    font-weight: 500;
-    color: #121212;
-}
-
-.clients-chart-header {
-    margin-bottom: 0.35rem;
-}
-
-.chart-tabs {
-    display: inline-flex;
-    gap: 1.5rem;
-}
-
-.chart-tab {
-    border: none;
-    background: none;
-    color: #1d4ed8;
-    font-size: 1.35rem;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 0;
-    border-bottom: 3px solid transparent;
-}
-
-.chart-tab.active {
-    color: #141414;
-    border-bottom-color: #141414;
-}
-
-.filter-btn {
-    border: none;
-    background: #0f8d1a;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 0.35rem 0.75rem;
-    font-size: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    cursor: pointer;
-}
-
-.chart-canvas-wrap {
-    width: 100%;
-    height: 345px;
-}
-
-.clients-canvas-wrap {
-    overflow-x: auto;
-}
-
-#clientsBreakdownChart {
-    min-width: 980px;
-}
-
-.gender-canvas-wrap {
-    height: 315px;
-}
-
-.gender-legend {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 0.35rem;
-    font-size: 0.95rem;
-    color: #202020;
-}
-
-.legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.legend-dot {
-    width: 0.65rem;
-    height: 0.65rem;
-    border-radius: 50%;
-}
-
-@media (max-width: 1023px) {
-    .charts-grid {
-        grid-template-columns: 1fr;
-    }
-
-    #clientsBreakdownChart {
-        min-width: 760px;
-    }
-}
-
