@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -137,6 +138,30 @@
                         <div class="card-content">
                             <i class="bi bi-people card-icon" aria-hidden="true"></i>
                             <h4 class="card-value" id="servedTodayValue">0</h4>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="charts-grid" aria-label="Report charts">
+                    <article class="chart-panel">
+                        <div class="chart-header">
+                            <h4 class="chart-title" id="clientsChartTitle">Total Served Clients per Barangay chart</h4>
+                            <div class="chart-tabs" role="tablist" aria-label="Clients chart mode">
+                                <button class="chart-tab active" type="button" id="barangayTab" data-chart-tab="barangay">Per Barangay</button>
+                                <button class="chart-tab" type="button" id="programTab" data-chart-tab="program">Per Program</button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="clientsBreakdownChart" height="320"></canvas>
+                        </div>
+                    </article>
+
+                    <article class="chart-panel">
+                        <div class="chart-header">
+                            <h4 class="chart-title">Total Served Clients by Gender chart</h4>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="genderChart" height="320"></canvas>
                         </div>
                     </article>
                 </section>
