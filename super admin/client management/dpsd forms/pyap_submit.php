@@ -15,6 +15,7 @@ $requiredFields = [
     'nationality',
     'age',
     'address',
+    'barangay',
     'religion',
     'sex',
     'in_school_youth',
@@ -128,11 +129,11 @@ try {
     $insertPyap = $connection->prepare(
         'INSERT INTO pyap_table (
             first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,
-            address, religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
+            address, barangay,religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
             occupation, civil_status, contact_number, school_last_attended, school_last_attended_month_year,
             trainings_attended, skills_interest_hobbies, assistance_received, assistance_specify,
             intervention_needed, intervention_specify
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPyap) {
@@ -148,6 +149,7 @@ try {
     $nationality = trim((string) $_POST['nationality']);
     $age = (int) $_POST['age'];
     $address = trim((string) $_POST['address']);
+    $brgy = trim((string) $_POST['barangay']);
     $religion = trim((string) $_POST['religion']);
     $sex = trim((string) $_POST['sex']);
     $inSchoolYouth = trim((string) $_POST['in_school_youth']);
@@ -167,7 +169,7 @@ try {
     $interventionSpecify = trim((string) $_POST['intervention_specify']);
 
     $insertPyap->bind_param(
-        'sssssssissssssssssssssssss',
+        'sssssssisssssssssssssssssss',
         $firstName,
         $middleName,
         $lastName,
@@ -177,6 +179,7 @@ try {
         $nationality,
         $age,
         $address,
+        $brgy,
         $religion,
         $sex,
         $inSchoolYouth,
