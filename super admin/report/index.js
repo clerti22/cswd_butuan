@@ -144,15 +144,16 @@ function renderGenderChart() {
         genderChart = new CanvasJS.Chart('genderChartContainer', {
             animationEnabled: true,
             theme: 'light1',
-            axisY: {
-                includeZero: true,
-                title: 'Total Served Clients'
-            },
-            axisX: {
-                interval: 1
+            legend: {
+                verticalAlign: 'bottom',
+                horizontalAlign: 'center'
             },
             data: [{
-                type: 'column',
+                type: 'pie',
+                startAngle: 90,
+                indexLabel: '{label}: {y}',
+                showInLegend: true,
+                legendText: '{label}',
                 dataPoints: []
             }]
         });
