@@ -140,9 +140,28 @@
                         </div>
                     </article>
                 </section>
+
+                <section class="charts-grid" aria-label="Client analytics charts">
+                    <article class="chart-card chart-card-large">
+                        <div class="chart-tabs" role="tablist" aria-label="Chart data views">
+                            <button class="chart-tab active" id="barangayTab" type="button" role="tab"
+                                aria-selected="true" data-chart-tab="barangay">Per barangay</button>
+                            <button class="chart-tab" id="programTab" type="button" role="tab" aria-selected="false"
+                                data-chart-tab="program">Per Program</button>
+                        </div>
+                        <h3 class="chart-title" id="mainChartTitle">Total Served Clients per Barangay Chart</h3>
+                        <div id="mainChartContainer" class="canvas-chart" aria-label="Main client chart"></div>
+                    </article>
+
+                    <article class="chart-card">
+                        <h3 class="chart-title">Total Served Clients by Gender</h3>
+                        <div id="genderChartContainer" class="canvas-chart" aria-label="Gender chart"></div>
+                    </article>
+                </section>
             </main>
         </div>
     </div>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <script src="index.js"></script>
 
 
