@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -107,7 +108,70 @@
             </header>
 
             <main class="form-page">
+                <section class="report-cards" aria-label="Report summary cards">
+                    <article class="report-card card-total">
+                        <p class="card-label">Total Served Clients</p>
+                        <div class="card-content">
+                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
+                            <h4 class="card-value" id="totalClientsValue">0</h4>
+                        </div>
+                    </article>
 
+                    <article class="report-card card-week">
+                        <p class="card-label">Total Served This Week</p>
+                        <div class="card-content">
+                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
+                            <h4 class="card-value" id="servedThisWeekValue">0</h4>
+                        </div>
+                    </article>
+
+                    <article class="report-card card-month">
+                        <p class="card-label">Total Served Clients This Month</p>
+                        <div class="card-content">
+                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
+                            <h4 class="card-value" id="servedThisMonthValue">0</h4>
+                        </div>
+                    </article>
+
+                    <article class="report-card card-day">
+                        <p class="card-label">Total Served Clients this Day</p>
+                        <div class="card-content">
+                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
+                            <h4 class="card-value" id="servedTodayValue">0</h4>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="charts-grid" aria-label="Report charts">
+                    <article class="chart-panel clients-chart-panel">
+                        <div class="chart-header clients-chart-header">
+                            <div class="chart-tabs" role="tablist" aria-label="Clients chart mode">
+                                <button class="chart-tab active" type="button" id="barangayTab" data-chart-tab="barangay">Per barangay</button>
+                                <button class="chart-tab" type="button" id="programTab" data-chart-tab="program">Per Program</button>
+                            </div>
+                        </div>
+
+                        <h4 class="chart-title" id="clientsChartTitle">Total Served Clients per Barangay Chart</h4>
+                        <div class="chart-canvas-wrap clients-canvas-wrap">
+                            <canvas id="clientsBreakdownChart" height="320"></canvas>
+                        </div>
+                    </article>
+
+                    <article class="chart-panel gender-chart-panel">
+                        <div class="chart-header">
+                            <h4 class="chart-title">Total Served Clients by gender</h4>
+                            <button class="filter-btn" type="button">
+                                <i class="bi bi-funnel"></i> Filter
+                            </button>
+                        </div>
+
+                        <div class="chart-canvas-wrap gender-canvas-wrap">
+                            <canvas id="genderChart" height="320"></canvas>
+                        </div>
+
+                        <div class="gender-legend" id="genderLegend"></div>
+                    </article>
+                </section>
             </main>
         </div>
     </div>
