@@ -14,6 +14,7 @@ $requiredFields = [
     'place_of_birth',
     'age',
     'address',
+    'barangay',
     'religion',
     'sex',
     'educational_attainment',
@@ -75,9 +76,9 @@ try {
     $insertPwud = $connection->prepare(
         'INSERT INTO pwd_table (
             first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
-            address, religion, sex, educational_attainment, occupation, monthly_income,
+            address,barangay,religion, sex, educational_attainment, occupation, monthly_income,
             civil_status, contact_number, services_needed
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPwud) {
@@ -92,6 +93,7 @@ try {
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $age = (int) $_POST['age'];
     $address = trim((string) $_POST['address']);
+    $brgy = trim((string) $_POST['barangay']);
     $religion = trim((string) $_POST['religion']);
     $sex = trim((string) $_POST['sex']);
     $educationalAttainment = trim((string) $_POST['educational_attainment']);
@@ -102,7 +104,7 @@ try {
     $servicesNeeded = trim((string) $_POST['services_needed']);
 
     $insertPwud->bind_param(
-        'ssssssisssssdsss',
+        'sssssssisssssdsss',
         $firstName,
         $middleName,
         $lastName,
@@ -111,6 +113,7 @@ try {
         $placeOfBirth,
         $age,
         $address,
+        $brgy,
         $religion,
         $sex,
         $educationalAttainment,

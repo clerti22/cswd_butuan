@@ -14,6 +14,7 @@ $requiredFields = [
     'place_of_birth',
     'age',
     'address',
+    'barangay',
     'religion',
     'sex',
     'educational_attainment',
@@ -112,6 +113,7 @@ try {
             place_of_birth,
             age,
             address,
+            barangay,
             religion,
             sex,
             educational_attainment,
@@ -131,7 +133,7 @@ try {
             pwd_status,
             solo_classification,
             solo_needs
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertSoloParent) {
@@ -146,6 +148,7 @@ try {
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $age = (int) $_POST['age'];
     $address = trim((string) $_POST['address']);
+    $brgy = trim((string) $_POST['barangay']);
     $religion = trim((string) $_POST['religion']);
     $sex = trim((string) $_POST['sex']);
     $educationalAttainment = trim((string) $_POST['educational_attainment']);
@@ -175,7 +178,7 @@ try {
     }
 
     $insertSoloParent->bind_param(
-        'ssssssisssssssssdssssssssss',
+        'ssssssissssssssssdssssssssss',
         $firstName,
         $middleName,
         $lastName,
@@ -184,6 +187,7 @@ try {
         $placeOfBirth,
         $age,
         $address,
+        $brgy,
         $religion,
         $sex,
         $educationalAttainment,
