@@ -423,10 +423,14 @@ button:hover {
     border-bottom-color: #dc2626;
 }
 
+.weekly-chart-section {
+    margin-top: 1rem;
+}
+
 .charts-grid {
     margin-top: 1rem;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: 1rem;
 }
 
@@ -440,7 +444,6 @@ button:hover {
 .chart-card-large {
     min-height: 430px;
 }
-
 
 .chart-head-row {
     display: flex;
@@ -509,6 +512,34 @@ button:hover {
 .btn-apply-filter:hover {
     background: #1d4ed8;
 }
+
+.chart-tabs {
+    display: inline-flex;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.chart-tab {
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+}
+
+.chart-tab.active {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+}
+
+.chart-tab:hover {
+    background: transparent;
+    color: #111827;
+}
+
 .chart-title {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;

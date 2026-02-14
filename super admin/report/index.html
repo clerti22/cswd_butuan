@@ -141,10 +141,10 @@
                     </article>
                 </section>
 
-                <section class="charts-grid" aria-label="Client analytics charts">
+                <section class="weekly-chart-section" aria-label="Weekly division registration chart">
                     <article class="chart-card chart-card-large">
                         <div class="chart-head-row">
-                            <h3 class="chart-title" id="mainChartTitle">Weekly Client Registration</h3>
+                            <h3 class="chart-title" id="weeklyChartTitle">Weekly Client Registration</h3>
                             <button class="btn-filter-chart" id="toggleFilterBtn" type="button">Filter</button>
                         </div>
 
@@ -170,7 +170,25 @@
                             <button class="btn-apply-filter" id="applyFilterBtn" type="button">Apply</button>
                         </div>
 
-                        <div id="mainChartContainer" class="canvas-chart" aria-label="Weekly division registration chart"></div>
+                        <div id="weeklyLineChartContainer" class="canvas-chart" aria-label="Weekly division registration line chart"></div>
+                    </article>
+                </section>
+
+                <section class="charts-grid" aria-label="Client analytics charts">
+                    <article class="chart-card chart-card-large">
+                        <div class="chart-tabs" role="tablist" aria-label="Chart data views">
+                            <button class="chart-tab active" type="button" role="tab" aria-selected="true"
+                                data-served-tab="barangay">Per barangay</button>
+                            <button class="chart-tab" type="button" role="tab" aria-selected="false"
+                                data-served-tab="program">Per Program</button>
+                        </div>
+                        <h3 class="chart-title" id="servedChartTitle">Total Served Clients per Barangay Chart</h3>
+                        <div id="servedMainChartContainer" class="canvas-chart" aria-label="Total served clients chart"></div>
+                    </article>
+
+                    <article class="chart-card">
+                        <h3 class="chart-title">Total Served Clients by Gender</h3>
+                        <div id="genderChartContainer" class="canvas-chart" aria-label="Gender chart"></div>
                     </article>
                 </section>
             </main>
