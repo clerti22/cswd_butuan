@@ -143,19 +143,34 @@
 
                 <section class="charts-grid" aria-label="Client analytics charts">
                     <article class="chart-card chart-card-large">
-                        <div class="chart-tabs" role="tablist" aria-label="Chart data views">
-                            <button class="chart-tab active" id="barangayTab" type="button" role="tab"
-                                aria-selected="true" data-chart-tab="barangay">Per barangay</button>
-                            <button class="chart-tab" id="programTab" type="button" role="tab" aria-selected="false"
-                                data-chart-tab="program">Per Program</button>
+                        <div class="chart-head-row">
+                            <h3 class="chart-title" id="mainChartTitle">Weekly Client Registration</h3>
+                            <button class="btn-filter-chart" id="toggleFilterBtn" type="button">Filter</button>
                         </div>
-                        <h3 class="chart-title" id="mainChartTitle">Total Served Clients per Barangay Chart</h3>
-                        <div id="mainChartContainer" class="canvas-chart" aria-label="Main client chart"></div>
-                    </article>
 
-                    <article class="chart-card">
-                        <h3 class="chart-title">Total Served Clients by Gender</h3>
-                        <div id="genderChartContainer" class="canvas-chart" aria-label="Gender chart"></div>
+                        <div class="filter-panel" id="chartFilterPanel" aria-label="Chart filters" hidden>
+                            <label class="filter-field">View
+                                <select id="periodFilter">
+                                    <option value="week" selected>Week</option>
+                                    <option value="month">Month</option>
+                                    <option value="year">Year</option>
+                                </select>
+                            </label>
+                            <label class="filter-field">Reference
+                                <input id="referenceFilter" type="date">
+                            </label>
+                            <label class="filter-field">Division
+                                <select id="divisionFilter">
+                                    <option value="all" selected>All Divisions</option>
+                                    <option value="DPSD">DPSD</option>
+                                    <option value="PSSD">PSSD</option>
+                                    <option value="RPSD">RPSD</option>
+                                </select>
+                            </label>
+                            <button class="btn-apply-filter" id="applyFilterBtn" type="button">Apply</button>
+                        </div>
+
+                        <div id="mainChartContainer" class="canvas-chart" aria-label="Weekly division registration chart"></div>
                     </article>
                 </section>
             </main>

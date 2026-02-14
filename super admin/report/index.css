@@ -426,7 +426,7 @@ button:hover {
 .charts-grid {
     margin-top: 1rem;
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1rem;
 }
 
@@ -441,33 +441,74 @@ button:hover {
     min-height: 430px;
 }
 
-.chart-tabs {
-    display: inline-flex;
+
+.chart-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
 }
 
-.chart-tab {
+.btn-filter-chart {
+    background: #0a8f1f;
+    color: #fff;
     border: none;
-    background: transparent;
-    color: #2563eb;
-    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
     cursor: pointer;
-    padding: 0;
 }
 
-.chart-tab.active {
-    color: #111827;
-    text-decoration: underline;
-    text-underline-offset: 6px;
-    text-decoration-thickness: 2px;
+.btn-filter-chart:hover {
+    background: #087219;
 }
 
-.chart-tab:hover {
-    background: transparent;
-    color: #111827;
+.filter-panel {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    gap: 0.7rem;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 0.7rem;
+    margin-bottom: 0.7rem;
 }
 
+.filter-panel[hidden] {
+    display: none;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: #374151;
+}
+
+.filter-field select,
+.filter-field input {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.9rem;
+    background: #fff;
+}
+
+.btn-apply-filter {
+    align-self: end;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+}
+
+.btn-apply-filter:hover {
+    background: #1d4ed8;
+}
 .chart-title {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
@@ -482,6 +523,10 @@ button:hover {
 
 @media (max-width: 1200px) {
     .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-panel {
         grid-template-columns: 1fr;
     }
 }
