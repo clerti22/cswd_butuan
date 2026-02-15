@@ -103,8 +103,44 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM soloparent_info_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing SOLOPARENT row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-SOLOPARENT-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM soloparent_info_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertSoloParent = $connection->prepare(
         'INSERT INTO soloparent_info_table (
+            control_number,
             first_name,
             middle_name,
             last_name,
@@ -133,7 +169,7 @@ try {
             pwd_status,
             solo_classification,
             solo_needs
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertSoloParent) {
@@ -178,7 +214,8 @@ try {
     }
 
     $insertSoloParent->bind_param(
-        'ssssssissssssssssdssssssssss',
+        'sssssssissssssssssdssssssssss',
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,
