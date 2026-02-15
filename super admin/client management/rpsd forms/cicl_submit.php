@@ -144,9 +144,44 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM cicl_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing CICL row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-CICL-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM cicl_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertCar = $connection->prepare(
         'INSERT INTO cicl_table (
-            interview_date, first_name, middle_name, last_name, suffix, nickname, birth_date, birth_place,
+            interview_date, control_number, first_name, middle_name, last_name, suffix, nickname, birth_date, birth_place,
             religion, civil_status, age, sex, education, present_address, permanent_address,
             spouse_first_name, spouse_middle_name, spouse_last_name, spouse_suffix,
             monthly_income_estimate, income_source, assistance_status,
@@ -156,7 +191,7 @@ try {
             type_of_offense, date_of_apprehension, by_whom, date_of_offense,
             source_of_information, complainant, presented_problem,
             family_environment, community_description, family_history_background, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertCar) {
@@ -210,8 +245,9 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertCar->bind_param(
-        'ssssssssssissssssssssssssssssssssssssssssssss',
+        'sssssssssssissssssssssssssssssssssssssssssssss',
         $interviewDate,
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,

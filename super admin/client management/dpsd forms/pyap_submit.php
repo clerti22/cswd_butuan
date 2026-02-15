@@ -126,14 +126,49 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM pyap_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing PYAP row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-PYAP-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM pyap_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertPyap = $connection->prepare(
         'INSERT INTO pyap_table (
-            first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,
+            control_number, first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,
             address, barangay,religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
             occupation, civil_status, contact_number, school_last_attended, school_last_attended_month_year,
             trainings_attended, skills_interest_hobbies, assistance_received, assistance_specify,
             intervention_needed, intervention_specify
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPyap) {
@@ -169,7 +204,8 @@ try {
     $interventionSpecify = trim((string) $_POST['intervention_specify']);
 
     $insertPyap->bind_param(
-        'sssssssisssssssssssssssssss',
+        'ssssssssisssssssssssssssssss',
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,

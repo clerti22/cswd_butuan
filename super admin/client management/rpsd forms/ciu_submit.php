@@ -127,16 +127,51 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM ciu_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing CIU row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-CIU-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM ciu_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertCiu = $connection->prepare(
         'INSERT INTO ciu_table (
-            first_name, middle_name, last_name, suffix,
+            control_number, first_name, middle_name, last_name, suffix,
             birth_date, birth_place, age, sex, civil_status,
             contact_number, monthly_income, religion, occupation,
             education, address,
             member_senior, member_solo_parent, member_pwd, member_4ps, member_others,
             service_prescribed_medicine, service_certificate_minor, service_hospital_bill,
             service_tesda_certificate, service_burial, service_laboratory, service_legal_assistance, service_others
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertCiu) {
@@ -175,7 +210,8 @@ try {
     $serviceOthers = trim((string) $_POST['service_others']);
 
     $insertCiu->bind_param(
-        'ssssssisssssssssssssssssssss',
+        'sssssssisssssssssssssssssssss',
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,

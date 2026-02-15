@@ -97,16 +97,51 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM csae_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing CSAE row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-CSAE-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM csae_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertMain = $connection->prepare(
         'INSERT INTO csae_table (
-            first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age, birth_place,
+            control_number, first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age, birth_place,
             present_address, permanent_address, education, school_last_attended, school_address,
             health_condition, contact_number, is_4ps, philhealth,
             offense_type, incident_date, perpetrator_name, referral_date, referring_party,
             case_status, criminal_case_no, info_source, complainant,
             presenting_problem, background_child, background_family, background_community,
             assessment, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertMain) {
@@ -148,7 +183,8 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertMain->bind_param(
-        'sssssssisssssssssssssssssssssssss',
+        'ssssssssisssssssssssssssssssssssss',
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,

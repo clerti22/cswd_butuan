@@ -73,12 +73,47 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM pwud_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing PWUD row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-PWUD-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM pwud_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertPwud = $connection->prepare(
         'INSERT INTO pwud_table (
-            first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
+            control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
             address,barangay, religion, sex, educational_attainment, occupation, monthly_income,
             civil_status, contact_number, services_needed
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPwud) {
@@ -104,7 +139,8 @@ try {
     $servicesNeeded = trim((string) $_POST['services_needed']);
 
     $insertPwud->bind_param(
-        'ssssssissssssdsss',
+        'sssssssissssssdsss',
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,
