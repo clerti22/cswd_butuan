@@ -104,7 +104,7 @@ try {
     $servicesNeeded = trim((string) $_POST['services_needed']);
 
     $insertPwud->bind_param(
-        'sssssssisssssdsss',
+        'ssssssissssssdsss',
         $firstName,
         $middleName,
         $lastName,
