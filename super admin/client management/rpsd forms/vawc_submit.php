@@ -105,13 +105,48 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM vawc_table');
+    if (!$rowCountResult) {
+        throw new Exception('Failed to get existing VAWC row count.');
+    }
+
+    $rowCountData = $rowCountResult->fetch_assoc();
+    $rowCountResult->free();
+
+    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $sequelNumber = $rowCount;
+
+    do {
+        $controlNumber = sprintf('CSWD-VAWC-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+        $controlCheck = $connection->prepare('SELECT 1 FROM vawc_table WHERE control_number = ? LIMIT 1');
+        if (!$controlCheck) {
+            throw new Exception('Failed to prepare control number uniqueness check.');
+        }
+
+        $controlCheck->bind_param('s', $controlNumber);
+        if (!$controlCheck->execute()) {
+            $controlCheck->close();
+            throw new Exception('Failed to check control number uniqueness.');
+        }
+
+        $controlCheck->store_result();
+        $controlExists = $controlCheck->num_rows > 0;
+        $controlCheck->close();
+
+        if ($controlExists) {
+            $sequelNumber++;
+        }
+    } while ($controlExists);
+
     $insertMain = $connection->prepare(
         'INSERT INTO vawc_table (
-            first_name, middle_name, last_name, suffix, birth_place, birth_date, age,
+            control_number, first_name, middle_name, last_name, suffix, birth_place, birth_date, age,
             education, religion, address, occupation, monthly_income, contact_number,
             civil_status, is_4ps, is_uct, is_nhts,
             presenting_problem, family_environment, community, family_history, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertMain) {
@@ -142,7 +177,8 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertMain->bind_param(
-        'ssssssisssssssssssssss',
+        'sssssssisssssssssssssss',
+        $controlNumber,
         $firstName,
         $middleName,
         $lastName,
