@@ -21,6 +21,7 @@ $requiredFields = [
     'education',
     'present_address',
     'permanent_address',
+    'barangay',
     'monthly_income_estimate',
     'income_source',
     'assistance_status',
@@ -182,7 +183,7 @@ try {
     $insertCar = $connection->prepare(
         'INSERT INTO car_table (
             interview_date, control_number, first_name, middle_name, last_name, suffix, nickname, birth_date, birth_place,
-            religion, civil_status, age, sex, education, present_address, permanent_address,
+            religion, civil_status, age, sex, education, present_address, permanent_address, barangay,
             spouse_first_name, spouse_middle_name, spouse_last_name, spouse_suffix,
             monthly_income_estimate, income_source, assistance_status,
             food_expense, house_lot_expense, education_expense, transport_expense, misc_expense,
@@ -191,7 +192,7 @@ try {
             type_of_offense, date_of_apprehension, by_whom, date_of_offense,
             source_of_information, complainant, presented_problem,
             family_environment, community_description, family_history_background, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertCar) {
@@ -213,6 +214,7 @@ try {
     $education = trim((string) $_POST['education']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
+    $brgy = trim((string) $_POST['barangay']);
     $spouseFirstName = trim((string) ($_POST['spouse_first_name'] ?? ''));
     $spouseMiddleName = trim((string) ($_POST['spouse_middle_name'] ?? ''));
     $spouseLastName = trim((string) ($_POST['spouse_last_name'] ?? ''));
@@ -245,7 +247,7 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertCar->bind_param(
-        'sssssssssssissssssssssssssssssssssssssssssssss',
+        'sssssssssssisssssssssssssssssssssssssssssssssss',
         $interviewDate,
         $controlNumber,
         $firstName,
@@ -262,6 +264,7 @@ try {
         $education,
         $presentAddress,
         $permanentAddress,
+        $brgy,
         $spouseFirstName,
         $spouseMiddleName,
         $spouseLastName,
