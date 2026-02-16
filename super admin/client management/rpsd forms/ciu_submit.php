@@ -22,6 +22,8 @@ $requiredFields = [
     'education',
     'address',
     'barangay',
+    'member_others',
+    'service_others',
     'member_senior',
     'member_solo_parent',
     'member_pwd',
