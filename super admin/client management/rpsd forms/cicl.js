@@ -334,6 +334,7 @@ submitButton?.addEventListener('click', async () => {
     formData.append('education', getFieldValue('education'));
     formData.append('present_address', getFieldValue('present-address'));
     formData.append('permanent_address', getFieldValue('permanent-address'));
+    formData.append('barangay', getFieldValue('barangay'));
     formData.append('spouse_first_name', getFieldValue('spouse-first-name'));
     formData.append('spouse_middle_name', getFieldValue('spouse-middle-name'));
     formData.append('spouse_last_name', getFieldValue('spouse-last-name'));

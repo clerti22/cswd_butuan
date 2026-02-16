@@ -21,6 +21,7 @@ $requiredFields = [
     'occupation',
     'education',
     'address',
+    'barangay',
     'member_others',
     'service_others',
     'member_senior',
@@ -167,11 +168,11 @@ try {
             control_number, first_name, middle_name, last_name, suffix,
             birth_date, birth_place, age, sex, civil_status,
             contact_number, monthly_income, religion, occupation,
-            education, address,
+            education, address, barangay,
             member_senior, member_solo_parent, member_pwd, member_4ps, member_others,
             service_prescribed_medicine, service_certificate_minor, service_hospital_bill,
             service_tesda_certificate, service_burial, service_laboratory, service_legal_assistance, service_others
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertCiu) {
@@ -193,6 +194,7 @@ try {
     $occupation = trim((string) $_POST['occupation']);
     $education = trim((string) $_POST['education']);
     $address = trim((string) $_POST['address']);
+    $barangay = trim((string) $_POST['barangay']);
 
     $memberSenior = trim((string) $_POST['member_senior']);
     $memberSoloParent = trim((string) $_POST['member_solo_parent']);
@@ -210,7 +212,7 @@ try {
     $serviceOthers = trim((string) $_POST['service_others']);
 
     $insertCiu->bind_param(
-        'sssssssisssssssssssssssssssss',
+        'sssssssissssssssssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -227,6 +229,7 @@ try {
         $occupation,
         $education,
         $address,
+        $barangay,
         $memberSenior,
         $memberSoloParent,
         $memberPwd,
