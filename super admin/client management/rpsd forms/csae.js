@@ -124,6 +124,7 @@ function validateForm() {
         'birth-place',
         'present-address',
         'permanent-address',
+        'barangay',
         'education',
         'school-last',
         'school-address',
@@ -338,6 +339,7 @@ submitButton?.addEventListener('click', async () => {
     formData.append('birth_place', getFieldValue('birth-place'));
     formData.append('present_address', getFieldValue('present-address'));
     formData.append('permanent_address', getFieldValue('permanent-address'));
+    formData.append('barangay', getFieldValue('barangay'));
     formData.append('education', getFieldValue('education'));
     formData.append('school_last_attended', getFieldValue('school-last'));
     formData.append('school_address', getFieldValue('school-address'));
