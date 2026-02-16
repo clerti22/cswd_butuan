@@ -183,7 +183,7 @@ try {
     $insertCar = $connection->prepare(
         'INSERT INTO car_table (
             interview_date, control_number, first_name, middle_name, last_name, suffix, nickname, birth_date, birth_place,
-            religion, civil_status, age, sex, education, present_address, permanent_address, barangay,
+            religion, civil_status, age, sex, education, present_address, permanent_address, barangays,
             spouse_first_name, spouse_middle_name, spouse_last_name, spouse_suffix,
             monthly_income_estimate, income_source, assistance_status,
             food_expense, house_lot_expense, education_expense, transport_expense, misc_expense,
@@ -214,7 +214,7 @@ try {
     $education = trim((string) $_POST['education']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
-    $brgy = trim((string) $_POST['barangay']);
+    $brgy = trim((string) $_POST['barangays']);
     $spouseFirstName = trim((string) ($_POST['spouse_first_name'] ?? ''));
     $spouseMiddleName = trim((string) ($_POST['spouse_middle_name'] ?? ''));
     $spouseLastName = trim((string) ($_POST['spouse_last_name'] ?? ''));
@@ -247,7 +247,7 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertCar->bind_param(
-        'sssssssssssisssssssssssssssssssssssssssssssssss',
+        'sssssssssssissssssssssssssssssssssssssssssssss',
         $interviewDate,
         $controlNumber,
         $firstName,
