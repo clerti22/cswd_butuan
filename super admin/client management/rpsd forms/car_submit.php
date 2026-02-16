@@ -21,7 +21,6 @@ $requiredFields = [
     'education',
     'present_address',
     'permanent_address',
-    'barangays',
     'monthly_income_estimate',
     'income_source',
     'assistance_status',
@@ -51,6 +50,17 @@ foreach ($requiredFields as $field) {
         echo json_encode(['success' => false, 'message' => "Missing required field: {$field}"]);
         exit;
     }
+}
+
+$barangayValue = trim((string) ($_POST['barangays'] ?? ''));
+if ($barangayValue === '') {
+    $barangayValue = trim((string) ($_POST['barangay'] ?? ''));
+}
+
+if ($barangayValue === '') {
+    http_response_code(422);
+    echo json_encode(['success' => false, 'message' => 'Missing required field: barangays']);
+    exit;
 }
 
 $classificationPayload = trim((string) ($_POST['classification_tags'] ?? ''));
@@ -214,7 +224,7 @@ try {
     $education = trim((string) $_POST['education']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
-    $brgy = trim((string) $_POST['barangays']);
+    $brgy = $barangayValue;
     $spouseFirstName = trim((string) ($_POST['spouse_first_name'] ?? ''));
     $spouseMiddleName = trim((string) ($_POST['spouse_middle_name'] ?? ''));
     $spouseLastName = trim((string) ($_POST['spouse_last_name'] ?? ''));
