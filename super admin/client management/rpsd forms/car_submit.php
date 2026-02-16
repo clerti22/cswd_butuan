@@ -21,7 +21,7 @@ $requiredFields = [
     'education',
     'present_address',
     'permanent_address',
-    'barangay',
+    'barangays',
     'monthly_income_estimate',
     'income_source',
     'assistance_status',
