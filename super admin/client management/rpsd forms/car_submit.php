@@ -21,7 +21,6 @@ $requiredFields = [
     'education',
     'present_address',
     'permanent_address',
-    'barangays',
     'monthly_income_estimate',
     'income_source',
     'assistance_status',
@@ -53,7 +52,11 @@ foreach ($requiredFields as $field) {
     }
 }
 
-$barangayValue = trim((string) ($_POST['barangays']));
+$barangayValue = trim((string) ($_POST['barangays'] ?? ''));
+if ($barangayValue === '') {
+    $barangayValue = trim((string) ($_POST['barangay'] ?? ''));
+}
+
 if ($barangayValue === '') {
     http_response_code(422);
     echo json_encode(['success' => false, 'message' => 'Missing required field: barangays']);
