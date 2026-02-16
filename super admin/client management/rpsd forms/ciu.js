@@ -157,6 +157,7 @@ function validateMainForm() {
         'occupation',
         'education',
         'address',
+        'barangay',
         'member_others',
         'service_others'
     ];
@@ -254,6 +255,7 @@ function collectMainFormData() {
         occupation: getInputValue('occupation'),
         education: getInputValue('education'),
         address: getInputValue('address'),
+        barangay: getInputValue('barangay'),
         member_others: getInputValue('member_others'),
         service_others: getInputValue('service_others'),
         ...memberFlags,
