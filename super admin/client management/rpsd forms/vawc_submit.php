@@ -16,6 +16,7 @@ $requiredFields = [
     'education',
     'religion',
     'address',
+    'barangay',
     'occupation',
     'monthly_income',
     'contact_number',
@@ -143,10 +144,10 @@ try {
     $insertMain = $connection->prepare(
         'INSERT INTO vawc_table (
             control_number, first_name, middle_name, last_name, suffix, birth_place, birth_date, age,
-            education, religion, address, occupation, monthly_income, contact_number,
+            education, religion, address, barangay, occupation, monthly_income, contact_number,
             civil_status, is_4ps, is_uct, is_nhts,
             presenting_problem, family_environment, community, family_history, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertMain) {
@@ -163,6 +164,7 @@ try {
     $education = trim((string) $_POST['education']);
     $religion = trim((string) $_POST['religion']);
     $address = trim((string) $_POST['address']);
+    $barangay = trim((string) $_POST['barangay']);
     $occupation = trim((string) $_POST['occupation']);
     $monthlyIncome = trim((string) $_POST['monthly_income']);
     $contactNumber = trim((string) $_POST['contact_number']);
@@ -177,7 +179,7 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertMain->bind_param(
-        'sssssssisssssssssssssss',
+        'sssssssissssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -189,6 +191,7 @@ try {
         $education,
         $religion,
         $address,
+        $barangay,
         $occupation,
         $monthlyIncome,
         $contactNumber,

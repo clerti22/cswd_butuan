@@ -114,6 +114,7 @@ function validateMainForm() {
         'education',
         'religion',
         'address',
+        'barangay',
         'occupation',
         'income',
         'contact',
@@ -304,6 +305,7 @@ submitButton?.addEventListener('click', async () => {
     formData.append('education', getFieldValue('education'));
     formData.append('religion', getFieldValue('religion'));
     formData.append('address', getFieldValue('address'));
+    formData.append('barangay', getFieldValue('barangay'));
     formData.append('occupation', getFieldValue('occupation'));
     formData.append('monthly_income', getFieldValue('income'));
     formData.append('contact_number', getFieldValue('contact'));
