@@ -257,7 +257,7 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertCar->bind_param(
-        'sssssssssssissssssssssssssssssssssssssssssssss',
+        'sssssssssssisssssssssssssssssssssssssssssssssss',
         $interviewDate,
         $controlNumber,
         $firstName,
