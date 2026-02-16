@@ -146,10 +146,11 @@
                         <table class="client-table">
                             <thead>
                                 <tr>
+                                    <th>Control Number</th>
                                     <th>Full Name</th>
                                     <th>Age</th>
                                     <th>Sex</th>
-                                    <th>Address</th>
+                                    <th>Barangay</th>
                                     <th>Services Availed</th>
                                     <th>Sector</th>
                                     <th>Contact Details</th>
