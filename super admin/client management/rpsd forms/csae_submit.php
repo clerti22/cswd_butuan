@@ -16,6 +16,7 @@ $requiredFields = [
     'birth_place',
     'present_address',
     'permanent_address',
+    'barangay',
     'education',
     'school_last_attended',
     'school_address',
@@ -135,13 +136,13 @@ try {
     $insertMain = $connection->prepare(
         'INSERT INTO csae_table (
             control_number, first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age, birth_place,
-            present_address, permanent_address, education, school_last_attended, school_address,
+            present_address, permanent_address, barangay, education, school_last_attended, school_address,
             health_condition, contact_number, is_4ps, philhealth,
             offense_type, incident_date, perpetrator_name, referral_date, referring_party,
             case_status, criminal_case_no, info_source, complainant,
             presenting_problem, background_child, background_family, background_community,
             assessment, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertMain) {
@@ -159,6 +160,7 @@ try {
     $birthPlace = trim((string) $_POST['birth_place']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
+    $barangay = trim((string) $_POST['barangay']);
     $education = trim((string) $_POST['education']);
     $schoolLastAttended = trim((string) $_POST['school_last_attended']);
     $schoolAddress = trim((string) $_POST['school_address']);
@@ -183,7 +185,7 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
 
     $insertMain->bind_param(
-        'ssssssssisssssssssssssssssssssssss',
+        'ssssssssissssssssssssssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -196,6 +198,7 @@ try {
         $birthPlace,
         $presentAddress,
         $permanentAddress,
+        $barangay,
         $education,
         $schoolLastAttended,
         $schoolAddress,
