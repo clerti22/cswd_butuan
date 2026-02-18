@@ -151,8 +151,8 @@
                                     <th>Age</th>
                                     <th>Sex</th>
                                     <th>Barangay</th>
-                                    <th>Services Availed</th>
-                                    <th>Sector</th>
+                                    <th>Program</th>
+                                    <th>Division</th>
                                     <th>Contact Details</th>
                                     <th>Date of Service</th>
                                     <th>Action</th>
