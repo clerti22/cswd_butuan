@@ -43,31 +43,41 @@ if (!$user) {
     exit;
 }
 
-$storedPassword = (string) $user['password'];
-$isValidPassword = password_verify($password, $storedPassword);
+$storedPassword = (string) ($user['password'] ?? '');
+
+// Support both bcrypt hashes and legacy plaintext VARCHAR passwords.
+$isHashedPassword = password_get_info($storedPassword)['algo'] !== null;
+$isValidPassword = $isHashedPassword
+    ? password_verify($password, $storedPassword)
+    : hash_equals($storedPassword, $password);
 
 if (!$isValidPassword) {
     header('Location: /login form/index.php?error=invalid_password');
     exit;
 }
 
-if (password_needs_rehash($storedPassword, PASSWORD_BCRYPT)) {
+// If account still uses plaintext or an outdated hash, migrate it to bcrypt after successful login.
+$shouldUpgradePassword = !$isHashedPassword || password_needs_rehash($storedPassword, PASSWORD_BCRYPT);
+
+if ($shouldUpgradePassword) {
     try {
         $connection = get_database_connection();
         $newHash = password_hash($password, PASSWORD_BCRYPT);
         $updateStatement = $connection->prepare('UPDATE users SET password = ? WHERE username = ?');
+
         if ($updateStatement) {
             $updateStatement->bind_param('ss', $newHash, $username);
             $updateStatement->execute();
             $updateStatement->close();
         }
+
         $connection->close();
     } catch (Throwable $exception) {
-        // Ignore rehash errors without blocking login.
+        // Ignore migration errors without blocking a valid login.
     }
 }
 
-$role = (string) ($user['role'] ?? '');
+$role = strtolower(trim((string) ($user['role'] ?? '')));
 $allowedRoles = ['super admin', 'admin', 'encoder'];
 
 if (!in_array($role, $allowedRoles, true)) {
