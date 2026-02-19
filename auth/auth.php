@@ -81,7 +81,7 @@ function require_login(array $allowedRoles): void
 function role_dashboard_path(string $role): string
 {
     return match ($role) {
-        'super admin' => '/super admin/index.php',
+        'super admin' => '/super admin/dashboard part/index.php',
         'admin' => '/admin/index.php',
         'encoder' => '/encoders/index.php',
         default => '/login form/index.php?error=invalid_role',
