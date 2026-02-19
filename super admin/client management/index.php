@@ -153,6 +153,7 @@ require_login(['super admin']);
                         <table class="client-table">
                             <thead>
                                 <tr>
+                                    
                                     <th>Control Number</th>
                                     <th>Full Name</th>
                                     <th>Age</th>
