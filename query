@@ -407,3 +407,20 @@ CREATE TABLE IF NOT EXISTS ciu_family_composition_table (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('super admin', 'admin', 'encoder') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO users (username, password, role)
+VALUES
+    ('superadmin', '$2y$12$K0FAC/vX147B6OjfGJXIKOQcDFuav.oexoLjr167uvEclpiOutU9.', 'super admin'),
+    ('adminuser', '$2y$12$MttNdwQWbKEiGkGvaBR.COO9rCT9GFJNhfW31eb7n7abEZBKhpCke', 'admin'),
+    ('encoderuser', '$2y$12$gO.iT62xZtvh9N8KE9TVieX89DITvKxftLhaiDtwtYyII5LD.wi1i', 'encoder')
+ON DUPLICATE KEY UPDATE
+    password = VALUES(password),
+    role = VALUES(role);
