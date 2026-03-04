@@ -13,14 +13,14 @@ $username = (string) ($_SESSION['username'] ?? '');
 $profile = [
     'name' => '',
     'username' => $username,
-    'address' => '',
+    'role' => '',
     'email' => '',
 ];
 
 if ($username !== '') {
     try {
         $connection = get_database_connection();
-        $statement = $connection->prepare('SELECT COALESCE(full_name, username) AS full_name, username, address, email_address FROM users WHERE username = ? LIMIT 1');
+        $statement = $connection->prepare('SELECT COALESCE(full_name, username) AS full_name, username, role, email_address FROM users WHERE username = ? LIMIT 1');
 
         if ($statement) {
             $statement->bind_param('s', $username);
@@ -31,7 +31,7 @@ if ($username !== '') {
             if ($user) {
                 $profile['name'] = (string) ($user['full_name'] ?? '');
                 $profile['username'] = (string) ($user['username'] ?? $username);
-                $profile['address'] = (string) ($user['address'] ?? '');
+                $profile['role'] = (string) ($user['role'] ?? '');
                 $profile['email'] = (string) ($user['email_address'] ?? '');
             }
 
