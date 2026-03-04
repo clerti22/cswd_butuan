@@ -34,4 +34,11 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const profileData = window.superAdminProfile || {};
+
+document.getElementById('name').value = profileData.name || '';
+document.getElementById('username').value = profileData.username || '';
+document.getElementById('address').value = profileData.address || 'No address available';
+document.getElementById('email').value = profileData.email || 'No email available';
