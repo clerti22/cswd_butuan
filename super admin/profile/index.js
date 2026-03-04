@@ -19,10 +19,16 @@ openBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
-// Close sidebar when clicking nav items on mobile
-document.querySelectorAll('.nav-item').forEach(item => {
+// Close sidebar when clicking placeholder nav items on mobile
+document.querySelectorAll('.nav-item:not(#logoutLink)').forEach(item => {
     item.addEventListener('click', (e) => {
-        e.preventDefault();
+        const hrefValue = item.getAttribute('href') || '';
+        const isPlaceholderLink = hrefValue === '#' || hrefValue.trim() === '';
+
+        if (isPlaceholderLink) {
+            e.preventDefault();
+        }
+
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
