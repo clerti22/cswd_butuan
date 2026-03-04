@@ -410,17 +410,23 @@ CREATE TABLE IF NOT EXISTS ciu_family_composition_table (
 
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(150) NULL,
     username VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role ENUM('super admin', 'admin', 'encoder') NOT NULL,
+    address VARCHAR(255) NULL,
+    email_address VARCHAR(150) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (username, password, role)
+INSERT INTO users (full_name, username, password, role, address, email_address)
 VALUES
-    ('superadmin', '$2y$12$K0FAC/vX147B6OjfGJXIKOQcDFuav.oexoLjr167uvEclpiOutU9.', 'super admin'),
-    ('adminuser', '$2y$12$MttNdwQWbKEiGkGvaBR.COO9rCT9GFJNhfW31eb7n7abEZBKhpCke', 'admin'),
-    ('encoderuser', '$2y$12$gO.iT62xZtvh9N8KE9TVieX89DITvKxftLhaiDtwtYyII5LD.wi1i', 'encoder')
+    ('Super Admin', 'superadmin', '$2y$12$K0FAC/vX147B6OjfGJXIKOQcDFuav.oexoLjr167uvEclpiOutU9.', 'super admin', 'Butuan City', 'superadmin@example.com'),
+    ('Admin User', 'adminuser', '$2y$12$MttNdwQWbKEiGkGvaBR.COO9rCT9GFJNhfW31eb7n7abEZBKhpCke', 'admin', 'Butuan City', 'admin@example.com'),
+    ('Encoder User', 'encoderuser', '$2y$12$gO.iT62xZtvh9N8KE9TVieX89DITvKxftLhaiDtwtYyII5LD.wi1i', 'encoder', 'Butuan City', 'encoder@example.com')
 ON DUPLICATE KEY UPDATE
+    full_name = VALUES(full_name),
     password = VALUES(password),
-    role = VALUES(role);
+    role = VALUES(role),
+    address = VALUES(address),
+    email_address = VALUES(email_address);

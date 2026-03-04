@@ -79,7 +79,7 @@
             </div>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-item">
+                <a href="/auth/logout.php" class="nav-item" id="logoutLink">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         class="bi bi-door-open nav-icon" viewBox="0 0 16 16">
                         <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
@@ -101,16 +101,35 @@
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <h3 class="topbar-title" style="font-weight: bold;">Programs and Services</h3>
+                <h3 class="topbar-title" style="font-weight: bold;">Super Admin Profile</h3>
             </header>
 
             <main class="form-page">
-               
+                <section class="profile-container">
+                    <div class="profile-details">
+                        <div class="profile-field">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" value="" readonly>
+                        </div>
+                        <div class="profile-field">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" value="" readonly>
+                        </div>
+                        <div class="profile-field">
+                            <label for="role">Role:</label>
+                            <input type="text" id="role" value="" readonly>
+                        </div>
+                        <div class="profile-field">
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" value="" readonly>
+                        </div>
+                    </div>
+                    <button id="edit-button" class="edit-button" type="button">Edit</button>
+                </section>
             </main>
         </div>
     </div>
     <script src="index.js"></script>
-
 
 </body>
 

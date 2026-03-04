@@ -364,3 +364,134 @@ button:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+.form-page {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-container {
+    width: min(700px, 100%);
+    background: #fffdf5;
+    border: 2px solid #d4af37;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(122, 96, 24, 0.15);
+}
+
+.profile-container h1 {
+    color: #7a6018;
+    margin-bottom: 1.25rem;
+}
+
+.profile-details {
+    display: grid;
+    gap: 1rem;
+}
+
+.profile-field {
+    background: #fff;
+    border: 1px solid #e4c96f;
+    border-radius: 12px;
+    padding: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.profile-field label {
+    font-weight: 600;
+    color: #6b550f;
+}
+
+.profile-field input {
+    border: 1px solid #ccad4a;
+    border-radius: 8px;
+    padding: 0.7rem 0.75rem;
+    font-size: 0.96rem;
+    color: #2f2f2f;
+    background: #fff8df;
+}
+
+.profile-field input:focus {
+    outline: none;
+}
+
+.edit-button {
+    margin-top: 1.25rem;
+    background: linear-gradient(135deg, #d4af37, #b98d14);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.4rem;
+    font-weight: 600;
+    cursor: default;
+    width: 100%;
+}
+
+.edit-button:hover {
+    background: linear-gradient(135deg, #d4af37, #b98d14);
+}
+
+.form-page {
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #d9d9d9;
+}
+
+.profile-container {
+    width: min(620px, 100%);
+    background: #f3f3f3;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.profile-field {
+    border: none;
+    background: transparent;
+    padding: 0;
+    gap: 0.55rem;
+}
+
+.profile-field label {
+    font-size: 1.05rem;
+    color: #2c2c2c;
+    font-weight: 500;
+}
+
+.profile-field input {
+    width: 100%;
+    border: 1px solid #d0d0d0;
+    background: #efefef;
+    color: #303030;
+    border-radius: 8px;
+    height: 44px;
+    padding: 0 14px;
+    font-size: 1rem;
+}
+
+.edit-button {
+    width: 110px;
+    height: 42px;
+    margin: 2.3rem auto 0;
+    display: block;
+    border-radius: 8px;
+    background: #f2b705;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: default;
+}
+
+.edit-button:hover {
+    background: #f2b705;
+}
