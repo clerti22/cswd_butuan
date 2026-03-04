@@ -40,5 +40,5 @@ const profileData = window.superAdminProfile || {};
 
 document.getElementById('name').value = profileData.name || '';
 document.getElementById('username').value = profileData.username || '';
-document.getElementById('address').value = profileData.address || 'No address available';
+document.getElementById('role').value = profileData.role || 'Super Admin';
 document.getElementById('email').value = profileData.email || 'No email available';

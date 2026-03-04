@@ -6,21 +6,43 @@ require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
 
 require_login(['super admin']);
-
 start_auth_session();
 
 $username = (string) ($_SESSION['username'] ?? '');
 $profile = [
     'name' => '',
     'username' => $username,
-    'role' => '',
+    'role' => 'Super Admin',
     'email' => '',
 ];
 
 if ($username !== '') {
     try {
         $connection = get_database_connection();
-        $statement = $connection->prepare('SELECT COALESCE(full_name, username) AS full_name, username, role, email_address FROM users WHERE username = ? LIMIT 1');
+
+        $columns = [];
+        $columnsResult = $connection->query('SHOW COLUMNS FROM users');
+        if ($columnsResult) {
+            while ($columnRow = $columnsResult->fetch_assoc()) {
+                $field = strtolower((string) ($columnRow['Field'] ?? ''));
+                if ($field !== '') {
+                    $columns[$field] = true;
+                }
+            }
+            $columnsResult->free();
+        }
+
+        $fullNameSelect = isset($columns['full_name'])
+            ? 'COALESCE(NULLIF(full_name, ""), username) AS full_name'
+            : 'username AS full_name';
+
+        $emailSelect = isset($columns['email_address'])
+            ? 'COALESCE(email_address, "") AS email_address'
+            : '"" AS email_address';
+
+        $statement = $connection->prepare(
+            "SELECT {$fullNameSelect}, username, role, {$emailSelect} FROM users WHERE username = ? LIMIT 1"
+        );
 
         if ($statement) {
             $statement->bind_param('s', $username);
@@ -29,9 +51,9 @@ if ($username !== '') {
             $user = $result ? $result->fetch_assoc() : null;
 
             if ($user) {
-                $profile['name'] = (string) ($user['full_name'] ?? '');
+                $profile['name'] = (string) ($user['full_name'] ?? $username);
                 $profile['username'] = (string) ($user['username'] ?? $username);
-                $profile['role'] = (string) ($user['role'] ?? '');
+                $profile['role'] = ucwords((string) ($user['role'] ?? 'super admin'));
                 $profile['email'] = (string) ($user['email_address'] ?? '');
             }
 
