@@ -374,7 +374,7 @@ button:hover {
 .profile-container {
     width: min(700px, 100%);
     background: #fffdf5;
-    border: 2px solid #d4af37;
+
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 10px 25px rgba(122, 96, 24, 0.15);

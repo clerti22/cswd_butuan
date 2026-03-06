@@ -36,9 +36,9 @@ if ($username !== '') {
             ? 'COALESCE(NULLIF(full_name, ""), username) AS full_name'
             : 'username AS full_name';
 
-        $emailSelect = isset($columns['email_address'])
-            ? 'COALESCE(email_address, "") AS email_address'
-            : '"" AS email_address';
+        $emailSelect = isset($columns['email'])
+            ? 'COALESCE(email, "") AS email'
+            : '"" AS email';
 
         $statement = $connection->prepare(
             "SELECT {$fullNameSelect}, username, role, {$emailSelect} FROM users WHERE username = ? LIMIT 1"
@@ -54,7 +54,7 @@ if ($username !== '') {
                 $profile['name'] = (string) ($user['full_name'] ?? $username);
                 $profile['username'] = (string) ($user['username'] ?? $username);
                 $profile['role'] = ucwords((string) ($user['role'] ?? 'super admin'));
-                $profile['email'] = (string) ($user['email_address'] ?? '');
+                $profile['email'] = (string) ($user['email'] ?? '');
             }
 
             $statement->close();
