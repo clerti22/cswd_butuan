@@ -95,7 +95,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $formState['message'] = 'Username exist please use different username.';
             } else {
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                $role = 'admin';
+                $role = 'super admin';
                 $ageValue = (int) $age;
 
                 $insertStatement = $connection->prepare(
