@@ -74,6 +74,7 @@ if (adminRegistrationForm) {
             'phone_number',
             'gender',
             'age',
+            'role',
             'password',
             'confirm_password',
         ];

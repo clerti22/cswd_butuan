@@ -16,6 +16,7 @@ $formState = [
         'phone_number' => '',
         'gender' => '',
         'age' => '',
+        'role' => '',
     ],
 ];
 
@@ -25,6 +26,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $phoneNumber = trim((string) ($_POST['phone_number'] ?? ''));
     $gender = trim((string) ($_POST['gender'] ?? ''));
     $age = trim((string) ($_POST['age'] ?? ''));
+    $role = trim((string) ($_POST['role'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
     $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
 
@@ -34,6 +36,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         'phone_number' => $phoneNumber,
         'gender' => $gender,
         'age' => $age,
+        'role' => $role,
     ];
 
     if (
@@ -42,6 +45,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $phoneNumber === '' ||
         $gender === '' ||
         $age === '' ||
+        $role === '' ||
         $password === '' ||
         $confirmPassword === ''
     ) {
@@ -50,6 +54,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif (!ctype_digit($age) || (int) $age <= 0) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please provide a valid age.';
+    } elseif (!in_array(strtolower($role), ['super admin', 'admin', 'encoder'], true)) {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Role must be super admin, admin, or encoder only.';
     } elseif (!hash_equals($password, $confirmPassword)) {
         $formState['status'] = 'error';
         $formState['message'] = 'Password and confirm password do not match.';
@@ -95,7 +102,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $formState['message'] = 'Username exist please use different username.';
             } else {
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                $role = 'super admin';
+                $normalizedRole = strtolower($role);
                 $ageValue = (int) $age;
 
                 $insertStatement = $connection->prepare(
@@ -114,7 +121,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     $gender,
                     $ageValue,
                     $hashedPassword,
-                    $role
+                    $normalizedRole
                 );
 
                 $insertStatement->execute();
@@ -128,6 +135,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     'phone_number' => '',
                     'gender' => '',
                     'age' => '',
+                    'role' => '',
                 ];
             }
 

@@ -372,7 +372,7 @@ button:hover {
 }
 
 .admin-registration-card {
-    background: #ffffff;
+    background: #e7e7e7;
     border-radius: 10px;
     padding: 1.5rem 2.2rem 2rem;
 }
@@ -436,7 +436,8 @@ button:hover {
     color: #1a1a1a;
 }
 
-.registration-field input {
+.registration-field input,
+.registration-field select {
     height: 48px;
     border: 1px solid #cfcfd7;
     border-radius: 10px;
