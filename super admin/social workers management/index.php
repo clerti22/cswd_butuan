@@ -92,7 +92,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
             if ($existingUser) {
                 $formState['status'] = 'error';
-                $formState['message'] = 'Username is already in use. Please choose another username.';
+                $formState['message'] = 'Username exist please use different username.';
             } else {
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
                 $role = 'admin';
