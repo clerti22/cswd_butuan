@@ -14,6 +14,7 @@ $formState = [
         'full_name' => '',
         'username' => '',
         'phone_number' => '',
+        'email' => '',
         'gender' => '',
         'age' => '',
         'role' => '',
@@ -24,6 +25,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $fullName = trim((string) ($_POST['full_name'] ?? ''));
     $username = trim((string) ($_POST['username'] ?? ''));
     $phoneNumber = trim((string) ($_POST['phone_number'] ?? ''));
+    $email = strtolower(trim((string) ($_POST['email'] ?? '')));
     $gender = trim((string) ($_POST['gender'] ?? ''));
     $age = trim((string) ($_POST['age'] ?? ''));
     $role = trim((string) ($_POST['role'] ?? ''));
@@ -34,6 +36,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         'full_name' => $fullName,
         'username' => $username,
         'phone_number' => $phoneNumber,
+        'email' => $email,
         'gender' => $gender,
         'age' => $age,
         'role' => $role,
@@ -43,6 +46,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $fullName === '' ||
         $username === '' ||
         $phoneNumber === '' ||
+        $email === '' ||
         $gender === '' ||
         $age === '' ||
         $role === '' ||
@@ -51,6 +55,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     ) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please complete all fields before submitting.';
+    } elseif (strpos($email, '@gmail.com') === false) {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Email must contain @gmail.com.';
     } elseif (!ctype_digit($age) || (int) $age <= 0) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please provide a valid age.';
@@ -78,7 +85,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $columnsResult->free();
             }
 
-            $requiredColumns = ['full_name', 'username', 'phone_number', 'gender', 'age', 'password', 'role'];
+            $requiredColumns = ['full_name', 'username', 'phone_number', 'email', 'gender', 'age', 'password', 'role'];
 
             foreach ($requiredColumns as $requiredColumn) {
                 if (!isset($columns[$requiredColumn])) {
@@ -101,31 +108,47 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $formState['status'] = 'error';
                 $formState['message'] = 'Username exist please use different username.';
             } else {
-                $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                $normalizedRole = strtolower($role);
-                $ageValue = (int) $age;
-
-                $insertStatement = $connection->prepare(
-                    'INSERT INTO users (full_name, username, phone_number, gender, age, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)'
-                );
-
-                if ($insertStatement === false) {
-                    throw new RuntimeException('Failed to prepare user insert statement.');
+                $existingEmailStatement = $connection->prepare('SELECT email FROM users WHERE email = ? LIMIT 1');
+                if ($existingEmailStatement === false) {
+                    throw new RuntimeException('Failed to prepare email check.');
                 }
 
-                $insertStatement->bind_param(
-                    'ssssiss',
-                    $fullName,
-                    $username,
-                    $phoneNumber,
-                    $gender,
-                    $ageValue,
-                    $hashedPassword,
-                    $normalizedRole
-                );
+                $existingEmailStatement->bind_param('s', $email);
+                $existingEmailStatement->execute();
+                $existingEmailResult = $existingEmailStatement->get_result();
+                $existingEmail = $existingEmailResult ? $existingEmailResult->fetch_assoc() : null;
+                $existingEmailStatement->close();
 
-                $insertStatement->execute();
-                $insertStatement->close();
+                if ($existingEmail) {
+                    $formState['status'] = 'error';
+                    $formState['message'] = 'This email is already used.';
+                } else {
+                    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+                    $normalizedRole = strtolower($role);
+                    $ageValue = (int) $age;
+
+                    $insertStatement = $connection->prepare(
+                        'INSERT INTO users (full_name, username, phone_number, email, gender, age, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+                    );
+
+                    if ($insertStatement === false) {
+                        throw new RuntimeException('Failed to prepare user insert statement.');
+                    }
+
+                    $insertStatement->bind_param(
+                        'sssssiss',
+                        $fullName,
+                        $username,
+                        $phoneNumber,
+                        $email,
+                        $gender,
+                        $ageValue,
+                        $hashedPassword,
+                        $normalizedRole
+                    );
+
+                    $insertStatement->execute();
+                    $insertStatement->close();
 
                 $formState['status'] = 'success';
                 $formState['message'] = 'Admin account has been added successfully.';
@@ -133,10 +156,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     'full_name' => '',
                     'username' => '',
                     'phone_number' => '',
+                    'email' => '',
                     'gender' => '',
                     'age' => '',
                     'role' => '',
                 ];
+                }
             }
 
             $connection->close();

@@ -72,6 +72,7 @@ if (adminRegistrationForm) {
             'full_name',
             'username',
             'phone_number',
+            'email',
             'gender',
             'age',
             'role',
@@ -87,6 +88,14 @@ if (adminRegistrationForm) {
         if (hasMissingField) {
             event.preventDefault();
             showRegistrationAlert('Please complete all fields before submitting.', 'error');
+            return;
+        }
+
+
+        const emailField = adminRegistrationForm.elements.namedItem('email');
+        if (emailField && !emailField.value.trim().toLowerCase().includes('@gmail.com')) {
+            event.preventDefault();
+            showRegistrationAlert('Email must contain @gmail.com.', 'error');
             return;
         }
 
