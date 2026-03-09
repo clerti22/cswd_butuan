@@ -364,3 +364,118 @@ button:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+
+.form-page {
+    width: min(96%, 1020px);
+    margin: 1.25rem auto 2rem;
+}
+
+.admin-registration-card {
+    background: #e7e7e7;
+    border-radius: 10px;
+    padding: 1.5rem 2.2rem 2rem;
+}
+
+.admin-registration-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.admin-registration-header h2 {
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 700;
+    color: #111;
+}
+
+.registration-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+
+.registration-alert {
+    display: none;
+    margin-bottom: 1rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.registration-alert.success {
+    display: block;
+    background: #e6f9eb;
+    color: #106c2f;
+    border: 1px solid #a6dfb7;
+}
+
+.registration-alert.error {
+    display: block;
+    background: #fbe7e7;
+    color: #8f1d1d;
+    border: 1px solid #efb0b0;
+}
+
+.admin-registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.registration-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.registration-field label {
+    font-size: 1.1rem;
+    color: #1a1a1a;
+}
+
+.registration-field input,
+.registration-field select {
+    height: 48px;
+    border: 1px solid #cfcfd7;
+    border-radius: 10px;
+    padding: 0 0.95rem;
+    font-size: 1rem;
+    background: #f8f8f8;
+}
+
+.registration-submit-btn {
+    margin: 1rem auto 0;
+    background: #0d8f24;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 0.72rem 1.3rem;
+    min-width: 120px;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.registration-submit-btn:hover {
+    background: #0a741d;
+}
+
+@media (max-width: 768px) {
+    .admin-registration-card {
+        padding: 1rem;
+    }
+
+    .admin-registration-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .admin-registration-header h2 {
+        font-size: 1.5rem;
+    }
+}
