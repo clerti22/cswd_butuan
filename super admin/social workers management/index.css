@@ -364,3 +364,109 @@ button:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+.form-page {
+    padding: 1.25rem;
+}
+
+.user-management {
+    background: #efefef;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.user-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.role-tab {
+    background-color: #059669;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+.role-tab.is-active {
+    background-color: #1e3a8a;
+}
+
+.add-user-wrapper {
+    position: relative;
+}
+
+.add-user-button {
+    background-color: #059669;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+}
+
+.add-user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 160px;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 4;
+}
+
+.add-user-dropdown a {
+    display: block;
+    padding: 0.7rem 0.9rem;
+    color: #111827;
+    text-decoration: none;
+}
+
+.add-user-dropdown a:hover {
+    background-color: #f3f4f6;
+}
+
+.add-user-dropdown a[aria-disabled='true'] {
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.user-table-wrap {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table thead th {
+    background-color: #d1d5db;
+    color: #111827;
+}
+
+.users-table th,
+.users-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-message {
+    padding: 0.8rem 1rem;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
