@@ -112,14 +112,28 @@
                             <button type="button" class="role-tab" data-role="encoder" role="tab" aria-selected="false">Encoder</button>
                         </div>
 
-                        <div class="add-user-wrapper">
-                            <button type="button" id="addUserButton" class="add-user-button" aria-haspopup="true" aria-expanded="false">
-                                + Add User
+                        <div class="right-controls">
+                            <input type="text" class="search-input" aria-label="Search users">
+                            <button type="button" class="control-button">
+                                <i class="bi bi-search"></i>
+                                Search
                             </button>
-                            <div id="addUserDropdown" class="add-user-dropdown" hidden>
-                                <a href="admin register/index.php">Add Admin</a>
-                                <a href="#" aria-disabled="true">Add Encoder</a>
+
+                            <div class="add-user-wrapper">
+                                <button type="button" id="addUserButton" class="control-button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-plus-lg"></i>
+                                    Add User
+                                </button>
+                                <div id="addUserDropdown" class="add-user-dropdown" hidden>
+                                    <a href="admin register/index.php">Add Admin</a>
+                                    <a href="#">Add Encoder</a>
+                                </div>
                             </div>
+
+                            <button type="button" class="control-button">
+                                <i class="bi bi-funnel"></i>
+                                Filter
+                            </button>
                         </div>
                     </div>
 

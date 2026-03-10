@@ -61,17 +61,36 @@ async function loadUsers(role) {
         }
 
         payload.users.forEach((user) => {
+            const normalizedStatus = String(user.status ?? '').toLowerCase();
+            const statusClass = normalizedStatus.includes('active')
+                ? 'active'
+                : normalizedStatus.includes('offline')
+                    ? 'offline'
+                    : 'disabled';
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${user.full_name ?? ''}</td>
                 <td>${user.role ?? ''}</td>
                 <td>${user.program ?? ''}</td>
-                <td>${user.status ?? ''}</td>
+                <td>
+                    <span class="status-cell">
+                        <span class="status-dot ${statusClass}"></span>
+                        <span>${user.status ?? ''}</span>
+                    </span>
+                </td>
             `;
             usersTableBody.appendChild(row);
         });
 
         usersTableMessage.textContent = '';
+
+        const placeholderRows = Math.max(0, 8 - payload.users.length);
+        for (let index = 0; index < placeholderRows; index += 1) {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td>&nbsp;</td><td></td><td></td><td></td>';
+            usersTableBody.appendChild(row);
+        }
     } catch (error) {
         usersTableBody.innerHTML = '';
         usersTableMessage.textContent = 'Failed to load user records right now.';
