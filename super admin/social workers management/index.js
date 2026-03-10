@@ -34,4 +34,79 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
+
+const roleTabs = document.querySelectorAll('.role-tab');
+const usersTableBody = document.getElementById('usersTableBody');
+const usersTableMessage = document.getElementById('usersTableMessage');
+const addUserButton = document.getElementById('addUserButton');
+const addUserDropdown = document.getElementById('addUserDropdown');
+
+async function loadUsers(role) {
+    usersTableMessage.textContent = `Loading ${role}s...`;
+
+    try {
+        const response = await fetch(`get_users.php?role=${encodeURIComponent(role)}`);
+
+        if (!response.ok) {
+            throw new Error('Unable to fetch users.');
+        }
+
+        const payload = await response.json();
+        usersTableBody.innerHTML = '';
+
+        if (!Array.isArray(payload.users) || payload.users.length === 0) {
+            usersTableMessage.textContent = `No ${role} records found.`;
+            return;
+        }
+
+        payload.users.forEach((user) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.full_name ?? ''}</td>
+                <td>${user.role ?? ''}</td>
+                <td>${user.program ?? ''}</td>
+                <td>${user.status ?? ''}</td>
+            `;
+            usersTableBody.appendChild(row);
+        });
+
+        usersTableMessage.textContent = '';
+    } catch (error) {
+        usersTableBody.innerHTML = '';
+        usersTableMessage.textContent = 'Failed to load user records right now.';
+    }
+}
+
+function setActiveTab(selectedRole) {
+    roleTabs.forEach((tab) => {
+        const isSelected = tab.dataset.role === selectedRole;
+        tab.classList.toggle('is-active', isSelected);
+        tab.setAttribute('aria-selected', String(isSelected));
+    });
+
+    loadUsers(selectedRole);
+}
+
+roleTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+        setActiveTab(tab.dataset.role);
+    });
+});
+
+if (addUserButton && addUserDropdown) {
+    addUserButton.addEventListener('click', () => {
+        const expanded = addUserButton.getAttribute('aria-expanded') === 'true';
+        addUserButton.setAttribute('aria-expanded', String(!expanded));
+        addUserDropdown.hidden = expanded;
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!addUserButton.contains(event.target) && !addUserDropdown.contains(event.target)) {
+            addUserButton.setAttribute('aria-expanded', 'false');
+            addUserDropdown.hidden = true;
+        }
+    });
+}
+
+setActiveTab('admin');
