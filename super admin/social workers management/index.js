@@ -61,7 +61,7 @@ async function loadUsers(role) {
         }
 
         payload.users.forEach((user) => {
-            const normalizedStatus = String(user.status ?? '').toLowerCase();
+            const normalizedStatus = String(user.statuz ?? '').toLowerCase();
             const statusClass = normalizedStatus.includes('active')
                 ? 'active'
                 : normalizedStatus.includes('offline')
@@ -72,11 +72,11 @@ async function loadUsers(role) {
             row.innerHTML = `
                 <td>${user.full_name ?? ''}</td>
                 <td>${user.role ?? ''}</td>
-                <td>${user.program ?? ''}</td>
+                <td>${user.programs ?? ''}</td>
                 <td>
                     <span class="status-cell">
                         <span class="status-dot ${statusClass}"></span>
-                        <span>${user.status ?? ''}</span>
+                        <span>${user.statuz ?? ''}</span>
                     </span>
                 </td>
             `;
