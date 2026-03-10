@@ -105,7 +105,53 @@
             </header>
 
             <main class="form-page">
-               
+                <section class="user-management" aria-label="Admin and encoder user management">
+                    <div class="user-controls">
+                        <div class="tab-buttons" role="tablist" aria-label="User role tabs">
+                            <button type="button" class="role-tab is-active" data-role="admin" role="tab" aria-selected="true">Admin</button>
+                            <button type="button" class="role-tab" data-role="encoder" role="tab" aria-selected="false">Encoder</button>
+                        </div>
+
+                        <div class="right-controls">
+                            <input type="text" class="search-input" aria-label="Search users">
+                            <button type="button" class="control-button">
+                                <i class="bi bi-search"></i>
+                                Search
+                            </button>
+
+                            <div class="add-user-wrapper">
+                                <button type="button" id="addUserButton" class="control-button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-plus-lg"></i>
+                                    Add User
+                                </button>
+                                <div id="addUserDropdown" class="add-user-dropdown" hidden>
+                                    <a href="admin register/index.php">Add Admin</a>
+                                    <a href="#">Add Encoder</a>
+                                </div>
+                            </div>
+
+                            <button type="button" class="control-button">
+                                <i class="bi bi-funnel"></i>
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="user-table-wrap">
+                        <table class="users-table" aria-live="polite">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Role</th>
+                                    <th>Program</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody"></tbody>
+                        </table>
+                        <p id="usersTableMessage" class="table-message"></p>
+                    </div>
+                </section>
             </main>
         </div>
     </div>
