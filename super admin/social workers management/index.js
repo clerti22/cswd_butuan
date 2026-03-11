@@ -52,7 +52,15 @@ const secretCodeError = document.getElementById('secretCodeError');
 const verifySecretCodeButton = document.getElementById('verifySecretCodeButton');
 const confirmDisableButton = document.getElementById('confirmDisableButton');
 const disableConfirmMessage = document.getElementById('disableConfirmMessage');
-const userDetailsGrid = document.getElementById('userDetailsGrid');
+const showFullName = document.getElementById('showFullName');
+const showUsername = document.getElementById('showUsername');
+const showAssignmentLabel = document.getElementById('showAssignmentLabel');
+const showAssignment = document.getElementById('showAssignment');
+const showPhoneNumber = document.getElementById('showPhoneNumber');
+const showGender = document.getElementById('showGender');
+const showAge = document.getElementById('showAge');
+const showRole = document.getElementById('showRole');
+const showEmail = document.getElementById('showEmail');
 
 const SECRET_CODE = 'cswd2026';
 
@@ -117,32 +125,44 @@ function updatePagination(meta) {
 }
 
 function buildUserDetails(user) {
-    if (!userDetailsGrid) {
-        return;
+    const role = String(user.role ?? '').toLowerCase();
+    const assignmentLabel = role === 'admin' ? 'Division Assigned:' : 'Program Assigned:';
+
+    if (showAssignmentLabel) {
+        showAssignmentLabel.textContent = assignmentLabel;
     }
 
-    const role = String(user.role ?? '').toLowerCase();
-    const assignmentLabel = role === 'admin' ? 'Division Assigned' : 'Program Assigned';
+    if (showFullName) {
+        showFullName.textContent = String(user.full_name ?? '');
+    }
 
-    const fields = [
-        ['Full Name', user.full_name],
-        ['Username', user.username],
-        [assignmentLabel, user.assignment],
-        ['Phone Number', user.phone_number],
-        ['Gender', user.gender],
-        ['Age', user.age],
-        ['Role', user.role],
-        ['Email', user.email],
-    ];
+    if (showUsername) {
+        showUsername.textContent = String(user.username ?? '');
+    }
 
-    userDetailsGrid.innerHTML = fields
-        .map(([label, value]) => `
-            <div class="info-field ${label === 'Role' || label === 'Email' ? 'full-width' : ''}">
-                <label class="info-label">${escapeHtml(label)}:</label>
-                <div class="info-input">${escapeHtml(value)}</div>
-            </div>
-        `)
-        .join('');
+    if (showAssignment) {
+        showAssignment.textContent = String(user.assignment ?? '');
+    }
+
+    if (showPhoneNumber) {
+        showPhoneNumber.textContent = String(user.phone_number ?? '');
+    }
+
+    if (showGender) {
+        showGender.textContent = String(user.gender ?? '');
+    }
+
+    if (showAge) {
+        showAge.textContent = String(user.age ?? '');
+    }
+
+    if (showRole) {
+        showRole.textContent = String(user.role ?? '');
+    }
+
+    if (showEmail) {
+        showEmail.textContent = String(user.email ?? '');
+    }
 }
 
 function attachActionEvents(button, user) {
@@ -159,10 +179,10 @@ function attachActionEvents(button, user) {
     if (disableButton) {
         disableButton.addEventListener('click', () => {
             selectedUser = user;
+            openModal(disableCodeModal);
             if (secretCodeInput) {
                 secretCodeInput.focus();
             }
-            openModal(disableCodeModal);
         });
     }
 }

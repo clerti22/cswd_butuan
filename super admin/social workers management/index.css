@@ -259,7 +259,7 @@ button {
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 29px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -567,6 +567,7 @@ button:hover {
     color: #1f2937;
 }
 
+
 .users-table th:last-child,
 .users-table td:last-child {
     width: 260px;
@@ -599,6 +600,10 @@ button:hover {
     overflow: hidden;
 }
 
+.custom-modal[hidden] {
+    display: none !important;
+}
+
 .custom-modal {
     position: fixed;
     inset: 0;
@@ -614,7 +619,7 @@ button:hover {
     width: min(760px, 100%);
     background: #d9d9d9;
     border-radius: 12px;
-    padding: 24px 30px;
+    padding: 18px 30px 26px;
 }
 
 .custom-modal-compact {
@@ -634,23 +639,23 @@ button:hover {
 
 .modal-logos {
     display: grid;
-    grid-template-columns: 72px 1fr 72px;
+    grid-template-columns: 92px 1fr 92px;
     align-items: center;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .modal-logos img {
-    width: 72px;
-    height: 72px;
+    width: 82px;
+    height: 82px;
     object-fit: contain;
 }
 
 .user-details-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 18px;
-    margin-bottom: 22px;
+    gap: 18px 24px;
+    margin: 10px 0 28px;
 }
 
 .info-field {
@@ -673,8 +678,19 @@ button:hover {
     border-radius: 8px;
     padding: 10px 12px;
     background: #efefef;
-    min-height: 44px;
-    font-size: 18px;
+    min-height: 48px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.show-field-label {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.show-field-value {
+    font-size: 16px;
 }
 
 .modal-error {
@@ -709,4 +725,10 @@ button:hover {
 
 .action-btn-danger {
     background: #ff1008;
+}
+
+@media (max-width: 900px) {
+    .user-details-grid {
+        grid-template-columns: 1fr;
+    }
 }
