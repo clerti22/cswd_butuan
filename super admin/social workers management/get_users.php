@@ -39,7 +39,7 @@ try {
         }
     }
 
-    $baseColumns = ['full_name', 'role', 'statuz'];
+    $baseColumns = ['full_name', 'username', 'email', 'role', 'age', 'phone_number', 'gender', 'statuz'];
     foreach ($baseColumns as $requiredColumn) {
         if (!isset($availableColumns[$requiredColumn])) {
             throw new RuntimeException('Missing users column: ' . $requiredColumn);
@@ -71,7 +71,7 @@ try {
     $offset = ($page - 1) * $perPage;
 
     $statement = $connection->prepare(
-        "SELECT full_name, role, {$assignmentColumn} AS assignment, statuz FROM users WHERE LOWER(role) = ? ORDER BY full_name ASC LIMIT ? OFFSET ?"
+        "SELECT full_name, username, email, role, {$assignmentColumn} AS assignment, age, phone_number, gender, statuz FROM users WHERE LOWER(role) = ? ORDER BY full_name ASC LIMIT ? OFFSET ?"
     );
 
     if (!$statement) {
@@ -86,8 +86,13 @@ try {
     while ($row = $result->fetch_assoc()) {
         $users[] = [
             'full_name' => (string) ($row['full_name'] ?? ''),
+            'username' => (string) ($row['username'] ?? ''),
+            'email' => (string) ($row['email'] ?? ''),
             'role' => ucfirst((string) ($row['role'] ?? '')),
             'assignment' => (string) ($row['assignment'] ?? ''),
+            'age' => (string) ($row['age'] ?? ''),
+            'phone_number' => (string) ($row['phone_number'] ?? ''),
+            'gender' => (string) ($row['gender'] ?? ''),
             'statuz' => (string) ($row['statuz'] ?? ''),
         ];
     }
