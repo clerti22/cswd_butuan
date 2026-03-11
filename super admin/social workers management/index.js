@@ -34,6 +34,7 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
+<<<<<<< HEAD
 });
 
 const roleTabs = document.querySelectorAll('.role-tab');
@@ -129,3 +130,6 @@ if (addUserButton && addUserDropdown) {
 }
 
 setActiveTab('admin');
+=======
+})
+>>>>>>> parent of a7bbc4b (Show Division for Admin tab and Program for Encoder tab)
