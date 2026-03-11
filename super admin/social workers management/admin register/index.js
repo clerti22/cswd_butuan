@@ -71,10 +71,12 @@ if (adminRegistrationForm) {
         const requiredFields = [
             'full_name',
             'username',
+            'email',
             'phone_number',
             'gender',
             'age',
             'role',
+            'division',
             'password',
             'confirm_password',
         ];
@@ -89,6 +91,26 @@ if (adminRegistrationForm) {
             showRegistrationAlert('Please complete all fields before submitting.', 'error');
             return;
         }
+
+        const emailField = adminRegistrationForm.elements.namedItem('email');
+        const emailValue = emailField ? emailField.value.trim() : '';
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+
+        if (!isValidEmail) {
+            event.preventDefault();
+            showRegistrationAlert('Please provide a valid email address.', 'error');
+            return;
+        }
+
+        const divisionField = adminRegistrationForm.elements.namedItem('division');
+        const validDivisions = ['DPSD', 'PSSD', 'RPSD'];
+
+        if (!divisionField || !validDivisions.includes(divisionField.value)) {
+            event.preventDefault();
+            showRegistrationAlert('Division assigned must be DPSD, PSSD, or RPSD only.', 'error');
+            return;
+        }
+
 
         const passwordField = adminRegistrationForm.elements.namedItem('password');
         const confirmPasswordField = adminRegistrationForm.elements.namedItem('confirm_password');
