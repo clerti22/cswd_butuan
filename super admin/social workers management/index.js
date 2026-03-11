@@ -52,6 +52,8 @@ const secretCodeError = document.getElementById('secretCodeError');
 const verifySecretCodeButton = document.getElementById('verifySecretCodeButton');
 const confirmDisableButton = document.getElementById('confirmDisableButton');
 const disableConfirmMessage = document.getElementById('disableConfirmMessage');
+const disableCodeTitle = document.getElementById('disableCodeTitle');
+const disableConfirmTitle = document.getElementById('disableConfirmTitle');
 const showFullName = document.getElementById('showFullName');
 const showUsername = document.getElementById('showUsername');
 const showAssignmentLabel = document.getElementById('showAssignmentLabel');
@@ -68,6 +70,7 @@ let activeRole = 'admin';
 let currentPage = 1;
 let totalPages = 1;
 let selectedUser = null;
+let selectedAction = 'disable';
 
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, (char) => {
@@ -165,9 +168,39 @@ function buildUserDetails(user) {
     }
 }
 
+
+function getAccountAction(user) {
+    const status = String(user?.statuz ?? '').trim().toLowerCase();
+    return status === 'disabled account' ? 'enable' : 'disable';
+}
+
+function applyAccountActionModalCopy(action, fullName = '') {
+    const normalizedAction = action === 'enable' ? 'enable' : 'disable';
+    const titleText = normalizedAction === 'enable' ? 'Enable Account' : 'Disable Account';
+
+    if (disableCodeTitle) {
+        disableCodeTitle.textContent = titleText;
+    }
+
+    if (disableConfirmTitle) {
+        disableConfirmTitle.textContent = `Confirm ${titleText}`;
+    }
+
+    if (confirmDisableButton) {
+        confirmDisableButton.textContent = normalizedAction === 'enable' ? 'Yes, Enable' : 'Yes, Disable';
+    }
+
+    if (disableConfirmMessage) {
+        const safeName = fullName || 'this user';
+        disableConfirmMessage.textContent = normalizedAction === 'enable'
+            ? `Are you sure you want to enable ${safeName}'s account?`
+            : `Are you sure you want to disable ${safeName}'s account?`;
+    }
+}
+
 function attachActionEvents(button, user) {
     const showButton = button.querySelector('[data-action="show"]');
-    const disableButton = button.querySelector('[data-action="disable"]');
+    const accountActionButton = button.querySelector('[data-action="account-toggle"]');
 
     if (showButton) {
         showButton.addEventListener('click', () => {
@@ -176,9 +209,11 @@ function attachActionEvents(button, user) {
         });
     }
 
-    if (disableButton) {
-        disableButton.addEventListener('click', () => {
+    if (accountActionButton) {
+        accountActionButton.addEventListener('click', () => {
             selectedUser = user;
+            selectedAction = getAccountAction(user);
+            applyAccountActionModalCopy(selectedAction, String(user.full_name ?? 'this user'));
             openModal(disableCodeModal);
             if (secretCodeInput) {
                 secretCodeInput.focus();
@@ -231,7 +266,7 @@ async function loadUsers(role, page = 1) {
                 </td>
                 <td>
                     <div class="table-actions">
-                        <button type="button" class="table-action-btn table-action-danger" data-action="disable">Disable Account</button>
+                        ${getAccountAction(user) === 'enable' ? `<button type="button" class="table-action-btn table-action-success" data-action="account-toggle">Enable Account</button>` : `<button type="button" class="table-action-btn table-action-danger" data-action="account-toggle">Disable Account</button>`}
                         <button type="button" class="table-action-btn table-action-primary" data-action="show">Show</button>
                     </div>
                 </td>
@@ -350,8 +385,8 @@ if (verifySecretCodeButton) {
 
         secretCodeError.textContent = '';
 
-        if (selectedUser && disableConfirmMessage) {
-            disableConfirmMessage.textContent = `Are you sure you want to disable ${selectedUser.full_name}'s account?`;
+        if (selectedUser) {
+            applyAccountActionModalCopy(selectedAction, String(selectedUser.full_name ?? 'this user'));
         }
 
         closeModal(disableCodeModal);
@@ -377,6 +412,7 @@ if (confirmDisableButton) {
                 body: JSON.stringify({
                     username: selectedUser.username,
                     role: String(selectedUser.role ?? '').toLowerCase(),
+                    action: selectedAction,
                 }),
             });
 
@@ -388,6 +424,7 @@ if (confirmDisableButton) {
 
             closeModal(disableConfirmModal);
             selectedUser = null;
+            selectedAction = 'disable';
             await loadUsers(activeRole, currentPage);
         } catch (error) {
             alert(error.message || 'Unable to disable account right now.');

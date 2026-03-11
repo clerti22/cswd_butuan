@@ -20,8 +20,9 @@ if (!is_array($payload)) {
 
 $username = trim((string) ($payload['username'] ?? ''));
 $role = strtolower(trim((string) ($payload['role'] ?? '')));
+$action = strtolower(trim((string) ($payload['action'] ?? 'disable')));
 
-if ($username === '' || !in_array($role, ['admin', 'encoder'], true)) {
+if ($username === '' || !in_array($role, ['admin', 'encoder'], true) || !in_array($action, ['disable', 'enable'], true)) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'message' => 'Invalid user details.']);
     exit;
@@ -49,7 +50,7 @@ try {
         }
     }
 
-    $newStatus = 'Disabled Account';
+    $newStatus = $action === 'enable' ? 'offline' : 'Disabled Account';
 
     $statement = $connection->prepare(
         'UPDATE users SET statuz = ? WHERE username = ? AND LOWER(role) = ? LIMIT 1'
@@ -75,10 +76,10 @@ try {
 
     echo json_encode([
         'ok' => true,
-        'message' => 'User account disabled successfully.',
+        'message' => $action === 'enable' ? 'User account enabled successfully.' : 'User account disabled successfully.',
         'status' => $newStatus,
     ]);
 } catch (Throwable $exception) {
     http_response_code(500);
-    echo json_encode(['ok' => false, 'message' => 'Unable to disable user account right now.']);
+    echo json_encode(['ok' => false, 'message' => 'Unable to update user account status right now.']);
 }

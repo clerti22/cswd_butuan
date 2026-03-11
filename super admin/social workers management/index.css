@@ -596,6 +596,10 @@ button:hover {
     background-color: #d11a2a;
 }
 
+.table-action-success {
+    background-color: #009419;
+}
+
 .has-modal-open {
     overflow: hidden;
 }
