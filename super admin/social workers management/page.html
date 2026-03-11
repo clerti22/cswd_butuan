@@ -145,6 +145,7 @@
                                     <th>Role</th>
                                     <th id="assignmentHeader">Division</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="usersTableBody"></tbody>
@@ -160,6 +161,46 @@
             </main>
         </div>
     </div>
+
+    <div id="disableCodeModal" class="custom-modal" hidden>
+        <div class="custom-modal-content custom-modal-compact" role="dialog" aria-modal="true" aria-labelledby="disableCodeTitle">
+            <h2 id="disableCodeTitle">Disable Account</h2>
+            <p class="custom-modal-subtitle">Enter secret code to continue.</p>
+            <label for="secretCodeInput" class="info-label">Secret Code</label>
+            <input type="password" id="secretCodeInput" class="info-input" autocomplete="off" />
+            <p id="secretCodeError" class="modal-error" aria-live="polite"></p>
+            <div class="custom-modal-actions">
+                <button type="button" class="action-btn action-btn-secondary" data-close-modal="disableCodeModal">Cancel</button>
+                <button type="button" id="verifySecretCodeButton" class="action-btn action-btn-danger">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="disableConfirmModal" class="custom-modal" hidden>
+        <div class="custom-modal-content custom-modal-compact" role="dialog" aria-modal="true" aria-labelledby="disableConfirmTitle">
+            <h2 id="disableConfirmTitle">Confirm Disable Account</h2>
+            <p class="custom-modal-subtitle" id="disableConfirmMessage">Are you sure you want to disable this user's account?</p>
+            <div class="custom-modal-actions">
+                <button type="button" class="action-btn action-btn-secondary" data-close-modal="disableConfirmModal">No</button>
+                <button type="button" id="confirmDisableButton" class="action-btn action-btn-danger">Yes, Disable</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="showUserModal" class="custom-modal" hidden>
+        <div class="custom-modal-content" role="dialog" aria-modal="true" aria-labelledby="showUserTitle">
+            <div class="modal-logos">
+                <img src="../images-logo/butuanseal.png" alt="Butuan seal">
+                <h2 id="showUserTitle">User's Full Information</h2>
+                <img src="../images-logo/cswd-logo.png" alt="CSWD logo">
+            </div>
+            <div class="user-details-grid" id="userDetailsGrid"></div>
+            <div class="custom-modal-actions custom-modal-actions-center">
+                <button type="button" class="action-btn action-btn-danger" data-close-modal="showUserModal">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="index.js"></script>
 
 
