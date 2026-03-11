@@ -93,7 +93,7 @@ async function loadUsers(role, page = 1) {
         }
 
         users.forEach((user) => {
-            const normalizedStatus = String(user.status ?? '').toLowerCase();
+            const normalizedStatus = String(user.statuz ?? '').toLowerCase();
             let statusClass = 'disabled';
 
             if (normalizedStatus.includes('active')) {
@@ -110,7 +110,7 @@ async function loadUsers(role, page = 1) {
                 <td>
                     <span class="status-cell">
                         <span class="status-dot ${statusClass}"></span>
-                        <span>${user.status ?? ''}</span>
+                        <span>${user.statuz ?? ''}</span>
                     </span>
                 </td>
             `;
