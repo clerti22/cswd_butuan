@@ -42,12 +42,40 @@ const usersTableMessage = document.getElementById('usersTableMessage');
 const assignmentHeader = document.getElementById('assignmentHeader');
 const addUserButton = document.getElementById('addUserButton');
 const addUserDropdown = document.getElementById('addUserDropdown');
+const usersPagination = document.getElementById('usersPagination');
+const prevPageButton = document.getElementById('prevPageButton');
+const nextPageButton = document.getElementById('nextPageButton');
+const paginationInfo = document.getElementById('paginationInfo');
 
-async function loadUsers(role) {
+let activeRole = 'admin';
+let currentPage = 1;
+let totalPages = 1;
+
+function updatePagination(meta) {
+    if (!usersPagination || !prevPageButton || !nextPageButton || !paginationInfo) {
+        return;
+    }
+
+    const pages = Number(meta?.total_pages ?? 1);
+    const safeTotalPages = pages > 0 ? pages : 1;
+    totalPages = safeTotalPages;
+
+    if (safeTotalPages <= 1) {
+        usersPagination.hidden = true;
+    } else {
+        usersPagination.hidden = false;
+    }
+
+    paginationInfo.textContent = `Page ${currentPage} of ${safeTotalPages}`;
+    prevPageButton.disabled = currentPage <= 1;
+    nextPageButton.disabled = currentPage >= safeTotalPages;
+}
+
+async function loadUsers(role, page = 1) {
     usersTableMessage.textContent = `Loading ${role}s...`;
 
     try {
-        const response = await fetch(`get_users.php?role=${encodeURIComponent(role)}`);
+        const response = await fetch(`get_users.php?role=${encodeURIComponent(role)}&page=${page}`);
 
         if (!response.ok) {
             throw new Error('Unable to fetch users.');
@@ -56,13 +84,16 @@ async function loadUsers(role) {
         const payload = await response.json();
         usersTableBody.innerHTML = '';
 
-        if (!Array.isArray(payload.users) || payload.users.length === 0) {
+        const users = Array.isArray(payload.users) ? payload.users : [];
+
+        if (users.length === 0) {
             usersTableMessage.textContent = `No ${role} records found.`;
+            updatePagination(payload.pagination ?? { total_pages: 1 });
             return;
         }
 
-        payload.users.forEach((user) => {
-            const normalizedStatus = String(user.statuz ?? '').toLowerCase();
+        users.forEach((user) => {
+            const normalizedStatus = String(user.status ?? '').toLowerCase();
             let statusClass = 'disabled';
 
             if (normalizedStatus.includes('active')) {
@@ -79,7 +110,7 @@ async function loadUsers(role) {
                 <td>
                     <span class="status-cell">
                         <span class="status-dot ${statusClass}"></span>
-                        <span>${user.statuz ?? ''}</span>
+                        <span>${user.status ?? ''}</span>
                     </span>
                 </td>
             `;
@@ -88,19 +119,28 @@ async function loadUsers(role) {
 
         usersTableMessage.textContent = '';
 
-        const placeholderRows = Math.max(0, 8 - payload.users.length);
+        const placeholderRows = Math.max(0, 10 - users.length);
         for (let index = 0; index < placeholderRows; index += 1) {
             const row = document.createElement('tr');
             row.innerHTML = '<td>&nbsp;</td><td></td><td></td><td></td>';
             usersTableBody.appendChild(row);
         }
+
+        updatePagination(payload.pagination ?? { total_pages: 1 });
     } catch (error) {
         usersTableBody.innerHTML = '';
         usersTableMessage.textContent = 'Failed to load user records right now.';
+
+        if (usersPagination) {
+            usersPagination.hidden = true;
+        }
     }
 }
 
 function setActiveTab(selectedRole) {
+    activeRole = selectedRole;
+    currentPage = 1;
+
     roleTabs.forEach((tab) => {
         const isSelected = tab.dataset.role === selectedRole;
         tab.classList.toggle('is-active', isSelected);
@@ -111,7 +151,7 @@ function setActiveTab(selectedRole) {
         assignmentHeader.textContent = selectedRole === 'admin' ? 'Division' : 'Program';
     }
 
-    loadUsers(selectedRole);
+    loadUsers(selectedRole, currentPage);
 }
 
 roleTabs.forEach((tab) => {
@@ -119,6 +159,28 @@ roleTabs.forEach((tab) => {
         setActiveTab(tab.dataset.role);
     });
 });
+
+if (prevPageButton) {
+    prevPageButton.addEventListener('click', () => {
+        if (currentPage <= 1) {
+            return;
+        }
+
+        currentPage -= 1;
+        loadUsers(activeRole, currentPage);
+    });
+}
+
+if (nextPageButton) {
+    nextPageButton.addEventListener('click', () => {
+        if (currentPage >= totalPages) {
+            return;
+        }
+
+        currentPage += 1;
+        loadUsers(activeRole, currentPage);
+    });
+}
 
 if (addUserButton && addUserDropdown) {
     addUserButton.addEventListener('click', () => {
@@ -136,4 +198,3 @@ if (addUserButton && addUserDropdown) {
 }
 
 setActiveTab('admin');
-
