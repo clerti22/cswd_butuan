@@ -360,9 +360,40 @@ if (verifySecretCodeButton) {
 }
 
 if (confirmDisableButton) {
-    confirmDisableButton.addEventListener('click', () => {
-        closeModal(disableConfirmModal);
-        selectedUser = null;
+    confirmDisableButton.addEventListener('click', async () => {
+        if (!selectedUser) {
+            closeModal(disableConfirmModal);
+            return;
+        }
+
+        confirmDisableButton.disabled = true;
+
+        try {
+            const response = await fetch('disable_user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: selectedUser.username,
+                    role: String(selectedUser.role ?? '').toLowerCase(),
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.ok) {
+                throw new Error(result.message || 'Unable to disable account.');
+            }
+
+            closeModal(disableConfirmModal);
+            selectedUser = null;
+            await loadUsers(activeRole, currentPage);
+        } catch (error) {
+            alert(error.message || 'Unable to disable account right now.');
+        } finally {
+            confirmDisableButton.disabled = false;
+        }
     });
 }
 
