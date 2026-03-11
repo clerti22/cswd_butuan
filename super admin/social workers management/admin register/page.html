@@ -128,6 +128,11 @@
                         </div>
 
                         <div class="registration-field">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" autocomplete="email" required>
+                        </div>
+
+                        <div class="registration-field">
                             <label for="phone_number">Phone Number:</label>
                             <input type="tel" id="phone_number" name="phone_number" autocomplete="tel" required>
                         </div>
@@ -149,6 +154,16 @@
                                 <option value="super admin">Super Admin</option>
                                 <option value="admin">Admin</option>
                                 <option value="encoder">Encoder</option>
+                            </select>
+                        </div>
+
+                        <div class="registration-field">
+                            <label for="division">Division Assigned:</label>
+                            <select id="division" name="division" required>
+                                <option value="">Select division</option>
+                                <option value="DPSD">DPSD</option>
+                                <option value="PSSD">PSSD</option>
+                                <option value="RPSD">RPSD</option>
                             </select>
                         </div>
 
