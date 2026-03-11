@@ -34,15 +34,20 @@ try {
         }
     }
 
-    $requiredColumns = ['full_name', 'role', 'program', 'status'];
-    foreach ($requiredColumns as $requiredColumn) {
+    $baseColumns = ['full_name', 'role', 'status'];
+    foreach ($baseColumns as $requiredColumn) {
         if (!isset($availableColumns[$requiredColumn])) {
             throw new RuntimeException('Missing users column: ' . $requiredColumn);
         }
     }
 
+    $assignmentColumn = $role === 'admin' ? 'division' : 'program';
+    if (!isset($availableColumns[$assignmentColumn])) {
+        throw new RuntimeException('Missing users column: ' . $assignmentColumn);
+    }
+
     $statement = $connection->prepare(
-        'SELECT full_name, role, program, status FROM users WHERE LOWER(role) = ? ORDER BY full_name ASC'
+        "SELECT full_name, role, {$assignmentColumn} AS assignment, status FROM users WHERE LOWER(role) = ? ORDER BY full_name ASC"
     );
 
     if (!$statement) {
@@ -58,7 +63,7 @@ try {
         $users[] = [
             'full_name' => (string) ($row['full_name'] ?? ''),
             'role' => ucfirst((string) ($row['role'] ?? '')),
-            'program' => (string) ($row['program'] ?? ''),
+            'assignment' => (string) ($row['assignment'] ?? ''),
             'status' => (string) ($row['status'] ?? ''),
         ];
     }

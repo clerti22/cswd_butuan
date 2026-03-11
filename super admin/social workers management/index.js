@@ -20,9 +20,9 @@ closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
 // Close sidebar when clicking nav items on mobile
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
+document.querySelectorAll('.nav-item').forEach((item) => {
+    item.addEventListener('click', (event) => {
+        event.preventDefault();
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
@@ -34,12 +34,12 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-<<<<<<< HEAD
 });
 
 const roleTabs = document.querySelectorAll('.role-tab');
 const usersTableBody = document.getElementById('usersTableBody');
 const usersTableMessage = document.getElementById('usersTableMessage');
+const assignmentHeader = document.getElementById('assignmentHeader');
 const addUserButton = document.getElementById('addUserButton');
 const addUserDropdown = document.getElementById('addUserDropdown');
 
@@ -63,17 +63,19 @@ async function loadUsers(role) {
 
         payload.users.forEach((user) => {
             const normalizedStatus = String(user.status ?? '').toLowerCase();
-            const statusClass = normalizedStatus.includes('active')
-                ? 'active'
-                : normalizedStatus.includes('offline')
-                    ? 'offline'
-                    : 'disabled';
+            let statusClass = 'disabled';
+
+            if (normalizedStatus.includes('active')) {
+                statusClass = 'active';
+            } else if (normalizedStatus.includes('offline')) {
+                statusClass = 'offline';
+            }
 
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${user.full_name ?? ''}</td>
                 <td>${user.role ?? ''}</td>
-                <td>${user.program ?? ''}</td>
+                <td>${user.assignment ?? ''}</td>
                 <td>
                     <span class="status-cell">
                         <span class="status-dot ${statusClass}"></span>
@@ -105,6 +107,10 @@ function setActiveTab(selectedRole) {
         tab.setAttribute('aria-selected', String(isSelected));
     });
 
+    if (assignmentHeader) {
+        assignmentHeader.textContent = selectedRole === 'admin' ? 'Division' : 'Program';
+    }
+
     loadUsers(selectedRole);
 }
 
@@ -130,6 +136,4 @@ if (addUserButton && addUserDropdown) {
 }
 
 setActiveTab('admin');
-=======
-})
->>>>>>> parent of a7bbc4b (Show Division for Admin tab and Program for Encoder tab)
+
