@@ -39,6 +39,7 @@ window.addEventListener('resize', () => {
 const roleTabs = document.querySelectorAll('.role-tab');
 const usersTableBody = document.getElementById('usersTableBody');
 const usersTableMessage = document.getElementById('usersTableMessage');
+const assignmentHeader = document.getElementById('assignmentHeader');
 const addUserButton = document.getElementById('addUserButton');
 const addUserDropdown = document.getElementById('addUserDropdown');
 
@@ -61,7 +62,7 @@ async function loadUsers(role) {
         }
 
         payload.users.forEach((user) => {
-            const normalizedStatus = String(user.statuz ?? '').toLowerCase();
+            const normalizedStatus = String(user.status ?? '').toLowerCase();
             const statusClass = normalizedStatus.includes('active')
                 ? 'active'
                 : normalizedStatus.includes('offline')
@@ -72,11 +73,11 @@ async function loadUsers(role) {
             row.innerHTML = `
                 <td>${user.full_name ?? ''}</td>
                 <td>${user.role ?? ''}</td>
-                <td>${user.programs ?? ''}</td>
+                <td>${user.assignment ?? ''}</td>
                 <td>
                     <span class="status-cell">
                         <span class="status-dot ${statusClass}"></span>
-                        <span>${user.statuz ?? ''}</span>
+                        <span>${user.status ?? ''}</span>
                     </span>
                 </td>
             `;
@@ -103,6 +104,10 @@ function setActiveTab(selectedRole) {
         tab.classList.toggle('is-active', isSelected);
         tab.setAttribute('aria-selected', String(isSelected));
     });
+
+    if (assignmentHeader) {
+        assignmentHeader.textContent = selectedRole === 'admin' ? 'Division' : 'Program';
+    }
 
     loadUsers(selectedRole);
 }
