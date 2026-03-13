@@ -148,6 +148,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $ageValue = (int) $age;
                 $normalizedDivision = $role === 'super admin' ? '' : $division;
                 $programValue = $role === 'encoder' ? $programAssigned : '';
+                $statusValue = 'Offline';
 
                 $columnsForInsert = ['full_name', 'username', 'email', 'phone_number', 'division', 'gender', 'age', 'password', 'role'];
                 $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?'];
@@ -169,6 +170,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     $placeholders[] = '?';
                     $types .= 's';
                     $values[] = $programValue;
+                }
+
+                if (isset($columns['status'])) {
+                    $columnsForInsert[] = 'status';
+                    $placeholders[] = '?';
+                    $types .= 's';
+                    $values[] = $statusValue;
                 }
 
                 $insertSql = sprintf(
