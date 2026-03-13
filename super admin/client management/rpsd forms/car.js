@@ -227,7 +227,7 @@ function validateForm() {
         'education',
         'present-address',
         'permanent-address',
-        'barangays',
+        'barangay',
         'years-together',
         'number-children',
         'food-expense',
@@ -334,9 +334,7 @@ submitButton?.addEventListener('click', async () => {
     formData.append('sex', getFieldValue('sex'));
     formData.append('education', getFieldValue('education'));
     formData.append('present_address', getFieldValue('present-address'));
-    const barangayValue = getFieldValue('barangays') || getFieldValue('barangay');
-    formData.append('barangays', barangayValue);
-    formData.append('barangay', barangayValue);
+    formData.append('barangay', getFieldValue('barangay'));
     formData.append('permanent_address', getFieldValue('permanent-address'));
     formData.append('spouse_first_name', getFieldValue('spouse-first-name'));
     formData.append('spouse_middle_name', getFieldValue('spouse-middle-name'));

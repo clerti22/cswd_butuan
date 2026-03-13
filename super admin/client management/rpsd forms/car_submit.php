@@ -52,16 +52,10 @@ foreach ($requiredFields as $field) {
     }
 }
 
-$barangayValue = trim((string) ($_POST['barangays'] ?? ''));
-if ($barangayValue === '') {
-    $barangayValue = trim((string) ($_POST['barangay'] ?? ''));
-}
 
-if ($barangayValue === '') {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Missing required field: barangays']);
-    exit;
-}
+
+
+
 
 $classificationPayload = trim((string) ($_POST['classification_tags'] ?? ''));
 $classificationTags = json_decode($classificationPayload, true);
@@ -193,7 +187,7 @@ try {
     $insertCar = $connection->prepare(
         'INSERT INTO car_table (
             interview_date, control_number, first_name, middle_name, last_name, suffix, nickname, birth_date, birth_place,
-            religion, civil_status, age, sex, education, present_address, permanent_address, barangays,
+            religion, civil_status, age, sex, education, present_address, permanent_address, barangay,
             spouse_first_name, spouse_middle_name, spouse_last_name, spouse_suffix,
             monthly_income_estimate, income_source, assistance_status,
             food_expense, house_lot_expense, education_expense, transport_expense, misc_expense,
@@ -224,7 +218,7 @@ try {
     $education = trim((string) $_POST['education']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
-    $brgy = $barangayValue;
+    $brgy = trim((string) $_POST['barangay']);
     $spouseFirstName = trim((string) ($_POST['spouse_first_name'] ?? ''));
     $spouseMiddleName = trim((string) ($_POST['spouse_middle_name'] ?? ''));
     $spouseLastName = trim((string) ($_POST['spouse_last_name'] ?? ''));
