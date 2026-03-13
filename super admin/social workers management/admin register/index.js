@@ -19,26 +19,39 @@ openBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
-// Close sidebar when clicking nav items on mobile
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
+document.querySelectorAll('.nav-item').forEach((item) => {
+    item.addEventListener('click', (event) => {
+        event.preventDefault();
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
     });
 });
 
-// Handle window resize
 window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
 
 const adminRegistrationForm = document.getElementById('admin-registration-form');
 const registrationAlert = document.getElementById('registration-alert');
 const registrationState = window.adminRegistrationState || null;
+
+const roleField = document.getElementById('role');
+const hiddenDivisionField = document.getElementById('division');
+const adminDivisionFieldWrapper = document.getElementById('admin-division-field');
+const adminDivisionField = document.getElementById('admin-division');
+const encoderDivisionFieldWrapper = document.getElementById('encoder-division-field');
+const encoderDivisionFields = document.querySelectorAll('input[name="encoder_division"]');
+const programAssignedFieldWrapper = document.getElementById('program-assigned-field');
+const programAssignedField = document.getElementById('program_assigned');
+
+const divisionPrograms = {
+    DPSD: ['PWUD', 'Solo Parent', 'PYAP'],
+    PSSD: ['PWD', 'Senior Citizen'],
+    RPSD: ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
+};
 
 function showRegistrationAlert(message, status) {
     if (!registrationAlert) {
@@ -53,6 +66,109 @@ function showRegistrationAlert(message, status) {
     }
 }
 
+function setFieldVisibility(fieldWrapper, isVisible) {
+    if (!fieldWrapper) {
+        return;
+    }
+
+    fieldWrapper.classList.toggle('hidden', !isVisible);
+}
+
+function resetEncoderDivisionSelection() {
+    encoderDivisionFields.forEach((field) => {
+        field.checked = false;
+        field.required = false;
+    });
+}
+
+function updateProgramAssignedOptions(divisionValue, selectedProgram = '') {
+    if (!programAssignedField) {
+        return;
+    }
+
+    const availablePrograms = divisionPrograms[divisionValue] || [];
+    programAssignedField.innerHTML = '';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select program';
+    programAssignedField.appendChild(defaultOption);
+
+    availablePrograms.forEach((program) => {
+        const option = document.createElement('option');
+        option.value = program;
+        option.textContent = program;
+        option.selected = selectedProgram === program;
+        programAssignedField.appendChild(option);
+    });
+
+    if (!availablePrograms.includes(selectedProgram)) {
+        programAssignedField.value = '';
+    }
+}
+
+function updateRoleBasedFields(selectedProgram = '') {
+    const roleValue = roleField ? roleField.value.trim().toLowerCase() : '';
+
+    if (!adminDivisionField || !hiddenDivisionField || !programAssignedField) {
+        return;
+    }
+
+    if (roleValue === 'admin') {
+        setFieldVisibility(adminDivisionFieldWrapper, true);
+        setFieldVisibility(encoderDivisionFieldWrapper, false);
+        setFieldVisibility(programAssignedFieldWrapper, false);
+
+        adminDivisionField.required = true;
+        encoderDivisionFields.forEach((field) => {
+            field.required = false;
+        });
+        programAssignedField.required = false;
+        programAssignedField.value = '';
+
+        hiddenDivisionField.value = adminDivisionField.value.trim();
+    } else if (roleValue === 'encoder') {
+        setFieldVisibility(adminDivisionFieldWrapper, false);
+        setFieldVisibility(encoderDivisionFieldWrapper, true);
+
+        adminDivisionField.required = false;
+        adminDivisionField.value = '';
+
+        const selectedEncoderDivision = Array.from(encoderDivisionFields).find((field) => field.checked);
+        const encoderDivisionValue = selectedEncoderDivision ? selectedEncoderDivision.value : '';
+
+        encoderDivisionFields.forEach((field) => {
+            field.required = !encoderDivisionValue;
+        });
+
+        hiddenDivisionField.value = encoderDivisionValue;
+
+        if (encoderDivisionValue) {
+            setFieldVisibility(programAssignedFieldWrapper, true);
+            programAssignedField.required = true;
+            updateProgramAssignedOptions(encoderDivisionValue, selectedProgram);
+        } else {
+            setFieldVisibility(programAssignedFieldWrapper, false);
+            programAssignedField.required = false;
+            updateProgramAssignedOptions('');
+        }
+    } else {
+        setFieldVisibility(adminDivisionFieldWrapper, false);
+        setFieldVisibility(encoderDivisionFieldWrapper, false);
+        setFieldVisibility(programAssignedFieldWrapper, false);
+
+        adminDivisionField.required = false;
+        adminDivisionField.value = '';
+
+        resetEncoderDivisionSelection();
+
+        hiddenDivisionField.value = '';
+        programAssignedField.required = false;
+        programAssignedField.value = '';
+        updateProgramAssignedOptions('');
+    }
+}
+
 if (registrationState && registrationState.old && adminRegistrationForm) {
     Object.entries(registrationState.old).forEach(([fieldName, fieldValue]) => {
         const field = adminRegistrationForm.elements.namedItem(fieldName);
@@ -61,14 +177,45 @@ if (registrationState && registrationState.old && adminRegistrationForm) {
         }
     });
 
+    if (registrationState.old.role === 'encoder') {
+        const oldDivision = registrationState.old.division || '';
+        encoderDivisionFields.forEach((field) => {
+            field.checked = field.value === oldDivision;
+        });
+    } else if (registrationState.old.role === 'admin') {
+        adminDivisionField.value = registrationState.old.division || '';
+    }
+
+    updateRoleBasedFields(registrationState.old.program_assigned || '');
+
     if (registrationState.message && registrationState.status) {
         showRegistrationAlert(registrationState.message, registrationState.status);
     }
 }
 
+if (roleField) {
+    roleField.addEventListener('change', () => {
+        updateRoleBasedFields();
+    });
+}
+
+if (adminDivisionField) {
+    adminDivisionField.addEventListener('change', () => {
+        hiddenDivisionField.value = adminDivisionField.value.trim();
+    });
+}
+
+encoderDivisionFields.forEach((field) => {
+    field.addEventListener('change', () => {
+        updateRoleBasedFields();
+    });
+});
+
 if (adminRegistrationForm) {
+    updateRoleBasedFields();
+
     adminRegistrationForm.addEventListener('submit', (event) => {
-        const requiredFields = [
+        const commonRequiredFields = [
             'full_name',
             'username',
             'email',
@@ -76,20 +223,51 @@ if (adminRegistrationForm) {
             'gender',
             'age',
             'role',
-            'division',
             'password',
             'confirm_password',
         ];
 
-        const hasMissingField = requiredFields.some((fieldName) => {
+        const hasMissingCommonField = commonRequiredFields.some((fieldName) => {
             const field = adminRegistrationForm.elements.namedItem(fieldName);
             return !field || !field.value.trim();
         });
 
-        if (hasMissingField) {
+        if (hasMissingCommonField) {
             event.preventDefault();
             showRegistrationAlert('Please complete all fields before submitting.', 'error');
             return;
+        }
+
+        const roleValue = roleField ? roleField.value.trim().toLowerCase() : '';
+        const divisionValue = hiddenDivisionField ? hiddenDivisionField.value.trim().toUpperCase() : '';
+
+        if (roleValue === 'admin' && !divisionValue) {
+            event.preventDefault();
+            showRegistrationAlert('Division assigned is required for admin accounts.', 'error');
+            return;
+        }
+
+        if (roleValue === 'encoder') {
+            const programValue = programAssignedField ? programAssignedField.value.trim() : '';
+
+            if (!divisionValue) {
+                event.preventDefault();
+                showRegistrationAlert('Division is required for encoder accounts.', 'error');
+                return;
+            }
+
+            if (!programValue) {
+                event.preventDefault();
+                showRegistrationAlert('Program assigned is required for encoder accounts.', 'error');
+                return;
+            }
+
+            const validPrograms = divisionPrograms[divisionValue] || [];
+            if (!validPrograms.includes(programValue)) {
+                event.preventDefault();
+                showRegistrationAlert('Program assigned is invalid for the selected division.', 'error');
+                return;
+            }
         }
 
         const emailField = adminRegistrationForm.elements.namedItem('email');
@@ -102,15 +280,12 @@ if (adminRegistrationForm) {
             return;
         }
 
-        const divisionField = adminRegistrationForm.elements.namedItem('division');
         const validDivisions = ['DPSD', 'PSSD', 'RPSD'];
-
-        if (!divisionField || !validDivisions.includes(divisionField.value)) {
+        if (divisionValue && !validDivisions.includes(divisionValue)) {
             event.preventDefault();
-            showRegistrationAlert('Division assigned must be DPSD, PSSD, or RPSD only.', 'error');
+            showRegistrationAlert('Division must be DPSD, PSSD, or RPSD only.', 'error');
             return;
         }
-
 
         const passwordField = adminRegistrationForm.elements.namedItem('password');
         const confirmPasswordField = adminRegistrationForm.elements.namedItem('confirm_password');
