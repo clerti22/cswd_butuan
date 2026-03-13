@@ -110,7 +110,7 @@
                 <section class="admin-registration-card" aria-labelledby="admin-division-registration-title">
                     <div class="admin-registration-header">
                         <img src="../../images-logo/butuanseal.png" alt="City of Butuan seal" class="registration-logo">
-                        <h2 id="admin-division-registration-title">Admin/Division Registration</h2>
+                        <h2 id="admin-division-registration-title">Admin / Encoder Registration</h2>
                         <img src="../../images-logo/cswd-logo.png" alt="City Social Welfare and Development Office logo" class="registration-logo">
                     </div>
 
@@ -151,19 +151,46 @@
                             <label for="role">Role:</label>
                             <select id="role" name="role" required>
                                 <option value="">Select role</option>
-                                <option value="super admin">Super Admin</option>
                                 <option value="admin">Admin</option>
+                                <option value="super admin">Super Admin</option>
                                 <option value="encoder">Encoder</option>
                             </select>
                         </div>
 
-                        <div class="registration-field">
-                            <label for="division">Division Assigned:</label>
-                            <select id="division" name="division" required>
+                        <input type="hidden" id="division" name="division" value="">
+
+                        <div class="registration-field hidden" id="admin-division-field">
+                            <label for="admin-division">Division Assigned:</label>
+                            <select id="admin-division" name="admin_division">
                                 <option value="">Select division</option>
                                 <option value="DPSD">DPSD</option>
-                                <option value="PSSD">PSSD</option>
                                 <option value="RPSD">RPSD</option>
+                                <option value="PSSD">PSSD</option>
+                            </select>
+                        </div>
+
+                        <div class="registration-field hidden" id="encoder-division-field">
+                            <span class="field-label">Division:</span>
+                            <div class="radio-group" role="radiogroup" aria-label="Encoder division">
+                                <label class="radio-option" for="encoder-division-dpsd">
+                                    <input type="radio" id="encoder-division-dpsd" name="encoder_division" value="DPSD">
+                                    <span>DPSD</span>
+                                </label>
+                                <label class="radio-option" for="encoder-division-rpsd">
+                                    <input type="radio" id="encoder-division-rpsd" name="encoder_division" value="RPSD">
+                                    <span>RPSD</span>
+                                </label>
+                                <label class="radio-option" for="encoder-division-pssd">
+                                    <input type="radio" id="encoder-division-pssd" name="encoder_division" value="PSSD">
+                                    <span>PSSD</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="registration-field hidden" id="program-assigned-field">
+                            <label for="program_assigned">Program Assigned:</label>
+                            <select id="program_assigned" name="program_assigned">
+                                <option value="">Select program</option>
                             </select>
                         </div>
 

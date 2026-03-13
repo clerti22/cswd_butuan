@@ -19,7 +19,14 @@ $formState = [
         'age' => '',
         'role' => '',
         'division' => '',
+        'program_assigned' => '',
     ],
+];
+
+$encoderProgramsByDivision = [
+    'DPSD' => ['PWUD', 'Solo Parent', 'PYAP'],
+    'PSSD' => ['PWD', 'Senior Citizen'],
+    'RPSD' => ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 ];
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -29,8 +36,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $phoneNumber = trim((string) ($_POST['phone_number'] ?? ''));
     $gender = trim((string) ($_POST['gender'] ?? ''));
     $age = trim((string) ($_POST['age'] ?? ''));
-    $role = trim((string) ($_POST['role'] ?? ''));
-    $division = trim((string) ($_POST['division'] ?? ''));
+    $role = strtolower(trim((string) ($_POST['role'] ?? '')));
+    $division = strtoupper(trim((string) ($_POST['division'] ?? '')));
+    $programAssigned = trim((string) ($_POST['program_assigned'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
     $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
 
@@ -43,6 +51,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         'age' => $age,
         'role' => $role,
         'division' => $division,
+        'program_assigned' => $programAssigned,
     ];
 
     if (
@@ -53,7 +62,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $gender === '' ||
         $age === '' ||
         $role === '' ||
-        $division === '' ||
         $password === '' ||
         $confirmPassword === ''
     ) {
@@ -65,12 +73,30 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please provide a valid email address.';
-    } elseif (!in_array(strtoupper($division), ['DPSD', 'PSSD', 'RPSD'], true)) {
-        $formState['status'] = 'error';
-        $formState['message'] = 'Division assigned must be DPSD, PSSD, or RPSD only.';
-    } elseif (!in_array(strtolower($role), ['super admin', 'admin', 'encoder'], true)) {
+    } elseif (!in_array($role, ['super admin', 'admin', 'encoder'], true)) {
         $formState['status'] = 'error';
         $formState['message'] = 'Role must be super admin, admin, or encoder only.';
+    } elseif ($role !== 'super admin' && !in_array($division, ['DPSD', 'PSSD', 'RPSD'], true)) {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Division must be DPSD, PSSD, or RPSD only.';
+    } elseif ($role === 'super admin' && ($division !== '' || $programAssigned !== '')) {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Super admin accounts do not require division or program assignment.';
+    } elseif ($role === 'admin' && $division === '') {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Division assigned is required for admin accounts.';
+    } elseif ($role === 'admin' && $programAssigned !== '') {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Program assigned is only available for encoder accounts.';
+    } elseif ($role === 'encoder' && $division === '') {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Division is required for encoder accounts.';
+    } elseif ($role === 'encoder' && $programAssigned === '') {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Program assigned is required for encoder accounts.';
+    } elseif ($role === 'encoder' && !in_array($programAssigned, $encoderProgramsByDivision[$division] ?? [], true)) {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Program assigned is invalid for the selected encoder division.';
     } elseif (!hash_equals($password, $confirmPassword)) {
         $formState['status'] = 'error';
         $formState['message'] = 'Password and confirm password do not match.';
@@ -119,20 +145,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $formState['message'] = 'Username exist please use different username.';
             } else {
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                $normalizedRole = strtolower($role);
-                $normalizedDivision = strtoupper($division);
                 $ageValue = (int) $age;
+                $normalizedDivision = $role === 'super admin' ? '' : $division;
+                $programValue = $role === 'encoder' ? $programAssigned : '';
 
-                $insertStatement = $connection->prepare(
-                    'INSERT INTO users (full_name, username, email, phone_number, division, gender, age, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-                );
-
-                if ($insertStatement === false) {
-                    throw new RuntimeException('Failed to prepare user insert statement.');
-                }
-
-                $insertStatement->bind_param(
-                    'ssssssiss',
+                $columnsForInsert = ['full_name', 'username', 'email', 'phone_number', 'division', 'gender', 'age', 'password', 'role'];
+                $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?'];
+                $types = 'ssssssiss';
+                $values = [
                     $fullName,
                     $username,
                     $email,
@@ -141,9 +161,29 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     $gender,
                     $ageValue,
                     $hashedPassword,
-                    $normalizedRole
+                    $role,
+                ];
+
+                if (isset($columns['programs'])) {
+                    $columnsForInsert[] = 'programs';
+                    $placeholders[] = '?';
+                    $types .= 's';
+                    $values[] = $programValue;
+                }
+
+                $insertSql = sprintf(
+                    'INSERT INTO users (%s) VALUES (%s)',
+                    implode(', ', $columnsForInsert),
+                    implode(', ', $placeholders)
                 );
 
+                $insertStatement = $connection->prepare($insertSql);
+
+                if ($insertStatement === false) {
+                    throw new RuntimeException('Failed to prepare user insert statement.');
+                }
+
+                $insertStatement->bind_param($types, ...$values);
                 $insertStatement->execute();
                 $insertStatement->close();
 
@@ -158,6 +198,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     'age' => '',
                     'role' => '',
                     'division' => '',
+                    'program_assigned' => '',
                 ];
             }
 
