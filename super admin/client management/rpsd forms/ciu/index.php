@@ -1,14 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_login(['super admin']);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCIMS - Senior Citizen Form</title>
+    <title>CCIMS -CIU Form</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="snrctizen.css">
+    <link rel="stylesheet" href="ciu.css">
 </head>
 
 <body>
@@ -47,7 +58,6 @@
                     <span class="nav-text">Clients Management</span>
                 </a>
 
-
                 <a href="#" class="nav-item">
                     <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                         <path fill="#ffffff"
@@ -66,6 +76,7 @@
                     <span class="nav-text">Feedback</span>
                     <span class="nav-badge">12</span>
                 </a>
+
                 <a href="#" class="nav-item">
                     <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -92,79 +103,121 @@
             </div>
         </nav>
 
+        <!-- Main Content -->
         <div class="main-content">
             <header class="topbar">
-                <button class="menu-btn" id="openSidebar" aria-label="Open sidebar">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                <button class="menu-btn" id="openSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <h1 class="topbar-title">Client Management/Senior Citizen</h1>
+                <h3 class="topbar-title" style="font-weight: bold;">Clients Management</h3>
             </header>
 
             <main class="form-page">
-                <section class="form-header">
-                    <div class="header-logos">
-                        <img src="../../images-logo/butuanseal.png" alt="Butuan City Seal">
-                        <div class="header-text">
-                            <p>Republic of the Philippines</p>
-                            <p class="strong">CITY GOVERNMENT OF BUTUAN</p>
-                            <p class="strong">City Social Welfare and Development Department</p>
-                            <p>City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
+                <section class="ciu-form">
+                    <div class="ciu-header">
+                        <div class="ciu-logos">
+                            <img src="../../images-logo/butuanseal.png" alt="Butuan City Seal">
+                            <div class="ciu-title">
+                                <p>Republic of the Philippines</p>
+                                <p><strong>City Government of Butuan</strong></p>
+                                <p><strong>City Social Welfare and Development Department</strong></p>
+                                <p>City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
+                            </div>
+                            <img src="../../images-logo/cswd-logo.png" alt="CSWD Logo">
                         </div>
-                        <img src="../../images-logo/cswd-logo.png" alt="CSWD Logo">
+                        <h2>CIU Intake Sheet Form</h2>
                     </div>
-                    <h2>Senior Citizen Intake Form</h2>
-                </section>
 
-                <form id="pwudForm" method="POST" novalidate>
-                    <section class="form-section">
-                        <div class="section-title">
-                            <i class="bi bi-person-circle"></i>
-                            <span>Identifying Information</span>
-                        </div>
-
+                    <form class="ciu-body">
                         <div class="form-grid">
                             <label class="field">
                                 First Name:
-                                <input type="text" name="first_name" id="firstName" required />
+                                <input type="text" name="first_name">
                             </label>
                             <label class="field">
                                 Middle Name:
-                                <input type="text" name="middle_name" id="middleName" />
+                                <input type="text" name="middle_name">
                             </label>
                             <label class="field">
                                 Last Name:
-                                <input type="text" name="last_name" id="lastName" required />
+                                <input type="text" name="last_name">
                             </label>
                             <label class="field">
                                 Suffix:
-                                <input type="text" name="suffix" id="suffix" />
+                                <input type="text" name="suffix">
                             </label>
 
                             <label class="field">
-                                Date of Birth:
-                                <input type="date" name="date_of_birth" id="dateOfBirth" required />
+                                Birth Date:
+                                <input type="date" name="birth_date">
                             </label>
                             <label class="field span-2">
-                                Place of Birth:
-                                <input type="text" name="place_of_birth" id="placeOfBirth" required />
+                                Birth Place:
+                                <input type="text" name="birth_place">
                             </label>
                             <label class="field">
                                 Age:
-                                <input type="number" min="0" name="age" id="age" required />
+                                <input type="text" name="age">
+                            </label>
+
+                            <div class="field">
+                                Sex:
+                                <div class="radio-group">
+                                    <label><input type="radio" name="sex" value="male"> Male</label>
+                                    <label><input type="radio" name="sex" value="female"> Female</label>
+                                </div>
+                            </div>
+                            <label class="field">
+                                Civil Status:
+                                <select name="civil_status">
+                                    <option value="">Select</option>
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                    <option value="widowed">Widowed</option>
+                                    <option value="separated">Separated</option>
+                                    <option value="annulled">Annulled</option>
+                                </select>
+                            </label>
+                            <label class="field span-2">
+                                Contact Number:
+                                <input type="text" name="contact_number">
                             </label>
 
                             <label class="field">
-                                Address:
-                                <input type="text" name="address" id="address" required />
+                                Monthly Income:
+                                <input type="text" name="monthly_income">
                             </label>
-                            <label class="field"><span>Barangay:</span>
+                            <label class="field">
+                                Religion:
+                                <select name="religion">
+                                    <option value="">Select</option>
+                                    <option value="roman_catholic">Roman Catholic</option>
+                                    <option value="islam">Islam</option>
+                                    <option value="protestant">Protestant</option>
+                                    <option value="iglesia_ni_cristo">Iglesia ni Cristo</option>
+                                    <option value="others">Others</option>
+                                </select>
+                            </label>
+                            <label class="field span-2">
+                                Occupation:
+                                <input type="text" name="occupation">
+                            </label>
 
-                               
-                                <input list="barangay-list" name="barangay" id="barangay">
+                            <label class="field">
+                                Educational Attainment:
+                                <input type="text" name="education">
+                            </label>
+                            <label class="field span-2">
+                                Address:
+                                <input type="text" name="address">
+                            </label>
+                            <label class="field">
+                                Barangay:
+                                 <input list="barangay-list" name="barangay" id="barangay">
                                 <datalist id="barangay-list">
                                     <option value="Maon">
                                     <option value="Golden Ribbon">
@@ -253,142 +306,142 @@
                                     <option value="Tungao">
                                     <option value="Villa Kananga">
                                 </datalist>
-
-
-                            </label>
-                            <label class="field">
-                                Religion:
-                                <input type="text" name="religion" id="religion" required />
-                            </label>
-                            <label class="field">
-                                Sex:
-                                <select name="sex" id="sex" required>
-                                    <option value="" selected></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </label>
-
-                            <label class="field span-2">
-                                Educational Attainment:
-                                <input type="text" name="educational_attainment" id="educationalAttainment" required />
-                            </label>
-                            <label class="field span-2">
-                                Occupation:
-                                <input type="text" name="occupation" id="occupation" required />
-                            </label>
-
-                            <label class="field">
-                                Monthly Income:
-                                <input type="number" min="0" step="0.01" name="monthly_income" id="monthlyIncome" required />
-                            </label>
-                            <label class="field">
-                                Civil Status:
-                                <select name="civil_status" id="civilStatus" required>
-                                    <option value="" selected></option>
-                                    <option value="Single">Single</option>
-                                    <option value="Married">Married</option>
-                                    <option value="Separated">Separated</option>
-                                    <option value="Widowed">Widowed</option>
-                                </select>
-                            </label>
-                            <label class="field span-2">
-                                Contact Number:
-                                <input type="text" name="contact_number" id="contactNumber" required />
-                            </label>
-
-                            <label class="field span-4">
-                                Services Needed:
-                                <textarea rows="4" name="services_needed" id="servicesNeeded" required></textarea>
                             </label>
                         </div>
-                    </section>
 
-                    <section class="form-section">
-                        <div class="section-title">
-                            <i class="bi bi-people-fill"></i>
-                            <span>Household Members</span>
+                        <div class="ciu-section">
+                            <p class="section-title">Member(s) of:</p>
+                            <div class="checkbox-grid">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="member_senior"> Senior Citizen
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="member_solo_parent"> Solo Parent
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="member_pwd"> PWD
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="member_4ps"> 4Ps
+                                </label>
+                            </div>
+                            <label class="field others-field">
+                                Others Specify:
+                                <input type="text" name="member_others">
+                            </label>
                         </div>
 
-                        <div class="table-card">
-                            <table class="info-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Age</th>
-                                        <th>Gender</th>
-                                        <th>Relationship</th>
-                                        <th>Occupation</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="householdMembersBody">
-                                    <tr class="placeholder-row">
-                                        <td colspan="5">No household member added yet.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="ciu-section">
+                            <p class="section-title">Services Needed:</p>
+                            <div class="services-grid">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_prescribed_medicine"> Prescribed Medicine Assistance
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_certificate_minor"> Certificate of Travelling Minor
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_hospital_bill"> Hospital Bill Assistance
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_tesda_certificate"> TESDA Certificate
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_burial"> Burial Assistance
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_laboratory"> Laboratory Assistance
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="service_legal_assistance"> Certificate to avail for Free Legal Assistance
+                                </label>
+                                <label class="field others-field">
+                                    Others Specify:
+                                    <input type="text" name="service_others">
+                                </label>
+                            </div>
                         </div>
 
-                        <button class="add-button" type="button" id="openHouseholdModal">
-                            <span class="button-icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" />
-                                </svg>
-                            </span>
-                            Add
-                        </button>
-                        
-                        <p id="formMessage" class="form-message" role="alert"></p>
-                    </section>
-                    <div style="text-align: center;">
-                        <button  type="submit"
-                            id="submitPwudForm">Submit</button>
-                    </div>
-                    <input type="hidden" name="household_members" id="householdMembersInput" value="[]" />
-                </form>
+                        <div class="ciu-section family-section">
+                            <div class="family-header">
+                                <p class="section-title">Family Composition</p>
+                                <button class="family-add-btn" type="button" id="openFamilyModal">
+                                    <span class="family-add-icon">+</span> Add
+                                </button>
+                            </div>
+                            <div class="family-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Age</th>
+                                            <th>Gender</th>
+                                            <th>Relationship to the client</th>
+                                            <th>Educational Attainment</th>
+                                            <th>Occupation</th>
+                                            <th>Income</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="7"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="submit-btn" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </section>
             </main>
         </div>
     </div>
 
-    <div class="modal" id="householdModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal" id="familyModal" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add Household Member</h2>
-                <a class="modal-close" type="button" id="closeHouseholdModal" aria-label="Close modal">✕</a>
+                <h2>Family Composition Details</h2>
+                <button class="modal-close" type="button" id="closeFamilyModal">&times;</button>
             </div>
-            <div class="modal-form-grid" id="householdModalForm">
-                <label class="modal-field">
-                    <span>Name</span>
-                    <input type="text" name="household_name" id="householdName" placeholder="Name" required />
+            <form class="modal-form">
+                <label>
+                    Name
+                    <input type="text" name="family_name">
                 </label>
-                <label class="modal-field">
-                    <span>Age</span>
-                    <input type="number" min="0" name="household_age" id="householdAge" placeholder="Age" required />
+                <label>
+                    Age
+                    <input type="number" name="family_age" min="0">
                 </label>
-                <label class="modal-field">
-                    <span>Gender</span>
-                    <select name="household_gender" id="householdGender" required>
-                        <option value="" selected></option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                <label>
+                    Gender
+                    <select name="family_gender">
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
                     </select>
                 </label>
-                <label class="modal-field">
-                    <span>Relationship</span>
-                    <input type="text" name="household_relationship" id="householdRelationship" placeholder="Relationship" required />
+                <label>
+                    Relationship to the client
+                    <input type="text" name="family_relationship">
                 </label>
-                <label class="modal-field span-2">
-                    <span>Occupation</span>
-                    <input type="text" name="household_occupation" id="householdOccupation" placeholder="Occupation" required />
+                <label>
+                    Educational Attainment
+                    <input type="text" name="family_education">
                 </label>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-submit" type="button" id="saveHouseholdMember">Save</button>
-            </div>
+                <label>
+                    Occupation
+                    <input type="text" name="family_occupation">
+                </label>
+                <label>
+                    Income
+                    <input type="text" name="family_income">
+                </label>
+                <button class="submit-btn" type="button" id="saveFamilyEntry">Save</button>
+            </form>
         </div>
     </div>
-    <script src="snrctizen.js"></script>
+    <script src="ciu.js"></script>
 
 
 </body>

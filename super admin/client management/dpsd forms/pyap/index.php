@@ -1,3 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_login(['super admin']);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +29,7 @@
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="../../images-logo/cswd-logo.png" alt="" width="130" height="110">
+                <img src="../../../images-logo/cswd-logo.png" alt="" width="130" height="110">
                 <p class="sidebar-title">CCIMS Dashboard</p>
                 <button class="close-btn" id="closeSidebar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -106,14 +117,14 @@
 
             <main class="form-page">
                 <header class="form-header">
-                    <img class="seal" src="../../images-logo/butuanseal.png" alt="City of Butuan Seal">
+                    <img class="seal" src="../../../images-logo/butuanseal.png" alt="City of Butuan Seal">
                     <div class="header-text">
                         <p>Republic of the Philippines</p>
                         <p class="header-strong">CITY GOVERNMENT OF BUTUAN</p>
                         <p class="header-strong">City Social Welfare and Development Department</p>
                         <p>City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
                     </div>
-                    <img class="seal" src="../../images-logo/cswd-logo.png" alt="CSWD Seal">
+                    <img class="seal" src="../../../images-logo/cswd-logo.png" alt="CSWD Seal">
                 </header>
 
                 <section class="title-block">

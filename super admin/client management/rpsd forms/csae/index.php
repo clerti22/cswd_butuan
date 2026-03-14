@@ -1,14 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_login(['super admin']);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCIMS Dashboard</title>
+    <title>CCIMS - CSAE Form</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="vawc.css">
+    <link rel="stylesheet" href="csae.css">
 </head>
 
 <body>
@@ -111,13 +121,14 @@
                         <div class="form-header__text">
                             <p class="form-header__line">Republic of the Philippines</p>
                             <p class="form-header__line form-header__line--bold">CITY GOVERNMENT OF BUTUAN</p>
-                            <p class="form-header__line form-header__line--bold">City Social Welfare and Development Department</p>
+                            <p class="form-header__line form-header__line--bold">City Social Welfare and Development
+                                Department</p>
                             <p class="form-header__line">City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
                         </div>
                         <img class="form-header__logo" src="../../images-logo/butuanseal.png" alt="Butuan City logo">
                     </header>
 
-                    <h1 class="form-title">VAWC Intake Sheet Form</h1>
+                    <h1 class="form-title">CSAE Intake Sheet Form</h1>
 
                     <section class="form-section">
                         <div class="section-title">
@@ -149,9 +160,17 @@
                                 <input id="suffix" type="text">
                             </div>
 
-                            <div class="field field--span-2">
-                                <label for="birth-place">Birth Place:</label>
-                                <input id="birth-place" type="text">
+                            <div class="field">
+                                <label for="nickname">Nickname:</label>
+                                <input id="nickname" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="sex">Sex:</label>
+                                <select id="sex">
+                                    <option value="" selected></option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
                             </div>
                             <div class="field">
                                 <label for="birth-date">Birth Date:</label>
@@ -164,29 +183,21 @@
                                 <input id="age" type="text">
                             </div>
 
-                            <div class="field field--span-2">
-                                <label for="education">Educational Attainment:</label>
-                                <input id="education" type="text">
+                            <div class="field field--span-4">
+                                <label for="birth-place">Birth Place:</label>
+                                <input id="birth-place" type="text">
+                            </div>
+                            <div class="field field--span-4">
+                                <label for="present-address">Present Address:</label>
+                                <input id="present-address" type="text">
                             </div>
                             <div class="field field--span-2">
-                                <label for="religion">Religion:</label>
-                                <select id="religion">
-                                    <option value="" selected></option>
-                                    <option>Roman Catholic</option>
-                                    <option>Islam</option>
-                                    <option>Protestant</option>
-                                    <option>Others</option>
-                                </select>
+                                <label for="permanent-address">Permanent Address:</label>
+                                <input id="permanent-address" type="text">
                             </div>
-
-                            <div class="field field--span-2">
-                                <label for="address">Address:</label>
-                                <input id="address" type="text">
-                            </div>
-
                             <div class="field field--span-2">
                                 <label for="barangay">Barangay:</label>
-                                 <input list="barangay-list" name="barangay" id="barangay">
+                                <input list="barangay-list" name="barangay" id="barangay">
                                 <datalist id="barangay-list">
                                     <option value="Maon">
                                     <option value="Golden Ribbon">
@@ -276,79 +287,118 @@
                                     <option value="Villa Kananga">
                                 </datalist>
                             </div>
-
-                            <div class="field">
-                                <label for="occupation">Occupation:</label>
-                                <input id="occupation" type="text">
+                            <div class="field field--span-2">
+                                <label for="education">Educational Attainment:</label>
+                                <input id="education" type="text">
                             </div>
-                            <div class="field">
-                                <label for="income">Monthly Income:</label>
-                                <input id="income" type="text">
+                            <div class="field field--span-2">
+                                <label for="school-last">School last Attended:</label>
+                                <input id="school-last" type="text">
                             </div>
-                            <div class="field">
-                                <label for="contact">Contact Number:</label>
-                                <input id="contact" type="text">
-                            </div>
-                            <div class="field">
-                                <label for="civil-status">Civil Status:</label>
-                                <select id="civil-status">
-                                    <option value="" selected></option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                </select>
-                            </div>
-
                             <div class="field field--span-4">
-                                <label class="clientele-label">Clientele Category:</label>
-                                <div class="clientele-grid">
-                                    <div class="clientele-item">
-                                        <span>4P's (?):
-                                        </span>
-                                        <div class="radio-group">
-                                            <label class="radio-option">
-                                                <input type="radio" name="4ps" value="Yes">
-                                                Yes
-                                            </label>
-                                            <label class="radio-option">
-                                                <input type="radio" name="4ps" value="No">
-                                                No
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="clientele-item">
-                                        <span>UCT (?):
-                                        </span>
-                                        <div class="radio-group">
-                                            <label class="radio-option">
-                                                <input type="radio" name="uct" value="Yes">
-                                                Yes
-                                            </label>
-                                            <label class="radio-option">
-                                                <input type="radio" name="uct" value="No">
-                                                No
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="clientele-item">
-                                        <span>NHTS (?):
-                                        </span>
-                                        <div class="radio-group">
-                                            <label class="radio-option">
-                                                <input type="radio" name="nhts" value="Yes">
-                                                Yes
-                                            </label>
-                                            <label class="radio-option">
-                                                <input type="radio" name="nhts" value="No">
-                                                No
-                                            </label>
-                                        </div>
-                                    </div>
+                                <label for="school-address">Address of School:</label>
+                                <input id="school-address" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="health-condition">Health Condition:</label>
+                                <input id="health-condition" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="contact-number">Contact Number:</label>
+                                <input id="contact-number" type="text">
+                            </div>
+                            <div class="field field--radio">
+                                <label>4Ps (?):
+                                </label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="4ps" value="Yes">
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="4ps" value="No">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field field--radio">
+                                <label>Philhealth:</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="philhealth" value="Yes">
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="philhealth" value="No">
+                                        No
+                                    </label>
                                 </div>
                             </div>
                         </form>
                     </section>
+
+                    <section class="form-section">
+                        <div class="section-title">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M12 3.5a1 1 0 0 1 1 1v4.14a4 4 0 1 1-2 0V4.5a1 1 0 0 1 1-1Zm-6 6.5a6 6 0 1 0 12 0c0-.7-.13-1.37-.37-2H5.37A6.06 6.06 0 0 0 6 10Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M6.5 2.5a1 1 0 0 1 1 1v.5h9v-.5a1 1 0 1 1 2 0v2a1 1 0 0 1-2 0V5h-9v.5a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Offense Committed to the Child</h2>
+                        </div>
+
+                        <form class="form-grid">
+                            <div class="field">
+                                <label for="offense-type">Type of Offense:</label>
+                                <input id="offense-type" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="incident-date-place">Date &amp; Place of Incident:</label>
+                                <div class="input-icon">
+                                    <input id="incident-date-place" type="date">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="perpetrator-name">Name of Perpetrator/Accused:</label>
+                                <input id="perpetrator-name" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="referral-date">Date of Referral to Social Worker:</label>
+                                <div class="input-icon">
+                                    <input id="referral-date" type="date">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="referring-party">Name and Address of Referring Party:</label>
+                                <input id="referring-party" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="case-status">Status of the Case:</label>
+                                <input id="case-status" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="criminal-case">Criminal Case No.:</label>
+                                <input id="criminal-case" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="info-source">Source of Information:</label>
+                                <input id="info-source" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="complainant">Complainant:</label>
+                                <input id="complainant" type="text">
+                            </div>
+                        </form>
+                    </section>
+
                     <section class="form-section">
                         <div class="section-title section-title--with-action">
                             <div class="section-title__content">
@@ -380,7 +430,7 @@
                                 <span>Occupation</span>
                                 <span>Income</span>
                             </div>
-                            <div class="family-table__body">
+                            <div class="family-table__body" id="familyTableBody">
                                 <div class="family-table__row family-table__row--empty">
                                     <span></span>
                                     <span></span>
@@ -398,54 +448,82 @@
                             <span class="section-title__icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
                                     <path
-                                        d="M12 2.75c-1.1 0-2.11.6-2.64 1.56L3.42 15.35a3 3 0 0 0 2.64 4.4h11.88a3 3 0 0 0 2.64-4.4l-5.94-11.04A2.98 2.98 0 0 0 12 2.75Zm0 4.5a1 1 0 0 1 1 1v4.5a1 1 0 1 1-2 0v-4.5a1 1 0 0 1 1-1Zm0 9.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z"
+                                        d="M12 3a9 9 0 0 0-9 9c0 5 4 9 9 9s9-4 9-9a9 9 0 0 0-9-9Zm0 4a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V8a1 1 0 0 1 1-1Zm0 9a1.25 1.25 0 1 1 0-2.5A1.25 1.25 0 0 1 12 16Z"
                                         fill="currentColor" />
                                 </svg>
                             </span>
                             <h2>Presenting Problem</h2>
                         </div>
-                        <textarea class="form-textarea" name="presenting-problem" rows="4"></textarea>
+                        <textarea class="form-textarea" name="presenting-problem" rows="3"></textarea>
                     </section>
+
                     <section class="form-section">
                         <div class="section-title">
                             <span class="section-title__icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
                                     <path
-                                        d="M4.5 3.75h10a2 2 0 0 1 2 2v1h3a1 1 0 0 1 1 1v11a2 2 0 0 1-2 2h-14a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Zm0 2a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-10.5h-2.5v5a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-7h9.5v-1a.5.5 0 0 0-.5-.5h-10Z"
+                                        d="M4 4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V4Z"
                                         fill="currentColor" />
                                     <path
-                                        d="M7.5 10.25h6a.75.75 0 0 0 0-1.5h-6a.75.75 0 0 0 0 1.5Zm0 3h6a.75.75 0 0 0 0-1.5h-6a.75.75 0 0 0 0 1.5Z"
+                                        d="M7 9a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M16.5 6a2.5 2.5 0 0 1 0 5H15V6h1.5Z"
                                         fill="currentColor" />
                                 </svg>
                             </span>
-                            <h2>Initial Description of the (below):</h2>
+                            <h2>Background Information</h2>
                         </div>
                         <div class="description-grid">
-                            <label class="description-field" for="family-environment">
-                                <span>Family Environment:</span>
-                                <textarea id="family-environment" name="family-environment" rows="3"></textarea>
+                            <label class="description-field" for="background-child">
+                                <span>Child:</span>
+                                <textarea id="background-child" name="background-child" rows="3"></textarea>
                             </label>
-                            <label class="description-field" for="community">
-                                <span>Community:</span>
-                                <textarea id="community" name="community" rows="3"></textarea>
+                            <label class="description-field" for="background-family">
+                                <span>Child's Family:</span>
+                                <textarea id="background-family" name="background-family" rows="3"></textarea>
                             </label>
-                            <label class="description-field" for="family-history">
-                                <span>Family and History Background:</span>
-                                <textarea id="family-history" name="family-history" rows="3"></textarea>
+                            <label class="description-field" for="background-community">
+                                <span>Child's Community:</span>
+                                <textarea id="background-community" name="background-community" rows="3"></textarea>
                             </label>
                         </div>
                     </section>
+
+                    <section class="form-section">
+                        <div class="section-title">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M6 3a2 2 0 0 0-2 2v13a3 3 0 0 0 3 3h9a3 3 0 0 0 3-3V9l-6-6H6Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M14 3v6h6"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M8 13h8v2H8v-2Zm0 4h6v2H8v-2Z"
+                                        fill="#ffffff" />
+                                </svg>
+                            </span>
+                            <h2>Assessment</h2>
+                        </div>
+                        <textarea class="form-textarea" name="assessment" rows="3"></textarea>
+                    </section>
+
                     <section class="form-section">
                         <div class="section-title section-title--with-action">
                             <div class="section-title__content">
                                 <span class="section-title__icon" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
                                         <path
-                                            d="M4 12a8 8 0 0 1 14.5-4.7l1.2-1.2a1 1 0 1 1 1.4 1.4l-1.2 1.2A8 8 0 1 1 4 12Zm8-4a1 1 0 0 0-1 1v2H9a1 1 0 0 0 0 2h2v2a1 1 0 0 0 2 0v-2h2a1 1 0 0 0 0-2h-2V9a1 1 0 0 0-1-1Z"
+                                            d="M4 12a8 8 0 0 1 14.5-4.7l1.2-1.2a1 1 0 1 1 1.4 1.4l-1.2 1.2A8 8 0 1 1 4 12Z"
+                                            fill="currentColor" />
+                                        <path
+                                            d="M7.5 13.5a.75.75 0 0 1 .75-.75h7.5a.75.75 0 1 1 0 1.5h-7.5a.75.75 0 0 1-.75-.75Zm0-3a.75.75 0 0 1 .75-.75h7.5a.75.75 0 1 1 0 1.5h-7.5a.75.75 0 0 1-.75-.75Z"
                                             fill="currentColor" />
                                     </svg>
                                 </span>
-                                <h2>Initial Treatment</h2>
+                                <h2>Treatment Plan</h2>
                             </div>
                             <button class="add-btn family-add-btn" type="button" id="openTreatmentModal">
                                 <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -461,11 +539,11 @@
                             <div class="treatment-table__header">
                                 <span>Objectives</span>
                                 <span>Activities</span>
-                                <span>Responsible Person</span>
-                                <span>Resources Needed</span>
-                                <span>Expected Output</span>
+                                <span>Time frame</span>
+                                <span>Person/s Responsible</span>
+                                <span>Remarks</span>
                             </div>
-                            <div class="treatment-table__body">
+                            <div class="treatment-table__body" id="treatmentTableBody">
                                 <div class="treatment-table__row treatment-table__row--empty">
                                     <span></span>
                                     <span></span>
@@ -482,7 +560,7 @@
                             <span class="section-title__icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
                                     <path
-                                        d="M12 2.5a9.5 9.5 0 1 0 9.5 9.5 9.51 9.51 0 0 0-9.5-9.5Zm0 2a7.5 7.5 0 0 1 6.9 10.6l-1.7-.7a3.5 3.5 0 0 0-4.7-3.2V7.5a1 1 0 0 0-2 0v5.2a3.5 3.5 0 0 0 4.2 3.4l2.1.9A7.5 7.5 0 1 1 12 4.5Z"
+                                        d="M12 2.5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 12 2.5Zm0 2a7.5 7.5 0 0 1 6.9 10.6l-1.7-.7a3.5 3.5 0 0 0-4.7-3.2V7.5a1 1 0 0 0-2 0v5.2a3.5 3.5 0 0 0 4.2 3.4l2.1.9A7.5 7.5 0 1 1 12 4.5Z"
                                         fill="currentColor" />
                                     <path
                                         d="M9.5 13h-1a1 1 0 0 0 0 2h1v1a1 1 0 0 0 2 0v-1h1a1 1 0 0 0 0-2h-1v-1a1 1 0 0 0-2 0v1Z"
@@ -491,7 +569,7 @@
                             </span>
                             <h2>Recommendation</h2>
                         </div>
-                        <textarea class="form-textarea" name="recommendation" rows="4"></textarea>
+                        <textarea class="form-textarea" name="recommendation" rows="3"></textarea>
                         <div class="form-actions">
                             <button class="form-submit-btn" type="button">Submit</button>
                         </div>
@@ -542,7 +620,7 @@
     <div class="modal" id="treatmentModal" aria-hidden="true">
         <div class="modal-content family-modal">
             <div class="family-modal__header">
-                <h2>Initial Treatment</h2>
+                <h2>Treatment Plan</h2>
                 <button class="family-modal__close" type="button" id="closeTreatmentModal" aria-label="Close">
                     &times;
                 </button>
@@ -557,16 +635,16 @@
                     <input id="treatment-activities" name="activities" type="text">
                 </div>
                 <div class="field">
-                    <label for="treatment-responsible">Responsible Person:</label>
+                    <label for="treatment-timeframe">Time frame:</label>
+                    <input id="treatment-timeframe" name="timeframe" type="text">
+                </div>
+                <div class="field">
+                    <label for="treatment-responsible">Person/s Responsible:</label>
                     <input id="treatment-responsible" name="responsible" type="text">
                 </div>
                 <div class="field">
-                    <label for="treatment-resources">Resources Needed:</label>
-                    <input id="treatment-resources" name="resources" type="text">
-                </div>
-                <div class="field">
-                    <label for="treatment-output">Expected Output:</label>
-                    <input id="treatment-output" name="output" type="text">
+                    <label for="treatment-remarks">Remarks:</label>
+                    <input id="treatment-remarks" name="remarks" type="text">
                 </div>
                 <div class="modal-actions">
                     <button class="modal-submit" type="submit">Save</button>
@@ -574,7 +652,7 @@
             </form>
         </div>
     </div>
-    <script src="vawc.js"></script>
+    <script src="csae.js"></script>
 
 
 </body>

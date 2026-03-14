@@ -1,4 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

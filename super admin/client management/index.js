@@ -48,20 +48,20 @@ const addClientOptions = {
 
 const addClientRoutes = {
     dpsd: {
-        'PYAP': 'dpsd forms/pyap.html',
-        'Solo Parent': 'dpsd forms/soloparent.html',
-        'PWUD': 'dpsd forms/pwud.html'
+        'PYAP': 'dpsd forms/pyap/index.php',
+        'Solo Parent': 'dpsd forms/solo parent/index.php',
+        'PWUD': 'dpsd forms/pwud/index.php'
     },
     pssd: {
-        'Senior Citizen': 'pssd forms/snrctizen.html',
-        'PWD': 'pssd forms/pwd.html'
+        'Senior Citizen': 'pssd forms/senior citizen/index.php',
+        'PWD': 'pssd forms/pwd/index.php'
     },
     rpsd: {
-        'VAWC': 'rpsd forms/vawc.html',
-        'CSAE': 'rpsd forms/csae.html',
-        'CAR': 'rpsd forms/car.html',
-        'CICL': 'rpsd forms/cicl.html',
-        'CIU': 'rpsd forms/ciu.html'
+        'VAWC': 'rpsd forms/vawc/vawc.html',
+        'CSAE': 'rpsd forms/csae/csae.html',
+        'CAR': 'rpsd forms/car/car.html',
+        'CICL': 'rpsd forms/cicl/cicl.html',
+        'CIU': 'rpsd forms/ciu/ciu.html'
     }
 };
 

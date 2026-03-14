@@ -1,14 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_login(['super admin']);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCIMS - PWD Form</title>
+    <title>CCIMS - Senior Citizen Form</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="pwd.css">
+    <link rel="stylesheet" href="snrctizen.css">
 </head>
 
 <body>
@@ -18,7 +29,7 @@
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="../../images-logo/cswd-logo.png" alt="" width="130" height="110">
+                <img src="../../../images-logo/cswd-logo.png" alt="" width="130" height="110">
                 <p class="sidebar-title">CCIMS Dashboard</p>
                 <button class="close-btn" id="closeSidebar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,6 +57,7 @@
                     </svg>
                     <span class="nav-text">Clients Management</span>
                 </a>
+
 
                 <a href="#" class="nav-item">
                     <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -100,22 +112,22 @@
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <h1 class="topbar-title">Client Management/PWD</h1>
+                <h1 class="topbar-title">Client Management/Senior Citizen</h1>
             </header>
 
             <main class="form-page">
                 <section class="form-header">
                     <div class="header-logos">
-                        <img src="../../images-logo/butuanseal.png" alt="Butuan City Seal">
+                        <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal">
                         <div class="header-text">
                             <p>Republic of the Philippines</p>
                             <p class="strong">CITY GOVERNMENT OF BUTUAN</p>
                             <p class="strong">City Social Welfare and Development Department</p>
                             <p>City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
                         </div>
-                        <img src="../../images-logo/cswd-logo.png" alt="CSWD Logo">
+                        <img src="../../../images-logo/cswd-logo.png" alt="CSWD Logo">
                     </div>
-                    <h2>PWD Intake Form</h2>
+                    <h2>Senior Citizen Intake Form</h2>
                 </section>
 
                 <form id="pwudForm" method="POST" novalidate>
@@ -387,7 +399,7 @@
             </div>
         </div>
     </div>
-    <script src="pwd.js"></script>
+    <script src="snrctizen.js"></script>
 
 
 </body>

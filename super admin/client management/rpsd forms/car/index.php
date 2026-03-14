@@ -1,14 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_login(['super admin']);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCIMS Client Management - CICL Form</title>
+    <title>CCIMS Client Management - CAR Form</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="cicl.css">
+    <link rel="stylesheet" href="car.css">
 </head>
 
 <body>
@@ -47,7 +57,6 @@
                     <span class="nav-text">Clients Management</span>
                 </a>
 
-                
 
                 <a href="#" class="nav-item">
                     <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -119,7 +128,7 @@
                         <img class="form-header__logo" src="../../images-logo/butuanseal.png" alt="Butuan City logo">
                     </header>
 
-                    <h1 class="form-title">CICL Intake Sheet</h1>
+                    <h1 class="form-title">CAR Intake Sheet</h1>
 
                     <section class="form-section">
                         <form class="form-grid">
@@ -228,10 +237,10 @@
                                 <label for="permanent-address">Permanenteng Address:</label>
                                 <input id="permanent-address" type="text">
                             </div>
-
                             <div class="field field--span-2">
                                 <label for="barangay">Barangay:</label>
-                                <input list="barangay-list" name="barangay" id="barangay">
+                               
+                                <input list="barangay-list" id="barangay" name="barangay">
                                 <datalist id="barangay-list">
                                     <option value="Maon">
                                     <option value="Golden Ribbon">
@@ -741,7 +750,7 @@
             </form>
         </div>
     </div>
-    <script src="cicl.js"></script>
+    <script src="car.js"></script>
 
 
 </body>

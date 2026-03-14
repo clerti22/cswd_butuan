@@ -1,3 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_login(['super admin']);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +28,7 @@
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="../../images-logo/cswd-logo.png" alt="" width="130" height="110">
+                <img src="../../../images-logo/cswd-logo.png" alt="" width="130" height="110">
                 <p class="sidebar-title">CCIMS Dashboard</p>
                 <button class="close-btn" id="closeSidebar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
