@@ -1,4 +1,15 @@
 <?php
+
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -148,6 +159,8 @@ try {
             date_of_birth,
             place_of_birth,
             age,
+            program,
+            division,
             address,
             barangay,
             religion,
@@ -168,8 +181,9 @@ try {
             lgbtq_plus,
             pwd_status,
             solo_classification,
-            solo_needs
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            solo_needs,
+            served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertSoloParent) {
@@ -183,6 +197,8 @@ try {
     $dateOfBirth = trim((string) $_POST['date_of_birth']);
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $age = (int) $_POST['age'];
+    $program = "SOLO PARENT";
+    $division = "DPSD";
     $address = trim((string) $_POST['address']);
     $brgy = trim((string) $_POST['barangay']);
     $religion = trim((string) $_POST['religion']);
@@ -204,6 +220,7 @@ try {
     $pwdStatus = strtolower(trim((string) $_POST['pwd_status']));
     $soloClassification = trim((string) $_POST['solo_classification']);
     $soloNeeds = trim((string) $_POST['solo_needs']);
+    $served = $fullname;
 
     if ($pantawidBeneficiary === 'no') {
         $pantawidHouseholdId = '';
@@ -214,7 +231,7 @@ try {
     }
 
     $insertSoloParent->bind_param(
-        'sssssssissssssssssdssssssssss',
+        'sssssssissssssssssssdsssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -223,6 +240,8 @@ try {
         $dateOfBirth,
         $placeOfBirth,
         $age,
+        $program,
+        $division,
         $address,
         $brgy,
         $religion,
@@ -243,7 +262,8 @@ try {
         $lgbtqPlus,
         $pwdStatus,
         $soloClassification,
-        $soloNeeds
+        $soloNeeds,
+        $served
     );
 
     if (!$insertSoloParent->execute()) {

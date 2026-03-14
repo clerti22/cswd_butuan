@@ -157,9 +157,7 @@ function validateMainForm() {
         'occupation',
         'education',
         'address',
-        'barangay',
-        'member_others',
-        'service_others'
+        'barangay'
     ];
 
     requiredInputs.forEach((name) => {

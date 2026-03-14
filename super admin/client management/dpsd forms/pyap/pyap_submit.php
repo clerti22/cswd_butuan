@@ -5,6 +5,9 @@ require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 
 require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
 
 header('Content-Type: application/json');
 
@@ -170,12 +173,12 @@ try {
 
     $insertPyap = $connection->prepare(
         'INSERT INTO pyap_table (
-            control_number, first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,
+            control_number, first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,program,division,
             address, barangay,religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
             occupation, civil_status, contact_number, school_last_attended, school_last_attended_month_year,
             trainings_attended, skills_interest_hobbies, assistance_received, assistance_specify,
-            intervention_needed, intervention_specify
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            intervention_needed, intervention_specify,served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPyap) {
@@ -190,6 +193,8 @@ try {
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $nationality = trim((string) $_POST['nationality']);
     $age = (int) $_POST['age'];
+    $program = "PYAP";
+    $division = "DPSD";
     $address = trim((string) $_POST['address']);
     $brgy = trim((string) $_POST['barangay']);
     $religion = trim((string) $_POST['religion']);
@@ -209,9 +214,10 @@ try {
     $assistanceSpecify = trim((string) $_POST['assistance_specify']);
     $interventionNeeded = implode(', ', array_map(static fn ($value) => trim((string) $value), $_POST['intervention_needed']));
     $interventionSpecify = trim((string) $_POST['intervention_specify']);
+    $served = $fullname;
 
     $insertPyap->bind_param(
-        'ssssssssisssssssssssssssssss',
+        'ssssssssissssssssssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -221,6 +227,8 @@ try {
         $placeOfBirth,
         $nationality,
         $age,
+        $program,
+        $division,
         $address,
         $brgy,
         $religion,
@@ -239,7 +247,8 @@ try {
         $assistanceReceived,
         $assistanceSpecify,
         $interventionNeeded,
-        $interventionSpecify
+        $interventionSpecify,
+        $fullname
     );
 
     if (!$insertPyap->execute()) {

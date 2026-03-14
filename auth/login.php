@@ -20,7 +20,7 @@ if ($username === '' || $password === '') {
 
 try {
     $connection = get_database_connection();
-    $statement = $connection->prepare('SELECT username, password, role FROM users WHERE username = ? LIMIT 1');
+    $statement = $connection->prepare('SELECT full_name,username, password, role FROM users WHERE username = ? LIMIT 1');
 
     if ($statement === false) {
         throw new RuntimeException('Failed to prepare login statement.');
@@ -78,6 +78,7 @@ if ($shouldUpgradePassword) {
 }
 
 $role = strtolower(trim((string) ($user['role'] ?? '')));
+$full_name = (trim((string) ($user['full_name'] ?? '')));
 $allowedRoles = ['super admin', 'admin', 'encoder'];
 
 if (!in_array($role, $allowedRoles, true)) {
@@ -85,6 +86,6 @@ if (!in_array($role, $allowedRoles, true)) {
     exit;
 }
 
-login_user($username, $role);
+login_user($full_name,$username, $role);
 header('Location: ' . role_dashboard_path($role));
 exit;

@@ -34,11 +34,12 @@ function start_auth_session(): void
     $_SESSION['last_activity'] = time();
 }
 
-function login_user(string $username, string $role): void
+function login_user(string $full_name, string $username, string $role): void
 {
     start_auth_session();
 
     session_regenerate_id(true);
+    $_SESSION['full_name'] = $full_name;
     $_SESSION['username'] = $username;
     $_SESSION['role'] = $role;
     $_SESSION['last_activity'] = time();
@@ -66,6 +67,7 @@ function require_login(array $allowedRoles): void
 
     $username = $_SESSION['username'] ?? null;
     $role = $_SESSION['role'] ?? null;
+   
 
     if (!$username || !$role) {
         header('Location: /login form/index.php?error=unauthorized');

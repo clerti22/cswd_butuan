@@ -7,8 +7,6 @@ require_login(['super admin']);
 
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 

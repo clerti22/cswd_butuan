@@ -1,4 +1,15 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
+
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -187,7 +198,7 @@ try {
     $insertCar = $connection->prepare(
         'INSERT INTO car_table (
             interview_date, control_number, first_name, middle_name, last_name, suffix, nickname, birth_date, birth_place,
-            religion, civil_status, age, sex, education, present_address, permanent_address, barangay,
+            religion, civil_status, age, division, program, sex, education, present_address, permanent_address, barangay,
             spouse_first_name, spouse_middle_name, spouse_last_name, spouse_suffix,
             monthly_income_estimate, income_source, assistance_status,
             food_expense, house_lot_expense, education_expense, transport_expense, misc_expense,
@@ -195,8 +206,8 @@ try {
             classification_tags, classification_other, abuse_tags, abuse_other,
             type_of_offense, date_of_apprehension, by_whom, date_of_offense,
             source_of_information, complainant, presented_problem,
-            family_environment, community_description, family_history_background, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            family_environment, community_description, family_history_background, recommendation,served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertCar) {
@@ -214,6 +225,8 @@ try {
     $religion = trim((string) $_POST['religion']);
     $civilStatus = trim((string) $_POST['civil_status']);
     $age = (int) $_POST['age'];
+    $division = "RPSD";
+    $program = "CAR";
     $sex = trim((string) $_POST['sex']);
     $education = trim((string) $_POST['education']);
     $presentAddress = trim((string) $_POST['present_address']);
@@ -249,9 +262,10 @@ try {
     $communityDescription = trim((string) $_POST['community_description']);
     $familyHistoryBackground = trim((string) $_POST['family_history_background']);
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
+    $served = $fullname;
 
     $insertCar->bind_param(
-        'sssssssssssisssssssssssssssssssssssssssssssssss',
+        'sssssssssssissssssssssssssssssssssssssssssssssssss',
         $interviewDate,
         $controlNumber,
         $firstName,
@@ -264,6 +278,8 @@ try {
         $religion,
         $civilStatus,
         $age,
+        $division,
+        $program,
         $sex,
         $education,
         $presentAddress,
@@ -298,7 +314,8 @@ try {
         $familyEnvironment,
         $communityDescription,
         $familyHistoryBackground,
-        $recommendation
+        $recommendation,
+        $served
     );
 
     if (!$insertCar->execute()) {

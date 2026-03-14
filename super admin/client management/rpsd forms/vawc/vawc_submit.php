@@ -1,4 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -143,11 +154,11 @@ try {
 
     $insertMain = $connection->prepare(
         'INSERT INTO vawc_table (
-            control_number, first_name, middle_name, last_name, suffix, birth_place, birth_date, age,
+            control_number, first_name, middle_name, last_name, suffix, birth_place, birth_date, age, division, program,
             education, religion, address, barangay, occupation, monthly_income, contact_number,
             civil_status, is_4ps, is_uct, is_nhts,
-            presenting_problem, family_environment, community, family_history, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            presenting_problem, family_environment, community, family_history, recommendation, served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertMain) {
@@ -161,6 +172,8 @@ try {
     $birthPlace = trim((string) $_POST['birth_place']);
     $birthDate = trim((string) $_POST['birth_date']);
     $age = (int) $_POST['age'];
+    $division = "RPSD";
+    $program = "VAWC";
     $education = trim((string) $_POST['education']);
     $religion = trim((string) $_POST['religion']);
     $address = trim((string) $_POST['address']);
@@ -177,9 +190,10 @@ try {
     $community = trim((string) $_POST['community']);
     $familyHistory = trim((string) $_POST['family_history']);
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
+    $served = $fullname;
 
     $insertMain->bind_param(
-        'sssssssissssssssssssssss',
+        'sssssssisssssssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -188,6 +202,8 @@ try {
         $birthPlace,
         $birthDate,
         $age,
+        $division,
+        $program,
         $education,
         $religion,
         $address,
@@ -203,7 +219,8 @@ try {
         $familyEnvironment,
         $community,
         $familyHistory,
-        $recommendation
+        $recommendation,
+        $served
     );
 
     if (!$insertMain->execute()) {

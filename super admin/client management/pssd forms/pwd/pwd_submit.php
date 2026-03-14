@@ -1,4 +1,13 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -110,10 +119,10 @@ try {
 
     $insertPwud = $connection->prepare(
         'INSERT INTO pwd_table (
-            control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
+            control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,division,program,
             address,barangay,religion, sex, educational_attainment, occupation, monthly_income,
-            civil_status, contact_number, services_needed
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            civil_status, contact_number, services_needed,served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPwud) {
@@ -127,6 +136,8 @@ try {
     $dateOfBirth = trim((string) $_POST['date_of_birth']);
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $age = (int) $_POST['age'];
+    $division = "PSSD";
+    $program = "PWD";
     $address = trim((string) $_POST['address']);
     $brgy = trim((string) $_POST['barangay']);
     $religion = trim((string) $_POST['religion']);
@@ -137,9 +148,10 @@ try {
     $civilStatus = trim((string) $_POST['civil_status']);
     $contactNumber = trim((string) $_POST['contact_number']);
     $servicesNeeded = trim((string) $_POST['services_needed']);
+    $served = $fullname;
 
     $insertPwud->bind_param(
-        'sssssssissssssdsss',
+        'sssssssissssssssdssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -148,6 +160,8 @@ try {
         $dateOfBirth,
         $placeOfBirth,
         $age,
+        $division,
+        $program,
         $address,
         $brgy,
         $religion,
@@ -157,7 +171,8 @@ try {
         $monthlyIncome,
         $civilStatus,
         $contactNumber,
-        $servicesNeeded
+        $servicesNeeded,
+        $served
     );
 
     if (!$insertPwud->execute()) {

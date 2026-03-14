@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../../../auth/auth.php';
 require_login(['super admin']);
 
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -139,6 +140,7 @@ require_login(['super admin']);
                             <label class="field">
                                 First Name:
                                 <input type="text" name="first_name" id="firstName" required />
+                                <input type="hidden" name="fullname" id="fullname" value="<?php echo $fullname; ?>"/>
                             </label>
                             <label class="field">
                                 Middle Name:

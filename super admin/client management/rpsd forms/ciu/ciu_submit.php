@@ -1,4 +1,14 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -22,8 +32,6 @@ $requiredFields = [
     'education',
     'address',
     'barangay',
-    'member_others',
-    'service_others',
     'member_senior',
     'member_solo_parent',
     'member_pwd',
@@ -166,13 +174,13 @@ try {
     $insertCiu = $connection->prepare(
         'INSERT INTO ciu_table (
             control_number, first_name, middle_name, last_name, suffix,
-            birth_date, birth_place, age, sex, civil_status,
+            birth_date, birth_place, age, division, program, sex, civil_status,
             contact_number, monthly_income, religion, occupation,
             education, address, barangay,
             member_senior, member_solo_parent, member_pwd, member_4ps, member_others,
             service_prescribed_medicine, service_certificate_minor, service_hospital_bill,
-            service_tesda_certificate, service_burial, service_laboratory, service_legal_assistance, service_others
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            service_tesda_certificate, service_burial, service_laboratory, service_legal_assistance, service_others, served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertCiu) {
@@ -186,6 +194,8 @@ try {
     $birthDate = trim((string) $_POST['birth_date']);
     $birthPlace = trim((string) $_POST['birth_place']);
     $age = (int) $_POST['age'];
+    $division = "RPSD";
+    $program = "CIU";
     $sex = trim((string) $_POST['sex']);
     $civilStatus = trim((string) $_POST['civil_status']);
     $contactNumber = trim((string) $_POST['contact_number']);
@@ -210,9 +220,10 @@ try {
     $serviceLaboratory = trim((string) $_POST['service_laboratory']);
     $serviceLegalAssistance = trim((string) $_POST['service_legal_assistance']);
     $serviceOthers = trim((string) $_POST['service_others']);
+    $served = $fullname;
 
     $insertCiu->bind_param(
-        'sssssssissssssssssssssssssssss',
+        'sssssssisssssssssssssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -221,6 +232,8 @@ try {
         $birthDate,
         $birthPlace,
         $age,
+        $division,
+        $program,
         $sex,
         $civilStatus,
         $contactNumber,
@@ -242,7 +255,8 @@ try {
         $serviceBurial,
         $serviceLaboratory,
         $serviceLegalAssistance,
-        $serviceOthers
+        $serviceOthers,
+        $served
     );
 
     if (!$insertCiu->execute()) {

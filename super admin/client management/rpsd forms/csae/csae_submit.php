@@ -1,4 +1,13 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../../auth/db.php';
+
+require_login(['super admin']);
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -135,14 +144,14 @@ try {
 
     $insertMain = $connection->prepare(
         'INSERT INTO csae_table (
-            control_number, first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age, birth_place,
+            control_number, first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age,division,program, birth_place,
             present_address, permanent_address, barangay, education, school_last_attended, school_address,
             health_condition, contact_number, is_4ps, philhealth,
             offense_type, incident_date, perpetrator_name, referral_date, referring_party,
             case_status, criminal_case_no, info_source, complainant,
             presenting_problem, background_child, background_family, background_community,
-            assessment, recommendation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            assessment, recommendation,served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertMain) {
@@ -157,6 +166,8 @@ try {
     $sex = trim((string) $_POST['sex']);
     $birthDate = trim((string) $_POST['birth_date']);
     $age = (int) $_POST['age'];
+    $division = "RPSD";
+    $program = "CSAE";
     $birthPlace = trim((string) $_POST['birth_place']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
@@ -183,9 +194,10 @@ try {
     $backgroundCommunity = trim((string) $_POST['background_community']);
     $assessment = trim((string) ($_POST['assessment'] ?? ''));
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
+    $served = $fullname;
 
     $insertMain->bind_param(
-        'ssssssssissssssssssssssssssssssssss',
+        'ssssssssisssssssssssssssssssssssssssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -195,6 +207,8 @@ try {
         $sex,
         $birthDate,
         $age,
+        $division,
+        $program,
         $birthPlace,
         $presentAddress,
         $permanentAddress,
@@ -220,7 +234,8 @@ try {
         $backgroundFamily,
         $backgroundCommunity,
         $assessment,
-        $recommendation
+        $recommendation,
+        $served
     );
 
     if (!$insertMain->execute()) {

@@ -29,7 +29,7 @@ require_login(['super admin']);
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="../../images-logo/cswd-logo.png" alt="" width="130" height="110">
+                <img src="../../../images-logo/cswd-logo.png" alt="" width="130" height="110">
                 <p class="sidebar-title">CCIMS Dashboard</p>
                 <button class="close-btn" id="closeSidebar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -120,14 +120,14 @@ require_login(['super admin']);
                 <section class="ciu-form">
                     <div class="ciu-header">
                         <div class="ciu-logos">
-                            <img src="../../images-logo/butuanseal.png" alt="Butuan City Seal">
+                            <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal">
                             <div class="ciu-title">
                                 <p>Republic of the Philippines</p>
                                 <p><strong>City Government of Butuan</strong></p>
                                 <p><strong>City Social Welfare and Development Department</strong></p>
                                 <p>City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
                             </div>
-                            <img src="../../images-logo/cswd-logo.png" alt="CSWD Logo">
+                            <img src="../../../images-logo/cswd-logo.png" alt="CSWD Logo">
                         </div>
                         <h2>CIU Intake Sheet Form</h2>
                     </div>

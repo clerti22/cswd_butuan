@@ -7,6 +7,10 @@ require_once __DIR__ . '/../../../../auth/db.php';
 
 require_login(['super admin']);
 
+start_auth_session();
+
+$fullname = (string) ($_SESSION['full_name'] ?? '');
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -14,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
     exit;
 }
+
 
 $requiredFields = [
     'first_name',
@@ -119,15 +124,15 @@ try {
     $insertPwud = $connection->prepare(
         'INSERT INTO pwud_table (
             control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
-            address,barangay, religion, sex, educational_attainment, occupation, monthly_income,
-            civil_status, contact_number, services_needed
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            address,barangay,division,program, religion, sex, educational_attainment, occupation, monthly_income,
+            civil_status, contact_number, services_needed, served_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     if (!$insertPwud) {
         throw new Exception('Failed to prepare PWUD insert statement.');
     }
-
+    
     $firstName = trim((string) $_POST['first_name']);
     $middleName = trim((string) ($_POST['middle_name'] ?? ''));
     $lastName = trim((string) $_POST['last_name']);
@@ -137,6 +142,8 @@ try {
     $age = (int) $_POST['age'];
     $address = trim((string) $_POST['address']);
     $brgy = trim((string) $_POST['barangay']);
+    $division = "DPSD";
+    $program = "PWUD";
     $religion = trim((string) $_POST['religion']);
     $sex = trim((string) $_POST['sex']);
     $educationalAttainment = trim((string) $_POST['educational_attainment']);
@@ -145,9 +152,10 @@ try {
     $civilStatus = trim((string) $_POST['civil_status']);
     $contactNumber = trim((string) $_POST['contact_number']);
     $servicesNeeded = trim((string) $_POST['services_needed']);
+    $served_by = $fullname;
 
     $insertPwud->bind_param(
-        'sssssssissssssdsss',
+        'sssssssissssssssdssss',
         $controlNumber,
         $firstName,
         $middleName,
@@ -158,6 +166,8 @@ try {
         $age,
         $address,
         $brgy,
+        $division,
+        $program,
         $religion,
         $sex,
         $educationalAttainment,
@@ -165,7 +175,8 @@ try {
         $monthlyIncome,
         $civilStatus,
         $contactNumber,
-        $servicesNeeded
+        $servicesNeeded,
+        $served_by
     );
 
     if (!$insertPwud->execute()) {

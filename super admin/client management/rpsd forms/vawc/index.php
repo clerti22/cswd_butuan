@@ -28,7 +28,7 @@ require_login(['super admin']);
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="../../images-logo/cswd-logo.png" alt="" width="130" height="110">
+                <img src="../../../images-logo/cswd-logo.png" alt="" width="130" height="110">
                 <p class="sidebar-title">CCIMS Dashboard</p>
                 <button class="close-btn" id="closeSidebar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -117,14 +117,14 @@ require_login(['super admin']);
             <main class="form-page">
                 <div class="form-sheet">
                     <header class="form-header">
-                        <img class="form-header__logo" src="../../images-logo/cswd-logo.png" alt="CSWD logo">
+                        <img class="form-header__logo" src="../../../images-logo/cswd-logo.png" alt="CSWD logo">
                         <div class="form-header__text">
                             <p class="form-header__line">Republic of the Philippines</p>
                             <p class="form-header__line form-header__line--bold">CITY GOVERNMENT OF BUTUAN</p>
                             <p class="form-header__line form-header__line--bold">City Social Welfare and Development Department</p>
                             <p class="form-header__line">City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
                         </div>
-                        <img class="form-header__logo" src="../../images-logo/butuanseal.png" alt="Butuan City logo">
+                        <img class="form-header__logo" src="../../../images-logo/butuanseal.png" alt="Butuan City logo">
                     </header>
 
                     <h1 class="form-title">VAWC Intake Sheet Form</h1>
