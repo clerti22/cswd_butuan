@@ -41,10 +41,19 @@ const tabPanels = document.querySelectorAll('.tab-panel');
 const addClientBtn = document.getElementById('addClientBtn');
 const addClientMenu = document.getElementById('addClientMenu');
 const clientDataCache = {
-    dpsd: null,
-    pssd: null,
-    rpsd: null
+    dpsd: {},
+    pssd: {},
+    rpsd: {}
 };
+
+const tabPaginationState = {
+    dpsd: { page: 1, totalPages: 1 },
+    pssd: { page: 1, totalPages: 1 },
+    rpsd: { page: 1, totalPages: 1 }
+};
+
+const prevButton = document.querySelector('.pagination .pager-btn:first-child');
+const nextButton = document.querySelector('.pagination .pager-btn:last-child');
 
 const addClientOptions = {
     dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
@@ -128,9 +137,29 @@ function renderClients(tabKey, clients) {
     panel.innerHTML = clients.map(createClientRow).join('');
 }
 
+function getActiveTabKey() {
+    const activeTab = document.querySelector('.tab.active');
+    return activeTab ? activeTab.dataset.tab : 'dpsd';
+}
+
+function updatePaginationButtons(tabKey) {
+    if (!prevButton || !nextButton) {
+        return;
+    }
+
+    const pagination = tabPaginationState[tabKey] || { page: 1, totalPages: 1 };
+
+    prevButton.disabled = pagination.page <= 1;
+    nextButton.disabled = pagination.page >= pagination.totalPages;
+}
+
 async function loadClients(tabKey) {
-    if (clientDataCache[tabKey] !== null) {
-        renderClients(tabKey, clientDataCache[tabKey]);
+    const pagination = tabPaginationState[tabKey] || { page: 1, totalPages: 1 };
+    const currentPage = pagination.page;
+
+    if (clientDataCache[tabKey] && clientDataCache[tabKey][currentPage]) {
+        renderClients(tabKey, clientDataCache[tabKey][currentPage]);
+        updatePaginationButtons(tabKey);
         return;
     }
 
@@ -140,19 +169,34 @@ async function loadClients(tabKey) {
     }
 
     try {
-        const response = await fetch(`get_clients.php?tab=${encodeURIComponent(tabKey)}`);
+        const response = await fetch(`get_clients.php?tab=${encodeURIComponent(tabKey)}&page=${encodeURIComponent(String(currentPage))}`);
         const payload = await response.json();
 
         if (!response.ok) {
             throw new Error(payload.message || 'Unable to load clients.');
         }
 
-        clientDataCache[tabKey] = Array.isArray(payload.clients) ? payload.clients : [];
-        renderClients(tabKey, clientDataCache[tabKey]);
+        const clients = Array.isArray(payload.clients) ? payload.clients : [];
+        const serverPagination = payload.pagination || {};
+
+        tabPaginationState[tabKey] = {
+            page: Number(serverPagination.page) > 0 ? Number(serverPagination.page) : currentPage,
+            totalPages: Number(serverPagination.total_pages) > 0 ? Number(serverPagination.total_pages) : 1
+        };
+
+        if (!clientDataCache[tabKey]) {
+            clientDataCache[tabKey] = {};
+        }
+
+        clientDataCache[tabKey][tabPaginationState[tabKey].page] = clients;
+
+        renderClients(tabKey, clients);
+        updatePaginationButtons(tabKey);
     } catch (error) {
         if (panel) {
             panel.innerHTML = '<tr><td colspan="10">Unable to load data.</td></tr>';
         }
+        updatePaginationButtons(tabKey);
     }
 }
 
@@ -174,6 +218,7 @@ tabs.forEach(tab => {
         setAddClientMenu(target);
         addClientMenu.classList.remove('open');
         addClientBtn.setAttribute('aria-expanded', 'false');
+        updatePaginationButtons(target);
         loadClients(target);
     });
 });
@@ -206,5 +251,34 @@ addClientMenu.addEventListener('click', event => {
     window.location.href = route;
 });
 
+if (prevButton) {
+    prevButton.addEventListener('click', () => {
+        const activeTabKey = getActiveTabKey();
+        const pagination = tabPaginationState[activeTabKey];
+
+        if (!pagination || pagination.page <= 1) {
+            return;
+        }
+
+        pagination.page -= 1;
+        loadClients(activeTabKey);
+    });
+}
+
+if (nextButton) {
+    nextButton.addEventListener('click', () => {
+        const activeTabKey = getActiveTabKey();
+        const pagination = tabPaginationState[activeTabKey];
+
+        if (!pagination || pagination.page >= pagination.totalPages) {
+            return;
+        }
+
+        pagination.page += 1;
+        loadClients(activeTabKey);
+    });
+}
+
 setAddClientMenu('dpsd');
+updatePaginationButtons('dpsd');
 loadClients('dpsd');

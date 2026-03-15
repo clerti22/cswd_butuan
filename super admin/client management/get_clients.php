@@ -22,6 +22,12 @@ if (!isset($tablesByTab[$tab])) {
     exit;
 }
 
+$page = (int) ($_GET['page'] ?? 1);
+if ($page < 1) {
+    $page = 1;
+}
+$perPage = 10;
+
 $requiredColumns = [
     'control_number',
     'first_name',
@@ -39,7 +45,7 @@ $requiredColumns = [
 
 try {
     $connection = get_database_connection();
-    $clients = [];
+    $allClients = [];
 
     foreach ($tablesByTab[$tab] as $tableName) {
         $columnsResult = $connection->query('SHOW COLUMNS FROM `' . $connection->real_escape_string($tableName) . '`');
@@ -82,13 +88,14 @@ try {
             $createdAt = '';
             $timestamp = 0;
             if ($createdAtRaw !== '') {
-                $timestamp = strtotime($createdAtRaw);
-                if ($timestamp !== false) {
+                $parsedTime = strtotime($createdAtRaw);
+                if ($parsedTime !== false) {
+                    $timestamp = $parsedTime;
                     $createdAt = date('m/d/y', $timestamp);
                 }
             }
 
-            $clients[] = [
+            $allClients[] = [
                 'control_number' => (string) ($row['control_number'] ?? ''),
                 'full_name' => $fullName,
                 'age' => (string) ($row['age'] ?? ''),
@@ -98,27 +105,43 @@ try {
                 'division' => (string) ($row['division'] ?? ''),
                 'contact_number' => (string) ($row['contact_number'] ?? ''),
                 'created_at' => $createdAt,
-                'created_at_sort' => (int) ($timestamp ?: 0),
-                'source_table' => $tableName,
+                'created_at_sort' => $timestamp,
             ];
         }
     }
 
     usort(
-        $clients,
+        $allClients,
         static function (array $first, array $second): int {
             return ((int) ($second['created_at_sort'] ?? 0)) <=> ((int) ($first['created_at_sort'] ?? 0));
         }
     );
 
-    $connection->close();
+    $totalRows = count($allClients);
+    $totalPages = max(1, (int) ceil($totalRows / $perPage));
+    if ($page > $totalPages) {
+        $page = $totalPages;
+    }
+
+    $offset = ($page - 1) * $perPage;
+    $clients = array_slice($allClients, $offset, $perPage);
 
     foreach ($clients as &$client) {
         unset($client['created_at_sort']);
     }
     unset($client);
 
-    echo json_encode(['clients' => $clients]);
+    $connection->close();
+
+    echo json_encode([
+        'clients' => $clients,
+        'pagination' => [
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_rows' => $totalRows,
+            'total_pages' => $totalPages,
+        ],
+    ]);
 } catch (Throwable $exception) {
     http_response_code(500);
     echo json_encode(['clients' => [], 'message' => 'Unable to fetch clients.']);
