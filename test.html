@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Print Layout</title>
+
+<style>
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* PRINT STYLES */
+@media print {
+  @page {
+      margin-top: 80px;
+      margin-bottom: 60px;
+      margin-left: 40px;
+      margin-right: 40px;
+  }
+
+  /* Header and Footer */
+  header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom: 1px solid black;
+      background: white;
+  }
+
+  footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      text-align: center;
+      font-size: 14px;
+      border-top: 1px solid black;
+      background: white;
+  }
+
+  /* Page number */
+  .page-number:after {
+      content: counter(page);
+  }
+
+  /* Avoid weird page breaks */
+  h1 {
+      page-break-inside: avoid;
+  }
+
+  /* Ensure no extra spacing or weird formatting for headings */
+  h1 {
+      margin: 0;
+      padding: 10px 0;
+      font-size: 16px;
+      text-align: center;
+  }
+}
+
+/* SCREEN PREVIEW (optional for on-screen preview) */
+header {
+    padding: 10px;
+}
+
+footer {
+    padding: 10px;
+}
+
+main {
+    padding: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    My Custom Print Header
+</header>
+
+<footer>
+    Page <span class="page-number"></span>
+</footer>
+
+<main>
+    <!-- List of Print Items -->
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+    <h1>print this</h1>
+</main>
+
+</body>
+</html>
