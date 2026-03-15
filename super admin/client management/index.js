@@ -40,6 +40,12 @@ const tabs = document.querySelectorAll('.tab');
 const tabPanels = document.querySelectorAll('.tab-panel');
 const addClientBtn = document.getElementById('addClientBtn');
 const addClientMenu = document.getElementById('addClientMenu');
+const clientDataCache = {
+    dpsd: null,
+    pssd: null,
+    rpsd: null
+};
+
 const addClientOptions = {
     dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
     pssd: ['Senior Citizen', 'PWD'],
@@ -65,7 +71,6 @@ const addClientRoutes = {
     }
 };
 
-
 function setAddClientMenu(tabKey) {
     const options = addClientOptions[tabKey] || [];
     const routes = addClientRoutes[tabKey] || {};
@@ -76,6 +81,79 @@ function setAddClientMenu(tabKey) {
             return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
         })
         .join('');
+}
+
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function createClientRow(client) {
+    return `
+        <tr>
+            <td>${escapeHtml(client.control_number)}</td>
+            <td>${escapeHtml(client.full_name)}</td>
+            <td>${escapeHtml(client.age)}</td>
+            <td>${escapeHtml(client.sex)}</td>
+            <td>${escapeHtml(client.barangay)}</td>
+            <td>${escapeHtml(client.program)}</td>
+            <td>${escapeHtml(client.division)}</td>
+            <td>${escapeHtml(client.contact_number)}</td>
+            <td>${escapeHtml(client.created_at)}</td>
+            <td>
+                <button class="btn btn-sm" type="button">Show</button>
+                <button class="btn btn-sm" type="button">Edit</button>
+            </td>
+        </tr>
+    `;
+}
+
+function renderClients(tabKey, clients) {
+    const panel = document.querySelector(`.tab-panel[data-tab-content="${tabKey}"]`);
+
+    if (!panel) {
+        return;
+    }
+
+    if (!Array.isArray(clients) || clients.length === 0) {
+        panel.innerHTML = '<tr><td colspan="10">No client records found.</td></tr>';
+        return;
+    }
+
+    panel.innerHTML = clients.map(createClientRow).join('');
+}
+
+async function loadClients(tabKey) {
+    if (clientDataCache[tabKey] !== null) {
+        renderClients(tabKey, clientDataCache[tabKey]);
+        return;
+    }
+
+    const panel = document.querySelector(`.tab-panel[data-tab-content="${tabKey}"]`);
+    if (panel) {
+        panel.innerHTML = '<tr><td colspan="10">Loading...</td></tr>';
+    }
+
+    try {
+        const response = await fetch(`get_clients.php?tab=${encodeURIComponent(tabKey)}`);
+        const payload = await response.json();
+
+        if (!response.ok) {
+            throw new Error(payload.message || 'Unable to load clients.');
+        }
+
+        clientDataCache[tabKey] = Array.isArray(payload.clients) ? payload.clients : [];
+        renderClients(tabKey, clientDataCache[tabKey]);
+    } catch (error) {
+        if (panel) {
+            panel.innerHTML = '<tr><td colspan="10">Unable to load data.</td></tr>';
+        }
+    }
 }
 
 tabs.forEach(tab => {
@@ -96,6 +174,7 @@ tabs.forEach(tab => {
         setAddClientMenu(target);
         addClientMenu.classList.remove('open');
         addClientBtn.setAttribute('aria-expanded', 'false');
+        loadClients(target);
     });
 });
 
@@ -128,3 +207,4 @@ addClientMenu.addEventListener('click', event => {
 });
 
 setAddClientMenu('dpsd');
+loadClients('dpsd');
