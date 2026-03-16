@@ -9,12 +9,19 @@ body {
   color: #000;
 }
 
+:root {
+  --sheet-width: min(210mm, calc(100vw - 32px));
+  --sheet-padding-x: 16px;
+  --sheet-padding-top: 8px;
+}
+
 .print-toolbar {
-  width: 794px;
+  width: var(--sheet-width);
   margin: 12px auto 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 .print-btn {
@@ -38,11 +45,11 @@ body {
 }
 
 .print-page {
-  width: 794px;
-  min-height: 1123px;
+  width: var(--sheet-width);
+  min-height: 297mm;
   margin: 0 auto 16px;
   background: #fff;
-  padding: 8px 16px 0;
+  padding: var(--sheet-padding-top) var(--sheet-padding-x) 0;
 }
 
 .header-image {
@@ -99,14 +106,14 @@ body {
 
 .identifying-data h2 {
   margin: 0 0 6px;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
 }
 
 .info-grid p,
 .services {
   margin: 2px 0;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.08;
 }
 
@@ -205,7 +212,7 @@ tbody td {
   gap: 9px;
   margin-bottom: 2px;
   color: #5b74a1;
-  font-size: 20px;
+  font-size: 14px;
   line-height: 1.04;
 }
 
@@ -231,7 +238,7 @@ tbody td {
 .footer-code {
   margin: 0 0 4px;
   color: #5e78a5;
-  font-size: 20px;
+  font-size: 14px;
 }
 
 .footer-logo {
@@ -247,10 +254,65 @@ tbody td {
   background: linear-gradient(90deg, #37ace0 0%, #1587c5 33%, #0d6296 65%, #0a3f73 100%);
 }
 
+.meta-row,
+.title-row,
+.identifying-data,
+.family-section,
+table,
+thead,
+tbody,
+tr,
+td,
+th {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+@media (max-width: 920px) {
+  :root {
+    --sheet-padding-x: 12px;
+  }
+
+  .print-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title-row {
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .signatures {
+    margin-top: 48px;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .sign-block {
+    width: 100%;
+  }
+
+  .footer-content {
+    gap: 8px;
+  }
+
+  .footer-left {
+    width: 60%;
+  }
+
+  .footer-right {
+    width: 36%;
+    text-align: center;
+  }
+}
+
 @media print {
   @page {
-    size: A4 portrait;
-    margin: 0;
+    size: auto;
+    margin: 10mm;
   }
 
   body {
@@ -263,8 +325,39 @@ tbody td {
 
   .print-page {
     margin: 0;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 8px 16px 0;
+    width: 100%;
+    min-height: auto;
+    padding: 0;
+    box-shadow: none;
+  }
+
+
+  .signatures {
+    page-break-before: auto;
+    page-break-after: auto;
+  }
+
+  .sheet-footer {
+    margin-top: 32px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .footer-content {
+    flex-wrap: nowrap;
+  }
+
+  .footer-left {
+    width: 58%;
+  }
+
+  .footer-right {
+    width: 34%;
+    text-align: center;
+  }
+
+  .footer-logo {
+    margin: 0 0 0 auto;
   }
 }
+
