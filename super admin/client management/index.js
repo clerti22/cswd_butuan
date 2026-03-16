@@ -103,17 +103,31 @@ function escapeHtml(value) {
 }
 
 function getShowRoute(client) {
-    if (String(client.source_table || '') === 'pwud_table' && Number(client.key_id) > 0) {
-        return `dpsd forms/pwud/print_form.php?id=${encodeURIComponent(String(client.key_id))}`;
+    const keyId = Number(client.key_id);
+
+    if (!Number.isInteger(keyId) || keyId <= 0) {
+        return '#';
     }
 
-    return '#';
+    const sourceTable = String(client.source_table || '');
+    const routesByTable = {
+        pwud_table: 'dpsd forms/pwud/print_form.php',
+        snr_table: 'pssd forms/senior citizen/print_form.php',
+        pwd_table: 'pssd forms/pwd/print_form.php'
+    };
+
+    const baseRoute = routesByTable[sourceTable];
+    if (!baseRoute) {
+        return '#';
+    }
+
+    return `${baseRoute}?id=${encodeURIComponent(String(keyId))}`;
 }
 
 function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const showButton = showRoute === '#'
-        ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD records only.">Show</button>'
+        ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PWD, and Senior Citizen records only.">Show</button>'
         : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
 
     return `
