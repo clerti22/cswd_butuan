@@ -258,8 +258,6 @@ tbody td {
 .title-row,
 .identifying-data,
 .family-section,
-.signatures,
-.sheet-footer,
 table,
 thead,
 tbody,
@@ -298,17 +296,16 @@ th {
   }
 
   .footer-content {
-    flex-wrap: wrap;
     gap: 8px;
   }
 
-  .footer-left,
-  .footer-right {
-    width: 100%;
+  .footer-left {
+    width: 60%;
   }
 
   .footer-right {
-    text-align: left;
+    width: 36%;
+    text-align: center;
   }
 }
 
@@ -334,7 +331,33 @@ th {
     box-shadow: none;
   }
 
+
+  .signatures {
+    page-break-before: auto;
+    page-break-after: auto;
+  }
+
   .sheet-footer {
     margin-top: 32px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .footer-content {
+    flex-wrap: nowrap;
+  }
+
+  .footer-left {
+    width: 58%;
+  }
+
+  .footer-right {
+    width: 34%;
+    text-align: center;
+  }
+
+  .footer-logo {
+    margin: 0 0 0 auto;
   }
 }
+
