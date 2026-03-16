@@ -308,6 +308,21 @@ body {
     background: #0a7d0a;
 }
 
+.btn-show {
+    background: #1a2ca0;
+    text-decoration: none;
+}
+
+.btn-show:hover:enabled,
+.btn-show:hover {
+    background: #14237e;
+}
+
+.btn-show:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 .btn-add {
     margin-left: auto;
     background: #0a7d0a;

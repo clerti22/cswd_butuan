@@ -113,8 +113,8 @@ function getShowRoute(client) {
 function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const showButton = showRoute === '#'
-        ? '<button class="btn btn-sm" type="button" disabled title="Show is currently available for PWUD records only.">Show</button>'
-        : `<a class="btn btn-sm" href="${escapeHtml(showRoute)}">Show</a>`;
+        ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD records only.">Show</button>'
+        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
 
     return `
         <tr>
