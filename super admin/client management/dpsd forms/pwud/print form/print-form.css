@@ -79,7 +79,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: baseline;
-  gap: 90px;
+  gap: 30px;
   margin-top: 18px;
 }
 
@@ -101,13 +101,13 @@ body {
 .identifying-data h2 {
   margin: 0 0 6px;
   font-size: 30px;
-  font-weight: 400;
+  font-weight: bold;
 }
 
 .info-grid p,
 .services {
   margin: 2px 0;
-  font-size: 31px;
+  font-size: 20px;
   line-height: 1.08;
 }
 
