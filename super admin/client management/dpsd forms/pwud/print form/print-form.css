@@ -85,7 +85,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: baseline;
-  gap: 90px;
+  gap: 70px;
   margin-top: 18px;
 }
 
@@ -197,8 +197,7 @@ tbody td {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-left: 1px solid #b3b3b3;
-  border-right: 1px solid #b3b3b3;
+
   padding: 0 22px 0 26px;
 }
 
@@ -360,7 +359,7 @@ th {
   }
 
   .sheet-footer {
-    margin-top: 20px;
+    margin-top: 12px;
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -376,6 +375,7 @@ th {
   .footer-right {
     width: 34%;
     text-align: center;
+
   }
 
   .footer-logo {
