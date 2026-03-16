@@ -94,19 +94,19 @@ body {
 }
 
 .identifying-data {
-  margin-top: 26px;
+  margin-top: 20px;
 }
 
 .identifying-data h2 {
   margin: 0 0 6px;
-  font-size: 30px;
-  font-weight: 400;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .info-grid p,
 .services {
   margin: 2px 0;
-  font-size: 31px;
+  font-size: 20px;
   line-height: 1.08;
 }
 
@@ -126,7 +126,7 @@ body {
 }
 
 .family-section h2 {
-  font-size: 37px;
+  font-size: 20px;
   margin: 0 0 8px;
   font-weight: 700;
 }
@@ -205,7 +205,7 @@ tbody td {
   gap: 9px;
   margin-bottom: 2px;
   color: #5b74a1;
-  font-size: 31px;
+  font-size: 20px;
   line-height: 1.04;
 }
 
@@ -231,11 +231,11 @@ tbody td {
 .footer-code {
   margin: 0 0 4px;
   color: #5e78a5;
-  font-size: 26px;
+  font-size: 20px;
 }
 
 .footer-logo {
-  width: 246px;
+  width: 200px;
   max-width: 100%;
   display: block;
   margin: 0 auto;
