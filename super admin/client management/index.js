@@ -102,7 +102,20 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
+function getShowRoute(client) {
+    if (String(client.source_table || '') === 'pwud_table' && Number(client.key_id) > 0) {
+        return `dpsd forms/pwud/print_form.php?id=${encodeURIComponent(String(client.key_id))}`;
+    }
+
+    return '#';
+}
+
 function createClientRow(client) {
+    const showRoute = getShowRoute(client);
+    const showButton = showRoute === '#'
+        ? '<button class="btn btn-sm" type="button" disabled title="Show is currently available for PWUD records only.">Show</button>'
+        : `<a class="btn btn-sm" href="${escapeHtml(showRoute)}">Show</a>`;
+
     return `
         <tr>
             <td>${escapeHtml(client.control_number)}</td>
@@ -115,7 +128,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.contact_number)}</td>
             <td>${escapeHtml(client.created_at)}</td>
             <td>
-                <button class="btn btn-sm" type="button">Show</button>
+                ${showButton}
                 <button class="btn btn-sm" type="button">Edit</button>
             </td>
         </tr>
