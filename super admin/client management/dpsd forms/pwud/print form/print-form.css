@@ -332,13 +332,29 @@ th {
   }
 
 
+  .family-section {
+    margin-top: 40px;
+  }
+
   .signatures {
-    page-break-before: auto;
-    page-break-after: auto;
+    margin-top: 40px;
+    padding: 0 8px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .sign-block {
+    width: 46%;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .sheet-footer {
-    margin-top: 32px;
+    margin-top: 28px;
     break-inside: avoid;
     page-break-inside: avoid;
   }
