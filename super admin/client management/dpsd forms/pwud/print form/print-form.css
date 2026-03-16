@@ -167,9 +167,9 @@ tbody td {
 .signatures {
   display: flex;
   justify-content: space-between;
-  margin-top: 64px;
-  padding: 0 14px;
-  font-size: 20px;
+  margin-top: 54px;
+  padding: 0 12px;
+  font-size: 16px;
 }
 
 .sign-block {
@@ -181,9 +181,9 @@ tbody td {
 }
 
 .line-name {
-  margin: 30px 0 4px !important;
+  margin: 20px 0 3px !important;
   border-bottom: 1px solid #000;
-  width: 145px;
+  width: 138px;
   padding-bottom: 1px;
 }
 
@@ -337,8 +337,9 @@ th {
   }
 
   .signatures {
-    margin-top: 40px;
-    padding: 0 8px;
+    margin-top: 28px;
+    padding: 0 6px;
+    font-size: 14px;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -353,8 +354,13 @@ th {
     page-break-inside: avoid;
   }
 
+  .sign-block .line-name {
+    margin-top: 14px !important;
+    width: 126px;
+  }
+
   .sheet-footer {
-    margin-top: 28px;
+    margin-top: 20px;
     break-inside: avoid;
     page-break-inside: avoid;
   }
