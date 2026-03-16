@@ -102,7 +102,34 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
+function getShowRoute(client) {
+    const keyId = Number(client.key_id);
+
+    if (!Number.isInteger(keyId) || keyId <= 0) {
+        return '#';
+    }
+
+    const sourceTable = String(client.source_table || '');
+    const routesByTable = {
+        pwud_table: 'dpsd forms/pwud/print_form.php',
+        snr_table: 'pssd forms/senior citizen/print_form.php',
+        pwd_table: 'pssd forms/pwd/print_form.php'
+    };
+
+    const baseRoute = routesByTable[sourceTable];
+    if (!baseRoute) {
+        return '#';
+    }
+
+    return `${baseRoute}?id=${encodeURIComponent(String(keyId))}`;
+}
+
 function createClientRow(client) {
+    const showRoute = getShowRoute(client);
+    const showButton = showRoute === '#'
+        ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PWD, and Senior Citizen records only.">Show</button>'
+        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
+
     return `
         <tr>
             <td>${escapeHtml(client.control_number)}</td>
@@ -115,7 +142,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.contact_number)}</td>
             <td>${escapeHtml(client.created_at)}</td>
             <td>
-                <button class="btn btn-sm" type="button">Show</button>
+                ${showButton}
                 <button class="btn btn-sm" type="button">Edit</button>
             </td>
         </tr>
