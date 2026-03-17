@@ -91,7 +91,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: baseline;
-  gap: 90px;
+  gap: 70px;
   margin-top: 18px;
 }
 
@@ -203,8 +203,7 @@ tbody td {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-left: 1px solid #b3b3b3;
-  border-right: 1px solid #b3b3b3;
+
   padding: 0 22px 0 26px;
 }
 
