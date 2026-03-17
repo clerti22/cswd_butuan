@@ -41,6 +41,104 @@ function checkbox(bool $checked): string
     return $checked ? '☑' : '☐';
 }
 
+function dos_datetime_fields(int $timestamp): array
+{
+    $dateParts = getdate($timestamp);
+
+    $year = max(1980, (int) ($dateParts['year'] ?? 1980));
+    $month = max(1, min(12, (int) ($dateParts['mon'] ?? 1)));
+    $day = max(1, min(31, (int) ($dateParts['mday'] ?? 1)));
+    $hour = max(0, min(23, (int) ($dateParts['hours'] ?? 0)));
+    $minute = max(0, min(59, (int) ($dateParts['minutes'] ?? 0)));
+    $second = max(0, min(59, (int) ($dateParts['seconds'] ?? 0)));
+
+    $dosTime = ($hour << 11) | ($minute << 5) | intdiv($second, 2);
+    $dosDate = (($year - 1980) << 9) | ($month << 5) | $day;
+
+    return [$dosTime, $dosDate];
+}
+
+function create_zip_archive_without_extension(array $files): string
+{
+    $timestamp = time();
+    [$dosTime, $dosDate] = dos_datetime_fields($timestamp);
+
+    $localHeaders = '';
+    $centralDirectory = '';
+    $offset = 0;
+
+    foreach ($files as $name => $content) {
+        $name = (string) $name;
+        $content = (string) $content;
+
+        $crc32 = crc32($content);
+        if ($crc32 < 0) {
+            $crc32 += 4294967296;
+        }
+
+        $size = strlen($content);
+        $nameLength = strlen($name);
+
+        $localHeader = pack(
+            'VvvvvvVVVvv',
+            0x04034b50,
+            20,
+            0,
+            0,
+            $dosTime,
+            $dosDate,
+            $crc32,
+            $size,
+            $size,
+            $nameLength,
+            0
+        );
+
+        $localHeaders .= $localHeader . $name . $content;
+
+        $centralHeader = pack(
+            'VvvvvvvVVVvvvvvVV',
+            0x02014b50,
+            20,
+            20,
+            0,
+            0,
+            $dosTime,
+            $dosDate,
+            $crc32,
+            $size,
+            $size,
+            $nameLength,
+            0,
+            0,
+            0,
+            0,
+            32,
+            $offset
+        );
+
+        $centralDirectory .= $centralHeader . $name;
+        $offset += strlen($localHeader) + $nameLength + $size;
+    }
+
+    $centralSize = strlen($centralDirectory);
+    $centralOffset = strlen($localHeaders);
+
+    $endOfCentralDirectory = pack(
+        'VvvvvVVv',
+        0x06054b50,
+        0,
+        0,
+        count($files),
+        count($files),
+        $centralSize,
+        $centralOffset,
+        0
+    );
+
+    return $localHeaders . $centralDirectory . $endOfCentralDirectory;
+}
+
 function build_docx(string $documentXml, string $targetPath): void
 {
     $contentTypes = <<<XML
@@ -83,17 +181,32 @@ XML;
 </w:styles>
 XML;
 
-    $zip = new ZipArchive();
-    if ($zip->open($targetPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-        throw new RuntimeException('Unable to create DOCX file.');
+    $files = [
+        '[Content_Types].xml' => $contentTypes,
+        '_rels/.rels' => $rels,
+        'word/document.xml' => $documentXml,
+        'word/styles.xml' => $styles,
+        'word/_rels/document.xml.rels' => $documentRels,
+    ];
+
+    if (class_exists('ZipArchive')) {
+        $zip = new ZipArchive();
+        if ($zip->open($targetPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new RuntimeException('Unable to create DOCX file.');
+        }
+
+        foreach ($files as $name => $content) {
+            $zip->addFromString($name, $content);
+        }
+
+        $zip->close();
+        return;
     }
 
-    $zip->addFromString('[Content_Types].xml', $contentTypes);
-    $zip->addFromString('_rels/.rels', $rels);
-    $zip->addFromString('word/document.xml', $documentXml);
-    $zip->addFromString('word/styles.xml', $styles);
-    $zip->addFromString('word/_rels/document.xml.rels', $documentRels);
-    $zip->close();
+    $archive = create_zip_archive_without_extension($files);
+    if (file_put_contents($targetPath, $archive) === false) {
+        throw new RuntimeException('Unable to create DOCX file.');
+    }
 }
 
 function paragraph(string $text, string $align = 'left', bool $bold = false, int $size = 16, int $spaceAfter = 20): string
