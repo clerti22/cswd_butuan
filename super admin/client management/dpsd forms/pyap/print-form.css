@@ -33,7 +33,7 @@ body {
 
 .print-page {
   width: var(--page-width);
-  min-height: 14in;
+  height: 14in;
   margin: 0 auto 12px;
   background: #fff;
   padding: 8px 10px 6px;
@@ -48,26 +48,26 @@ body {
   gap: 8px;
 }
 
-.logo-side img { width: 72px; height: 72px; object-fit: contain; }
+.logo-side img { width: 82px; height: 82px; object-fit: contain; }
 .logo-right { display: flex; justify-content: flex-end; gap: 4px; }
-.logo-right img { width: 62px; height: 62px; object-fit: contain; }
+.logo-right img { width: 70px; height: 70px; object-fit: contain; }
 
 .header-text { text-align: center; }
-.header-text .small { margin: 0; font-size: 13px; }
-.header-text h1 { margin: 0; font-size: 25px; letter-spacing: 0.2px; }
-.header-text h2 { margin: 2px 0 0; font-size: 16px; text-decoration: underline; }
-.header-text .city { margin: 0; color: #bf0000; font-size: 13px; font-weight: 700; }
-.header-text h3 { margin: 4px 0 0; font-size: 14px; }
+.header-text .small { margin: 0; font-size: 14px; }
+.header-text h1 { margin: 0; font-size: 29px; letter-spacing: 0.2px; }
+.header-text h2 { margin: 2px 0 0; font-size: 18px; text-decoration: underline; }
+.header-text .city { margin: 0; color: #bf0000; font-size: 14px; font-weight: 700; }
+.header-text h3 { margin: 4px 0 0; font-size: 16px; }
 
 .section { margin-top: 6px; }
-.section h4 { margin: 0 0 3px; font-size: 12px; }
+.section h4 { margin: 0 0 3px; font-size: 13px; }
 
 .line-row {
   display: grid;
   grid-template-columns: 2.3fr 1fr 1fr 1fr;
   gap: 8px;
   border-bottom: 1px solid #000;
-  font-size: 11px;
+  font-size: 12px;
   min-height: 18px;
   align-items: end;
 }
@@ -86,7 +86,7 @@ body {
 .member-table td {
   border: 1px solid #000;
   padding: 1px 3px;
-  font-size: 10px;
+  font-size: 11px;
   text-align: center;
   line-height: 1.15;
 }
@@ -106,7 +106,7 @@ body {
   margin: 2px 0;
   border-bottom: 1px solid #000;
   min-height: 16px;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .month-year { margin-left: 15px; }
@@ -115,32 +115,39 @@ body {
 .column h4 { margin-bottom: 1px; }
 .check-grid { columns: 2; column-gap: 12px; }
 .check-grid p,
-.column p { margin: 1px 0; font-size: 10px; }
+.column p { margin: 1px 0; font-size: 11px; }
 .specify { border-bottom: 1px solid #000; min-height: 16px; }
 
+.consent { border: 1px solid #000; padding: 4px 6px; }
 .consent h4 { text-align: center; }
 .consent p {
   margin: 2px 0;
-  font-size: 9px;
+  font-size: 10px;
   text-align: center;
-  line-height: 1.18;
+  line-height: 1.2;
+}
+
+.consent .youth-name {
+  margin: 6px auto 0;
+  width: 300px;
+  border-bottom: 1px solid #000;
+  min-height: 16px;
+  font-size: 12px;
+}
+
+.consent .youth-label {
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 11px;
 }
 
 .signature-section { text-align: center; margin-top: 4px; }
-.youth-name {
-  margin: 0 auto;
-  width: 260px;
-  border-bottom: 1px solid #000;
-  min-height: 14px;
-  font-size: 11px;
-}
-.signature-section .label { margin: 2px 0 4px; font-size: 11px; }
 .signatories {
   display: flex;
   justify-content: space-between;
   text-align: center;
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 12px;
   padding: 0 26px;
 }
 .signatories .name {
@@ -155,13 +162,13 @@ body {
 .sheet-footer { margin-top: auto; padding-top: 2px; }
 .footer-content { display: flex; justify-content: space-between; align-items: flex-end; }
 .footer-left { width: 57%; }
-.footer-row { display: flex; gap: 7px; font-size: 11px; color: #5b74a1; }
+.footer-row { display: flex; gap: 7px; font-size: 12px; color: #5b74a1; }
 .footer-label { width: 50px; }
 .footer-value { color: #4f6ca0; }
 .underline { text-decoration: underline; }
 .footer-right { width: 36%; text-align: right; }
 .footer-logo { width: 150px; max-width: 100%; }
-.footer-code { margin: 0; font-size: 10px; color: #5e78a5; }
+.footer-code { margin: 0; font-size: 11px; color: #5e78a5; }
 
 @media print {
   @page { size: legal portrait; margin: 0.22in; }
@@ -170,7 +177,7 @@ body {
   .print-page {
     margin: 0;
     width: 100%;
-    min-height: auto;
+    height: 13.56in;
     padding: 0;
   }
 }

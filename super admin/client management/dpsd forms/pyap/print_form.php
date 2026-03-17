@@ -320,12 +320,11 @@ $currentDate = date('F d, Y');
       <p>I confirm that the information I have provided in this form is true and represents accurate information.</p>
       <p>I understand that the data collected from this report will be processed, managed and maintained in a secure database by the City Social Welfare and Development (CSWD). Such data will used to serve as basis for research and in the development and implementation of Social Protection and Services, to promote and interest of the Out of School Youth and other Disadvantage Youth.</p>
       <p>I authorized CSWD to manage the information, including personal data obtained from this assessment/case study and allow the processing and controlled disclosure of transfer of data to its development partners and other stakeholders in accordance with the CSWD policies and data sharing and the provisions of Republic Act. No. 10173 of the Data Policy Act (DPA) of 2012.</p>
+      <p class="youth-name"><?= escape_html($fullName) ?></p>
+      <p class="youth-label">Name & Signature of the Youth</p>
     </section>
 
     <section class="signature-section">
-      <p class="youth-name"><?= escape_html($fullName) ?></p>
-      <p class="label">Name & Signature of the Youth</p>
-
       <div class="signatories">
         <div>
           <p class="name">ARIEL JOY J. TANSO</p>
