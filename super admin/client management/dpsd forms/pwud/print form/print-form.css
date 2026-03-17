@@ -50,6 +50,12 @@ body {
   margin: 0 auto 16px;
   background: #fff;
   padding: var(--sheet-padding-top) var(--sheet-padding-x) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1 1 auto;
 }
 
 .header-image {
@@ -188,7 +194,7 @@ tbody td {
 }
 
 .sheet-footer {
-  margin-top: 42px;
+  margin-top: auto;
   position: relative;
   padding: 8px 0 10px;
 }
@@ -325,9 +331,15 @@ th {
   .print-page {
     margin: 0;
     width: 100%;
-    min-height: auto;
+    min-height: calc(100vh - 20mm);
     padding: 0;
     box-shadow: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-content {
+    flex: 1 1 auto;
   }
 
 
@@ -359,9 +371,10 @@ th {
   }
 
   .sheet-footer {
-    margin-top: 12px;
+    margin-top: auto;
     break-inside: avoid;
     page-break-inside: avoid;
+    padding-bottom: 0;
   }
 
   .footer-content {
@@ -375,7 +388,6 @@ th {
   .footer-right {
     width: 34%;
     text-align: center;
-
   }
 
   .footer-logo {
