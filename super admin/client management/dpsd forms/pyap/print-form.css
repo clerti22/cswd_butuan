@@ -67,7 +67,7 @@ body {
   grid-template-columns: 2.3fr 1fr 1fr 1fr;
   gap: 8px;
   border-bottom: 1px solid #000;
-  font-size: 12.8px;
+  font-size: 13.8px;
   min-height: 18px;
   align-items: end;
 }
@@ -86,7 +86,7 @@ body {
 .member-table td {
   border: 1px solid #000;
   padding: 1px 3px;
-  font-size: 11.6px;
+  font-size: 12.2px;
   text-align: center;
   line-height: 1.15;
 }
@@ -106,7 +106,7 @@ body {
   margin: 2px 0;
   border-bottom: 1px solid #000;
   min-height: 16px;
-  font-size: 11.8px;
+  font-size: 12.8px;
 }
 
 .month-year { margin-left: 15px; }
@@ -115,14 +115,14 @@ body {
 .column h4 { margin-bottom: 1px; }
 .check-grid { columns: 2; column-gap: 12px; }
 .check-grid p,
-.column p { margin: 1px 0; font-size: 11.8px; }
+.column p { margin: 1px 0; font-size: 12.8px; }
 .specify { border-bottom: 1px solid #000; min-height: 16px; }
 
 .consent { border: 1px solid #000; padding: 4px 6px; }
 .consent h4 { text-align: center; }
 .consent p {
   margin: 2px 0;
-  font-size: 10.8px;
+  font-size: 11.8px;
   text-align: center;
   line-height: 1.2;
 }
@@ -138,7 +138,7 @@ body {
 .consent .youth-label {
   margin: 2px 0 0;
   text-align: center;
-  font-size: 11.8px;
+  font-size: 12.8px;
 }
 
 .signature-section { text-align: center; margin-top: 4px; }
@@ -147,7 +147,7 @@ body {
   justify-content: space-between;
   text-align: center;
   margin-top: 4px;
-  font-size: 12.6px;
+  font-size: 13.4px;
   padding: 0 26px;
 }
 .signatories .name {
@@ -162,13 +162,13 @@ body {
 .sheet-footer { margin-top: auto; padding-top: 2px; }
 .footer-content { display: flex; justify-content: space-between; align-items: flex-end; }
 .footer-left { width: 57%; }
-.footer-row { display: flex; gap: 7px; font-size: 12.6px; color: #5b74a1; }
+.footer-row { display: flex; gap: 7px; font-size: 12.2px; color: #5b74a1; }
 .footer-label { width: 50px; }
 .footer-value { color: #4f6ca0; }
 .underline { text-decoration: underline; }
 .footer-right { width: 36%; text-align: right; }
 .footer-logo { width: 150px; max-width: 100%; }
-.footer-code { margin: 0; font-size: 11.6px; color: #5e78a5; }
+.footer-code { margin: 0; font-size: 12px; color: #5e78a5; }
 
 @media print {
   @page { size: legal portrait; margin: 0.22in; }
