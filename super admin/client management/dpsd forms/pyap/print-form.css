@@ -1,0 +1,176 @@
+* { box-sizing: border-box; }
+
+:root {
+  --page-width: min(8.5in, calc(100vw - 20px));
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ececec;
+  color: #000;
+}
+
+.print-toolbar {
+  width: var(--page-width);
+  margin: 10px auto 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.print-btn {
+  border: 1px solid #1e6cb3;
+  background: #1e6cb3;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.print-hint { margin: 0; font-size: 12px; }
+
+.print-page {
+  width: var(--page-width);
+  min-height: 14in;
+  margin: 0 auto 12px;
+  background: #fff;
+  padding: 8px 10px 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-wrap {
+  display: grid;
+  grid-template-columns: 82px 1fr 132px;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-side img { width: 72px; height: 72px; object-fit: contain; }
+.logo-right { display: flex; justify-content: flex-end; gap: 4px; }
+.logo-right img { width: 62px; height: 62px; object-fit: contain; }
+
+.header-text { text-align: center; }
+.header-text .small { margin: 0; font-size: 13px; }
+.header-text h1 { margin: 0; font-size: 25px; letter-spacing: 0.2px; }
+.header-text h2 { margin: 2px 0 0; font-size: 16px; text-decoration: underline; }
+.header-text .city { margin: 0; color: #bf0000; font-size: 13px; font-weight: 700; }
+.header-text h3 { margin: 4px 0 0; font-size: 14px; }
+
+.section { margin-top: 6px; }
+.section h4 { margin: 0 0 3px; font-size: 12px; }
+
+.line-row {
+  display: grid;
+  grid-template-columns: 2.3fr 1fr 1fr 1fr;
+  gap: 8px;
+  border-bottom: 1px solid #000;
+  font-size: 11px;
+  min-height: 18px;
+  align-items: end;
+}
+
+.class-row { grid-template-columns: 1.2fr 1.2fr 1.5fr 0.7fr; }
+
+.family-table,
+.member-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.family-table th,
+.family-table td,
+.member-table th,
+.member-table td {
+  border: 1px solid #000;
+  padding: 1px 3px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.15;
+}
+
+.family-table td:first-child,
+.family-table td:nth-child(2),
+.family-table td:nth-child(8),
+.member-table td:first-child,
+.member-table td:nth-child(2) {
+  text-align: left;
+}
+
+.family-table tbody td { height: 18px; }
+.member-table tbody td { height: 18px; }
+
+.line-block p {
+  margin: 2px 0;
+  border-bottom: 1px solid #000;
+  min-height: 16px;
+  font-size: 10px;
+}
+
+.month-year { margin-left: 15px; }
+
+.intervention-wrap { display: grid; grid-template-columns: 1fr 0.62fr; gap: 10px; }
+.column h4 { margin-bottom: 1px; }
+.check-grid { columns: 2; column-gap: 12px; }
+.check-grid p,
+.column p { margin: 1px 0; font-size: 10px; }
+.specify { border-bottom: 1px solid #000; min-height: 16px; }
+
+.consent h4 { text-align: center; }
+.consent p {
+  margin: 2px 0;
+  font-size: 9px;
+  text-align: center;
+  line-height: 1.18;
+}
+
+.signature-section { text-align: center; margin-top: 4px; }
+.youth-name {
+  margin: 0 auto;
+  width: 260px;
+  border-bottom: 1px solid #000;
+  min-height: 14px;
+  font-size: 11px;
+}
+.signature-section .label { margin: 2px 0 4px; font-size: 11px; }
+.signatories {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin-top: 4px;
+  font-size: 11px;
+  padding: 0 26px;
+}
+.signatories .name {
+  margin: 0 auto;
+  border-bottom: 1px solid #000;
+  width: 190px;
+  font-weight: 700;
+}
+.signatories p { margin: 0; }
+.signatories .date { margin-top: 6px; }
+
+.sheet-footer { margin-top: auto; padding-top: 2px; }
+.footer-content { display: flex; justify-content: space-between; align-items: flex-end; }
+.footer-left { width: 57%; }
+.footer-row { display: flex; gap: 7px; font-size: 11px; color: #5b74a1; }
+.footer-label { width: 50px; }
+.footer-value { color: #4f6ca0; }
+.underline { text-decoration: underline; }
+.footer-right { width: 36%; text-align: right; }
+.footer-logo { width: 150px; max-width: 100%; }
+.footer-code { margin: 0; font-size: 10px; color: #5e78a5; }
+
+@media print {
+  @page { size: legal portrait; margin: 0.22in; }
+  body { background: #fff; }
+  .print-toolbar { display: none; }
+  .print-page {
+    margin: 0;
+    width: 100%;
+    min-height: auto;
+    padding: 0;
+  }
+}
