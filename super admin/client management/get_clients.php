@@ -29,6 +29,7 @@ if ($page < 1) {
 $perPage = 10;
 
 $requiredColumns = [
+    'key_id',
     'control_number',
     'first_name',
     'middle_name',
@@ -67,7 +68,7 @@ try {
             }
         }
 
-        $query = "SELECT control_number, first_name, middle_name, last_name, suffix, age, sex, barangay, program, division, contact_number, created_at FROM `{$tableName}` ORDER BY created_at DESC";
+        $query = "SELECT key_id, control_number, first_name, middle_name, last_name, suffix, age, sex, barangay, program, division, contact_number, created_at FROM `{$tableName}` ORDER BY created_at DESC";
         $result = $connection->query($query);
 
         if (!$result) {
@@ -96,6 +97,7 @@ try {
             }
 
             $allClients[] = [
+                'key_id' => (int) ($row['key_id'] ?? 0),
                 'control_number' => (string) ($row['control_number'] ?? ''),
                 'full_name' => $fullName,
                 'age' => (string) ($row['age'] ?? ''),
@@ -103,6 +105,7 @@ try {
                 'barangay' => (string) ($row['barangay'] ?? ''),
                 'program' => (string) ($row['program'] ?? ''),
                 'division' => (string) ($row['division'] ?? ''),
+                'source_table' => $tableName,
                 'contact_number' => (string) ($row['contact_number'] ?? ''),
                 'created_at' => $createdAt,
                 'created_at_sort' => $timestamp,
