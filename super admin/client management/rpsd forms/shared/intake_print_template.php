@@ -257,7 +257,7 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
   </div>
 
   <main class="print-document" id="printPage">
-    <section class="sheet-page">
+    <section class="sheet-page sheet-page--first">
       <img class="sheet-header-image" src="../../../images-logo/header.png" alt="CSWD header" />
 
       <div class="sheet-page-content">
