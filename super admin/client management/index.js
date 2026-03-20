@@ -117,7 +117,8 @@ function getShowRoute(client) {
         snr_table: 'pssd forms/senior citizen/print_form.php',
         pwd_table: 'pssd forms/pwd/print_form.php',
         car_table: 'rpsd forms/car/print_form.php',
-        cicl_table: 'rpsd forms/cicl/print_form.php'
+        cicl_table: 'rpsd forms/cicl/print_form.php',
+        csae_table: 'rpsd forms/csae/print_form.php'
     };
 
     const baseRoute = routesByTable[sourceTable];
@@ -131,7 +132,7 @@ function getShowRoute(client) {
 function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const showButton = showRoute === '#'
-        ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, and Senior Citizen records only.">Show</button>'
+        ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, and CSAE records only.">Show</button>'
         : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
 
     return `
