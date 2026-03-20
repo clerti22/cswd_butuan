@@ -213,172 +213,217 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
 
   <main class="print-document" id="printPage">
     <section class="sheet-page">
-      <header class="sheet-branding">
-        <img src="../../../images-logo/cswd-logo.png" alt="CSWD logo" class="sheet-branding__logo" />
-        <div class="sheet-branding__text">
-          <div>Republic of the Philippines</div>
-          <div class="sheet-branding__strong">CITY GOVERNMENT OF BUTUAN</div>
-          <div class="sheet-branding__strong">City Social Welfare and Development Department</div>
-          <div>J.P. Rosales Avenue, Doongan, Butuan City</div>
-        </div>
-        <img src="../../../images-logo/butuanseal.png" alt="Butuan City seal" class="sheet-branding__logo" />
-      </header>
+      <div class="sheet-page-content">
+        <header class="sheet-branding">
+          <img src="../../../images-logo/cswd-logo.png" alt="CSWD logo" class="sheet-branding__logo" />
+          <div class="sheet-branding__text">
+            <div>Republic of the Philippines</div>
+            <div class="sheet-branding__strong">CITY GOVERNMENT OF BUTUAN</div>
+            <div class="sheet-branding__strong">City Social Welfare and Development Department</div>
+            <div>J.P. Rosales Avenue, Doongan, Butuan City</div>
+          </div>
+          <img src="../../../images-logo/butuanseal.png" alt="Butuan City seal" class="sheet-branding__logo" />
+        </header>
 
-      <div class="title-area">
-        <div class="title-area__date">Date: <span><?= escape_html($createdDate) ?></span></div>
-        <h1>GENERAL INTAKE SHEET (CHILD ABUSE)</h1>
+        <div class="title-area">
+          <div class="title-area__date">Date: <span><?= escape_html($createdDate) ?></span></div>
+          <h1>GENERAL INTAKE SHEET (CHILD ABUSE)</h1>
+        </div>
+
+        <section class="section-block">
+          <h2>I. IDENTIFYING INFORMATION</h2>
+          <div class="field-grid field-grid--two">
+            <div class="field-line field-line--wide"><span class="field-label">Name of the Child:</span><span class="field-value"><?= escape_html($fullName) ?></span></div>
+            <div class="field-line"><span class="field-label">Nickname:</span><span class="field-value"><?= escape_html((string) ($client['nickname'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Age:</span><span class="field-value"><?= escape_html((string) ($client['age'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Sex:</span><span class="field-value"><?= escape_html((string) ($client['sex'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Birthdate:</span><span class="field-value"><?= escape_html($birthDate) ?></span></div>
+            <div class="field-line"><span class="field-label">Birthplace:</span><span class="field-value"><?= escape_html((string) ($client['birth_place'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Educational Attainment:</span><span class="field-value"><?= escape_html((string) ($client['education'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Health Condition:</span><span class="field-value"><?= escape_html((string) ($client['health_condition'] ?? '')) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">School last Attended:</span><span class="field-value"><?= escape_html((string) ($client['school_last_attended'] ?? '')) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Address of School:</span><span class="field-value"><?= escape_html((string) ($client['school_address'] ?? '')) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Present Address:</span><span class="field-value"><?= escape_html((string) ($client['present_address'] ?? '')) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Permanent Address:</span><span class="field-value"><?= escape_html((string) ($client['permanent_address'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Contact no.:</span><span class="field-value"><?= escape_html((string) ($client['contact_number'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">4 P's:</span><span class="field-value"><?= escape_html($fourPs) ?></span></div>
+            <div class="field-line"><span class="field-label">PhilHealth:</span><span class="field-value"><?= escape_html($philhealth) ?></span></div>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <h2>II. OFFENSE COMMITTED TO THE CHILD</h2>
+          <div class="field-grid field-grid--two">
+            <div class="field-line field-line--wide"><span class="field-label">Type of Offense:</span><span class="field-value"><?= escape_html((string) ($client['offense_type'] ?? '')) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Date &amp; Place of Incident:</span><span class="field-value"><?= escape_html($incidentDate) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Name of Perpetrator/Accused:</span><span class="field-value"><?= escape_html((string) ($client['perpetrator_name'] ?? '')) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Date of Referral to Social Worker:</span><span class="field-value"><?= escape_html($referralDate) ?></span></div>
+            <div class="field-line field-line--wide"><span class="field-label">Name and Address of Referring Party:</span><span class="field-value"><?= escape_html((string) ($client['referring_party'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Status of the Case:</span><span class="field-value"><?= escape_html((string) ($client['case_status'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Criminal Case No.:</span><span class="field-value"><?= escape_html((string) ($client['criminal_case_no'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Source of Information:</span><span class="field-value"><?= escape_html((string) ($client['info_source'] ?? '')) ?></span></div>
+            <div class="field-line"><span class="field-label">Complainant:</span><span class="field-value"><?= escape_html((string) ($client['complainant'] ?? '')) ?></span></div>
+          </div>
+        </section>
+
+        <section class="section-block section-block--fill">
+          <h2>III. FAMILY COMPOSITION</h2>
+          <table class="detail-table detail-table--family">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Relationship</th>
+                <th>Educ. Attt.</th>
+                <th>Occupation</th>
+                <th>Income</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?= render_table_rows($familyMembers, ['member_name', 'member_age', 'relationship', 'education_attainment', 'occupation', 'monthly_income'], 8) ?>
+            </tbody>
+          </table>
+        </section>
       </div>
 
-      <section class="section-block">
-        <h2>I. IDENTIFYING INFORMATION</h2>
-        <div class="field-grid field-grid--two">
-          <div class="field-line field-line--wide"><span class="field-label">Name of the Child:</span><span class="field-value"><?= escape_html($fullName) ?></span></div>
-          <div class="field-line"><span class="field-label">Nickname:</span><span class="field-value"><?= escape_html((string) ($client['nickname'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Age:</span><span class="field-value"><?= escape_html((string) ($client['age'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Sex:</span><span class="field-value"><?= escape_html((string) ($client['sex'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Birthdate:</span><span class="field-value"><?= escape_html($birthDate) ?></span></div>
-          <div class="field-line"><span class="field-label">Birthplace:</span><span class="field-value"><?= escape_html((string) ($client['birth_place'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Educational Attainment:</span><span class="field-value"><?= escape_html((string) ($client['education'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Health Condition:</span><span class="field-value"><?= escape_html((string) ($client['health_condition'] ?? '')) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">School last Attended:</span><span class="field-value"><?= escape_html((string) ($client['school_last_attended'] ?? '')) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Address of School:</span><span class="field-value"><?= escape_html((string) ($client['school_address'] ?? '')) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Present Address:</span><span class="field-value"><?= escape_html((string) ($client['present_address'] ?? '')) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Permanent Address:</span><span class="field-value"><?= escape_html((string) ($client['permanent_address'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Contact no.:</span><span class="field-value"><?= escape_html((string) ($client['contact_number'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">4 P's:</span><span class="field-value"><?= escape_html($fourPs) ?></span></div>
-          <div class="field-line"><span class="field-label">PhilHealth:</span><span class="field-value"><?= escape_html($philhealth) ?></span></div>
+      <footer class="sheet-footer">
+        <div class="footer-left">
+          <div>Phone: +639562241679 / +639816016317</div>
+          <div>Email: cswdobutuan@gmail.com</div>
+          <div>Website: http://www.butuan.gov.ph</div>
         </div>
-      </section>
-
-      <section class="section-block">
-        <h2>II. OFFENSE COMMITTED TO THE CHILD</h2>
-        <div class="field-grid field-grid--two">
-          <div class="field-line field-line--wide"><span class="field-label">Type of Offense:</span><span class="field-value"><?= escape_html((string) ($client['offense_type'] ?? '')) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Date &amp; Place of Incident:</span><span class="field-value"><?= escape_html($incidentDate) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Name of Perpetrator/Accused:</span><span class="field-value"><?= escape_html((string) ($client['perpetrator_name'] ?? '')) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Date of Referral to Social Worker:</span><span class="field-value"><?= escape_html($referralDate) ?></span></div>
-          <div class="field-line field-line--wide"><span class="field-label">Name and Address of Referring Party:</span><span class="field-value"><?= escape_html((string) ($client['referring_party'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Status of the Case:</span><span class="field-value"><?= escape_html((string) ($client['case_status'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Criminal Case No.:</span><span class="field-value"><?= escape_html((string) ($client['criminal_case_no'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Source of Information:</span><span class="field-value"><?= escape_html((string) ($client['info_source'] ?? '')) ?></span></div>
-          <div class="field-line"><span class="field-label">Complainant:</span><span class="field-value"><?= escape_html((string) ($client['complainant'] ?? '')) ?></span></div>
+        <div class="footer-right">
+          <img src="../../../images-logo/footer.png" alt="ButuanOn logo" />
+          <div>CSWDD.F.053.REV01</div>
         </div>
-      </section>
-
-      <section class="section-block section-block--fill">
-        <h2>III. FAMILY COMPOSITION</h2>
-        <table class="detail-table detail-table--family">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Relationship</th>
-              <th>Educ. Attt.</th>
-              <th>Occupation</th>
-              <th>Income</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?= render_table_rows($familyMembers, ['member_name', 'member_age', 'relationship', 'education_attainment', 'occupation', 'monthly_income'], 8) ?>
-          </tbody>
-        </table>
-      </section>
+      </footer>
+      <div class="sheet-footer-band"></div>
     </section>
 
     <section class="sheet-page">
-      <header class="sheet-branding sheet-branding--compact">
-        <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
-      </header>
+      <div class="sheet-page-content">
+        <header class="sheet-branding sheet-branding--compact">
+          <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
+        </header>
 
-      <section class="section-block">
-        <h2>I. PRESENTING PROBLEM</h2>
-        <div class="lined-block lined-block--medium"><?= render_lined_block((string) ($client['presenting_problem'] ?? ''), 7, 112) ?></div>
-      </section>
+        <section class="section-block">
+          <h2>I. PRESENTING PROBLEM</h2>
+          <div class="lined-block lined-block--medium"><?= render_lined_block((string) ($client['presenting_problem'] ?? ''), 7, 112) ?></div>
+        </section>
 
-      <section class="section-block">
-        <h2>II. BACKGROUND INFORMATION</h2>
-        <div class="subsection-block">
-          <h3>A. Child</h3>
-          <div class="lined-block"><?= render_lined_block((string) ($client['background_child'] ?? ''), 5, 112) ?></div>
-        </div>
-        <div class="subsection-block">
-          <h3>B. Child's Family</h3>
-          <div class="lined-block"><?= render_lined_block((string) ($client['background_family'] ?? ''), 5, 112) ?></div>
-        </div>
-        <div class="subsection-block">
-          <h3>C. Child's Community</h3>
-          <div class="lined-block"><?= render_lined_block((string) ($client['background_community'] ?? ''), 5, 112) ?></div>
-        </div>
-      </section>
+        <section class="section-block">
+          <h2>II. BACKGROUND INFORMATION</h2>
+          <div class="subsection-block">
+            <h3>A. Child</h3>
+            <div class="lined-block"><?= render_lined_block((string) ($client['background_child'] ?? ''), 5, 112) ?></div>
+          </div>
+          <div class="subsection-block">
+            <h3>B. Child's Family</h3>
+            <div class="lined-block"><?= render_lined_block((string) ($client['background_family'] ?? ''), 5, 112) ?></div>
+          </div>
+          <div class="subsection-block">
+            <h3>C. Child's Community</h3>
+            <div class="lined-block"><?= render_lined_block((string) ($client['background_community'] ?? ''), 5, 112) ?></div>
+          </div>
+        </section>
 
-      <section class="section-block section-block--fill">
-        <h2>III. ASSESSMENT</h2>
-        <div class="lined-block lined-block--tall"><?= render_lined_block((string) ($client['assessment'] ?? ''), 10, 112) ?></div>
-      </section>
+        <section class="section-block section-block--fill">
+          <h2>III. ASSESSMENT</h2>
+          <div class="lined-block lined-block--tall"><?= render_lined_block((string) ($client['assessment'] ?? ''), 10, 112) ?></div>
+        </section>
+      </div>
+
+      <footer class="sheet-footer">
+        <div class="footer-left">
+          <div>Phone: +639562241679 / +639816016317</div>
+          <div>Email: cswdobutuan@gmail.com</div>
+          <div>Website: http://www.butuan.gov.ph</div>
+        </div>
+        <div class="footer-right">
+          <img src="../../../images-logo/footer.png" alt="ButuanOn logo" />
+          <div>CSWDD.F.053.REV01</div>
+        </div>
+      </footer>
+      <div class="sheet-footer-band"></div>
     </section>
 
     <section class="sheet-page">
-      <header class="sheet-branding sheet-branding--compact">
-        <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
-      </header>
+      <div class="sheet-page-content">
+        <header class="sheet-branding sheet-branding--compact">
+          <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
+        </header>
 
-      <section class="section-block">
-        <h2>VII. TREATMENT PLAN</h2>
-        <table class="detail-table detail-table--treatment">
-          <thead>
-            <tr>
-              <th>Objective</th>
-              <th>Activities</th>
-              <th>Time frame</th>
-              <th>Person/s Responsible</th>
-              <th>Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?= render_table_rows($treatmentPlans, ['objectives', 'activities', 'timeframe', 'responsible_person', 'remarks'], 6) ?>
-          </tbody>
-        </table>
-      </section>
+        <section class="section-block">
+          <h2>VII. TREATMENT PLAN</h2>
+          <table class="detail-table detail-table--treatment">
+            <thead>
+              <tr>
+                <th>Objective</th>
+                <th>Activities</th>
+                <th>Time frame</th>
+                <th>Person/s Responsible</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?= render_table_rows($treatmentPlans, ['objectives', 'activities', 'timeframe', 'responsible_person', 'remarks'], 6) ?>
+            </tbody>
+          </table>
+        </section>
 
-      <section class="section-block">
-        <h2>IV. RECOMMENDATION</h2>
-        <div class="lined-block lined-block--medium"><?= render_lined_block((string) ($client['recommendation'] ?? ''), 6, 112) ?></div>
-      </section>
+        <section class="section-block">
+          <h2>IV. RECOMMENDATION</h2>
+          <div class="lined-block lined-block--medium"><?= render_lined_block((string) ($client['recommendation'] ?? ''), 6, 112) ?></div>
+        </section>
 
-      <section class="signature-grid">
-        <div class="signature-card">
-          <div class="signature-card__label">Prepared by:</div>
-          <div class="signature-card__line"><?= escape_html($preparedBy) ?></div>
-          <div class="signature-card__role">Social Welfare Officer / Staff</div>
+        <section class="signature-grid">
+          <div class="signature-card">
+            <div class="signature-card__label">Prepared by:</div>
+            <div class="signature-card__line"><?= escape_html($preparedBy) ?></div>
+            <div class="signature-card__role">Social Welfare Officer / Staff</div>
+          </div>
+          <div class="signature-card">
+            <div class="signature-card__label">Conformed by:</div>
+            <div class="signature-card__line"></div>
+            <div class="signature-card__role">Client / Guardian</div>
+          </div>
+          <div class="signature-card signature-card--centered">
+            <div class="signature-card__label">Noted by:</div>
+            <div class="signature-card__line"></div>
+            <div class="signature-card__role">Supervising Social Worker</div>
+          </div>
+        </section>
+
+        <section class="privacy-consent">
+          <div class="privacy-consent__title">DATA PRIVACY CONSENT</div>
+          <p>
+            I hereby certify that the information provided in this General Intake Sheet is true and correct to the best of my knowledge.
+            I voluntarily allow the City Social Welfare and Development Department to collect, record, organize, store, update and use
+            the personal information contained in this document for case management, assessment, referral, intervention planning, and
+            other lawful social welfare purposes consistent with Republic Act No. 10173 or the Data Privacy Act of 2012.
+          </p>
+          <p>
+            I understand that this information shall be handled with confidentiality and disclosed only to authorized personnel,
+            partner agencies, or institutions whenever necessary for the delivery of appropriate services and in accordance with
+            applicable laws, policies and data sharing protocols.
+          </p>
+          <div class="privacy-consent__signature-line"></div>
+          <div class="privacy-consent__signature-caption">Name &amp; Signature of Client</div>
+        </section>
+      </div>
+
+      <footer class="sheet-footer">
+        <div class="footer-left">
+          <div>Phone: +639562241679 / +639816016317</div>
+          <div>Email: cswdobutuan@gmail.com</div>
+          <div>Website: http://www.butuan.gov.ph</div>
         </div>
-        <div class="signature-card">
-          <div class="signature-card__label">Conformed by:</div>
-          <div class="signature-card__line"></div>
-          <div class="signature-card__role">Client / Guardian</div>
+        <div class="footer-right">
+          <img src="../../../images-logo/footer.png" alt="ButuanOn logo" />
+          <div>CSWDD.F.053.REV01</div>
         </div>
-        <div class="signature-card signature-card--centered">
-          <div class="signature-card__label">Noted by:</div>
-          <div class="signature-card__line"></div>
-          <div class="signature-card__role">Supervising Social Worker</div>
-        </div>
-      </section>
-
-      <section class="privacy-consent">
-        <div class="privacy-consent__title">DATA PRIVACY CONSENT</div>
-        <p>
-          I hereby certify that the information provided in this General Intake Sheet is true and correct to the best of my knowledge.
-          I voluntarily allow the City Social Welfare and Development Department to collect, record, organize, store, update and use
-          the personal information contained in this document for case management, assessment, referral, intervention planning, and
-          other lawful social welfare purposes consistent with Republic Act No. 10173 or the Data Privacy Act of 2012.
-        </p>
-        <p>
-          I understand that this information shall be handled with confidentiality and disclosed only to authorized personnel,
-          partner agencies, or institutions whenever necessary for the delivery of appropriate services and in accordance with
-          applicable laws, policies and data sharing protocols.
-        </p>
-        <div class="privacy-consent__signature-line"></div>
-        <div class="privacy-consent__signature-caption">Name &amp; Signature of Client</div>
-      </section>
+      </footer>
+      <div class="sheet-footer-band"></div>
     </section>
   </main>
 

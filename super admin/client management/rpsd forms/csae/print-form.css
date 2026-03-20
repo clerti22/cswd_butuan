@@ -63,6 +63,14 @@ body {
   gap: 6px;
 }
 
+.sheet-page-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .sheet-branding {
   display: flex;
   align-items: center;
@@ -308,6 +316,40 @@ body {
 .privacy-consent__signature-caption {
   text-align: center;
   font-size: 8.5px;
+}
+
+.sheet-footer {
+  margin-top: 0;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  padding-top: 6px;
+  font-size: 7.6px;
+}
+
+.footer-left {
+  display: grid;
+  gap: 1px;
+}
+
+.footer-right {
+  text-align: right;
+}
+
+.footer-right img {
+  width: 110px;
+  display: block;
+  margin-left: auto;
+  margin-bottom: 4px;
+}
+
+.sheet-footer-band {
+  height: 5px;
+  margin-top: 4px;
+  background: linear-gradient(90deg, #5cb5ed 0%, #1486c2 50%, #0c5f96 100%);
+  flex: 0 0 auto;
 }
 
 @media print {
