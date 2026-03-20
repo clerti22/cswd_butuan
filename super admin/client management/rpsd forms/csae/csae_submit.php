@@ -7,6 +7,32 @@ require_once __DIR__ . '/../../../../auth/db.php';
 require_login(['super admin']);
 start_auth_session();
 
+function resolve_foreign_key_column(mysqli $connection, string $tableName, array $candidates): string
+{
+    $escapedTableName = $connection->real_escape_string($tableName);
+    $columnsResult = $connection->query("SHOW COLUMNS FROM `{$escapedTableName}`");
+    if (!$columnsResult) {
+        throw new Exception('Unable to inspect related CSAE table columns.');
+    }
+
+    $availableColumns = [];
+    while ($column = $columnsResult->fetch_assoc()) {
+        $field = trim((string) ($column['Field'] ?? ''));
+        if ($field !== '') {
+            $availableColumns[$field] = true;
+        }
+    }
+    $columnsResult->free();
+
+    foreach ($candidates as $candidate) {
+        if (isset($availableColumns[$candidate])) {
+            return $candidate;
+        }
+    }
+
+    throw new Exception('Unable to resolve related CSAE foreign key column.');
+}
+
 $fullname = (string) ($_SESSION['full_name'] ?? '');
 header('Content-Type: application/json');
 
@@ -243,11 +269,15 @@ try {
     }
 
     $csaeId = $connection->insert_id;
+    $familyForeignKey = resolve_foreign_key_column($connection, 'csae_family_information_table', ['case_id', 'csae_id']);
 
     $insertFamily = $connection->prepare(
-        'INSERT INTO csae_family_information_table (
-            csae_id, member_name, member_age, relationship, education_attainment, occupation, monthly_income
-        ) VALUES (?, ?, ?, ?, ?, ?, ?)'
+        sprintf(
+            'INSERT INTO csae_family_information_table (
+                %s, member_name, member_age, relationship, education_attainment, occupation, monthly_income
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            $familyForeignKey
+        )
     );
 
     if (!$insertFamily) {
@@ -279,10 +309,14 @@ try {
     }
 
     if (!empty($treatmentPlans)) {
+        $treatmentForeignKey = resolve_foreign_key_column($connection, 'csae_treatment_plan_table', ['case_id', 'csae_id']);
         $insertTreatment = $connection->prepare(
-            'INSERT INTO csae_treatment_plan_table (
-                csae_id, objectives, activities, timeframe, responsible_person, remarks
-            ) VALUES (?, ?, ?, ?, ?, ?)'
+            sprintf(
+                'INSERT INTO csae_treatment_plan_table (
+                    %s, objectives, activities, timeframe, responsible_person, remarks
+                ) VALUES (?, ?, ?, ?, ?, ?)',
+                $treatmentForeignKey
+            )
         );
 
         if (!$insertTreatment) {
