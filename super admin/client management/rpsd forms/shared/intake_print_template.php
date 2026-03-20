@@ -260,6 +260,7 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
     <section class="sheet-page">
       <img class="sheet-header-image" src="../../../images-logo/header.png" alt="CSWD header" />
 
+      <div class="sheet-page-content">
       <section class="sheet-title-block">
         <div class="sheet-title-block__meta">Petsa Nga Gi Interbyu: <span class="line-value line-value--short"><?= escape_html(format_date_value((string) ($client['interview_date'] ?? ''))) ?></span></div>
         <h1><?= escape_html($formLabel) ?></h1>
@@ -378,6 +379,8 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
         </table>
       </section>
 
+      </div>
+
       <footer class="sheet-footer">
         <div class="footer-left">
           <div>Phone: +639562241679 / +639816016317</div>
@@ -395,6 +398,7 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
     <section class="sheet-page sheet-page--next">
       <img class="sheet-header-image" src="../../../images-logo/header.png" alt="CSWD header" />
 
+      <div class="sheet-page-content">
       <section class="sheet-section">
         <h2>IV. INITIAL DESCRIPTION OF THE:</h2>
         <div class="description-group">
@@ -456,6 +460,8 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
         <div class="client-signature-name"><?= escape_html($fullName) ?></div>
         <div class="client-signature-caption">(Name and Signature of Client)</div>
       </section>
+
+      </div>
 
       <footer class="sheet-footer">
         <div class="footer-left">
