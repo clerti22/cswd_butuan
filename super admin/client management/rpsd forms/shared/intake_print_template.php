@@ -258,18 +258,7 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
 
   <main class="print-document" id="printPage">
     <section class="sheet-page">
-      <header class="sheet-header">
-        <img class="sheet-logo" src="../../../images-logo/butuanseal.png" alt="Butuan City logo" />
-        <div class="sheet-header-copy">
-          <div>Republic of the Philippines</div>
-          <div class="sheet-header-copy--strong">CITY GOVERNMENT OF BUTUAN</div>
-          <div class="sheet-header-copy--strong">City Social Welfare and Development Department</div>
-          <div>J.P. Rosales Ave., Tandang Sora, Butuan City</div>
-        </div>
-        <img class="sheet-logo" src="../../../images-logo/cswd-logo.png" alt="CSWD logo" />
-      </header>
-
-      <div class="sheet-banner"></div>
+      <img class="sheet-header-image" src="../../../images-logo/header.png" alt="CSWD header" />
 
       <section class="sheet-title-block">
         <div class="sheet-title-block__meta">Petsa Nga Gi Interbyu: <span class="line-value line-value--short"><?= escape_html(format_date_value((string) ($client['interview_date'] ?? ''))) ?></span></div>
@@ -400,21 +389,11 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
           <div><?= escape_html($formCode) ?></div>
         </div>
       </footer>
+      <div class="sheet-footer-band"></div>
     </section>
 
     <section class="sheet-page sheet-page--next">
-      <header class="sheet-header sheet-header--compact">
-        <img class="sheet-logo" src="../../../images-logo/butuanseal.png" alt="Butuan City logo" />
-        <div class="sheet-header-copy">
-          <div>Republic of the Philippines</div>
-          <div class="sheet-header-copy--strong">CITY GOVERNMENT OF BUTUAN</div>
-          <div class="sheet-header-copy--strong">City Social Welfare and Development Department</div>
-          <div>J.P. Rosales Ave., Tandang Sora, Butuan City</div>
-        </div>
-        <img class="sheet-logo" src="../../../images-logo/cswd-logo.png" alt="CSWD logo" />
-      </header>
-
-      <div class="sheet-banner"></div>
+      <img class="sheet-header-image" src="../../../images-logo/header.png" alt="CSWD header" />
 
       <section class="sheet-section">
         <h2>IV. INITIAL DESCRIPTION OF THE:</h2>
@@ -489,6 +468,7 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
           <div><?= escape_html($formCode) ?></div>
         </div>
       </footer>
+      <div class="sheet-footer-band"></div>
     </section>
   </main>
 
