@@ -115,7 +115,9 @@ function getShowRoute(client) {
         pyap_table: 'dpsd forms/pyap/print_form.php',
         soloparent_info_table: 'dpsd forms/solo parent/print_form.php',
         snr_table: 'pssd forms/senior citizen/print_form.php',
-        pwd_table: 'pssd forms/pwd/print_form.php'
+        pwd_table: 'pssd forms/pwd/print_form.php',
+        car_table: 'rpsd forms/car/print_form.php',
+        cicl_table: 'rpsd forms/cicl/print_form.php'
     };
 
     const baseRoute = routesByTable[sourceTable];
