@@ -186,7 +186,9 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
   </div>
 
   <main class="print-page" id="printPage">
-    <img src="../../dpsd forms/pwud/print form/header.png" alt="CSWD Header" class="header-image" />
+    <header class="print-page-header">
+      <img src="../../dpsd forms/pwud/print form/header.png" alt="CSWD Header" class="header-image" />
+    </header>
 
     <section class="page-content">
       <section class="meta-title-block">
@@ -307,7 +309,7 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
       </footer>
     </section>
 
-    <footer class="sheet-footer" aria-label="Contact footer">
+    <footer class="print-page-footer sheet-footer" aria-label="Contact footer">
       <div class="footer-content">
         <div class="footer-left">
           <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>

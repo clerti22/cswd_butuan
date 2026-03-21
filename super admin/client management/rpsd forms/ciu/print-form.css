@@ -7,6 +7,8 @@
   --sheet-padding-x: 14px;
   --sheet-padding-top: 8px;
   --line-color: #111;
+  --header-space: 86px;
+  --footer-space: 110px;
 }
 
 body {
@@ -55,11 +57,17 @@ body {
   flex-direction: column;
 }
 
+.print-page-header,
+.print-page-footer {
+  background: #fff;
+}
+
 .page-content {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  padding-top: 10px;
 }
 
 .header-image {
@@ -71,7 +79,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-top: 10px;
+  margin-top: 2px;
 }
 
 .meta-grid {
@@ -329,8 +337,7 @@ body {
 .option-sections,
 .section-block,
 .detail-table,
-.signature-footer,
-.sheet-footer {
+.signature-footer {
   break-inside: avoid;
   page-break-inside: avoid;
 }
@@ -384,6 +391,7 @@ body {
     margin: 0;
   }
 
+  html,
   body {
     background: #fff;
     -webkit-print-color-adjust: exact;
@@ -397,8 +405,32 @@ body {
   .print-page {
     margin: 0;
     width: 100%;
-    min-height: 100vh;
-    padding: var(--sheet-padding-top) var(--sheet-padding-x) 0;
+    min-height: auto;
+    padding: 0 var(--sheet-padding-x);
     box-shadow: none;
+    background: transparent;
+  }
+
+  .print-page-header {
+    position: fixed;
+    top: var(--sheet-padding-top);
+    left: var(--sheet-padding-x);
+    right: var(--sheet-padding-x);
+    z-index: 10;
+  }
+
+  .print-page-footer {
+    position: fixed;
+    left: var(--sheet-padding-x);
+    right: var(--sheet-padding-x);
+    bottom: 0;
+    z-index: 10;
+    padding-bottom: 8px;
+  }
+
+  .page-content {
+    display: block;
+    padding-top: calc(var(--header-space) + 14px);
+    padding-bottom: calc(var(--footer-space) + 14px);
   }
 }
