@@ -185,19 +185,10 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
-  <main class="print-document" id="printPage">
-    <section class="sheet-page">
-      <header class="sheet-branding">
-        <img src="../../../images-logo/cswd-logo.png" alt="CSWD logo" class="sheet-branding__logo" />
-        <div class="sheet-branding__text">
-          <div>Republic of the Philippines</div>
-          <div class="sheet-branding__strong">CITY GOVERNMENT OF BUTUAN</div>
-          <div class="sheet-branding__strong">City Social Welfare and Development Department</div>
-          <div>J.P. Rosales Avenue, Doongan, Butuan City</div>
-        </div>
-        <img src="../../../images-logo/butuanseal.png" alt="Butuan City seal" class="sheet-branding__logo" />
-      </header>
+  <main class="print-page" id="printPage">
+    <img src="../../dpsd forms/pwud/print form/header.png" alt="CSWD Header" class="header-image" />
 
+    <section class="page-content">
       <section class="meta-title-block">
         <div class="meta-grid">
           <div class="meta-line"><span class="meta-label">Control No.</span><span class="meta-value"><?= escape_html((string) ($client['control_number'] ?? '')) ?></span></div>
@@ -315,6 +306,21 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
         </div>
       </footer>
     </section>
+
+    <footer class="sheet-footer" aria-label="Contact footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
+          <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
+          <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+        </div>
+        <div class="footer-right">
+          <p class="footer-code">CSWDD.F.053.REV01</p>
+          <img src="../../dpsd forms/pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+        </div>
+      </div>
+      <div class="footer-bar" aria-hidden="true"></div>
+    </footer>
   </main>
 
   <script src="../shared/print-form.js"></script>
