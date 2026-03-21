@@ -7,8 +7,6 @@
   --sheet-padding-x: 14px;
   --sheet-padding-top: 8px;
   --line-color: #111;
-  --header-space: 86px;
-  --footer-space: 110px;
 }
 
 body {
@@ -53,8 +51,17 @@ body {
   margin: 0 auto 16px;
   background: #fff;
   padding: var(--sheet-padding-top) var(--sheet-padding-x) 0;
-  display: flex;
-  flex-direction: column;
+}
+
+.print-template {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.print-template td {
+  padding: 0;
+  vertical-align: top;
 }
 
 .print-page-header,
@@ -63,11 +70,11 @@ body {
 }
 
 .page-content {
-  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .header-image {
@@ -270,7 +277,6 @@ body {
 }
 
 .sheet-footer {
-  margin-top: auto;
   position: relative;
   padding: 8px 0 10px;
 }
@@ -411,26 +417,31 @@ body {
     background: transparent;
   }
 
-  .print-page-header {
-    position: fixed;
-    top: var(--sheet-padding-top);
-    left: var(--sheet-padding-x);
-    right: var(--sheet-padding-x);
-    z-index: 10;
+  .print-template {
+    width: 100%;
   }
 
-  .print-page-footer {
-    position: fixed;
-    left: var(--sheet-padding-x);
-    right: var(--sheet-padding-x);
-    bottom: 0;
-    z-index: 10;
-    padding-bottom: 8px;
+  .print-template__head {
+    display: table-header-group;
+  }
+
+  .print-template__foot {
+    display: table-footer-group;
+  }
+
+  .print-template__body {
+    display: table-row-group;
   }
 
   .page-content {
     display: block;
-    padding-top: calc(var(--header-space) + 14px);
-    padding-bottom: calc(var(--footer-space) + 14px);
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+
+  .print-page-header,
+  .print-page-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }

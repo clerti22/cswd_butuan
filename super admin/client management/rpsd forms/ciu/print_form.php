@@ -186,11 +186,20 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
   </div>
 
   <main class="print-page" id="printPage">
-    <header class="print-page-header">
-      <img src="../../dpsd forms/pwud/print form/header.png" alt="CSWD Header" class="header-image" />
-    </header>
-
-    <section class="page-content">
+    <table class="print-template" role="presentation">
+      <thead class="print-template__head">
+        <tr>
+          <td>
+            <header class="print-page-header">
+              <img src="../../dpsd forms/pwud/print form/header.png" alt="CSWD Header" class="header-image" />
+            </header>
+          </td>
+        </tr>
+      </thead>
+      <tbody class="print-template__body">
+        <tr>
+          <td>
+            <section class="page-content">
       <section class="meta-title-block">
         <div class="meta-grid">
           <div class="meta-line"><span class="meta-label">Control No.</span><span class="meta-value"><?= escape_html((string) ($client['control_number'] ?? '')) ?></span></div>
@@ -307,22 +316,31 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
           <div class="signature-caption">CIU Clerk</div>
         </div>
       </footer>
-    </section>
-
-    <footer class="print-page-footer sheet-footer" aria-label="Contact footer">
-      <div class="footer-content">
-        <div class="footer-left">
-          <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
-          <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
-          <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
-        </div>
-        <div class="footer-right">
-          <p class="footer-code">CSWDD.F.053.REV01</p>
-          <img src="../../dpsd forms/pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
-        </div>
-      </div>
-      <div class="footer-bar" aria-hidden="true"></div>
-    </footer>
+            </section>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="print-template__foot">
+        <tr>
+          <td>
+            <footer class="print-page-footer sheet-footer" aria-label="Contact footer">
+              <div class="footer-content">
+                <div class="footer-left">
+                  <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
+                  <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
+                  <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+                </div>
+                <div class="footer-right">
+                  <p class="footer-code">CSWDD.F.053.REV01</p>
+                  <img src="../../dpsd forms/pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+                </div>
+              </div>
+              <div class="footer-bar" aria-hidden="true"></div>
+            </footer>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </main>
 
   <script src="../shared/print-form.js"></script>
