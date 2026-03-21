@@ -118,6 +118,7 @@ function getShowRoute(client) {
         pwd_table: 'pssd forms/pwd/print_form.php',
         car_table: 'rpsd forms/car/print_form.php',
         cicl_table: 'rpsd forms/cicl/print_form.php',
+        ciu_table: 'rpsd forms/ciu/print_form.php',
         csae_table: 'rpsd forms/csae/print_form.php',
         vawc_table: 'rpsd forms/vawc/print_form.php'
     };
