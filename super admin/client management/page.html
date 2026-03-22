@@ -126,8 +126,12 @@ require_login(['super admin']);
                     </div>
 
                     <div class="toolbar">
-                        <input class="search-input" type="text" placeholder="">
-                        <button class="btn btn-search" type="button">
+                        <label class="search-field" for="clientSearchInput">
+                            <span class="search-label">Search clients</span>
+                            <input class="search-input" id="clientSearchInput" type="search"
+                                placeholder="Search name or control number" autocomplete="off">
+                        </label>
+                        <button class="btn btn-search" type="button" id="clientSearchButton">
                             <i class="bi bi-search"></i>
                             Search
                         </button>
@@ -138,8 +142,8 @@ require_login(['super admin']);
                         <div class="add-client">
                             <button class="btn btn-add" type="button" id="addClientBtn" aria-haspopup="true"
                                 aria-expanded="false">
-                            <i class="bi bi-plus-lg"></i>
-                            Add Client
+                                <i class="bi bi-plus-lg"></i>
+                                Add Client
                             </button>
                             <div class="add-client-menu" id="addClientMenu" role="menu" aria-hidden="true">
                                 <button type="button" class="menu-item" role="menuitem">PYAP</button>
@@ -153,7 +157,6 @@ require_login(['super admin']);
                         <table class="client-table">
                             <thead>
                                 <tr>
-                                    
                                     <th>Control Number</th>
                                     <th>Full Name</th>
                                     <th>Age</th>
@@ -167,13 +170,10 @@ require_login(['super admin']);
                                 </tr>
                             </thead>
                             <tbody class="tab-panel active" data-tab-content="dpsd">
-                               
                             </tbody>
                             <tbody class="tab-panel" data-tab-content="pssd">
-                               
                             </tbody>
                             <tbody class="tab-panel" data-tab-content="rpsd">
-                                
                             </tbody>
                         </table>
                     </div>

@@ -2,6 +2,8 @@ const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
+const searchInput = document.getElementById('clientSearchInput');
+const searchButton = document.getElementById('clientSearchButton');
 
 function openSidebar() {
     sidebar.classList.add('open');
@@ -52,6 +54,12 @@ const tabPaginationState = {
     rpsd: { page: 1, totalPages: 1 }
 };
 
+const tabSearchState = {
+    dpsd: '',
+    pssd: '',
+    rpsd: ''
+};
+
 const prevButton = document.querySelector('.pagination .pager-btn:first-child');
 const nextButton = document.querySelector('.pagination .pager-btn:last-child');
 
@@ -91,7 +99,6 @@ function setAddClientMenu(tabKey) {
         })
         .join('');
 }
-
 
 function escapeHtml(value) {
     return String(value ?? '')
@@ -176,6 +183,12 @@ function getActiveTabKey() {
     return activeTab ? activeTab.dataset.tab : 'dpsd';
 }
 
+function getCacheKey(tabKey) {
+    const pagination = tabPaginationState[tabKey] || { page: 1 };
+    const searchTerm = tabSearchState[tabKey] || '';
+    return `${pagination.page}::${searchTerm}`;
+}
+
 function updatePaginationButtons(tabKey) {
     if (!prevButton || !nextButton) {
         return;
@@ -190,9 +203,11 @@ function updatePaginationButtons(tabKey) {
 async function loadClients(tabKey) {
     const pagination = tabPaginationState[tabKey] || { page: 1, totalPages: 1 };
     const currentPage = pagination.page;
+    const searchTerm = tabSearchState[tabKey] || '';
+    const cacheKey = getCacheKey(tabKey);
 
-    if (clientDataCache[tabKey] && clientDataCache[tabKey][currentPage]) {
-        renderClients(tabKey, clientDataCache[tabKey][currentPage]);
+    if (clientDataCache[tabKey] && clientDataCache[tabKey][cacheKey]) {
+        renderClients(tabKey, clientDataCache[tabKey][cacheKey]);
         updatePaginationButtons(tabKey);
         return;
     }
@@ -203,7 +218,12 @@ async function loadClients(tabKey) {
     }
 
     try {
-        const response = await fetch(`get_clients.php?tab=${encodeURIComponent(tabKey)}&page=${encodeURIComponent(String(currentPage))}`);
+        const params = new URLSearchParams({
+            tab: tabKey,
+            page: String(currentPage),
+            search: searchTerm
+        });
+        const response = await fetch(`get_clients.php?${params.toString()}`);
         const payload = await response.json();
 
         if (!response.ok) {
@@ -222,7 +242,7 @@ async function loadClients(tabKey) {
             clientDataCache[tabKey] = {};
         }
 
-        clientDataCache[tabKey][tabPaginationState[tabKey].page] = clients;
+        clientDataCache[tabKey][cacheKey] = clients;
 
         renderClients(tabKey, clients);
         updatePaginationButtons(tabKey);
@@ -232,6 +252,52 @@ async function loadClients(tabKey) {
         }
         updatePaginationButtons(tabKey);
     }
+}
+
+function syncSearchInput(tabKey) {
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.value = tabSearchState[tabKey] || '';
+}
+
+function applySearch(tabKey, searchValue) {
+    const normalizedSearchValue = String(searchValue ?? '').trim();
+    tabSearchState[tabKey] = normalizedSearchValue;
+    tabPaginationState[tabKey] = {
+        page: 1,
+        totalPages: 1
+    };
+    loadClients(tabKey);
+}
+
+let searchDebounceTimer = null;
+
+if (searchInput) {
+    searchInput.addEventListener('input', () => {
+        const activeTabKey = getActiveTabKey();
+
+        window.clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = window.setTimeout(() => {
+            applySearch(activeTabKey, searchInput.value);
+        }, 250);
+    });
+
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            window.clearTimeout(searchDebounceTimer);
+            applySearch(getActiveTabKey(), searchInput.value);
+        }
+    });
+}
+
+if (searchButton) {
+    searchButton.addEventListener('click', () => {
+        window.clearTimeout(searchDebounceTimer);
+        applySearch(getActiveTabKey(), searchInput ? searchInput.value : '');
+    });
 }
 
 tabs.forEach(tab => {
@@ -252,6 +318,7 @@ tabs.forEach(tab => {
         setAddClientMenu(target);
         addClientMenu.classList.remove('open');
         addClientBtn.setAttribute('aria-expanded', 'false');
+        syncSearchInput(target);
         updatePaginationButtons(target);
         loadClients(target);
     });
@@ -260,59 +327,66 @@ tabs.forEach(tab => {
 addClientBtn.addEventListener('click', () => {
     const isOpen = addClientMenu.classList.toggle('open');
     addClientBtn.setAttribute('aria-expanded', String(isOpen));
+    addClientMenu.setAttribute('aria-hidden', String(!isOpen));
 });
 
-document.addEventListener('click', event => {
-    if (!addClientMenu.contains(event.target) && !addClientBtn.contains(event.target)) {
+document.addEventListener('click', (event) => {
+    if (!addClientBtn.contains(event.target) && !addClientMenu.contains(event.target)) {
         addClientMenu.classList.remove('open');
         addClientBtn.setAttribute('aria-expanded', 'false');
+        addClientMenu.setAttribute('aria-hidden', 'true');
     }
 });
 
-addClientMenu.addEventListener('click', event => {
+addClientMenu.addEventListener('click', (event) => {
     const menuItem = event.target.closest('.menu-item');
-
     if (!menuItem) {
         return;
     }
 
-    const route = menuItem.dataset.route;
+    const route = menuItem.dataset.route || '#';
+    addClientMenu.classList.remove('open');
+    addClientBtn.setAttribute('aria-expanded', 'false');
+    addClientMenu.setAttribute('aria-hidden', 'true');
 
-    if (!route || route === '#') {
+    if (route !== '#') {
+        window.location.href = route;
+    }
+});
+
+prevButton.addEventListener('click', () => {
+    const activeTabKey = getActiveTabKey();
+    const pagination = tabPaginationState[activeTabKey] || { page: 1, totalPages: 1 };
+
+    if (pagination.page <= 1) {
         return;
     }
 
-    window.location.href = route;
+    tabPaginationState[activeTabKey] = {
+        ...pagination,
+        page: pagination.page - 1
+    };
+
+    loadClients(activeTabKey);
 });
 
-if (prevButton) {
-    prevButton.addEventListener('click', () => {
-        const activeTabKey = getActiveTabKey();
-        const pagination = tabPaginationState[activeTabKey];
+nextButton.addEventListener('click', () => {
+    const activeTabKey = getActiveTabKey();
+    const pagination = tabPaginationState[activeTabKey] || { page: 1, totalPages: 1 };
 
-        if (!pagination || pagination.page <= 1) {
-            return;
-        }
+    if (pagination.page >= pagination.totalPages) {
+        return;
+    }
 
-        pagination.page -= 1;
-        loadClients(activeTabKey);
-    });
-}
+    tabPaginationState[activeTabKey] = {
+        ...pagination,
+        page: pagination.page + 1
+    };
 
-if (nextButton) {
-    nextButton.addEventListener('click', () => {
-        const activeTabKey = getActiveTabKey();
-        const pagination = tabPaginationState[activeTabKey];
-
-        if (!pagination || pagination.page >= pagination.totalPages) {
-            return;
-        }
-
-        pagination.page += 1;
-        loadClients(activeTabKey);
-    });
-}
+    loadClients(activeTabKey);
+});
 
 setAddClientMenu('dpsd');
+syncSearchInput('dpsd');
 updatePaginationButtons('dpsd');
 loadClients('dpsd');

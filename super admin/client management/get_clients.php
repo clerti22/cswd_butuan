@@ -9,6 +9,28 @@ require_login(['super admin']);
 
 header('Content-Type: application/json; charset=utf-8');
 
+function normalize_search_keyword(string $value): string
+{
+    $trimmedValue = trim($value);
+
+    if ($trimmedValue === '') {
+        return '';
+    }
+
+    return function_exists('mb_strtolower')
+        ? mb_strtolower($trimmedValue, 'UTF-8')
+        : strtolower($trimmedValue);
+}
+
+function escape_like_pattern(string $value): string
+{
+    return str_replace(
+        ['\\', '%', '_'],
+        ['\\\\', '\\%', '\\_'],
+        $value
+    );
+}
+
 $tab = strtolower(trim((string) ($_GET['tab'] ?? '')));
 $tablesByTab = [
     'dpsd' => ['pwud_table', 'pyap_table', 'soloparent_info_table'],
@@ -27,6 +49,8 @@ if ($page < 1) {
     $page = 1;
 }
 $perPage = 10;
+$searchKeyword = normalize_search_keyword((string) ($_GET['search'] ?? ''));
+$searchPattern = '%' . escape_like_pattern($searchKeyword) . '%';
 
 $requiredColumns = [
     'key_id',
@@ -68,10 +92,34 @@ try {
             }
         }
 
-        $query = "SELECT key_id, control_number, first_name, middle_name, last_name, suffix, age, sex, barangay, program, division, contact_number, created_at FROM `{$tableName}` ORDER BY created_at DESC";
-        $result = $connection->query($query);
+        $query = "SELECT key_id, control_number, first_name, middle_name, last_name, suffix, age, sex, barangay, program, division, contact_number, created_at FROM `{$tableName}`";
 
+        if ($searchKeyword !== '') {
+            $query .= " WHERE LOWER(COALESCE(first_name, '')) LIKE ? ESCAPE '\\\\'"
+                . " OR LOWER(COALESCE(middle_name, '')) LIKE ? ESCAPE '\\\\'"
+                . " OR LOWER(COALESCE(last_name, '')) LIKE ? ESCAPE '\\\\'"
+                . " OR LOWER(COALESCE(control_number, '')) LIKE ? ESCAPE '\\\\'";
+        }
+
+        $query .= ' ORDER BY created_at DESC';
+        $statement = $connection->prepare($query);
+
+        if (!$statement) {
+            throw new RuntimeException('Could not prepare client query.');
+        }
+
+        if ($searchKeyword !== '') {
+            $statement->bind_param('ssss', $searchPattern, $searchPattern, $searchPattern, $searchPattern);
+        }
+
+        if (!$statement->execute()) {
+            $statement->close();
+            throw new RuntimeException('Could not fetch client records.');
+        }
+
+        $result = $statement->get_result();
         if (!$result) {
+            $statement->close();
             throw new RuntimeException('Could not fetch client records.');
         }
 
@@ -111,6 +159,8 @@ try {
                 'created_at_sort' => $timestamp,
             ];
         }
+
+        $statement->close();
     }
 
     usort(
