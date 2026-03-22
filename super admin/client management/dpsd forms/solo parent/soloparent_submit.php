@@ -112,6 +112,7 @@ if ($connection->connect_error) {
 }
 
 $connection->begin_transaction();
+$recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 try {
     $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM soloparent_info_table');
@@ -230,47 +231,117 @@ try {
         $indigenousAffiliation = '';
     }
 
-    $insertSoloParent->bind_param(
-        'sssssssissssssssssssdsssssssssss',
-        $controlNumber,
-        $firstName,
-        $middleName,
-        $lastName,
-        $suffix,
-        $dateOfBirth,
-        $placeOfBirth,
-        $age,
-        $program,
-        $division,
-        $address,
-        $brgy,
-        $religion,
-        $sex,
-        $educationalAttainment,
-        $occupation,
-        $companyAgency,
-        $civilStatus,
-        $employmentStatus,
-        $contactNumber,
-        $monthlyIncome,
-        $philsysCardNumber,
-        $emailAddress,
-        $pantawidBeneficiary,
-        $pantawidHouseholdId,
-        $indigenousPerson,
-        $indigenousAffiliation,
-        $lgbtqPlus,
-        $pwdStatus,
-        $soloClassification,
-        $soloNeeds,
-        $served
-    );
+    if ($recordId !== false && $recordId !== null) {
+        $updateSoloParent = $connection->prepare(
+            'UPDATE soloparent_info_table SET
+                first_name = ?, middle_name = ?, last_name = ?, suffix = ?, date_of_birth = ?, place_of_birth = ?, age = ?,
+                program = ?, division = ?, address = ?, barangay = ?, religion = ?, sex = ?, educational_attainment = ?,
+                occupation = ?, company_agency = ?, civil_status = ?, employment_status = ?, contact_number = ?, monthly_income = ?,
+                philsys_card_number = ?, email_address = ?, pantawid_beneficiary = ?, pantawid_household_id = ?, indigenous_person = ?,
+                indigenous_affiliation_name = ?, lgbtq_plus = ?, pwd_status = ?, solo_classification = ?, solo_needs = ?, served_by = ?
+             WHERE key_id = ?'
+        );
 
-    if (!$insertSoloParent->execute()) {
-        throw new Exception('Failed to insert solo parent record.');
+        if (!$updateSoloParent) {
+            throw new Exception('Failed to prepare solo parent update statement.');
+        }
+
+        $updateSoloParent->bind_param(
+            'ssssssissssssssssssdsssssssssssi',
+            $firstName,
+            $middleName,
+            $lastName,
+            $suffix,
+            $dateOfBirth,
+            $placeOfBirth,
+            $age,
+            $program,
+            $division,
+            $address,
+            $brgy,
+            $religion,
+            $sex,
+            $educationalAttainment,
+            $occupation,
+            $companyAgency,
+            $civilStatus,
+            $employmentStatus,
+            $contactNumber,
+            $monthlyIncome,
+            $philsysCardNumber,
+            $emailAddress,
+            $pantawidBeneficiary,
+            $pantawidHouseholdId,
+            $indigenousPerson,
+            $indigenousAffiliation,
+            $lgbtqPlus,
+            $pwdStatus,
+            $soloClassification,
+            $soloNeeds,
+            $served,
+            $recordId
+        );
+
+        if (!$updateSoloParent->execute()) {
+            throw new Exception('Failed to update solo parent record.');
+        }
+
+        $updateSoloParent->close();
+        $soloParentId = $recordId;
+
+        $deleteHouseholdMembers = $connection->prepare('DELETE FROM household_members_soloparent WHERE solo_parent_id = ?');
+        if (!$deleteHouseholdMembers) {
+            throw new Exception('Failed to prepare existing household member delete statement.');
+        }
+
+        $deleteHouseholdMembers->bind_param('i', $soloParentId);
+        if (!$deleteHouseholdMembers->execute()) {
+            throw new Exception('Failed to delete existing household member records.');
+        }
+        $deleteHouseholdMembers->close();
+    } else {
+        $insertSoloParent->bind_param(
+            'sssssssissssssssssssdsssssssssss',
+            $controlNumber,
+            $firstName,
+            $middleName,
+            $lastName,
+            $suffix,
+            $dateOfBirth,
+            $placeOfBirth,
+            $age,
+            $program,
+            $division,
+            $address,
+            $brgy,
+            $religion,
+            $sex,
+            $educationalAttainment,
+            $occupation,
+            $companyAgency,
+            $civilStatus,
+            $employmentStatus,
+            $contactNumber,
+            $monthlyIncome,
+            $philsysCardNumber,
+            $emailAddress,
+            $pantawidBeneficiary,
+            $pantawidHouseholdId,
+            $indigenousPerson,
+            $indigenousAffiliation,
+            $lgbtqPlus,
+            $pwdStatus,
+            $soloClassification,
+            $soloNeeds,
+            $served
+        );
+
+        if (!$insertSoloParent->execute()) {
+            throw new Exception('Failed to insert solo parent record.');
+        }
+
+        $soloParentId = $connection->insert_id;
     }
-
-    $soloParentId = $connection->insert_id;
 
     $insertHouseholdMember = $connection->prepare(
         'INSERT INTO household_members_soloparent (
@@ -325,7 +396,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Solo parent information and household members saved successfully.',
+        'message' => $recordId ? 'Solo parent information and household members updated successfully.' : 'Solo parent information and household members saved successfully.',
         'solo_parent_id' => $soloParentId
     ]);
 } catch (Exception $exception) {

@@ -44,6 +44,8 @@ const householdMembersBody = document.getElementById('householdMembersBody');
 const householdMembersInput = document.getElementById('householdMembersInput');
 const formMessage = document.getElementById('formMessage');
 const pwudForm = document.getElementById('pwudForm');
+const submitPwdFormButton = document.getElementById('submitPwudForm');
+const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
 const householdFields = {
     household_name: document.getElementById('householdName'),
@@ -54,6 +56,8 @@ const householdFields = {
 };
 
 const householdMembers = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 function showHouseholdModal() {
     householdModal.classList.add('show');
@@ -110,6 +114,108 @@ function renderHouseholdMembers() {
 
 function updateHouseholdInput() {
     householdMembersInput.value = JSON.stringify(householdMembers);
+}
+
+function clearFormMessage() {
+    formMessage.textContent = '';
+    formMessage.classList.remove('error-message');
+    formMessage.classList.remove('success-message');
+}
+
+function populateForm(record, related = {}) {
+    const fieldMappings = {
+        first_name: 'firstName',
+        middle_name: 'middleName',
+        last_name: 'lastName',
+        suffix: 'suffix',
+        date_of_birth: 'dateOfBirth',
+        place_of_birth: 'placeOfBirth',
+        age: 'age',
+        address: 'address',
+        barangay: 'barangay',
+        religion: 'religion',
+        sex: 'sex',
+        educational_attainment: 'educationalAttainment',
+        occupation: 'occupation',
+        monthly_income: 'monthlyIncome',
+        civil_status: 'civilStatus',
+        contact_number: 'contactNumber',
+        services_needed: 'servicesNeeded'
+    };
+
+    Object.entries(fieldMappings).forEach(([name, id]) => {
+        const field = document.getElementById(id);
+        if (!field) {
+            return;
+        }
+
+        field.value = record?.[name] ?? '';
+    });
+
+    householdMembers.length = 0;
+    (related.household_members || []).forEach((member) => {
+        householdMembers.push({
+            household_name: member.household_name ?? '',
+            household_age: member.household_age ?? '',
+            household_gender: member.household_gender ?? '',
+            household_relationship: member.household_relationship ?? '',
+            household_occupation: member.household_occupation ?? ''
+        });
+    });
+
+    renderHouseholdMembers();
+    updateHouseholdInput();
+    clearFormMessage();
+}
+
+function setEditMode(isEditable) {
+    window.clientRecordMode?.toggleContainerEditState(pwudForm, isEditable, ['#openHouseholdModal', '#saveHouseholdMember', '#closeHouseholdModal']);
+
+    if (openHouseholdModal) {
+        openHouseholdModal.disabled = !isEditable;
+    }
+
+    if (saveHouseholdMemberButton) {
+        saveHouseholdMemberButton.disabled = !isEditable;
+    }
+}
+
+async function loadRecordForViewMode() {
+    if (!recordId) {
+        return;
+    }
+
+    formMessage.textContent = 'Loading record...';
+
+    try {
+        const response = await fetch(`../../get_client_record.php?program=pwd&id=${encodeURIComponent(String(recordId))}`);
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load PWD record.');
+        }
+
+        originalRecordSnapshot = payload;
+        populateForm(payload.record, payload.related || {});
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton: submitPwdFormButton,
+            onEnableEdit: () => {
+                setEditMode(true);
+                clearFormMessage();
+            },
+            onCancelEdit: () => {
+                populateForm(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+            },
+            onSaveStateChange: () => {}
+        }) || null;
+    } catch (error) {
+        formMessage.textContent = error.message;
+        formMessage.classList.add('error-message');
+    }
 }
 
 if (openHouseholdModal && closeHouseholdModal && householdModal) {
@@ -196,6 +302,9 @@ pwudForm.addEventListener('submit', async (event) => {
     formMessage.classList.remove('success-message');
 
     const formData = new FormData(pwudForm);
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
 
     try {
         const response = await fetch('pwd_submit.php', {
@@ -217,14 +326,28 @@ pwudForm.addEventListener('submit', async (event) => {
             throw new Error((result && result.message) || 'Failed to save PWD record.');
         }
 
-        formMessage.textContent = 'PWD record saved successfully.';
+        formMessage.textContent = recordId ? 'PWD record updated successfully.' : 'PWD record saved successfully.';
         formMessage.classList.add('success-message');
-        pwudForm.reset();
-        householdMembers.length = 0;
-        renderHouseholdMembers();
-        updateHouseholdInput();
+
+        if (recordId) {
+            originalRecordSnapshot = {
+                record: Object.fromEntries(formData.entries()),
+                related: {
+                    household_members: householdMembers.map((member) => ({ ...member }))
+                }
+            };
+            setEditMode(false);
+            recordControls?.setEditing(false);
+        } else {
+            pwudForm.reset();
+            householdMembers.length = 0;
+            renderHouseholdMembers();
+            updateHouseholdInput();
+        }
     } catch (error) {
         formMessage.textContent = error.message;
         formMessage.classList.add('error-message');
     }
 });
+
+loadRecordForViewMode();

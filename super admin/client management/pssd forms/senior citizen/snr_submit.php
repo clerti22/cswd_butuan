@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 
 require_login(['super admin']);
+
 start_auth_session();
 
 $fullname = (string) ($_SESSION['full_name'] ?? '');
@@ -16,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
     exit;
 }
+
 
 $requiredFields = [
     'first_name',
@@ -81,55 +84,9 @@ if ($connection->connect_error) {
 }
 
 $connection->begin_transaction();
+$recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 try {
-    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM snr_table');
-    if (!$rowCountResult) {
-        throw new Exception('Failed to get existing SNR row count.');
-    }
-
-    $rowCountData = $rowCountResult->fetch_assoc();
-    $rowCountResult->free();
-
-    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
-    $currentYear = date('Y');
-    $currentMonth = date('m');
-    $sequelNumber = $rowCount;
-
-    do {
-        $controlNumber = sprintf('CSWD-SNR-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
-        $controlCheck = $connection->prepare('SELECT 1 FROM snr_table WHERE control_number = ? LIMIT 1');
-        if (!$controlCheck) {
-            throw new Exception('Failed to prepare control number uniqueness check.');
-        }
-
-        $controlCheck->bind_param('s', $controlNumber);
-        if (!$controlCheck->execute()) {
-            $controlCheck->close();
-            throw new Exception('Failed to check control number uniqueness.');
-        }
-
-        $controlCheck->store_result();
-        $controlExists = $controlCheck->num_rows > 0;
-        $controlCheck->close();
-
-        if ($controlExists) {
-            $sequelNumber++;
-        }
-    } while ($controlExists);
-
-    $insertPwud = $connection->prepare(
-        'INSERT INTO snr_table (
-            control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age, division, program,
-            address,barangay, religion, sex, educational_attainment, occupation, monthly_income,
-            civil_status, contact_number, services_needed, served_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    );
-
-    if (!$insertPwud) {
-        throw new Exception('Failed to prepare PWUD insert statement.');
-    }
-
     $firstName = trim((string) $_POST['first_name']);
     $middleName = trim((string) ($_POST['middle_name'] ?? ''));
     $lastName = trim((string) $_POST['last_name']);
@@ -137,10 +94,10 @@ try {
     $dateOfBirth = trim((string) $_POST['date_of_birth']);
     $placeOfBirth = trim((string) $_POST['place_of_birth']);
     $age = (int) $_POST['age'];
-    $division = "PSSD";
-    $program = "SENIOR CITIZEN";
     $address = trim((string) $_POST['address']);
     $brgy = trim((string) $_POST['barangay']);
+    $division = "PSSD";
+    $program = "SENIOR CITIZEN";
     $religion = trim((string) $_POST['religion']);
     $sex = trim((string) $_POST['sex']);
     $educationalAttainment = trim((string) $_POST['educational_attainment']);
@@ -149,38 +106,143 @@ try {
     $civilStatus = trim((string) $_POST['civil_status']);
     $contactNumber = trim((string) $_POST['contact_number']);
     $servicesNeeded = trim((string) $_POST['services_needed']);
-    $served = $fullname;
+    $served_by = $fullname;
 
-    $insertPwud->bind_param(
-        'sssssssissssssssdssss',
-        $controlNumber,
-        $firstName,
-        $middleName,
-        $lastName,
-        $suffix,
-        $dateOfBirth,
-        $placeOfBirth,
-        $age,
-        $division,
-        $program,
-        $address,
-        $brgy,
-        $religion,
-        $sex,
-        $educationalAttainment,
-        $occupation,
-        $monthlyIncome,
-        $civilStatus,
-        $contactNumber,
-        $servicesNeeded,
-        $served
-    );
+    if ($recordId !== false && $recordId !== null) {
+        $updatePwud = $connection->prepare(
+            'UPDATE snr_table
+             SET first_name = ?, middle_name = ?, last_name = ?, suffix = ?, date_of_birth = ?, place_of_birth = ?, age = ?,
+                 address = ?, barangay = ?, division = ?, program = ?, religion = ?, sex = ?, educational_attainment = ?,
+                 occupation = ?, monthly_income = ?, civil_status = ?, contact_number = ?, services_needed = ?, served_by = ?
+             WHERE key_id = ?'
+        );
 
-    if (!$insertPwud->execute()) {
-        throw new Exception('Failed to insert Senior Citizen record.');
+        if (!$updatePwud) {
+            throw new Exception('Failed to prepare Senior Citizen update statement.');
+        }
+
+        $updatePwud->bind_param(
+            'ssssssissssssssdssssi',
+            $firstName,
+            $middleName,
+            $lastName,
+            $suffix,
+            $dateOfBirth,
+            $placeOfBirth,
+            $age,
+            $address,
+            $brgy,
+            $division,
+            $program,
+            $religion,
+            $sex,
+            $educationalAttainment,
+            $occupation,
+            $monthlyIncome,
+            $civilStatus,
+            $contactNumber,
+            $servicesNeeded,
+            $served_by,
+            $recordId
+        );
+
+        if (!$updatePwud->execute()) {
+            throw new Exception('Failed to update Senior Citizen record.');
+        }
+
+        $updatePwud->close();
+        $snrId = $recordId;
+
+        $deleteHousehold = $connection->prepare('DELETE FROM snr_household_table WHERE snr_key_id = ?');
+        if (!$deleteHousehold) {
+            throw new Exception('Failed to prepare household delete statement.');
+        }
+
+        $deleteHousehold->bind_param('i', $snrId);
+        if (!$deleteHousehold->execute()) {
+            throw new Exception('Failed to delete existing household members.');
+        }
+        $deleteHousehold->close();
+    } else {
+        $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM snr_table');
+        if (!$rowCountResult) {
+            throw new Exception('Failed to get existing Senior Citizen row count.');
+        }
+
+        $rowCountData = $rowCountResult->fetch_assoc();
+        $rowCountResult->free();
+
+        $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        $sequelNumber = $rowCount;
+
+        do {
+            $controlNumber = sprintf('CSWD-SNR-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+            $controlCheck = $connection->prepare('SELECT 1 FROM snr_table WHERE control_number = ? LIMIT 1');
+            if (!$controlCheck) {
+                throw new Exception('Failed to prepare control number uniqueness check.');
+            }
+
+            $controlCheck->bind_param('s', $controlNumber);
+            if (!$controlCheck->execute()) {
+                $controlCheck->close();
+                throw new Exception('Failed to check control number uniqueness.');
+            }
+
+            $controlCheck->store_result();
+            $controlExists = $controlCheck->num_rows > 0;
+            $controlCheck->close();
+
+            if ($controlExists) {
+                $sequelNumber++;
+            }
+        } while ($controlExists);
+
+        $insertPwud = $connection->prepare(
+            'INSERT INTO snr_table (
+                control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
+                address,barangay,division,program, religion, sex, educational_attainment, occupation, monthly_income,
+                civil_status, contact_number, services_needed, served_by
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        );
+
+        if (!$insertPwud) {
+            throw new Exception('Failed to prepare Senior Citizen insert statement.');
+        }
+
+        $insertPwud->bind_param(
+            'sssssssissssssssdssss',
+            $controlNumber,
+            $firstName,
+            $middleName,
+            $lastName,
+            $suffix,
+            $dateOfBirth,
+            $placeOfBirth,
+            $age,
+            $address,
+            $brgy,
+            $division,
+            $program,
+            $religion,
+            $sex,
+            $educationalAttainment,
+            $occupation,
+            $monthlyIncome,
+            $civilStatus,
+            $contactNumber,
+            $servicesNeeded,
+            $served_by
+        );
+
+        if (!$insertPwud->execute()) {
+            throw new Exception('Failed to insert Senior Citizen record.');
+        }
+
+        $snrId = $connection->insert_id;
+        $insertPwud->close();
     }
-
-    $pwudId = $connection->insert_id;
 
     $insertHousehold = $connection->prepare(
         'INSERT INTO snr_household_table (
@@ -201,7 +263,7 @@ try {
 
         $insertHousehold->bind_param(
             'isisss',
-            $pwudId,
+            $snrId,
             $memberName,
             $memberAge,
             $memberGender,
@@ -218,8 +280,8 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Senior Citizen record and household members saved successfully.',
-        'key_id' => $pwudId
+        'message' => $recordId ? 'Senior Citizen record updated successfully.' : 'Senior Citizen record and household members saved successfully.',
+        'key_id' => $snrId
     ]);
 } catch (Exception $exception) {
     $connection->rollback();

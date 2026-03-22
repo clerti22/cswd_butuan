@@ -118,11 +118,11 @@ function getShowRoute(client) {
 
     const sourceTable = String(client.source_table || '');
     const routesByTable = {
-        pwud_table: 'dpsd forms/pwud/print_form.php',
+        pwud_table: 'dpsd forms/pwud/index.php',
         pyap_table: 'dpsd forms/pyap/print_form.php',
-        soloparent_info_table: 'dpsd forms/solo parent/print_form.php',
-        snr_table: 'pssd forms/senior citizen/print_form.php',
-        pwd_table: 'pssd forms/pwd/print_form.php',
+        soloparent_info_table: 'dpsd forms/solo parent/index.php',
+        snr_table: 'pssd forms/senior citizen/index.php',
+        pwd_table: 'pssd forms/pwd/index.php',
         car_table: 'rpsd forms/car/print_form.php',
         cicl_table: 'rpsd forms/cicl/print_form.php',
         ciu_table: 'rpsd forms/ciu/print_form.php',
@@ -142,7 +142,7 @@ function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const showButton = showRoute === '#'
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
-        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Print</a>`;
+        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
 
     return `
         <tr>
@@ -157,7 +157,6 @@ function createClientRow(client) {
             <td>${escapeHtml(client.created_at)}</td>
             <td>
                 ${showButton}
-                <button class="btn btn-sm" type="button">Show</button>
             </td>
         </tr>
     `;
