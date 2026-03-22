@@ -325,6 +325,11 @@ submitButton?.addEventListener('click', async () => {
         return;
     }
 
+    const confirmed = await window.clientFormSubmitConfirmation?.confirm();
+    if (!confirmed) {
+        return;
+    }
+
     submitButton.disabled = true;
 
     const formData = new FormData();

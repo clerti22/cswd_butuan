@@ -316,6 +316,11 @@ if (soloParentForm) {
             return;
         }
 
+        const confirmed = await window.clientFormSubmitConfirmation?.confirm();
+        if (!confirmed) {
+            return;
+        }
+
         syncHouseholdPayload();
 
         const formData = new FormData(soloParentForm);

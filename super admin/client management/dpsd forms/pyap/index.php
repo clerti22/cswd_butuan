@@ -496,6 +496,7 @@ require_login(['super admin']);
             </main>
         </div>
     </div>
+    <script src="../../shared/form-submit-confirm.js"></script>
     <script src="pyap.js"></script>
 
 </body>

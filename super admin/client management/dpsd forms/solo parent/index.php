@@ -536,6 +536,7 @@ require_login(['super admin']);
             </div>
         </div>
     </div>
+    <script src="../../shared/form-submit-confirm.js"></script>
     <script src="soloparent.js"></script>
 
 
