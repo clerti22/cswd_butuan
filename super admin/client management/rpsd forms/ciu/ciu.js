@@ -307,6 +307,11 @@ ciuForm?.addEventListener('submit', async (event) => {
         return;
     }
 
+    const confirmed = await window.clientFormSubmitConfirmation?.confirm();
+    if (!confirmed) {
+        return;
+    }
+
     const submitButton = ciuForm.querySelector('.submit-btn');
     if (submitButton) {
         submitButton.disabled = true;

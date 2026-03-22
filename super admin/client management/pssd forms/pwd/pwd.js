@@ -186,6 +186,11 @@ pwudForm.addEventListener('submit', async (event) => {
         return;
     }
 
+    const confirmed = await window.clientFormSubmitConfirmation?.confirm();
+    if (!confirmed) {
+        return;
+    }
+
     formMessage.textContent = 'Submitting...';
     formMessage.classList.remove('error-message');
     formMessage.classList.remove('success-message');

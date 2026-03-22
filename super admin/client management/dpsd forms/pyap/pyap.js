@@ -249,6 +249,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const confirmed = await window.clientFormSubmitConfirmation?.confirm();
+        if (!confirmed) {
+            return;
+        }
+
         setMessage('Submitting...');
 
         const formData = new FormData(pyapForm);
