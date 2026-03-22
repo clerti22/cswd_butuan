@@ -342,6 +342,21 @@ body {
     cursor: not-allowed;
 }
 
+.btn-print {
+    background: #475569;
+    text-decoration: none;
+}
+
+.btn-print:hover:enabled,
+.btn-print:hover {
+    background: #334155;
+}
+
+.btn-print:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 .btn-add {
     margin-left: auto;
     background: #0a7d0a;

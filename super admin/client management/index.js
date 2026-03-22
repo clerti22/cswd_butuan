@@ -174,8 +174,8 @@ function createClientRow(client) {
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
         : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
     const printButton = printRoute === '#'
-        ? '<button class="btn btn-sm" type="button" disabled title="Print is not available for this record.">Print</button>'
-        : `<a class="btn btn-sm" href="${escapeHtml(printRoute)}">Print</a>`;
+        ? '<button class="btn btn-sm btn-print" type="button" disabled title="Print is not available for this record.">Print</button>'
+        : `<a class="btn btn-sm btn-print" href="${escapeHtml(printRoute)}">Print</a>`;
 
     return `
         <tr>
