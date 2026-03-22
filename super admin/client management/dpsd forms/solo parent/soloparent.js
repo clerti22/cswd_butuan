@@ -115,8 +115,11 @@ const householdTableBody = document.getElementById('householdTableBody');
 const soloParentForm = document.getElementById('soloParentForm');
 const householdPayloadInput = document.getElementById('household-members-payload');
 const submitFormButton = document.getElementById('submitSoloParent');
+const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
 const householdMembers = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 const householdInputs = {
     name: document.getElementById('householdName'),
@@ -154,6 +157,108 @@ const syncHouseholdPayload = () => {
     }
 
     householdPayloadInput.value = JSON.stringify(householdMembers);
+};
+
+const renderHouseholdTable = () => {
+    if (!householdTableBody) {
+        return;
+    }
+
+    if (householdMembers.length === 0) {
+        householdTableBody.innerHTML = '<tr class="household-empty-row"><td colspan="9">No household members added yet.</td></tr>';
+        return;
+    }
+
+    householdTableBody.innerHTML = householdMembers.map((entry) => `
+        <tr>
+            <td>${entry.household_name}</td>
+            <td>${entry.household_sex}</td>
+            <td>${entry.household_relationship}</td>
+            <td>${entry.household_age}</td>
+            <td>${entry.household_birthdate}</td>
+            <td>${entry.household_civil_status}</td>
+            <td>${entry.household_educational}</td>
+            <td>${entry.household_occupation}</td>
+            <td>${entry.household_monthly_income}</td>
+        </tr>
+    `).join('');
+};
+
+const assignFieldValue = (name, value) => {
+    const fields = soloParentForm?.querySelectorAll(`[name="${name}"]`) || [];
+    if (!fields.length) {
+        return;
+    }
+
+    if (fields[0].type === 'radio') {
+        fields.forEach((field) => {
+            field.checked = String(field.value).toLowerCase() === String(value ?? '').toLowerCase();
+        });
+        return;
+    }
+
+    fields.forEach((field) => {
+        field.value = value ?? '';
+    });
+};
+
+const populateSoloParentForm = (record, related = {}) => {
+    Object.entries(record || {}).forEach(([name, value]) => {
+        assignFieldValue(name, value);
+    });
+
+    householdMembers.length = 0;
+    (related.household_members || []).forEach((member) => {
+        householdMembers.push({ ...member });
+    });
+
+    syncHouseholdPayload();
+    renderHouseholdTable();
+    refreshEligibilityToggleStates();
+};
+
+const setEditMode = (isEditable) => {
+    window.clientRecordMode?.toggleContainerEditState(soloParentForm, isEditable, ['#openHouseholdModal', '#submitHousehold', '#closeHouseholdModal']);
+    if (openHouseholdModalButton) {
+        openHouseholdModalButton.disabled = !isEditable;
+    }
+    if (submitHouseholdButton) {
+        submitHouseholdButton.disabled = !isEditable;
+    }
+    refreshEligibilityToggleStates();
+};
+
+const loadRecordForViewMode = async () => {
+    if (!recordId) {
+        renderHouseholdTable();
+        return;
+    }
+
+    try {
+        const response = await fetch(`../../get_client_record.php?program=solo-parent&id=${encodeURIComponent(String(recordId))}`);
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load Solo Parent record.');
+        }
+
+        originalRecordSnapshot = payload;
+        populateSoloParentForm(payload.record, payload.related || {});
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton: submitFormButton,
+            onEnableEdit: () => setEditMode(true),
+            onCancelEdit: () => {
+                populateSoloParentForm(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+            },
+            onSaveStateChange: () => {}
+        }) || null;
+    } catch (error) {
+        alert(error.message);
+    }
 };
 
 if (openHouseholdModalButton) {
@@ -200,25 +305,7 @@ if (submitHouseholdButton) {
         householdMembers.push(householdEntry);
         syncHouseholdPayload();
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${householdEntry.household_name}</td>
-            <td>${householdEntry.household_sex}</td>
-            <td>${householdEntry.household_relationship}</td>
-            <td>${householdEntry.household_age}</td>
-            <td>${householdEntry.household_birthdate}</td>
-            <td>${householdEntry.household_civil_status}</td>
-            <td>${householdEntry.household_educational}</td>
-            <td>${householdEntry.household_occupation}</td>
-            <td>${householdEntry.household_monthly_income}</td>
-        `;
-
-        const emptyRow = householdTableBody.querySelector('.household-empty-row');
-        if (emptyRow) {
-            emptyRow.remove();
-        }
-
-        householdTableBody.appendChild(row);
+        renderHouseholdTable();
         resetHouseholdInputs();
         toggleHouseholdModal(false);
     });
@@ -324,6 +411,9 @@ if (soloParentForm) {
         syncHouseholdPayload();
 
         const formData = new FormData(soloParentForm);
+        if (recordId) {
+            formData.append('record_id', String(recordId));
+        }
 
         try {
             submitFormButton.disabled = true;
@@ -339,14 +429,22 @@ if (soloParentForm) {
                 throw new Error(result.message || 'Unable to submit solo parent form.');
             }
 
-            alert(result.message || 'Solo parent information submitted successfully.');
-            soloParentForm.reset();
-            householdMembers.length = 0;
-            syncHouseholdPayload();
-            if (householdTableBody) {
-                householdTableBody.innerHTML = '<tr class="household-empty-row"><td colspan="9">No household members added yet.</td></tr>';
+            alert(result.message || (recordId ? 'Solo parent information updated successfully.' : 'Solo parent information submitted successfully.'));
+
+            if (recordId) {
+                originalRecordSnapshot = {
+                    record: Object.fromEntries(formData.entries()),
+                    related: { household_members: householdMembers.map((member) => ({ ...member })) }
+                };
+                setEditMode(false);
+                recordControls?.setEditing(false);
+            } else {
+                soloParentForm.reset();
+                householdMembers.length = 0;
+                syncHouseholdPayload();
+                renderHouseholdTable();
+                refreshEligibilityToggleStates();
             }
-            refreshEligibilityToggleStates();
         } catch (error) {
             alert(error.message || 'An error occurred while submitting the form.');
         } finally {
@@ -354,3 +452,5 @@ if (soloParentForm) {
         }
     });
 }
+
+loadRecordForViewMode();
