@@ -119,7 +119,7 @@ function getShowRoute(client) {
     const sourceTable = String(client.source_table || '');
     const routesByTable = {
         pwud_table: 'dpsd forms/pwud/index.php',
-        pyap_table: 'dpsd forms/pyap/print_form.php',
+        pyap_table: 'dpsd forms/pyap/index.php',
         soloparent_info_table: 'dpsd forms/solo parent/index.php',
         snr_table: 'pssd forms/senior citizen/index.php',
         pwd_table: 'pssd forms/pwd/index.php',
