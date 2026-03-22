@@ -750,6 +750,7 @@ require_login(['super admin']);
             </form>
         </div>
     </div>
+    <script src="../../shared/client-record-mode.js"></script>
     <script src="../../shared/form-submit-confirm.js"></script>
     <script src="car.js"></script>
 
