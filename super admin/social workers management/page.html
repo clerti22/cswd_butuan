@@ -113,8 +113,12 @@
                         </div>
 
                         <div class="right-controls">
-                            <input type="text" class="search-input" aria-label="Search users" placeholder="">
-                            <button type="button" class="control-button">
+                            <label class="search-field" for="userSearchInput">
+                                <span class="search-label">Search social workers</span>
+                                <input type="search" id="userSearchInput" class="search-input" aria-label="Search users"
+                                    placeholder="Search first, middle, or last name" autocomplete="off">
+                            </label>
+                            <button type="button" class="control-button" id="userSearchButton">
                                 <i class="bi bi-search"></i>
                                 Search
                             </button>

@@ -2,6 +2,8 @@ const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
+const userSearchInput = document.getElementById('userSearchInput');
+const userSearchButton = document.getElementById('userSearchButton');
 
 function openSidebar() {
     sidebar.classList.add('open');
@@ -69,8 +71,14 @@ const SECRET_CODE = 'cswd2026';
 let activeRole = 'admin';
 let currentPage = 1;
 let totalPages = 1;
+let searchDebounceTimer = null;
 let selectedUser = null;
 let selectedAction = 'disable';
+
+const roleSearchState = {
+    admin: '',
+    encoder: '',
+};
 
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, (char) => {
@@ -223,10 +231,16 @@ function attachActionEvents(button, user) {
 }
 
 async function loadUsers(role, page = 1) {
+    const searchTerm = roleSearchState[role] || '';
     usersTableMessage.textContent = `Loading ${role}s...`;
 
     try {
-        const response = await fetch(`get_users.php?role=${encodeURIComponent(role)}&page=${page}`);
+        const params = new URLSearchParams({
+            role,
+            page: String(page),
+            search: searchTerm,
+        });
+        const response = await fetch(`get_users.php?${params.toString()}`);
 
         if (!response.ok) {
             throw new Error('Unable to fetch users.');
@@ -295,6 +309,20 @@ async function loadUsers(role, page = 1) {
     }
 }
 
+function syncSearchInput(role) {
+    if (!userSearchInput) {
+        return;
+    }
+
+    userSearchInput.value = roleSearchState[role] || '';
+}
+
+function applySearch(role, searchValue) {
+    roleSearchState[role] = String(searchValue ?? '').trim();
+    currentPage = 1;
+    loadUsers(role, currentPage);
+}
+
 function setActiveTab(selectedRole) {
     activeRole = selectedRole;
     currentPage = 1;
@@ -309,6 +337,7 @@ function setActiveTab(selectedRole) {
         assignmentHeader.textContent = selectedRole === 'admin' ? 'Division' : 'Program';
     }
 
+    syncSearchInput(selectedRole);
     loadUsers(selectedRole, currentPage);
 }
 
@@ -317,6 +346,30 @@ roleTabs.forEach((tab) => {
         setActiveTab(tab.dataset.role);
     });
 });
+
+if (userSearchInput) {
+    userSearchInput.addEventListener('input', () => {
+        window.clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = window.setTimeout(() => {
+            applySearch(activeRole, userSearchInput.value);
+        }, 250);
+    });
+
+    userSearchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            window.clearTimeout(searchDebounceTimer);
+            applySearch(activeRole, userSearchInput.value);
+        }
+    });
+}
+
+if (userSearchButton) {
+    userSearchButton.addEventListener('click', () => {
+        window.clearTimeout(searchDebounceTimer);
+        applySearch(activeRole, userSearchInput ? userSearchInput.value : '');
+    });
+}
 
 if (prevPageButton) {
     prevPageButton.addEventListener('click', () => {
