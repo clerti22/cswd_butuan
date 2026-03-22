@@ -9,6 +9,28 @@ require_login(['super admin']);
 
 header('Content-Type: application/json; charset=utf-8');
 
+function normalize_search_keyword(string $value): string
+{
+    $trimmedValue = trim($value);
+
+    if ($trimmedValue === '') {
+        return '';
+    }
+
+    return function_exists('mb_strtolower')
+        ? mb_strtolower($trimmedValue, 'UTF-8')
+        : strtolower($trimmedValue);
+}
+
+function escape_like_pattern(string $value): string
+{
+    return str_replace(
+        ['\\', '%', '_'],
+        ['\\\\', '\\%', '\\_'],
+        $value
+    );
+}
+
 $role = strtolower(trim((string) ($_GET['role'] ?? '')));
 $allowedRoles = ['admin', 'encoder'];
 $perPage = 10;
@@ -16,6 +38,8 @@ $page = (int) ($_GET['page'] ?? 1);
 if ($page < 1) {
     $page = 1;
 }
+$searchKeyword = normalize_search_keyword((string) ($_GET['search'] ?? ''));
+$searchPattern = '%' . escape_like_pattern($searchKeyword) . '%';
 
 if (!in_array($role, $allowedRoles, true)) {
     http_response_code(400);
@@ -51,12 +75,22 @@ try {
         throw new RuntimeException('Missing users column: ' . $assignmentColumn);
     }
 
-    $countStatement = $connection->prepare('SELECT COUNT(*) AS total_users FROM users WHERE LOWER(role) = ?');
+    $countQuery = 'SELECT COUNT(*) AS total_users FROM users WHERE LOWER(role) = ?';
+    if ($searchKeyword !== '') {
+        $countQuery .= " AND LOWER(COALESCE(full_name, '')) LIKE ? ESCAPE '\\\\'";
+    }
+
+    $countStatement = $connection->prepare($countQuery);
     if (!$countStatement) {
         throw new RuntimeException('Could not prepare users count query.');
     }
 
-    $countStatement->bind_param('s', $role);
+    if ($searchKeyword !== '') {
+        $countStatement->bind_param('ss', $role, $searchPattern);
+    } else {
+        $countStatement->bind_param('s', $role);
+    }
+
     $countStatement->execute();
     $countResult = $countStatement->get_result();
     $countRow = $countResult ? $countResult->fetch_assoc() : null;
@@ -70,15 +104,24 @@ try {
 
     $offset = ($page - 1) * $perPage;
 
-    $statement = $connection->prepare(
-        "SELECT full_name, username, email, role, {$assignmentColumn} AS assignment, age, phone_number, gender, statuz FROM users WHERE LOWER(role) = ? ORDER BY full_name ASC LIMIT ? OFFSET ?"
-    );
+    $query = "SELECT full_name, username, email, role, {$assignmentColumn} AS assignment, age, phone_number, gender, statuz FROM users WHERE LOWER(role) = ?";
+    if ($searchKeyword !== '') {
+        $query .= " AND LOWER(COALESCE(full_name, '')) LIKE ? ESCAPE '\\\\'";
+    }
+    $query .= ' ORDER BY full_name ASC LIMIT ? OFFSET ?';
+
+    $statement = $connection->prepare($query);
 
     if (!$statement) {
         throw new RuntimeException('Could not prepare users query.');
     }
 
-    $statement->bind_param('sii', $role, $perPage, $offset);
+    if ($searchKeyword !== '') {
+        $statement->bind_param('ssii', $role, $searchPattern, $perPage, $offset);
+    } else {
+        $statement->bind_param('sii', $role, $perPage, $offset);
+    }
+
     $statement->execute();
     $result = $statement->get_result();
 

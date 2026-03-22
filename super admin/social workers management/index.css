@@ -381,7 +381,7 @@ button:hover {
 .user-controls {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     gap: 12px;
     background: #f4f4f4;
     border-radius: 12px;
@@ -410,8 +410,20 @@ button:hover {
 
 .right-controls {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 14px;
+}
+
+.search-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.search-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
 }
 
 .search-input {
@@ -421,6 +433,12 @@ button:hover {
     border-radius: 9px;
     background: #f3f3f3;
     padding: 0 12px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #009419;
+    box-shadow: 0 0 0 3px rgba(0, 148, 25, 0.12);
 }
 
 .control-button {
