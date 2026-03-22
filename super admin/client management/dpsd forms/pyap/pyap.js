@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveMembershipBtn = document.getElementById('saveMembershipBtn');
     const familyToggle = document.getElementById('family-modal-toggle');
     const membershipToggle = document.getElementById('membership-modal-toggle');
+    const submitButton = pyapForm.querySelector('.submit-btn-main');
+    const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
     if (!pyapForm || !familyTableBody || !membershipTableBody || !familyInput || !membershipInput) {
         return;
@@ -78,6 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const familyCompositions = [];
     const memberships = [];
+    let originalRecordSnapshot = null;
+    let recordControls = null;
 
     function renderFamilyRows() {
         if (!familyCompositions.length) {
@@ -126,6 +130,91 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateJsonInputs() {
         familyInput.value = JSON.stringify(familyCompositions);
         membershipInput.value = JSON.stringify(memberships);
+    }
+
+    function setCheckboxGroupValues(name, values) {
+        const selectedValues = new Set((values || []).map((value) => String(value).trim().toLowerCase()));
+        pyapForm.querySelectorAll(`input[name="${name}"]`).forEach((checkbox) => {
+            checkbox.checked = selectedValues.has(String(checkbox.value).trim().toLowerCase());
+        });
+    }
+
+    function setRadioOrCheckboxValue(name, value) {
+        pyapForm.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+            input.checked = String(input.value).trim().toLowerCase() === String(value ?? '').trim().toLowerCase();
+        });
+    }
+
+    function populatePyapForm(record, related = {}) {
+        pyapForm.querySelectorAll('input[name]:not([type="checkbox"]):not([type="radio"]), select[name], textarea[name]').forEach((field) => {
+            const value = record?.[field.name] ?? '';
+            field.value = value;
+        });
+
+        setCheckboxGroupValues('assistance_received[]', String(record?.assistance_received || '').split(','));
+        setCheckboxGroupValues('intervention_needed[]', String(record?.intervention_needed || '').split(','));
+
+        familyCompositions.length = 0;
+        memberships.length = 0;
+
+        (related.family_composition || []).forEach((row) => familyCompositions.push({ ...row }));
+        (related.memberships || []).forEach((row) => memberships.push({ ...row }));
+
+        updateJsonInputs();
+        renderFamilyRows();
+        renderMembershipRows();
+        setMessage('');
+    }
+
+    function setEditMode(isEditable) {
+        window.clientRecordMode?.toggleContainerEditState(pyapForm, isEditable, [
+            '#saveFamilyBtn',
+            '#saveMembershipBtn',
+            '#family-modal-toggle',
+            '#membership-modal-toggle'
+        ]);
+
+        if (saveFamilyBtn) {
+            saveFamilyBtn.disabled = !isEditable;
+        }
+
+        if (saveMembershipBtn) {
+            saveMembershipBtn.disabled = !isEditable;
+        }
+    }
+
+    async function loadRecordForViewMode() {
+        if (!recordId) {
+            return;
+        }
+
+        setMessage('Loading record...');
+
+        try {
+            const response = await fetch(`../../get_client_record.php?program=pyap&id=${encodeURIComponent(String(recordId))}`);
+            const payload = await response.json();
+
+            if (!response.ok || !payload.success) {
+                throw new Error(payload.message || 'Unable to load PYAP record.');
+            }
+
+            originalRecordSnapshot = payload;
+            populatePyapForm(payload.record, payload.related || {});
+            setEditMode(false);
+
+            recordControls = window.clientRecordMode?.mountControls({
+                anchor: document.querySelector('.form-page'),
+                submitButton,
+                onEnableEdit: () => setEditMode(true),
+                onCancelEdit: () => {
+                    populatePyapForm(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                    setEditMode(false);
+                },
+                onSaveStateChange: () => {}
+            }) || null;
+        } catch (error) {
+            setMessage(error.message, 'error-message');
+        }
     }
 
     function validateFieldGroup(fields, allowAllEmpty = false) {
@@ -257,6 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setMessage('Submitting...');
 
         const formData = new FormData(pyapForm);
+        if (recordId) {
+            formData.append('record_id', String(recordId));
+        }
 
         try {
             const response = await fetch('pyap_submit.php', {
@@ -272,13 +364,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error((result && result.message) || 'Failed to save PYAP record.');
             }
 
-            setMessage('PYAP record saved successfully.', 'success-message');
-            pyapForm.reset();
-            familyCompositions.length = 0;
-            memberships.length = 0;
-            updateJsonInputs();
-            renderFamilyRows();
-            renderMembershipRows();
+            setMessage(recordId ? 'PYAP record updated successfully.' : 'PYAP record saved successfully.', 'success-message');
+
+            if (recordId) {
+                originalRecordSnapshot = {
+                    record: Object.fromEntries(formData.entries()),
+                    related: {
+                        family_composition: familyCompositions.map((row) => ({ ...row })),
+                        memberships: memberships.map((row) => ({ ...row }))
+                    }
+                };
+                setEditMode(false);
+                recordControls?.setEditing(false);
+            } else {
+                pyapForm.reset();
+                familyCompositions.length = 0;
+                memberships.length = 0;
+                updateJsonInputs();
+                renderFamilyRows();
+                renderMembershipRows();
+            }
         } catch (error) {
             setMessage(error.message, 'error-message');
         }
@@ -287,4 +392,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updateJsonInputs();
     renderFamilyRows();
     renderMembershipRows();
+    loadRecordForViewMode();
 });

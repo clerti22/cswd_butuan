@@ -134,57 +134,9 @@ if ($connection->connect_error) {
 }
 
 $connection->begin_transaction();
+$recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 try {
-    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM pyap_table');
-    if (!$rowCountResult) {
-        throw new Exception('Failed to get existing PYAP row count.');
-    }
-
-    $rowCountData = $rowCountResult->fetch_assoc();
-    $rowCountResult->free();
-
-    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
-    $currentYear = date('Y');
-    $currentMonth = date('m');
-    $sequelNumber = $rowCount;
-
-    do {
-        $controlNumber = sprintf('CSWD-PYAP-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
-        $controlCheck = $connection->prepare('SELECT 1 FROM pyap_table WHERE control_number = ? LIMIT 1');
-        if (!$controlCheck) {
-            throw new Exception('Failed to prepare control number uniqueness check.');
-        }
-
-        $controlCheck->bind_param('s', $controlNumber);
-        if (!$controlCheck->execute()) {
-            $controlCheck->close();
-            throw new Exception('Failed to check control number uniqueness.');
-        }
-
-        $controlCheck->store_result();
-        $controlExists = $controlCheck->num_rows > 0;
-        $controlCheck->close();
-
-        if ($controlExists) {
-            $sequelNumber++;
-        }
-    } while ($controlExists);
-
-    $insertPyap = $connection->prepare(
-        'INSERT INTO pyap_table (
-            control_number, first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,program,division,
-            address, barangay,religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
-            occupation, civil_status, contact_number, school_last_attended, school_last_attended_month_year,
-            trainings_attended, skills_interest_hobbies, assistance_received, assistance_specify,
-            intervention_needed, intervention_specify,served_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    );
-
-    if (!$insertPyap) {
-        throw new Exception('Failed to prepare PYAP insert statement.');
-    }
-
     $firstName = trim((string) $_POST['first_name']);
     $middleName = trim((string) ($_POST['middle_name'] ?? ''));
     $lastName = trim((string) $_POST['last_name']);
@@ -216,46 +168,167 @@ try {
     $interventionSpecify = trim((string) $_POST['intervention_specify']);
     $served = $fullname;
 
-    $insertPyap->bind_param(
-        'ssssssssissssssssssssssssssssss',
-        $controlNumber,
-        $firstName,
-        $middleName,
-        $lastName,
-        $suffix,
-        $dateOfBirth,
-        $placeOfBirth,
-        $nationality,
-        $age,
-        $program,
-        $division,
-        $address,
-        $brgy,
-        $religion,
-        $sex,
-        $inSchoolYouth,
-        $outOfSchoolYouth,
-        $otherDisadvantageYouth,
-        $ips,
-        $occupation,
-        $civilStatus,
-        $contactNumber,
-        $schoolLastAttended,
-        $schoolLastAttendedMonthYear,
-        $trainingsAttended,
-        $skillsInterestHobbies,
-        $assistanceReceived,
-        $assistanceSpecify,
-        $interventionNeeded,
-        $interventionSpecify,
-        $fullname
-    );
+    if ($recordId !== false && $recordId !== null) {
+        $updatePyap = $connection->prepare(
+            'UPDATE pyap_table SET
+                first_name = ?, middle_name = ?, last_name = ?, suffix = ?, income_data = ?, place_of_birth = ?, nationality = ?, age = ?,
+                program = ?, division = ?, address = ?, barangay = ?, religion = ?, sex = ?, in_school_youth = ?, out_of_school_youth = ?,
+                other_disadvantage_youth = ?, ips = ?, occupation = ?, civil_status = ?, contact_number = ?, school_last_attended = ?,
+                school_last_attended_month_year = ?, trainings_attended = ?, skills_interest_hobbies = ?, assistance_received = ?,
+                assistance_specify = ?, intervention_needed = ?, intervention_specify = ?, served_by = ?
+             WHERE key_id = ?'
+        );
 
-    if (!$insertPyap->execute()) {
-        throw new Exception('Failed to insert PYAP record: ' . $insertPyap->error);
+        if (!$updatePyap) {
+            throw new Exception('Failed to prepare PYAP update statement.');
+        }
+
+        $updatePyap->bind_param(
+            'sssssssissssssssssssssssssssssi',
+            $firstName,
+            $middleName,
+            $lastName,
+            $suffix,
+            $dateOfBirth,
+            $placeOfBirth,
+            $nationality,
+            $age,
+            $program,
+            $division,
+            $address,
+            $brgy,
+            $religion,
+            $sex,
+            $inSchoolYouth,
+            $outOfSchoolYouth,
+            $otherDisadvantageYouth,
+            $ips,
+            $occupation,
+            $civilStatus,
+            $contactNumber,
+            $schoolLastAttended,
+            $schoolLastAttendedMonthYear,
+            $trainingsAttended,
+            $skillsInterestHobbies,
+            $assistanceReceived,
+            $assistanceSpecify,
+            $interventionNeeded,
+            $interventionSpecify,
+            $served,
+            $recordId
+        );
+
+        if (!$updatePyap->execute()) {
+            throw new Exception('Failed to update PYAP record: ' . $updatePyap->error);
+        }
+
+        $updatePyap->close();
+        $pyapId = $recordId;
+
+        foreach (['pyap_family_composition_table', 'pyap_membership_table'] as $tableName) {
+            $deleteStatement = $connection->prepare(sprintf('DELETE FROM %s WHERE pyap_id = ?', $tableName));
+            if (!$deleteStatement) {
+                throw new Exception('Failed to prepare PYAP related delete statement.');
+            }
+
+            $deleteStatement->bind_param('i', $pyapId);
+            if (!$deleteStatement->execute()) {
+                throw new Exception('Failed to delete existing PYAP related records.');
+            }
+            $deleteStatement->close();
+        }
+    } else {
+        $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM pyap_table');
+        if (!$rowCountResult) {
+            throw new Exception('Failed to get existing PYAP row count.');
+        }
+
+        $rowCountData = $rowCountResult->fetch_assoc();
+        $rowCountResult->free();
+
+        $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        $sequelNumber = $rowCount;
+
+        do {
+            $controlNumber = sprintf('CSWD-PYAP-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+            $controlCheck = $connection->prepare('SELECT 1 FROM pyap_table WHERE control_number = ? LIMIT 1');
+            if (!$controlCheck) {
+                throw new Exception('Failed to prepare control number uniqueness check.');
+            }
+
+            $controlCheck->bind_param('s', $controlNumber);
+            if (!$controlCheck->execute()) {
+                $controlCheck->close();
+                throw new Exception('Failed to check control number uniqueness.');
+            }
+
+            $controlCheck->store_result();
+            $controlExists = $controlCheck->num_rows > 0;
+            $controlCheck->close();
+
+            if ($controlExists) {
+                $sequelNumber++;
+            }
+        } while ($controlExists);
+
+        $insertPyap = $connection->prepare(
+            'INSERT INTO pyap_table (
+                control_number, first_name, middle_name, last_name, suffix, income_data, place_of_birth, nationality, age,program,division,
+                address, barangay,religion, sex, in_school_youth, out_of_school_youth, other_disadvantage_youth, ips,
+                occupation, civil_status, contact_number, school_last_attended, school_last_attended_month_year,
+                trainings_attended, skills_interest_hobbies, assistance_received, assistance_specify,
+                intervention_needed, intervention_specify,served_by
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        );
+
+        if (!$insertPyap) {
+            throw new Exception('Failed to prepare PYAP insert statement.');
+        }
+
+        $insertPyap->bind_param(
+            'ssssssssissssssssssssssssssssss',
+            $controlNumber,
+            $firstName,
+            $middleName,
+            $lastName,
+            $suffix,
+            $dateOfBirth,
+            $placeOfBirth,
+            $nationality,
+            $age,
+            $program,
+            $division,
+            $address,
+            $brgy,
+            $religion,
+            $sex,
+            $inSchoolYouth,
+            $outOfSchoolYouth,
+            $otherDisadvantageYouth,
+            $ips,
+            $occupation,
+            $civilStatus,
+            $contactNumber,
+            $schoolLastAttended,
+            $schoolLastAttendedMonthYear,
+            $trainingsAttended,
+            $skillsInterestHobbies,
+            $assistanceReceived,
+            $assistanceSpecify,
+            $interventionNeeded,
+            $interventionSpecify,
+            $fullname
+        );
+
+        if (!$insertPyap->execute()) {
+            throw new Exception('Failed to insert PYAP record: ' . $insertPyap->error);
+        }
+
+        $pyapId = $connection->insert_id;
+        $insertPyap->close();
     }
-
-    $pyapId = $connection->insert_id;
 
     $insertFamily = $connection->prepare(
         'INSERT INTO pyap_family_composition_table (
@@ -323,7 +396,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'PYAP information saved successfully.',
+        'message' => $recordId ? 'PYAP information updated successfully.' : 'PYAP information saved successfully.',
         'pyap_id' => $pyapId
     ]);
 } catch (Exception $exception) {
