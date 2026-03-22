@@ -135,7 +135,7 @@ function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const showButton = showRoute === '#'
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
-        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
+        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Print</a>`;
 
     return `
         <tr>
