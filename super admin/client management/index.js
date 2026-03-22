@@ -118,6 +118,35 @@ function getShowRoute(client) {
 
     const sourceTable = String(client.source_table || '');
     const routesByTable = {
+        pwud_table: 'dpsd forms/pwud/index.php',
+        pyap_table: 'dpsd forms/pyap/index.php',
+        soloparent_info_table: 'dpsd forms/solo parent/index.php',
+        snr_table: 'pssd forms/senior citizen/index.php',
+        pwd_table: 'pssd forms/pwd/index.php',
+        car_table: 'rpsd forms/car/print_form.php',
+        cicl_table: 'rpsd forms/cicl/print_form.php',
+        ciu_table: 'rpsd forms/ciu/print_form.php',
+        csae_table: 'rpsd forms/csae/print_form.php',
+        vawc_table: 'rpsd forms/vawc/print_form.php'
+    };
+
+    const baseRoute = routesByTable[sourceTable];
+    if (!baseRoute) {
+        return '#';
+    }
+
+    return `${baseRoute}?id=${encodeURIComponent(String(keyId))}`;
+}
+
+function getPrintRoute(client) {
+    const keyId = Number(client.key_id);
+
+    if (!Number.isInteger(keyId) || keyId <= 0) {
+        return '#';
+    }
+
+    const sourceTable = String(client.source_table || '');
+    const routesByTable = {
         pwud_table: 'dpsd forms/pwud/print_form.php',
         pyap_table: 'dpsd forms/pyap/print_form.php',
         soloparent_info_table: 'dpsd forms/solo parent/print_form.php',
@@ -140,9 +169,13 @@ function getShowRoute(client) {
 
 function createClientRow(client) {
     const showRoute = getShowRoute(client);
+    const printRoute = getPrintRoute(client);
     const showButton = showRoute === '#'
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
-        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Print</a>`;
+        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
+    const printButton = printRoute === '#'
+        ? '<button class="btn btn-sm btn-print" type="button" disabled title="Print is not available for this record.">Print</button>'
+        : `<a class="btn btn-sm btn-print" href="${escapeHtml(printRoute)}">Print</a>`;
 
     return `
         <tr>
@@ -157,7 +190,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.created_at)}</td>
             <td>
                 ${showButton}
-                <button class="btn btn-sm" type="button">Show</button>
+                ${printButton}
             </td>
         </tr>
     `;
