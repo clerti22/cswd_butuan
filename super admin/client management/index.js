@@ -157,7 +157,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.created_at)}</td>
             <td>
                 ${showButton}
-                <button class="btn btn-sm" type="button">Edit</button>
+                <button class="btn btn-sm" type="button">Show</button>
             </td>
         </tr>
     `;
