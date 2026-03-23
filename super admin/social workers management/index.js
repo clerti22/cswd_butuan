@@ -22,8 +22,7 @@ closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
 document.querySelectorAll('.nav-item').forEach((item) => {
-    item.addEventListener('click', (event) => {
-        event.preventDefault();
+    item.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
             closeSidebar();
         }

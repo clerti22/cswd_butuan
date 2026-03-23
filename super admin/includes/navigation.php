@@ -100,7 +100,7 @@ HTML,
                 ? ' style="color: #fff; background-color: rgba(255, 255, 255, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);" aria-current="page"'
                 : '';
             ?>
-            <a href="<?= htmlspecialchars(super_admin_sidebar_path($basePrefixToSuperAdmin, $item['href']), ENT_QUOTES, 'UTF-8') ?>" class="<?= $itemClasses ?>"<?= $activeAttributes ?>>
+            <a href="<?= htmlspecialchars(super_admin_sidebar_path($basePrefixToSuperAdmin, $item['href']), ENT_QUOTES, 'UTF-8') ?>" onclick="window.location.href=this.getAttribute('href'); return false;" class="<?= $itemClasses ?>"<?= $activeAttributes ?>>
                 <?= $item['icon'] ?>
                 <span class="nav-text"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
             </a>
