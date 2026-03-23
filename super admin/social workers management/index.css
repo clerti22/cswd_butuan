@@ -617,7 +617,7 @@ button:hover {
 
 .custom-modal-content {
     width: min(760px, 100%);
-    background: #d9d9d9;
+    background: #ffffff;
     border-radius: 12px;
     padding: 18px 30px 26px;
 }
