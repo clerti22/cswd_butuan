@@ -61,7 +61,7 @@ try {
     }
 
     $updateStatement = $connection->prepare(
-        'UPDATE users SET full_name = ?, username = ?, email_address = ?, age = ?, gender = ?, phone_number = ? WHERE username = ? LIMIT 1'
+        'UPDATE users SET full_name = ?, username = ?, email = ?, age = ?, gender = ?, phone_number = ? WHERE username = ? LIMIT 1'
     );
 
     if ($updateStatement === false) {

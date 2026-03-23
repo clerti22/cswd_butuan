@@ -263,7 +263,7 @@ body {
 }
 
 .action-button.primary {
-    background: linear-gradient(135deg, #0077B6, #023E8A);
+    background-color: rgb(235, 199, 0);
     color: #fff;
 }
 
