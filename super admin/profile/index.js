@@ -19,26 +19,19 @@ openBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
-const logoutLink = document.getElementById('logoutLink');
+const logoutLink = document.getElementById('logoutTrigger');
 
 if (logoutLink) {
     logoutLink.addEventListener('click', (e) => {
         e.preventDefault();
         closeSidebar();
-        window.location.href = '/auth/logout.php';
+        window.location.href = logoutLink.getAttribute('href') || '../auth/logout.php';
     });
 }
 
-// Close sidebar when clicking placeholder nav items on mobile
-document.querySelectorAll('.nav-item:not(#logoutLink)').forEach(item => {
-    item.addEventListener('click', (e) => {
-        const hrefValue = item.getAttribute('href') || '';
-        const isPlaceholderLink = hrefValue === '#' || hrefValue.trim() === '';
-
-        if (isPlaceholderLink) {
-            e.preventDefault();
-        }
-
+// Close sidebar when clicking nav items on mobile
+document.querySelectorAll('.nav-item:not(#logoutTrigger)').forEach(item => {
+    item.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
