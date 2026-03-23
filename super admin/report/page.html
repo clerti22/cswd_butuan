@@ -16,7 +16,117 @@
 
     <div class="container">
         <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
+        <style>
+    .logout-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(7, 7, 12, 0.72);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        z-index: 1200;
+    }
+
+    .logout-modal-backdrop.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .logout-modal {
+        width: min(100%, 420px);
+        background: #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 28px;
+        padding: 2rem 1.75rem 1.5rem;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.38);
+        text-align: center;
+        color: #111827;
+    }
+
+    .logout-modal__icon-wrap {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 1.5rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(250, 204, 21, 0.42);
+        background: radial-gradient(circle at center, rgba(250, 204, 21, 0.22), rgba(250, 204, 21, 0.08));
+        box-shadow: inset 0 0 18px rgba(250, 204, 21, 0.08);
+    }
+
+    .logout-modal__icon {
+        font-size: 1.8rem;
+        color: #facc15;
+        line-height: 1;
+    }
+
+    .logout-modal__title {
+        margin: 0;
+        font-size: clamp(1.5rem, 3vw, 1.9rem);
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .logout-modal__subtitle {
+        margin: 0.75rem 0 0;
+        font-size: 1rem;
+        color: #6b7280;
+    }
+
+    .logout-modal__actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+        margin-top: 2rem;
+    }
+
+    .logout-modal__button {
+        border: 0;
+        border-radius: 14px;
+        padding: 0.95rem 1rem;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .logout-modal__button:hover {
+        transform: translateY(-1px);
+    }
+
+    .logout-modal__button--cancel {
+        background: #f3f4f6;
+        color: #374151;
+        box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+    }
+
+    .logout-modal__button--confirm {
+        background: linear-gradient(135deg, #ff5a54 0%, #ef4444 100%);
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(239, 68, 68, 0.28);
+    }
+
+    @media (max-width: 480px) {
+        .logout-modal {
+            border-radius: 24px;
+            padding: 1.75rem 1.15rem 1.15rem;
+        }
+
+        .logout-modal__actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <img src="../images-logo/cswd-logo.png" alt="" width="130" height="110">
         <p class="sidebar-title">CCIMS Dashboard</p>
@@ -73,106 +183,16 @@
         </a>
     </div>
 </nav>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="topbar">
-                <button class="menu-btn" id="openSidebar">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-                <h3 class="topbar-title" style="font-weight: bold;">Report</h3>
-            </header>
-
-            <main class="form-page">
-                <section class="report-cards" aria-label="Report summary cards">
-                    <article class="report-card card-total">
-                        <p class="card-label">Total Served Clients</p>
-                        <div class="card-content">
-                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
-                            <h4 class="card-value" id="totalClientsValue">0</h4>
-                        </div>
-                    </article>
-
-                    <article class="report-card card-week">
-                        <p class="card-label">Total Served This Week</p>
-                        <div class="card-content">
-                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
-                            <h4 class="card-value" id="servedThisWeekValue">0</h4>
-                        </div>
-                    </article>
-
-                    <article class="report-card card-month">
-                        <p class="card-label">Total Served Clients This Month</p>
-                        <div class="card-content">
-                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
-                            <h4 class="card-value" id="servedThisMonthValue">0</h4>
-                        </div>
-                    </article>
-
-                    <article class="report-card card-day">
-                        <p class="card-label">Total Served Clients this Day</p>
-                        <div class="card-content">
-                            <i class="bi bi-people card-icon" aria-hidden="true"></i>
-                            <h4 class="card-value" id="servedTodayValue">0</h4>
-                        </div>
-                    </article>
-                </section>
-
-                <section class="weekly-chart-section" aria-label="Weekly division registration chart">
-                    <article class="chart-card chart-card-large">
-                        <div class="chart-head-row">
-                            <h3 class="chart-title" id="weeklyChartTitle">Weekly Client Registration</h3>
-                            <button class="btn-filter-chart" id="toggleFilterBtn" type="button">Filter</button>
-                        </div>
-
-                        <div class="filter-panel" id="chartFilterPanel" aria-label="Chart filters" hidden>
-                            <label class="filter-field">View
-                                <select id="periodFilter">
-                                    <option value="week" selected>Week</option>
-                                    <option value="month">Month</option>
-                                    <option value="year">Year</option>
-                                </select>
-                            </label>
-                            <label class="filter-field">Reference
-                                <input id="referenceFilter" type="date">
-                            </label>
-                            <label class="filter-field">Division
-                                <select id="divisionFilter">
-                                    <option value="all" selected>All Divisions</option>
-                                    <option value="DPSD">DPSD</option>
-                                    <option value="PSSD">PSSD</option>
-                                    <option value="RPSD">RPSD</option>
-                                </select>
-                            </label>
-                            <button class="btn-apply-filter" id="applyFilterBtn" type="button">Apply</button>
-                        </div>
-
-                        <div id="weeklyLineChartContainer" class="canvas-chart" aria-label="Weekly division registration line chart"></div>
-                    </article>
-                </section>
-
-                <section class="charts-grid" aria-label="Client analytics charts">
-                    <article class="chart-card chart-card-large">
-                        <div class="chart-tabs" role="tablist" aria-label="Chart data views">
-                            <button class="chart-tab active" type="button" role="tab" aria-selected="true"
-                                data-served-tab="barangay">Per barangay</button>
-                            <button class="chart-tab" type="button" role="tab" aria-selected="false"
-                                data-served-tab="program">Per Program</button>
-                        </div>
-                        <h3 class="chart-title" id="servedChartTitle">Total Served Clients per Barangay Chart</h3>
-                        <div id="servedMainChartContainer" class="canvas-chart" aria-label="Total served clients chart"></div>
-                    </article>
-
-                    <article class="chart-card">
-                        <h3 class="chart-title">Total Served Clients by Gender</h3>
-                        <div id="genderChartContainer" class="canvas-chart" aria-label="Gender chart"></div>
-                    </article>
-                </section>
-            </main>
+<div class="logout-modal-backdrop" id="logoutModal" aria-hidden="true">
+    <div class="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle" aria-describedby="logoutModalDescription">
+        <div class="logout-modal__icon-wrap" aria-hidden="true">
+            <i class="bi bi-exclamation-triangle-fill logout-modal__icon"></i>
+        </div>
+        <h2 class="logout-modal__title" id="logoutModalTitle">Logout Confirmation</h2>
+        <p class="logout-modal__subtitle" id="logoutModalDescription">You will be logged out of the system.</p>
+        <div class="logout-modal__actions">
+            <button class="logout-modal__button logout-modal__button--cancel" id="cancelLogoutButton" type="button">Cancel</button>
+            <button class="logout-modal__button logout-modal__button--confirm" id="confirmLogoutButton" type="button">Yes, logout</button>
         </div>
     </div>
 </div>
