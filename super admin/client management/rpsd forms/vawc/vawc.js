@@ -45,9 +45,13 @@ const closeTreatmentModalBtn = document.getElementById('closeTreatmentModal');
 const treatmentForm = document.getElementById('treatmentForm');
 const treatmentTableBody = document.querySelector('.treatment-table__body');
 const submitButton = document.querySelector('.form-submit-btn');
+const recordId = window.clientRecordMode?.getRecordId() ?? null;
+const formPage = document.querySelector('.form-page');
 
 const familyMembers = [];
 const treatmentPlans = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 function toggleModal(modal, isOpen) {
     if (!modal) {
@@ -99,6 +103,157 @@ function resetTableBody(tableBody, rowClass, columnCount) {
 
     const emptyCells = Array.from({ length: columnCount }, () => '<span></span>').join('');
     tableBody.innerHTML = `<div class="${rowClass} ${rowClass}--empty">${emptyCells}</div>`;
+}
+
+function setRadioValue(name, value) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+        input.checked = input.value === String(value ?? '');
+    });
+}
+
+function renderFamilyRows() {
+    resetTableBody(familyTableBody, 'family-table__row', 6);
+
+    if (!familyMembers.length || !familyTableBody) {
+        return;
+    }
+
+    familyTableBody.innerHTML = '';
+    familyMembers.forEach((member) => {
+        const row = document.createElement('div');
+        row.className = 'family-table__row';
+        [member.name, member.age, member.relationship, member.education, member.occupation, member.income].forEach((value) => {
+            const cell = document.createElement('span');
+            cell.textContent = value ?? '';
+            row.appendChild(cell);
+        });
+        familyTableBody.appendChild(row);
+    });
+}
+
+function renderTreatmentRows() {
+    resetTableBody(treatmentTableBody, 'treatment-table__row', 5);
+
+    if (!treatmentPlans.length || !treatmentTableBody) {
+        return;
+    }
+
+    treatmentTableBody.innerHTML = '';
+    treatmentPlans.forEach((plan) => {
+        const row = document.createElement('div');
+        row.className = 'treatment-table__row';
+        [plan.objectives, plan.activities, plan.responsible, plan.resources, plan.output].forEach((value) => {
+            const cell = document.createElement('span');
+            cell.textContent = value ?? '';
+            row.appendChild(cell);
+        });
+        treatmentTableBody.appendChild(row);
+    });
+}
+
+function populateRecord(record, related = {}) {
+    const fieldMappings = {
+        'first-name': 'first_name',
+        'middle-name': 'middle_name',
+        'last-name': 'last_name',
+        suffix: 'suffix',
+        'birth-place': 'birth_place',
+        'birth-date': 'birth_date',
+        age: 'age',
+        education: 'education',
+        religion: 'religion',
+        address: 'address',
+        barangay: 'barangay',
+        occupation: 'occupation',
+        income: 'monthly_income',
+        contact: 'contact_number',
+        'civil-status': 'civil_status',
+        'family-environment': 'family_environment',
+        community: 'community',
+        'family-history': 'family_history'
+    };
+
+    Object.entries(fieldMappings).forEach(([fieldId, recordKey]) => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = record?.[recordKey] ?? '';
+        }
+    });
+
+    document.querySelector('textarea[name="presenting-problem"]').value = record?.presenting_problem ?? '';
+    document.querySelector('textarea[name="recommendation"]').value = record?.recommendation ?? '';
+
+    setRadioValue('4ps', record?.is_4ps ?? '');
+    setRadioValue('uct', record?.is_uct ?? '');
+    setRadioValue('nhts', record?.is_nhts ?? '');
+
+    familyMembers.length = 0;
+    (related.family_information || []).forEach((member) => familyMembers.push({ ...member }));
+    renderFamilyRows();
+
+    treatmentPlans.length = 0;
+    (related.initial_treatment_plan || []).forEach((plan) => treatmentPlans.push({ ...plan }));
+    renderTreatmentRows();
+}
+
+function setEditMode(isEditable) {
+    if (formPage) {
+        window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
+    }
+
+    [openFamilyModalBtn, closeFamilyModalBtn, openTreatmentModalBtn, closeTreatmentModalBtn].forEach((button) => {
+        if (button) {
+            button.disabled = !isEditable;
+        }
+    });
+
+    familyForm?.querySelectorAll('button').forEach((button) => {
+        button.disabled = !isEditable;
+    });
+    treatmentForm?.querySelectorAll('button').forEach((button) => {
+        button.disabled = !isEditable;
+    });
+
+    if (submitButton && recordId) {
+        submitButton.disabled = !isEditable;
+    }
+
+    if (!isEditable) {
+        toggleModal(familyModal, false);
+        toggleModal(treatmentModal, false);
+    }
+}
+
+async function loadRecordForViewMode() {
+    if (!recordId) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`../../get_client_record.php?program=vawc&id=${encodeURIComponent(String(recordId))}`);
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load VAWC record.');
+        }
+
+        originalRecordSnapshot = payload;
+        populateRecord(payload.record, payload.related || {});
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton,
+            onEnableEdit: () => setEditMode(true),
+            onCancelEdit: () => {
+                populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+            },
+            onSaveStateChange: () => {}
+        }) || null;
+    } catch (error) {
+        showMessage(error.message);
+    }
 }
 
 function validateMainForm() {
@@ -299,6 +454,9 @@ submitButton?.addEventListener('click', async () => {
     submitButton.disabled = true;
 
     const formData = new FormData();
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
     formData.append('first_name', getFieldValue('first-name'));
     formData.append('middle_name', getFieldValue('middle-name'));
     formData.append('last_name', getFieldValue('last-name'));
@@ -343,7 +501,13 @@ submitButton?.addEventListener('click', async () => {
             throw new Error((result && result.message) || 'Failed to save VAWC record.');
         }
 
-        showMessage('VAWC record saved successfully.');
+        showMessage(recordId ? 'VAWC record updated successfully.' : 'VAWC record saved successfully.');
+
+        if (recordId) {
+            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            return;
+        }
+
         resetMainForm();
     } catch (error) {
         showMessage(error.message);
@@ -351,3 +515,5 @@ submitButton?.addEventListener('click', async () => {
         submitButton.disabled = false;
     }
 });
+
+loadRecordForViewMode();

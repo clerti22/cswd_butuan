@@ -42,37 +42,47 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$requiredFields = [
-    'first_name',
-    'last_name',
-    'sex',
-    'birth_date',
-    'age',
-    'birth_place',
-    'present_address',
-    'permanent_address',
-    'barangay',
-    'education',
-    'school_last_attended',
-    'school_address',
-    'contact_number',
-    'is_4ps',
-    'philhealth',
-    'offense_type',
-    'incident_date',
-    'perpetrator_name',
-    'referral_date',
-    'referring_party',
-    'case_status',
-    'criminal_case_no',
-    'info_source',
-    'complainant',
-    'presenting_problem',
-    'background_child',
-    'background_family',
-    'background_community'
-];
+function bind_all_params(mysqli_stmt $statement, array $params): void
+{
+    if (count($params) === 0) {
+        return;
+    }
 
+    $types = str_repeat('s', count($params));
+    $references = [$types];
+
+    foreach ($params as $index => $value) {
+        $references[] = &$params[$index];
+    }
+
+    call_user_func_array([$statement, 'bind_param'], $references);
+}
+
+function execute_statement(mysqli $connection, string $query, array $params = []): mysqli_stmt
+{
+    $statement = $connection->prepare($query);
+    if (!$statement) {
+        throw new Exception('Failed to prepare statement.');
+    }
+
+    bind_all_params($statement, $params);
+
+    if (!$statement->execute()) {
+        $message = $statement->error;
+        $statement->close();
+        throw new Exception($message !== '' ? $message : 'Failed to execute statement.');
+    }
+
+    return $statement;
+}
+
+
+$requiredFields = [
+    'first_name', 'last_name', 'sex', 'birth_date', 'age', 'birth_place', 'present_address', 'permanent_address', 'barangay',
+    'education', 'school_last_attended', 'school_address', 'contact_number', 'is_4ps', 'philhealth', 'offense_type', 'incident_date',
+    'perpetrator_name', 'referral_date', 'referring_party', 'case_status', 'criminal_case_no', 'info_source', 'complainant',
+    'presenting_problem', 'background_child', 'background_family', 'background_community'
+];
 foreach ($requiredFields as $field) {
     if (!isset($_POST[$field]) || trim((string) $_POST[$field]) === '') {
         http_response_code(422);
@@ -83,22 +93,18 @@ foreach ($requiredFields as $field) {
 
 $familyPayload = trim((string) ($_POST['family_information'] ?? ''));
 $familyMembers = json_decode($familyPayload, true);
-
 if (!is_array($familyMembers) || count($familyMembers) === 0) {
     http_response_code(422);
     echo json_encode(['success' => false, 'message' => 'Please add at least one family information entry.']);
     exit;
 }
-
-$familyRequired = ['name', 'age', 'relationship', 'education', 'occupation', 'income'];
 foreach ($familyMembers as $member) {
     if (!is_array($member)) {
         http_response_code(422);
         echo json_encode(['success' => false, 'message' => 'Invalid family entry format.']);
         exit;
     }
-
-    foreach ($familyRequired as $field) {
+    foreach (['name', 'age', 'relationship', 'education', 'occupation', 'income'] as $field) {
         if (!isset($member[$field]) || trim((string) $member[$field]) === '') {
             http_response_code(422);
             echo json_encode(['success' => false, 'message' => 'Incomplete family information entry found.']);
@@ -109,7 +115,6 @@ foreach ($familyMembers as $member) {
 
 $treatmentPayload = trim((string) ($_POST['treatment_plan'] ?? ''));
 $treatmentPlans = [];
-
 if ($treatmentPayload !== '') {
     $decodedTreatment = json_decode($treatmentPayload, true);
     if ($decodedTreatment === null && json_last_error() !== JSON_ERROR_NONE) {
@@ -117,7 +122,6 @@ if ($treatmentPayload !== '') {
         echo json_encode(['success' => false, 'message' => 'Invalid treatment plan payload.']);
         exit;
     }
-
     if (is_array($decodedTreatment)) {
         $treatmentPlans = $decodedTreatment;
     }
@@ -131,59 +135,9 @@ if ($connection->connect_error) {
 }
 
 $connection->begin_transaction();
+$recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 try {
-    $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM csae_table');
-    if (!$rowCountResult) {
-        throw new Exception('Failed to get existing CSAE row count.');
-    }
-
-    $rowCountData = $rowCountResult->fetch_assoc();
-    $rowCountResult->free();
-
-    $rowCount = (int) ($rowCountData['row_count'] ?? 0);
-    $currentYear = date('Y');
-    $currentMonth = date('m');
-    $sequelNumber = $rowCount;
-
-    do {
-        $controlNumber = sprintf('CSWD-CSAE-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
-        $controlCheck = $connection->prepare('SELECT 1 FROM csae_table WHERE control_number = ? LIMIT 1');
-        if (!$controlCheck) {
-            throw new Exception('Failed to prepare control number uniqueness check.');
-        }
-
-        $controlCheck->bind_param('s', $controlNumber);
-        if (!$controlCheck->execute()) {
-            $controlCheck->close();
-            throw new Exception('Failed to check control number uniqueness.');
-        }
-
-        $controlCheck->store_result();
-        $controlExists = $controlCheck->num_rows > 0;
-        $controlCheck->close();
-
-        if ($controlExists) {
-            $sequelNumber++;
-        }
-    } while ($controlExists);
-
-    $insertMain = $connection->prepare(
-        'INSERT INTO csae_table (
-            control_number, first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age,division,program, birth_place,
-            present_address, permanent_address, barangay, education, school_last_attended, school_address,
-            health_condition, contact_number, is_4ps, philhealth,
-            offense_type, incident_date, perpetrator_name, referral_date, referring_party,
-            case_status, criminal_case_no, info_source, complainant,
-            presenting_problem, background_child, background_family, background_community,
-            assessment, recommendation,served_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    );
-
-    if (!$insertMain) {
-        throw new Exception('Failed to prepare CSAE insert statement.');
-    }
-
     $firstName = trim((string) $_POST['first_name']);
     $middleName = trim((string) ($_POST['middle_name'] ?? ''));
     $lastName = trim((string) $_POST['last_name']);
@@ -191,9 +145,9 @@ try {
     $nickname = trim((string) ($_POST['nickname'] ?? ''));
     $sex = trim((string) $_POST['sex']);
     $birthDate = trim((string) $_POST['birth_date']);
-    $age = (int) $_POST['age'];
-    $division = "RPSD";
-    $program = "CSAE";
+    $age = trim((string) $_POST['age']);
+    $division = 'RPSD';
+    $program = 'CSAE';
     $birthPlace = trim((string) $_POST['birth_place']);
     $presentAddress = trim((string) $_POST['present_address']);
     $permanentAddress = trim((string) $_POST['permanent_address']);
@@ -221,143 +175,73 @@ try {
     $assessment = trim((string) ($_POST['assessment'] ?? ''));
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
     $served = $fullname;
-
-    $insertMain->bind_param(
-        'ssssssssisssssssssssssssssssssssssssss',
-        $controlNumber,
-        $firstName,
-        $middleName,
-        $lastName,
-        $suffix,
-        $nickname,
-        $sex,
-        $birthDate,
-        $age,
-        $division,
-        $program,
-        $birthPlace,
-        $presentAddress,
-        $permanentAddress,
-        $barangay,
-        $education,
-        $schoolLastAttended,
-        $schoolAddress,
-        $healthCondition,
-        $contactNumber,
-        $is4ps,
-        $philhealth,
-        $offenseType,
-        $incidentDate,
-        $perpetratorName,
-        $referralDate,
-        $referringParty,
-        $caseStatus,
-        $criminalCaseNo,
-        $infoSource,
-        $complainant,
-        $presentingProblem,
-        $backgroundChild,
-        $backgroundFamily,
-        $backgroundCommunity,
-        $assessment,
-        $recommendation,
-        $served
-    );
-
-    if (!$insertMain->execute()) {
-        throw new Exception('Unable to save CSAE record.');
-    }
-
-    $csaeId = $connection->insert_id;
     $familyForeignKey = resolve_foreign_key_column($connection, 'csae_family_information_table', ['case_id', 'csae_id']);
+    $treatmentForeignKey = resolve_foreign_key_column($connection, 'csae_treatment_plan_table', ['case_id', 'csae_id']);
 
-    $insertFamily = $connection->prepare(
-        sprintf(
-            'INSERT INTO csae_family_information_table (
-                %s, member_name, member_age, relationship, education_attainment, occupation, monthly_income
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            $familyForeignKey
-        )
-    );
+    if ($recordId !== false && $recordId !== null) {
+        execute_statement(
+            $connection,
+            'UPDATE `csae_table` SET
+                first_name = ?, middle_name = ?, last_name = ?, suffix = ?, nickname = ?, sex = ?, birth_date = ?, age = ?, division = ?, program = ?, birth_place = ?,
+                present_address = ?, permanent_address = ?, barangay = ?, education = ?, school_last_attended = ?, school_address = ?, health_condition = ?, contact_number = ?,
+                is_4ps = ?, philhealth = ?, offense_type = ?, incident_date = ?, perpetrator_name = ?, referral_date = ?, referring_party = ?, case_status = ?, criminal_case_no = ?,
+                info_source = ?, complainant = ?, presenting_problem = ?, background_child = ?, background_family = ?, background_community = ?, assessment = ?, recommendation = ?, served_by = ?
+             WHERE key_id = ?',
+            [$firstName, $middleName, $lastName, $suffix, $nickname, $sex, $birthDate, $age, $division, $program, $birthPlace, $presentAddress, $permanentAddress, $barangay, $education, $schoolLastAttended, $schoolAddress, $healthCondition, $contactNumber, $is4ps, $philhealth, $offenseType, $incidentDate, $perpetratorName, $referralDate, $referringParty, $caseStatus, $criminalCaseNo, $infoSource, $complainant, $presentingProblem, $backgroundChild, $backgroundFamily, $backgroundCommunity, $assessment, $recommendation, $served, (string) $recordId]
+        )->close();
+        $csaeId = (string) $recordId;
+        execute_statement($connection, sprintf('DELETE FROM `csae_family_information_table` WHERE `%s` = ?', $familyForeignKey), [$csaeId])->close();
+        execute_statement($connection, sprintf('DELETE FROM `csae_treatment_plan_table` WHERE `%s` = ?', $treatmentForeignKey), [$csaeId])->close();
+    } else {
+        $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM `csae_table`');
+        if (!$rowCountResult) { throw new Exception('Failed to get existing CSAE row count.'); }
+        $rowCountData = $rowCountResult->fetch_assoc();
+        $rowCountResult->free();
+        $rowCount = (int) ($rowCountData['row_count'] ?? 0);
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        $sequelNumber = $rowCount;
+        do {
+            $controlNumber = sprintf('CSWD-CSAE-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+            $check = execute_statement($connection, 'SELECT 1 FROM `csae_table` WHERE control_number = ? LIMIT 1', [$controlNumber]);
+            $check->store_result();
+            $controlExists = $check->num_rows > 0;
+            $check->close();
+            if ($controlExists) { $sequelNumber++; }
+        } while ($controlExists);
 
-    if (!$insertFamily) {
-        throw new Exception('Failed to prepare family insert statement.');
+        execute_statement(
+            $connection,
+            'INSERT INTO `csae_table` (
+                control_number, first_name, middle_name, last_name, suffix, nickname, sex, birth_date, age, division, program, birth_place,
+                present_address, permanent_address, barangay, education, school_last_attended, school_address, health_condition, contact_number, is_4ps, philhealth,
+                offense_type, incident_date, perpetrator_name, referral_date, referring_party, case_status, criminal_case_no, info_source, complainant,
+                presenting_problem, background_child, background_family, background_community, assessment, recommendation, served_by
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [$controlNumber, $firstName, $middleName, $lastName, $suffix, $nickname, $sex, $birthDate, $age, $division, $program, $birthPlace, $presentAddress, $permanentAddress, $barangay, $education, $schoolLastAttended, $schoolAddress, $healthCondition, $contactNumber, $is4ps, $philhealth, $offenseType, $incidentDate, $perpetratorName, $referralDate, $referringParty, $caseStatus, $criminalCaseNo, $infoSource, $complainant, $presentingProblem, $backgroundChild, $backgroundFamily, $backgroundCommunity, $assessment, $recommendation, $served]
+        )->close();
+        $csaeId = (string) $connection->insert_id;
     }
 
     foreach ($familyMembers as $member) {
-        $memberName = trim((string) $member['name']);
-        $memberAge = (int) $member['age'];
-        $relationship = trim((string) $member['relationship']);
-        $memberEducation = trim((string) $member['education']);
-        $memberOccupation = trim((string) $member['occupation']);
-        $memberIncome = trim((string) $member['income']);
-
-        $insertFamily->bind_param(
-            'isissss',
-            $csaeId,
-            $memberName,
-            $memberAge,
-            $relationship,
-            $memberEducation,
-            $memberOccupation,
-            $memberIncome
-        );
-
-        if (!$insertFamily->execute()) {
-            throw new Exception('Unable to save family information entry.');
-        }
+        execute_statement(
+            $connection,
+            sprintf('INSERT INTO `csae_family_information_table` (%s, member_name, member_age, relationship, education_attainment, occupation, monthly_income) VALUES (?, ?, ?, ?, ?, ?, ?)', $familyForeignKey),
+            [$csaeId, trim((string) $member['name']), trim((string) $member['age']), trim((string) $member['relationship']), trim((string) $member['education']), trim((string) $member['occupation']), trim((string) $member['income'])]
+        )->close();
     }
 
-    if (!empty($treatmentPlans)) {
-        $treatmentForeignKey = resolve_foreign_key_column($connection, 'csae_treatment_plan_table', ['case_id', 'csae_id']);
-        $insertTreatment = $connection->prepare(
-            sprintf(
-                'INSERT INTO csae_treatment_plan_table (
-                    %s, objectives, activities, timeframe, responsible_person, remarks
-                ) VALUES (?, ?, ?, ?, ?, ?)',
-                $treatmentForeignKey
-            )
-        );
-
-        if (!$insertTreatment) {
-            throw new Exception('Failed to prepare treatment plan insert statement.');
-        }
-
-        foreach ($treatmentPlans as $plan) {
-            if (!is_array($plan)) {
-                continue;
-            }
-
-            $objectives = trim((string) ($plan['objectives'] ?? ''));
-            $activities = trim((string) ($plan['activities'] ?? ''));
-            $timeframe = trim((string) ($plan['timeframe'] ?? ''));
-            $responsible = trim((string) ($plan['responsible'] ?? ''));
-            $remarks = trim((string) ($plan['remarks'] ?? ''));
-
-            $insertTreatment->bind_param(
-                'isssss',
-                $csaeId,
-                $objectives,
-                $activities,
-                $timeframe,
-                $responsible,
-                $remarks
-            );
-
-            if (!$insertTreatment->execute()) {
-                throw new Exception('Unable to save treatment plan entry.');
-            }
-        }
+    foreach ($treatmentPlans as $plan) {
+        execute_statement(
+            $connection,
+            sprintf('INSERT INTO `csae_treatment_plan_table` (%s, objectives, activities, timeframe, responsible_person, remarks) VALUES (?, ?, ?, ?, ?, ?)', $treatmentForeignKey),
+            [$csaeId, trim((string) ($plan['objectives'] ?? '')), trim((string) ($plan['activities'] ?? '')), trim((string) ($plan['timeframe'] ?? '')), trim((string) ($plan['responsible'] ?? '')), trim((string) ($plan['remarks'] ?? ''))]
+        )->close();
     }
 
     $connection->commit();
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'CSAE record saved successfully.',
-        'csae_id' => $csaeId
-    ]);
-} catch (Exception $exception) {
+    echo json_encode(['success' => true, 'message' => $recordId ? 'CSAE record updated successfully.' : 'CSAE record saved successfully.', 'record_id' => $csaeId]);
+} catch (Throwable $exception) {
     $connection->rollback();
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => $exception->getMessage()]);

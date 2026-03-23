@@ -46,9 +46,13 @@ const treatmentForm = document.getElementById('treatmentForm');
 const treatmentTableBody = document.getElementById('treatmentTableBody');
 
 const submitButton = document.querySelector('.form-submit-btn');
+const recordId = window.clientRecordMode?.getRecordId() ?? null;
+const formPage = document.querySelector('.form-page');
 
 const familyMembers = [];
 const treatmentPlans = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 const toggleModal = (modal, isOpen) => {
     if (!modal) {
@@ -109,6 +113,172 @@ function resetTableBody(tableBody, rowClass, columns) {
 
     const emptyCells = Array.from({ length: columns }, () => '<span></span>').join('');
     tableBody.innerHTML = `<div class="${rowClass} ${rowClass}--empty">${emptyCells}</div>`;
+}
+
+function setRadioValue(name, value) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+        input.checked = input.value === String(value ?? '');
+    });
+}
+
+function renderFamilyRows() {
+    resetTableBody(familyTableBody, 'family-table__row', 6);
+
+    if (!familyMembers.length || !familyTableBody) {
+        return;
+    }
+
+    familyTableBody.innerHTML = '';
+    familyMembers.forEach((member) => {
+        const row = document.createElement('div');
+        row.className = 'family-table__row';
+        [member.name, member.age, member.relationship, member.education, member.occupation, member.income].forEach((value) => {
+            const cell = document.createElement('span');
+            cell.textContent = value ?? '';
+            row.appendChild(cell);
+        });
+        familyTableBody.appendChild(row);
+    });
+}
+
+function renderTreatmentRows() {
+    resetTableBody(treatmentTableBody, 'treatment-table__row', 5);
+
+    if (!treatmentPlans.length || !treatmentTableBody) {
+        return;
+    }
+
+    treatmentTableBody.innerHTML = '';
+    treatmentPlans.forEach((plan) => {
+        const row = document.createElement('div');
+        row.className = 'treatment-table__row';
+        [plan.objectives, plan.activities, plan.timeframe, plan.responsible, plan.remarks].forEach((value) => {
+            const cell = document.createElement('span');
+            cell.textContent = value ?? '';
+            row.appendChild(cell);
+        });
+        treatmentTableBody.appendChild(row);
+    });
+}
+
+function populateRecord(record, related = {}) {
+    const fieldMappings = {
+        'first-name': 'first_name',
+        'middle-name': 'middle_name',
+        'last-name': 'last_name',
+        suffix: 'suffix',
+        nickname: 'nickname',
+        sex: 'sex',
+        'birth-date': 'birth_date',
+        age: 'age',
+        'birth-place': 'birth_place',
+        'present-address': 'present_address',
+        'permanent-address': 'permanent_address',
+        barangay: 'barangay',
+        education: 'education',
+        'school-last': 'school_last_attended',
+        'school-address': 'school_address',
+        'health-condition': 'health_condition',
+        'contact-number': 'contact_number',
+        'offense-type': 'offense_type',
+        'incident-date-place': 'incident_date',
+        'perpetrator-name': 'perpetrator_name',
+        'referral-date': 'referral_date',
+        'referring-party': 'referring_party',
+        'case-status': 'case_status',
+        'criminal-case': 'criminal_case_no',
+        'info-source': 'info_source',
+        complainant: 'complainant',
+        'background-child': 'background_child',
+        'background-family': 'background_family',
+        'background-community': 'background_community'
+    };
+
+    Object.entries(fieldMappings).forEach(([fieldId, recordKey]) => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = record?.[recordKey] ?? '';
+        }
+    });
+
+    document.querySelector('textarea[name="presenting-problem"]').value = record?.presenting_problem ?? '';
+    document.querySelector('textarea[name="assessment"]').value = record?.assessment ?? '';
+    document.querySelector('textarea[name="recommendation"]').value = record?.recommendation ?? '';
+
+    setRadioValue('4ps', record?.is_4ps ?? '');
+    setRadioValue('philhealth', record?.philhealth ?? '');
+
+    familyMembers.length = 0;
+    (related.family_information || []).forEach((member) => familyMembers.push({ ...member }));
+    renderFamilyRows();
+
+    treatmentPlans.length = 0;
+    (related.treatment_plan || []).forEach((plan) => treatmentPlans.push({ ...plan }));
+    renderTreatmentRows();
+}
+
+function setEditMode(isEditable) {
+    if (formPage) {
+        window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
+    }
+
+    [openFamilyModal, closeFamilyModal, openTreatmentModal, closeTreatmentModal].forEach((button) => {
+        if (button) {
+            button.disabled = !isEditable;
+        }
+    });
+
+    familyForm?.querySelectorAll('button').forEach((button) => {
+        button.disabled = !isEditable;
+    });
+    treatmentForm?.querySelectorAll('button').forEach((button) => {
+        button.disabled = !isEditable;
+    });
+
+    if (submitButton && recordId) {
+        submitButton.disabled = !isEditable;
+    }
+
+    if (!isEditable) {
+        toggleModal(familyModal, false);
+        toggleModal(treatmentModal, false);
+    }
+}
+
+async function loadRecordForViewMode() {
+    if (!recordId) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`../../get_client_record.php?program=csae&id=${encodeURIComponent(String(recordId))}`);
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load CSAE record.');
+        }
+
+        originalRecordSnapshot = payload;
+        populateRecord(payload.record, payload.related || {});
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton,
+            onEnableEdit: () => {
+                setEditMode(true);
+                setMessage('', '');
+            },
+            onCancelEdit: () => {
+                populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+                setMessage('', '');
+            },
+            onSaveStateChange: () => {}
+        }) || null;
+    } catch (error) {
+        setMessage(error.message, 'error');
+    }
 }
 
 function validateForm() {
@@ -332,6 +502,9 @@ submitButton?.addEventListener('click', async () => {
     submitButton.disabled = true;
 
     const formData = new FormData();
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
     formData.append('first_name', getFieldValue('first-name'));
     formData.append('middle_name', getFieldValue('middle-name'));
     formData.append('last_name', getFieldValue('last-name'));
@@ -390,7 +563,13 @@ submitButton?.addEventListener('click', async () => {
             throw new Error((result && result.message) || 'Failed to save CSAE record.');
         }
 
-        setMessage('CSAE record saved successfully.', 'success');
+        setMessage(recordId ? 'CSAE record updated successfully.' : 'CSAE record saved successfully.', 'success');
+
+        if (recordId) {
+            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            return;
+        }
+
         resetMainForm();
     } catch (error) {
         setMessage(error.message, 'error');
@@ -398,3 +577,5 @@ submitButton?.addEventListener('click', async () => {
         submitButton.disabled = false;
     }
 });
+
+loadRecordForViewMode();

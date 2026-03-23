@@ -49,9 +49,13 @@ const treatmentTableBody = document.getElementById('treatmentTableBody');
 
 const submitButton = document.querySelector('.final-submit-btn');
 const formMessage = document.getElementById('carFormMessage');
+const recordId = window.clientRecordMode?.getRecordId() ?? null;
+const formPage = document.querySelector('.form-page');
 
 const householdMembers = [];
 const treatmentPlans = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 function openHouseholdModal() {
     if (!householdModal) return;
@@ -128,6 +132,224 @@ function getCheckedRadioValue(name) {
 function clearTableBody(tableBody, colspan) {
     if (!tableBody) return;
     tableBody.innerHTML = `<tr class="household-empty-row"><td colspan="${colspan}"></td></tr>`;
+}
+
+function setRadioValue(name, value) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+        input.checked = input.value === String(value ?? '');
+    });
+}
+
+function setCheckboxGroupByLabel(selector, values) {
+    const normalizedValues = new Set(
+        String(values ?? '')
+            .split(',')
+            .map((value) => value.trim().toLowerCase())
+            .filter((value) => value !== '')
+    );
+
+    document.querySelectorAll(`${selector} .check-option`).forEach((option) => {
+        const checkbox = option.querySelector('input[type="checkbox"]');
+        if (!checkbox) {
+            return;
+        }
+
+        const labelText = option.textContent.replace(/\s+/g, ' ').trim().toLowerCase();
+        checkbox.checked = normalizedValues.has(labelText);
+    });
+}
+
+function renderHouseholdTable() {
+    clearTableBody(householdTableBody, 8);
+
+    if (!householdMembers.length || !householdTableBody) {
+        return;
+    }
+
+    householdTableBody.innerHTML = '';
+    householdMembers.forEach((rowData) => {
+        const row = document.createElement('tr');
+        [
+            rowData.member_name,
+            rowData.member_age,
+            rowData.member_gender,
+            rowData.member_status,
+            rowData.member_relation,
+            rowData.member_work,
+            rowData.member_income,
+            rowData.member_remarks ?? ''
+        ].forEach((value) => {
+            const cell = document.createElement('td');
+            cell.textContent = value ?? '';
+            row.appendChild(cell);
+        });
+        householdTableBody.appendChild(row);
+    });
+}
+
+function renderTreatmentTable() {
+    clearTableBody(treatmentTableBody, 5);
+
+    if (!treatmentPlans.length || !treatmentTableBody) {
+        return;
+    }
+
+    treatmentTableBody.innerHTML = '';
+    treatmentPlans.forEach((rowData) => {
+        const row = document.createElement('tr');
+        [
+            rowData.objectives,
+            rowData.activities,
+            rowData.responsible_person,
+            rowData.resources_needed,
+            rowData.expected_output
+        ].forEach((value) => {
+            const cell = document.createElement('td');
+            cell.textContent = value ?? '';
+            row.appendChild(cell);
+        });
+        treatmentTableBody.appendChild(row);
+    });
+}
+
+function populateRecord(record, related = {}) {
+    const fieldMappings = {
+        'interview-date': 'interview_date',
+        'first-name': 'first_name',
+        'middle-name': 'middle_name',
+        'last-name': 'last_name',
+        suffix: 'suffix',
+        nickname: 'nickname',
+        'birth-date': 'birth_date',
+        'birth-place': 'birth_place',
+        religion: 'religion',
+        'civil-status': 'civil_status',
+        age: 'age',
+        sex: 'sex',
+        education: 'education',
+        'present-address': 'present_address',
+        'permanent-address': 'permanent_address',
+        barangay: 'barangay',
+        'spouse-first-name': 'spouse_first_name',
+        'spouse-middle-name': 'spouse_middle_name',
+        'spouse-last-name': 'spouse_last_name',
+        'spouse-suffix': 'spouse_suffix',
+        'years-together': 'monthly_income_estimate',
+        'number-children': 'income_source',
+        'food-expense': 'food_expense',
+        'house-lot-expense': 'house_lot_expense',
+        'education-expense': 'education_expense',
+        'transport-expense': 'transport_expense',
+        'misc-expense': 'misc_expense',
+        'total-expenses': 'total_expenses',
+        'total-income': 'total_income',
+        'net-income': 'net_income',
+        'classification-other': 'classification_other',
+        'abuse-other': 'abuse_other',
+        'type-offense': 'type_of_offense',
+        'date-apprehension': 'date_of_apprehension',
+        'by-whom': 'by_whom',
+        'date-offense': 'date_of_offense',
+        'source-info': 'source_of_information',
+        complainant: 'complainant',
+        'presented-problem': 'presented_problem',
+        'family-environment': 'family_environment',
+        'community-description': 'community_description',
+        'family-history-background': 'family_history_background',
+        recommendation: 'recommendation'
+    };
+
+    Object.entries(fieldMappings).forEach(([fieldId, recordKey]) => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = record?.[recordKey] ?? '';
+        }
+    });
+
+    setRadioValue('assistance-status', record?.assistance_status ?? '');
+    setCheckboxGroupByLabel('.classification-grid', record?.classification_tags ?? '');
+    setCheckboxGroupByLabel('.abuse-classification-form', record?.abuse_tags ?? '');
+
+    householdMembers.length = 0;
+    (related.family_composition || []).forEach((member) => householdMembers.push({ ...member }));
+    renderHouseholdTable();
+
+    treatmentPlans.length = 0;
+    (related.initial_treatment_plan || []).forEach((plan) => treatmentPlans.push({ ...plan }));
+    renderTreatmentTable();
+}
+
+function setEditMode(isEditable) {
+    if (formPage) {
+        window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
+    }
+
+    [
+        openHouseholdModalBtn,
+        closeHouseholdModalBtn,
+        openTreatmentModalBtn,
+        closeTreatmentModalBtn
+    ].forEach((button) => {
+        if (button) {
+            button.disabled = !isEditable;
+        }
+    });
+
+    householdForm?.querySelectorAll('button').forEach((button) => {
+        button.disabled = !isEditable;
+    });
+    treatmentForm?.querySelectorAll('button').forEach((button) => {
+        button.disabled = !isEditable;
+    });
+
+    if (submitButton && recordId) {
+        submitButton.disabled = !isEditable;
+    }
+
+    if (!isEditable) {
+        closeHouseholdModal();
+        closeTreatmentModal();
+    }
+}
+
+async function loadRecordForViewMode() {
+    if (!recordId) {
+        return;
+    }
+
+    setMessage('Loading record...', '');
+
+    try {
+        const response = await fetch(`../../get_client_record.php?program=car&id=${encodeURIComponent(String(recordId))}`);
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load record.');
+        }
+
+        originalRecordSnapshot = payload;
+        populateRecord(payload.record, payload.related || {});
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton,
+            onEnableEdit: () => {
+                setEditMode(true);
+                setMessage('', '');
+            },
+            onCancelEdit: () => {
+                populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+                setMessage('', '');
+            },
+            onSaveStateChange: () => {}
+        }) || null;
+
+        setMessage('', '');
+    } catch (error) {
+        setMessage(error.message, 'error');
+    }
 }
 
 openHouseholdModalBtn?.addEventListener('click', openHouseholdModal);
@@ -324,6 +546,9 @@ submitButton?.addEventListener('click', async () => {
     setMessage('Submitting...', '');
 
     const formData = new FormData();
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
     formData.append('interview_date', getFieldValue('interview-date'));
     formData.append('first_name', getFieldValue('first-name'));
     formData.append('middle_name', getFieldValue('middle-name'));
@@ -398,7 +623,13 @@ submitButton?.addEventListener('click', async () => {
             throw new Error((result && result.message) || 'Failed to save CAR record.');
         }
 
-        setMessage('CAR record saved successfully.', 'success');
+        setMessage(recordId ? 'CAR record updated successfully.' : 'CAR record saved successfully.', 'success');
+
+        if (recordId) {
+            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            return;
+        }
+
         resetMainForm();
     } catch (error) {
         setMessage(error.message, 'error');
@@ -406,3 +637,5 @@ submitButton?.addEventListener('click', async () => {
         submitButton.disabled = false;
     }
 });
+
+loadRecordForViewMode();
