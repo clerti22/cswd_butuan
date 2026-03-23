@@ -19,18 +19,8 @@ openBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
-const logoutLink = document.getElementById('logoutLink');
-
-if (logoutLink) {
-    logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeSidebar();
-        window.location.href = '/auth/logout.php';
-    });
-}
-
 // Close sidebar when clicking placeholder nav items on mobile
-document.querySelectorAll('.nav-item:not(#logoutLink)').forEach(item => {
+document.querySelectorAll('.nav-item:not([data-logout-confirm])').forEach(item => {
     item.addEventListener('click', (e) => {
         const hrefValue = item.getAttribute('href') || '';
         const isPlaceholderLink = hrefValue === '#' || hrefValue.trim() === '';
