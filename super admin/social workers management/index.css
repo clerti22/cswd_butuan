@@ -454,36 +454,11 @@ button:hover {
     line-height: 1;
     padding: 0 18px;
     cursor: pointer;
-}
-
-.add-user-wrapper {
-    position: relative;
-}
-
-.add-user-dropdown {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    min-width: 170px;
-    background: #fff;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.15);
-    z-index: 4;
-}
-
-.add-user-dropdown a {
-    display: block;
-    color: #111827;
     text-decoration: none;
-    background: #fff;
-    font-size: 22px;
-    padding: 10px 12px;
 }
 
-.add-user-dropdown a:hover {
-    background: #f3f4f6;
+.control-button:hover {
+    background-color: #218838;
 }
 
 .user-table-wrap {
