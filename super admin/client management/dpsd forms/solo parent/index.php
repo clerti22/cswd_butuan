@@ -58,15 +58,6 @@ require_login(['super admin']);
                 </a>
 
                 <a href="#" class="nav-item">
-                    <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                        viewBox="0 0 1024 1024">
-                        <path fill="#ffff"
-                            d="M864 409.6a192 192 0 0 1-37.888 349.44A256.064 256.064 0 0 1 576 960h-96a32 32 0 1 1 0-64h96a192.064 192.064 0 0 0 181.12-128H736a32 32 0 0 1-32-32V416a32 32 0 0 1 32-32h32c10.368 0 20.544.832 30.528 2.432a288 288 0 0 0-573.056 0A193.235 193.235 0 0 1 256 384h32a32 32 0 0 1 32 32v320a32 32 0 0 1-32 32h-32a192 192 0 0 1-96-358.4a352 352 0 0 1 704 0zM256 448a128 128 0 1 0 0 256V448zm640 128a128 128 0 0 0-128-128v256a128 128 0 0 0 128-128z" />
-                    </svg>
-                    <span class="nav-text">Program & Services</span>
-                </a>
-
-                <a href="#" class="nav-item">
                     <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                         <path fill="#ffffff"
                             d="M12 6a1 1 0 0 0-1 1v10a1 1 0 0 0 2 0V7a1 1 0 0 0-1-1Zm-5 6a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0v-4a1 1 0 0 0-1-1Zm10-2a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1Zm2-8H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3Zm1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z" />
@@ -83,6 +74,16 @@ require_login(['super admin']);
                     </svg>
                     <span class="nav-text">Feedback</span>
                     <span class="nav-badge">12</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="profilePage()">
+                    <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                        <path fill-rule="evenodd"
+                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                    </svg>
+                    <span class="nav-text">View Profile</span>
                 </a>
 
 
@@ -136,116 +137,116 @@ require_login(['super admin']);
 
                     <form id="soloParentForm" method="post" action="soloparent_submit.php">
                         <div class="form-grid">
-                        <div class="field">
-                            <label for="first-name">First Name:</label>
-                            <input id="first-name" name="first_name" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="middle-name">Middle Name:</label>
-                            <input id="middle-name" name="middle_name" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="last-name">Last Name:</label>
-                            <input id="last-name" name="last_name" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="suffix">Suffix:</label>
-                            <input id="suffix" name="suffix" type="text" />
-                        </div>
-
-                        <div class="field">
-                            <label for="birth-date">Date of Birth:</label>
-                            <div class="input-icon">
-                                <input id="birth-date" name="date_of_birth" type="date" />
+                            <div class="field">
+                                <label for="first-name">First Name:</label>
+                                <input id="first-name" name="first_name" type="text" />
                             </div>
-                        </div>
-                        <div class="field field--span-2">
-                            <label for="birth-place">Place of Birth:</label>
-                            <input id="birth-place" name="place_of_birth" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="age">Age:</label>
-                            <input id="age" name="age" type="text" />
-                        </div>
-
-                        <div class="field field--span-2">
-                            <label for="address">Address:</label>
-                            <input id="address" name="address" type="text" />
-                        </div>
-
-                        
-                        <div class="field">
-                            <label for="religion">Religion:</label>
-                            <input id="religion" name="religion" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="sex">Sex:</label>
-                            <select name="sex" id="sex">
-                                <option value=""></option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-
-                        <div class="field field--span-2">
-                            <label for="education">Educational Attainment:</label>
-                            <input id="education" name="educational_attainment" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="occupation">Occupation:</label>
-                            <input id="occupation" name="occupation" type="text" />
-                        </div>
-
-                        <div class="field">
-                            <label for="company">Company/Agency:</label>
-                            <input id="company" name="company_agency" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="civil-status">Civil Status:</label>
-                            <select id="civil-status" name="civil_status">
-                                <option value="" selected></option>
-                                <option>Single</option>
-                                <option>Married</option>
-                                <option>Separated</option>
-                                <option>Widowed</option>
-                            </select>
-                        </div>
-                        <div class="field field--span-2">
-                            <label>Employment Status:</label>
-                            <div class="radio-group">
-                                <label class="radio-option">
-                                    <input type="radio" name="employment_status" value="Employed" />
-                                    Employed
-                                </label>
-                                <label class="radio-option">
-                                    <input type="radio" name="employment_status" value="Self-Employed" />
-                                    Self-Employed
-                                </label>
-                                <label class="radio-option">
-                                    <input type="radio" name="employment_status" value="Not Employed" />
-                                    Not - Employed
-                                </label>
+                            <div class="field">
+                                <label for="middle-name">Middle Name:</label>
+                                <input id="middle-name" name="middle_name" type="text" />
                             </div>
-                        </div>
+                            <div class="field">
+                                <label for="last-name">Last Name:</label>
+                                <input id="last-name" name="last_name" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="suffix">Suffix:</label>
+                                <input id="suffix" name="suffix" type="text" />
+                            </div>
 
-                        <div class="field">
-                            <label for="contact">Contact Number:</label>
-                            <input id="contact" name="contact_number" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="income">Monthly Income:</label>
-                            <input id="income" name="monthly_income" type="text" />
-                        </div>
-                        <div class="field">
-                            <label for="philsy">Philsys Card Number:</label>
-                            <input id="philsy" name="philsys_card_number" type="text" />
-                        </div>
+                            <div class="field">
+                                <label for="birth-date">Date of Birth:</label>
+                                <div class="input-icon">
+                                    <input id="birth-date" name="date_of_birth" type="date" />
+                                </div>
+                            </div>
+                            <div class="field field--span-2">
+                                <label for="birth-place">Place of Birth:</label>
+                                <input id="birth-place" name="place_of_birth" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="age">Age:</label>
+                                <input id="age" name="age" type="text" />
+                            </div>
 
-                        <div class="field">
-                            <label for="email">Email Address:</label>
-                            <input id="email" name="email_address" type="email" />
-                        </div>
-                         <label class="field"><span>Barangay:</span>                              
+                            <div class="field field--span-2">
+                                <label for="address">Address:</label>
+                                <input id="address" name="address" type="text" />
+                            </div>
+
+
+                            <div class="field">
+                                <label for="religion">Religion:</label>
+                                <input id="religion" name="religion" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="sex">Sex:</label>
+                                <select name="sex" id="sex">
+                                    <option value=""></option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="field field--span-2">
+                                <label for="education">Educational Attainment:</label>
+                                <input id="education" name="educational_attainment" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="occupation">Occupation:</label>
+                                <input id="occupation" name="occupation" type="text" />
+                            </div>
+
+                            <div class="field">
+                                <label for="company">Company/Agency:</label>
+                                <input id="company" name="company_agency" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="civil-status">Civil Status:</label>
+                                <select id="civil-status" name="civil_status">
+                                    <option value="" selected></option>
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                </select>
+                            </div>
+                            <div class="field field--span-2">
+                                <label>Employment Status:</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="employment_status" value="Employed" />
+                                        Employed
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="employment_status" value="Self-Employed" />
+                                        Self-Employed
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="employment_status" value="Not Employed" />
+                                        Not - Employed
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="contact">Contact Number:</label>
+                                <input id="contact" name="contact_number" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="income">Monthly Income:</label>
+                                <input id="income" name="monthly_income" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="philsy">Philsys Card Number:</label>
+                                <input id="philsy" name="philsys_card_number" type="text" />
+                            </div>
+
+                            <div class="field">
+                                <label for="email">Email Address:</label>
+                                <input id="email" name="email_address" type="email" />
+                            </div>
+                            <label class="field"><span>Barangay:</span>
                                 <input list="barangay-list" name="barangay" id="barangay">
                                 <datalist id="barangay-list">
                                     <option value="Maon">
@@ -340,75 +341,78 @@ require_login(['super admin']);
                             </label>
                         </div>
 
-                        
 
-                    <div class="eligibility-section">
-                        <div class="eligibility-grid">
-                            <div class="eligibility-item">
-                                <p class="eligibility-title">Pantawid Beneficiary(?):</p>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="pantawid_beneficiary" value="yes" />
-                                        Yes
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="pantawid_beneficiary" value="no" />
-                                        No
-                                    </label>
+
+                        <div class="eligibility-section">
+                            <div class="eligibility-grid">
+                                <div class="eligibility-item">
+                                    <p class="eligibility-title">Pantawid Beneficiary(?):</p>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" name="pantawid_beneficiary" value="yes" />
+                                            Yes
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="pantawid_beneficiary" value="no" />
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="eligibility-item">
+                                    <p class="eligibility-title">Indigenous Person(?):</p>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" name="indigenous_person" value="yes" />
+                                            Yes
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="indigenous_person" value="no" />
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="eligibility-item">
+                                    <p class="eligibility-title">LGBTQ+(?):</p>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" name="lgbtq_plus" value="yes" />
+                                            Yes
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="lgbtq_plus" value="no" />
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="eligibility-item">
+                                    <p class="eligibility-title">PWD(?):</p>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" name="pwd_status" value="yes" />
+                                            Yes
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="pwd_status" value="no" />
+                                            No
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="eligibility-item">
-                                <p class="eligibility-title">Indigenous Person(?):</p>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="indigenous_person" value="yes" />
-                                        Yes
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="indigenous_person" value="no" />
-                                        No
-                                    </label>
+
+                            <div class="eligibility-inputs">
+                                <div class="field">
+                                    <label for="pantawid-household">Pantawid Beneficiary,if yes (Household ID#):</label>
+                                    <input id="pantawid-household" name="pantawid_household_id" type="text"
+                                        placeholder="Disabled" disabled />
                                 </div>
-                            </div>
-                            <div class="eligibility-item">
-                                <p class="eligibility-title">LGBTQ+(?):</p>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="lgbtq_plus" value="yes" />
-                                        Yes
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="lgbtq_plus" value="no" />
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="eligibility-item">
-                                <p class="eligibility-title">PWD(?):</p>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="pwd_status" value="yes" />
-                                        Yes
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="pwd_status" value="no" />
-                                        No
-                                    </label>
+                                <div class="field">
+                                    <label for="indigenous-affiliation">Name of Affliation,if yes (Household
+                                        ID#):</label>
+                                    <input id="indigenous-affiliation" name="indigenous_affiliation_name" type="text"
+                                        placeholder="Disabled" disabled />
                                 </div>
                             </div>
                         </div>
-
-                        <div class="eligibility-inputs">
-                            <div class="field">
-                                <label for="pantawid-household">Pantawid Beneficiary,if yes (Household ID#):</label>
-                                <input id="pantawid-household" name="pantawid_household_id" type="text" placeholder="Disabled" disabled />
-                            </div>
-                            <div class="field">
-                                <label for="indigenous-affiliation">Name of Affliation,if yes (Household ID#):</label>
-                                <input id="indigenous-affiliation" name="indigenous_affiliation_name" type="text" placeholder="Disabled" disabled />
-                            </div>
-                        </div>
-                    </div>
                 </section>
                 <section class="form-section">
                     <div class="section-title section-title--with-action">
@@ -470,7 +474,7 @@ require_login(['super admin']);
                         <button class="submit-form-btn" type="submit" id="submitSoloParent">Submit</button>
                     </div>
                 </section>
-                    </form>
+                </form>
             </main>
         </div>
     </div>
@@ -498,7 +502,8 @@ require_login(['super admin']);
                 </div>
                 <div class="field">
                     <label for="householdRelationship">Relationship</label>
-                    <input id="householdRelationship" name="household_relationship" type="text" placeholder="Relationship" />
+                    <input id="householdRelationship" name="household_relationship" type="text"
+                        placeholder="Relationship" />
                 </div>
                 <div class="field">
                     <label for="householdAge">Age</label>
@@ -520,7 +525,8 @@ require_login(['super admin']);
                 </div>
                 <div class="field">
                     <label for="householdEducational">Educational</label>
-                    <input id="householdEducational" name="household_educational" type="text" placeholder="Educational" />
+                    <input id="householdEducational" name="household_educational" type="text"
+                        placeholder="Educational" />
                 </div>
                 <div class="field">
                     <label for="householdOccupation">Occupation</label>
