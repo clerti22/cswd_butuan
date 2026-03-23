@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../auth/auth.php';
 require_once __DIR__ . '/../../../auth/db.php';
-require_once __DIR__ . '/../../includes/navigation.php';
 
 require_login(['super admin']);
 
@@ -227,16 +226,13 @@ if ($pageHtml === false) {
     exit('Unable to load social workers management page.');
 }
 
-$sidebarMarkup = render_super_admin_sidebar('social_workers', '../..');
-$renderedPage = preg_replace('/<nav class="sidebar" id="sidebar">.*?<\/nav>/s', $sidebarMarkup, $pageHtml, 1);
-
 $formStateJson = json_encode($formState, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 $formStateScript = '<script>window.adminRegistrationState = ' . $formStateJson . ';</script>';
 
 $renderedPage = str_replace(
     '<script src="index.js"></script>',
     $formStateScript . PHP_EOL . '    <script src="index.js"></script>',
-    $renderedPage ?? $pageHtml
+    $pageHtml
 );
 
 echo $renderedPage;
