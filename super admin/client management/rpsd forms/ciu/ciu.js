@@ -43,6 +43,8 @@ const ciuForm = document.querySelector('.ciu-body');
 const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
 const familyMembers = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 function toggleModal(modal, isOpen) {
     if (!modal) {
@@ -180,24 +182,27 @@ function populateRecord(record, related = {}) {
     renderFamilyTable();
 }
 
-function enableViewMode() {
-    window.clientRecordMode?.toggleContainerEditState(ciuForm, false);
+function setEditMode(isEditable) {
+    window.clientRecordMode?.toggleContainerEditState(ciuForm, isEditable);
     [openFamilyModalBtn, closeFamilyModalBtn, saveFamilyEntryButton].forEach((button) => {
         if (button) {
-            button.disabled = true;
+            button.disabled = !isEditable;
         }
     });
 
     if (familyForm) {
         familyForm.querySelectorAll('button').forEach((button) => {
-            button.disabled = true;
+            button.disabled = !isEditable;
         });
     }
 
     const submitButton = ciuForm?.querySelector('.submit-btn');
-    if (submitButton) {
-        submitButton.hidden = true;
-        submitButton.disabled = true;
+    if (submitButton && recordId) {
+        submitButton.disabled = !isEditable;
+    }
+
+    if (!isEditable) {
+        toggleModal(familyModal, false);
     }
 }
 
@@ -214,8 +219,20 @@ async function loadRecordForViewMode() {
             throw new Error(payload.message || 'Unable to load CIU record.');
         }
 
+        originalRecordSnapshot = payload;
         populateRecord(payload.record, payload.related || {});
-        enableViewMode();
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: ciuForm.closest('.form-page') || ciuForm,
+            submitButton: ciuForm?.querySelector('.submit-btn'),
+            onEnableEdit: () => setEditMode(true),
+            onCancelEdit: () => {
+                populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+            },
+            onSaveStateChange: () => {}
+        }) || null;
     } catch (error) {
         alert(error.message);
     }
@@ -404,6 +421,10 @@ ciuForm?.addEventListener('submit', async (event) => {
         formData.append(key, value);
     });
 
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
+
     formData.append('family_composition', JSON.stringify(familyMembers));
 
     try {
@@ -424,7 +445,13 @@ ciuForm?.addEventListener('submit', async (event) => {
             throw new Error((result && result.message) || 'Failed to save CIU record.');
         }
 
-        alert('CIU record saved successfully.');
+        alert(recordId ? 'CIU record updated successfully.' : 'CIU record saved successfully.');
+
+        if (recordId) {
+            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            return;
+        }
+
         resetForm();
     } catch (error) {
         alert(error.message);

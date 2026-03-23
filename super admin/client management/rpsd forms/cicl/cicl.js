@@ -54,6 +54,8 @@ const formPage = document.querySelector('.form-page');
 
 const householdMembers = [];
 const treatmentPlans = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 function openHouseholdModal() {
     if (!householdModal) return;
@@ -277,9 +279,9 @@ function populateRecord(record, related = {}) {
     renderTreatmentTable();
 }
 
-function enableViewMode() {
+function setEditMode(isEditable) {
     if (formPage) {
-        window.clientRecordMode?.toggleContainerEditState(formPage, false);
+        window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
     }
 
     [
@@ -289,20 +291,24 @@ function enableViewMode() {
         closeTreatmentModalBtn
     ].forEach((button) => {
         if (button) {
-            button.disabled = true;
+            button.disabled = !isEditable;
         }
     });
 
     householdForm?.querySelectorAll('button').forEach((button) => {
-        button.disabled = true;
+        button.disabled = !isEditable;
     });
     treatmentForm?.querySelectorAll('button').forEach((button) => {
-        button.disabled = true;
+        button.disabled = !isEditable;
     });
 
-    if (submitButton) {
-        submitButton.hidden = true;
-        submitButton.disabled = true;
+    if (submitButton && recordId) {
+        submitButton.disabled = !isEditable;
+    }
+
+    if (!isEditable) {
+        closeHouseholdModal();
+        closeTreatmentModal();
     }
 }
 
@@ -321,8 +327,25 @@ async function loadRecordForViewMode() {
             throw new Error(payload.message || 'Unable to load record.');
         }
 
+        originalRecordSnapshot = payload;
         populateRecord(payload.record, payload.related || {});
-        enableViewMode();
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton,
+            onEnableEdit: () => {
+                setEditMode(true);
+                setMessage('', '');
+            },
+            onCancelEdit: () => {
+                populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+                setMessage('', '');
+            },
+            onSaveStateChange: () => {}
+        }) || null;
+
         setMessage('', '');
     } catch (error) {
         setMessage(error.message, 'error');
@@ -522,6 +545,9 @@ submitButton?.addEventListener('click', async () => {
     setMessage('Submitting...', '');
 
     const formData = new FormData();
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
     formData.append('interview_date', getFieldValue('interview-date'));
     formData.append('first_name', getFieldValue('first-name'));
     formData.append('middle_name', getFieldValue('middle-name'));
@@ -596,7 +622,13 @@ submitButton?.addEventListener('click', async () => {
             throw new Error((result && result.message) || 'Failed to save CICL record.');
         }
 
-        setMessage('CICL record saved successfully.', 'success');
+        setMessage(recordId ? 'CICL record updated successfully.' : 'CICL record saved successfully.', 'success');
+
+        if (recordId) {
+            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            return;
+        }
+
         resetMainForm();
     } catch (error) {
         setMessage(error.message, 'error');

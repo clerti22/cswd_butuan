@@ -51,6 +51,8 @@ const formPage = document.querySelector('.form-page');
 
 const familyMembers = [];
 const treatmentPlans = [];
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 const toggleModal = (modal, isOpen) => {
     if (!modal) {
@@ -215,27 +217,31 @@ function populateRecord(record, related = {}) {
     renderTreatmentRows();
 }
 
-function enableViewMode() {
+function setEditMode(isEditable) {
     if (formPage) {
-        window.clientRecordMode?.toggleContainerEditState(formPage, false);
+        window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
     }
 
     [openFamilyModal, closeFamilyModal, openTreatmentModal, closeTreatmentModal].forEach((button) => {
         if (button) {
-            button.disabled = true;
+            button.disabled = !isEditable;
         }
     });
 
     familyForm?.querySelectorAll('button').forEach((button) => {
-        button.disabled = true;
+        button.disabled = !isEditable;
     });
     treatmentForm?.querySelectorAll('button').forEach((button) => {
-        button.disabled = true;
+        button.disabled = !isEditable;
     });
 
-    if (submitButton) {
-        submitButton.hidden = true;
-        submitButton.disabled = true;
+    if (submitButton && recordId) {
+        submitButton.disabled = !isEditable;
+    }
+
+    if (!isEditable) {
+        toggleModal(familyModal, false);
+        toggleModal(treatmentModal, false);
     }
 }
 
@@ -252,8 +258,24 @@ async function loadRecordForViewMode() {
             throw new Error(payload.message || 'Unable to load CSAE record.');
         }
 
+        originalRecordSnapshot = payload;
         populateRecord(payload.record, payload.related || {});
-        enableViewMode();
+        setEditMode(false);
+
+        recordControls = window.clientRecordMode?.mountControls({
+            anchor: document.querySelector('.form-page'),
+            submitButton,
+            onEnableEdit: () => {
+                setEditMode(true);
+                setMessage('', '');
+            },
+            onCancelEdit: () => {
+                populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+                setEditMode(false);
+                setMessage('', '');
+            },
+            onSaveStateChange: () => {}
+        }) || null;
     } catch (error) {
         setMessage(error.message, 'error');
     }
@@ -480,6 +502,9 @@ submitButton?.addEventListener('click', async () => {
     submitButton.disabled = true;
 
     const formData = new FormData();
+    if (recordId) {
+        formData.append('record_id', String(recordId));
+    }
     formData.append('first_name', getFieldValue('first-name'));
     formData.append('middle_name', getFieldValue('middle-name'));
     formData.append('last_name', getFieldValue('last-name'));
@@ -538,7 +563,13 @@ submitButton?.addEventListener('click', async () => {
             throw new Error((result && result.message) || 'Failed to save CSAE record.');
         }
 
-        setMessage('CSAE record saved successfully.', 'success');
+        setMessage(recordId ? 'CSAE record updated successfully.' : 'CSAE record saved successfully.', 'success');
+
+        if (recordId) {
+            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            return;
+        }
+
         resetMainForm();
     } catch (error) {
         setMessage(error.message, 'error');
