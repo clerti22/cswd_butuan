@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
+require_once __DIR__ . '/../includes/navigation.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -74,9 +75,11 @@ if ($pageHtml === false) {
     exit('Unable to load profile page.');
 }
 
+$sidebarMarkup = render_super_admin_sidebar('profile', '..');
+$renderedPage = preg_replace('/<nav class="sidebar" id="sidebar">.*?<\/nav>/s', $sidebarMarkup, $pageHtml, 1);
+
 $profileJson = json_encode($profile, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 $profileScript = '<script>window.superAdminProfile = ' . $profileJson . ';</script>';
-
-$renderedPage = str_replace('<script src="index.js"></script>', $profileScript . PHP_EOL . '    <script src="index.js"></script>', $pageHtml);
+$renderedPage = str_replace('<script src="index.js"></script>', $profileScript . PHP_EOL . '    <script src="index.js"></script>', $renderedPage ?? $pageHtml);
 
 echo $renderedPage;
