@@ -36,9 +36,8 @@ if (overlay) {
 }
 
 // Close sidebar when clicking nav items on mobile
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
+document.querySelectorAll('.nav-item').forEach((item) => {
+    item.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
