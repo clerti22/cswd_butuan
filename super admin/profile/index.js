@@ -19,10 +19,33 @@ openBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
+<<<<<<< HEAD
 
 // Close sidebar when clicking nav items on mobile
 document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
+=======
+const logoutLink = document.getElementById('logoutLink');
+
+if (logoutLink) {
+    logoutLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeSidebar();
+        window.location.href = '/auth/logout.php';
+    });
+}
+
+// Close sidebar when clicking placeholder nav items on mobile
+document.querySelectorAll('.nav-item:not(#logoutLink)').forEach(item => {
+    item.addEventListener('click', (e) => {
+        const hrefValue = item.getAttribute('href') || '';
+        const isPlaceholderLink = hrefValue === '#' || hrefValue.trim() === '';
+
+        if (isPlaceholderLink) {
+            e.preventDefault();
+        }
+
+>>>>>>> parent of 47d2b9b (Update page.html)
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
