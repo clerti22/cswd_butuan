@@ -20,11 +20,14 @@ closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 // Close sidebar when clicking nav items on mobile
 document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
 =======
+=======
+>>>>>>> parent of 47d2b9b (Update page.html)
 const logoutLink = document.getElementById('logoutLink');
 
 if (logoutLink) {
@@ -45,6 +48,9 @@ document.querySelectorAll('.nav-item:not(#logoutLink)').forEach(item => {
             e.preventDefault();
         }
 
+<<<<<<< HEAD
+>>>>>>> parent of 47d2b9b (Update page.html)
+=======
 >>>>>>> parent of 47d2b9b (Update page.html)
         if (window.innerWidth < 1024) {
             closeSidebar();
