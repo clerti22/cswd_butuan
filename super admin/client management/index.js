@@ -122,11 +122,11 @@ function getShowRoute(client) {
         soloparent_info_table: 'dpsd forms/solo parent/index.php',
         snr_table: 'pssd forms/senior citizen/index.php',
         pwd_table: 'pssd forms/pwd/index.php',
-        car_table: 'rpsd forms/car/print_form.php',
-        cicl_table: 'rpsd forms/cicl/print_form.php',
-        ciu_table: 'rpsd forms/ciu/print_form.php',
-        csae_table: 'rpsd forms/csae/print_form.php',
-        vawc_table: 'rpsd forms/vawc/print_form.php'
+        car_table: 'rpsd forms/car/index.php',
+        cicl_table: 'rpsd forms/cicl/index.php',
+        ciu_table: 'rpsd forms/ciu/index.php',
+        csae_table: 'rpsd forms/csae/index.php',
+        vawc_table: 'rpsd forms/vawc/index.php'
     };
 
     const baseRoute = routesByTable[sourceTable];

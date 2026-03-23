@@ -40,6 +40,7 @@ const familyForm = document.querySelector('#familyModal .modal-form');
 const saveFamilyEntryButton = document.getElementById('saveFamilyEntry');
 const familyTableBody = document.querySelector('.family-table tbody');
 const ciuForm = document.querySelector('.ciu-body');
+const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
 const familyMembers = [];
 
@@ -138,6 +139,86 @@ function readFamilyModalRow() {
 
 function validateFamilyRow(row) {
     return Object.values(row).every((value) => value !== '');
+}
+
+function setRadioValue(name, value) {
+    ciuForm?.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+        input.checked = input.value === String(value ?? '');
+    });
+}
+
+function setCheckboxValue(name, value) {
+    const checkbox = ciuForm?.querySelector(`input[name="${name}"]`);
+    if (checkbox) {
+        checkbox.checked = String(value ?? '').trim().toLowerCase() === 'yes';
+    }
+}
+
+function populateRecord(record, related = {}) {
+    ciuForm?.querySelectorAll('input[name]:not([type="checkbox"]):not([type="radio"]), select[name], textarea[name]').forEach((field) => {
+        field.value = record?.[field.name] ?? '';
+    });
+
+    setRadioValue('sex', record?.sex ?? '');
+
+    [
+        'member_senior',
+        'member_solo_parent',
+        'member_pwd',
+        'member_4ps',
+        'service_prescribed_medicine',
+        'service_certificate_minor',
+        'service_hospital_bill',
+        'service_tesda_certificate',
+        'service_burial',
+        'service_laboratory',
+        'service_legal_assistance'
+    ].forEach((name) => setCheckboxValue(name, record?.[name] ?? 'No'));
+
+    familyMembers.length = 0;
+    (related.family_composition || []).forEach((member) => familyMembers.push({ ...member }));
+    renderFamilyTable();
+}
+
+function enableViewMode() {
+    window.clientRecordMode?.toggleContainerEditState(ciuForm, false);
+    [openFamilyModalBtn, closeFamilyModalBtn, saveFamilyEntryButton].forEach((button) => {
+        if (button) {
+            button.disabled = true;
+        }
+    });
+
+    if (familyForm) {
+        familyForm.querySelectorAll('button').forEach((button) => {
+            button.disabled = true;
+        });
+    }
+
+    const submitButton = ciuForm?.querySelector('.submit-btn');
+    if (submitButton) {
+        submitButton.hidden = true;
+        submitButton.disabled = true;
+    }
+}
+
+async function loadRecordForViewMode() {
+    if (!recordId) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`../../get_client_record.php?program=ciu&id=${encodeURIComponent(String(recordId))}`);
+        const payload = await response.json();
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Unable to load CIU record.');
+        }
+
+        populateRecord(payload.record, payload.related || {});
+        enableViewMode();
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 function validateMainForm() {
@@ -355,3 +436,5 @@ ciuForm?.addEventListener('submit', async (event) => {
 });
 
 renderFamilyTable();
+
+loadRecordForViewMode();
