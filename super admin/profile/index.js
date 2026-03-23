@@ -19,18 +19,9 @@ openBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', closeSidebar);
 
-const logoutLink = document.getElementById('logoutTrigger');
-
-if (logoutLink) {
-    logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeSidebar();
-        window.location.href = logoutLink.getAttribute('href') || '../auth/logout.php';
-    });
-}
 
 // Close sidebar when clicking nav items on mobile
-document.querySelectorAll('.nav-item:not(#logoutTrigger)').forEach(item => {
+document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
             closeSidebar();

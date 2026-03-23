@@ -16,7 +16,117 @@
 
     <div class="container">
         <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
+        <style>
+    .logout-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(7, 7, 12, 0.72);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        z-index: 1200;
+    }
+
+    .logout-modal-backdrop.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .logout-modal {
+        width: min(100%, 420px);
+        background: #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 28px;
+        padding: 2rem 1.75rem 1.5rem;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.38);
+        text-align: center;
+        color: #111827;
+    }
+
+    .logout-modal__icon-wrap {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 1.5rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(250, 204, 21, 0.42);
+        background: radial-gradient(circle at center, rgba(250, 204, 21, 0.22), rgba(250, 204, 21, 0.08));
+        box-shadow: inset 0 0 18px rgba(250, 204, 21, 0.08);
+    }
+
+    .logout-modal__icon {
+        font-size: 1.8rem;
+        color: #facc15;
+        line-height: 1;
+    }
+
+    .logout-modal__title {
+        margin: 0;
+        font-size: clamp(1.5rem, 3vw, 1.9rem);
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .logout-modal__subtitle {
+        margin: 0.75rem 0 0;
+        font-size: 1rem;
+        color: #6b7280;
+    }
+
+    .logout-modal__actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+        margin-top: 2rem;
+    }
+
+    .logout-modal__button {
+        border: 0;
+        border-radius: 14px;
+        padding: 0.95rem 1rem;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .logout-modal__button:hover {
+        transform: translateY(-1px);
+    }
+
+    .logout-modal__button--cancel {
+        background: #f3f4f6;
+        color: #374151;
+        box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+    }
+
+    .logout-modal__button--confirm {
+        background: linear-gradient(135deg, #ff5a54 0%, #ef4444 100%);
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(239, 68, 68, 0.28);
+    }
+
+    @media (max-width: 480px) {
+        .logout-modal {
+            border-radius: 24px;
+            padding: 1.75rem 1.15rem 1.15rem;
+        }
+
+        .logout-modal__actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <img src="../images-logo/cswd-logo.png" alt="" width="130" height="110">
         <p class="sidebar-title">CCIMS Dashboard</p>
@@ -73,160 +183,83 @@
         </a>
     </div>
 </nav>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="topbar">
-                <button class="menu-btn" id="openSidebar">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-                <h3 class="topbar-title" style="font-weight: bold;">Social Workers Management</h3>
-            </header>
-
-            <main class="form-page">
-                <section class="user-management" aria-label="Admin and encoder user management">
-                    <div class="user-controls">
-                        <div class="tab-buttons" role="tablist" aria-label="User role tabs">
-                            <button type="button" class="role-tab is-active" data-role="admin" role="tab"
-                                aria-selected="true">Admin</button>
-                            <button type="button" class="role-tab" data-role="encoder" role="tab"
-                                aria-selected="false">Encoder</button>
-                        </div>
-
-                        <div class="right-controls">
-                            <label class="search-field" for="userSearchInput">
-                                <span class="search-label">Search social workers</span>
-                                <input type="search" id="userSearchInput" class="search-input" aria-label="Search users"
-                                    placeholder="Search first, middle, or last name" autocomplete="off">
-                            </label>
-                            <button type="button" class="control-button" id="userSearchButton">
-                                <i class="bi bi-search"></i>
-                                Search
-                            </button>
-
-                            <a href="admin register/index.php" id="addUserButton" class="control-button">
-                                <i class="bi bi-plus-lg"></i>
-                                Add User
-                            </a>
-
-                            <button type="button" class="control-button">
-                                <i class="bi bi-funnel"></i>
-                                Filter
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="user-table-wrap">
-                        <table class="users-table" aria-live="polite">
-                            <thead>
-                                <tr>
-                                    <th>Full Name</th>
-                                    <th>Role</th>
-                                    <th id="assignmentHeader">Division</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTableBody"></tbody>
-                        </table>
-                        <p id="usersTableMessage" class="table-message"></p>
-                        <div class="pagination" id="usersPagination" hidden>
-                            <button type="button" id="prevPageButton" class="pagination-button">Prev</button>
-                            <span id="paginationInfo" class="pagination-info">Page 1 of 1</span>
-                            <button type="button" id="nextPageButton" class="pagination-button">Next</button>
-                        </div>
-                    </div>
-                </section>
-            </main>
+<div class="logout-modal-backdrop" id="logoutModal" aria-hidden="true">
+    <div class="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle" aria-describedby="logoutModalDescription">
+        <div class="logout-modal__icon-wrap" aria-hidden="true">
+            <i class="bi bi-exclamation-triangle-fill logout-modal__icon"></i>
+        </div>
+        <h2 class="logout-modal__title" id="logoutModalTitle">Logout Confirmation</h2>
+        <p class="logout-modal__subtitle" id="logoutModalDescription">You will be logged out of the system.</p>
+        <div class="logout-modal__actions">
+            <button class="logout-modal__button logout-modal__button--cancel" id="cancelLogoutButton" type="button">Cancel</button>
+            <button class="logout-modal__button logout-modal__button--confirm" id="confirmLogoutButton" type="button">Yes, logout</button>
         </div>
     </div>
+</div>
+<script>
+(function () {
+    const initializeLogoutModal = () => {
+        const logoutTrigger = document.getElementById('logoutTrigger');
+        const logoutModal = document.getElementById('logoutModal');
+        const cancelLogoutButton = document.getElementById('cancelLogoutButton');
+        const confirmLogoutButton = document.getElementById('confirmLogoutButton');
+        const logoutUrl = logoutTrigger?.getAttribute('href') || '../auth/logout.php';
 
-    <div id="disableCodeModal" class="custom-modal" hidden>
-        <div class="custom-modal-content custom-modal-compact" role="dialog" aria-modal="true"
-            aria-labelledby="disableCodeTitle">
-            <h2 id="disableCodeTitle">Disable Account</h2>
-            <p class="custom-modal-subtitle">Enter secret code to continue.</p>
-            <label for="secretCodeInput" class="info-label">Secret Code</label>
-            <input type="password" id="secretCodeInput" class="info-input" autocomplete="off" />
-            <p id="secretCodeError" class="modal-error" aria-live="polite"></p>
-            <div class="custom-modal-actions">
-                <button type="button" class="action-btn action-btn-secondary"
-                    data-close-modal="disableCodeModal">Cancel</button>
-                <button type="button" id="verifySecretCodeButton" class="action-btn action-btn-danger">Verify</button>
-            </div>
-        </div>
-    </div>
+        if (!logoutTrigger || !logoutModal || !cancelLogoutButton || !confirmLogoutButton || logoutTrigger.dataset.logoutModalBound === 'true') {
+            return;
+        }
 
-    <div id="disableConfirmModal" class="custom-modal" hidden>
-        <div class="custom-modal-content custom-modal-compact" role="dialog" aria-modal="true"
-            aria-labelledby="disableConfirmTitle">
-            <h2 id="disableConfirmTitle">Confirm Disable Account</h2>
-            <p class="custom-modal-subtitle" id="disableConfirmMessage">Are you sure you want to disable this user's
-                account?</p>
-            <div class="custom-modal-actions">
-                <button type="button" class="action-btn action-btn-secondary"
-                    data-close-modal="disableConfirmModal">No</button>
-                <button type="button" id="confirmDisableButton" class="action-btn action-btn-danger">Yes,
-                    Disable</button>
-            </div>
-        </div>
-    </div>
+        logoutTrigger.dataset.logoutModalBound = 'true';
 
-    <div id="showUserModal" class="custom-modal" hidden>
-        <div class="custom-modal-content" role="dialog" aria-modal="true" aria-labelledby="showUserTitle">
-            <div class="modal-logos">
-                <img src="../images-logo/butuanseal.png" alt="Butuan seal">
-                <h2 id="showUserTitle">User's Full Information</h2>
-                <img src="../images-logo/cswd-logo.png" alt="CSWD logo">
-            </div>
+        const setModalState = (isOpen) => {
+            logoutModal.classList.toggle('active', isOpen);
+            logoutModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
 
-            <div class="user-details-grid">
-                <div class="info-field">
-                    <label class="info-label show-field-label">Full Name:</label>
-                    <div class="info-input show-field-value" id="showFullName"></div>
-                </div>
-                <div class="info-field">
-                    <label class="info-label show-field-label">Username:</label>
-                    <div class="info-input show-field-value" id="showUsername"></div>
-                </div>
-                <div class="info-field">
-                    <label class="info-label show-field-label" id="showAssignmentLabel">Division Assigned:</label>
-                    <div class="info-input show-field-value" id="showAssignment"></div>
-                </div>
-                <div class="info-field">
-                    <label class="info-label show-field-label">Phone Number:</label>
-                    <div class="info-input show-field-value" id="showPhoneNumber"></div>
-                </div>
-                <div class="info-field">
-                    <label class="info-label show-field-label">Gender:</label>
-                    <div class="info-input show-field-value" id="showGender"></div>
-                </div>
-                <div class="info-field">
-                    <label class="info-label show-field-label">Age:</label>
-                    <div class="info-input show-field-value" id="showAge"></div>
-                </div>
-                <div class="info-field full-width">
-                    <label class="info-label show-field-label">Role:</label>
-                    <div class="info-input show-field-value" id="showRole"></div>
-                </div>
-                <div class="info-field full-width">
-                    <label class="info-label show-field-label">Email:</label>
-                    <div class="info-input show-field-value" id="showEmail"></div>
-                </div>
-            </div>
+            if (isOpen) {
+                cancelLogoutButton.focus();
+                return;
+            }
 
-            <div class="custom-modal-actions custom-modal-actions-center">
-                <button type="button" class="action-btn action-btn-danger"
-                    data-close-modal="showUserModal">Close</button>
-            </div>
-        </div>
-    </div>
+            logoutTrigger.focus();
+        };
 
-    <script src="index.js"></script>
+        logoutTrigger.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            if (typeof closeSidebar === 'function') {
+                closeSidebar();
+            }
+
+            setModalState(true);
+        });
+
+        cancelLogoutButton.addEventListener('click', () => setModalState(false));
+        confirmLogoutButton.addEventListener('click', () => {
+            window.location.href = logoutUrl;
+        });
+
+        logoutModal.addEventListener('click', (event) => {
+            if (event.target === logoutModal) {
+                setModalState(false);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && logoutModal.classList.contains('active')) {
+                setModalState(false);
+            }
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeLogoutModal, { once: true });
+        return;
+    }
+
+    initializeLogoutModal();
+})();
+</script>
 
 
 </body>
