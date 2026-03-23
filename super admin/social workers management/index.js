@@ -40,8 +40,6 @@ const roleTabs = document.querySelectorAll('.role-tab');
 const usersTableBody = document.getElementById('usersTableBody');
 const usersTableMessage = document.getElementById('usersTableMessage');
 const assignmentHeader = document.getElementById('assignmentHeader');
-const addUserButton = document.getElementById('addUserButton');
-const addUserDropdown = document.getElementById('addUserDropdown');
 const usersPagination = document.getElementById('usersPagination');
 const prevPageButton = document.getElementById('prevPageButton');
 const nextPageButton = document.getElementById('nextPageButton');
@@ -390,21 +388,6 @@ if (nextPageButton) {
 
         currentPage += 1;
         loadUsers(activeRole, currentPage);
-    });
-}
-
-if (addUserButton && addUserDropdown) {
-    addUserButton.addEventListener('click', () => {
-        const expanded = addUserButton.getAttribute('aria-expanded') === 'true';
-        addUserButton.setAttribute('aria-expanded', String(!expanded));
-        addUserDropdown.hidden = expanded;
-    });
-
-    document.addEventListener('click', (event) => {
-        if (!addUserButton.contains(event.target) && !addUserDropdown.contains(event.target)) {
-            addUserButton.setAttribute('aria-expanded', 'false');
-            addUserDropdown.hidden = true;
-        }
     });
 }
 
