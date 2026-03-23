@@ -76,6 +76,8 @@ HTML,
 
     $logoPath = super_admin_sidebar_path($basePrefixToSuperAdmin, 'images-logo/cswd-logo.png');
     $logoutPath = super_admin_sidebar_path($basePrefixToSuperAdmin, '../auth/logout.php');
+    $logoutModalStylesPath = super_admin_sidebar_path($basePrefixToSuperAdmin, 'includes/logout-confirmation.css');
+    $logoutModalScriptPath = super_admin_sidebar_path($basePrefixToSuperAdmin, 'includes/logout-confirmation.js');
 
     ob_start();
     ?>
@@ -108,7 +110,12 @@ HTML,
     </div>
 
     <div class="sidebar-footer">
-        <a href="<?= htmlspecialchars($logoutPath, ENT_QUOTES, 'UTF-8') ?>" class="nav-item" id="logoutTrigger">
+        <a
+            href="<?= htmlspecialchars($logoutPath, ENT_QUOTES, 'UTF-8') ?>"
+            class="nav-item"
+            id="logoutTrigger"
+            data-logout-confirm="true"
+        >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-door-open nav-icon" viewBox="0 0 16 16">
                 <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
                 <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
@@ -117,6 +124,21 @@ HTML,
         </a>
     </div>
 </nav>
+<link rel="stylesheet" href="<?= htmlspecialchars($logoutModalStylesPath, ENT_QUOTES, 'UTF-8') ?>">
+<div class="logout-modal-backdrop" id="logoutModal" aria-hidden="true">
+    <div class="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle" aria-describedby="logoutModalDescription">
+        <div class="logout-modal__icon-wrap" aria-hidden="true">
+            <i class="bi bi-exclamation-triangle-fill logout-modal__icon"></i>
+        </div>
+        <h2 class="logout-modal__title" id="logoutModalTitle">Logout Confirmation</h2>
+        <p class="logout-modal__subtitle" id="logoutModalDescription">Are you sure you want to log out?</p>
+        <div class="logout-modal__actions">
+            <button class="logout-modal__button logout-modal__button--cancel" id="cancelLogoutButton" type="button">Cancel</button>
+            <button class="logout-modal__button logout-modal__button--confirm" id="confirmLogoutButton" type="button">Yes, logout</button>
+        </div>
+    </div>
+</div>
+<script src="<?= htmlspecialchars($logoutModalScriptPath, ENT_QUOTES, 'UTF-8') ?>"></script>
 <?php
     return (string) ob_get_clean();
 }
