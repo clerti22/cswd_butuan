@@ -216,50 +216,151 @@
             logoutModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
             document.body.style.overflow = isOpen ? 'hidden' : '';
 
-            if (isOpen) {
-                cancelLogoutButton.focus();
-                return;
-            }
+            <div class="status-card">
+              <div class="status-card-head">Total Served Clients (OSCA/PDAO)</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                </div>
+                <div class="status-value center-value" id="oscaTotal">1</div>
+              </div>
+            </div>
 
-            logoutTrigger.focus();
-        };
+            <div class="status-card">
+              <div class="status-card-head">Total Served Clients (RPSD)</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                </div>
+                <div class="status-value center-value" id="rpsdTotal">2</div>
+              </div>
+            </div>
 
-        logoutTrigger.addEventListener('click', (event) => {
-            event.preventDefault();
+            <div class="status-card">
+              <div class="status-card-head">Active Social Workers</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-person-badge-fill"></i>
+                  </div>
+                  <span class="dot-online" title="Active"></span>
+                </div>
+                <div class="status-value" id="activeSW">25</div>
+              </div>
+            </div>
 
-            if (typeof closeSidebar === 'function') {
-                closeSidebar();
-            }
+            <div class="status-card">
+              <div class="status-card-head">Total served clients (today)</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-check2-circle"></i>
+                  </div>
+                </div>
+                <div class="status-value" id="todayTotal">30</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- ===== TABLE AREA ===== -->
+        <section class="section">
+          <div class="table-panel">
+            <div class="table-top-controls">
+              <div class="table-switch">
+                <button class="switch-btn active" id="btnClients" type="button">Clients Table</button>
+                <button class="switch-btn green" id="btnSW" type="button">Social Workers Table</button>
+              </div>
 
-            setModalState(true);
-        });
+              <div class="search-actions">
+                <input class="search-input" id="searchInput" type="text" placeholder="" />
+                <button class="btn btn-search" id="btnSearch" type="button">
+                  <i class="bi bi-search"></i> Search
+                </button>
+                <button class="btn btn-filter" id="btnFilter" type="button">
+                  <i class="bi bi-funnel"></i> Filter
+                </button>
+              </div>
+            </div>
 
-        cancelLogoutButton.addEventListener('click', () => setModalState(false));
-        confirmLogoutButton.addEventListener('click', () => {
-            window.location.href = logoutUrl;
-        });
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr id="tableHeadRow"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
 
-        logoutModal.addEventListener('click', (event) => {
-            if (event.target === logoutModal) {
-                setModalState(false);
-            }
-        });
+        <!-- ===== CHART + RIGHT PANEL ===== -->
+        <section class="section">
+          <div class="two-col">
+            <div class="panel chart-panel">
+              <h3 class="panel-title">Total Served Clients per Division</h3>
+              <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && logoutModal.classList.contains('active')) {
-                setModalState(false);
-            }
-        });
-    };
+            <div class="right-stack">
+              <div class="panel">
+                <h3 class="panel-title">Recent Activities</h3>
+
+                <div class="activity">
+                  <div class="activity-icon blue"><i class="bi bi-box-arrow-in-right"></i></div>
+                  <div class="activity-text">
+                    <div class="activity-title">Kie Kamado Logged In (DPSD)</div>
+                    <div class="activity-sub">Admin · Today 15:03</div>
+                  </div>
+                </div>
+
+                <div class="activity">
+                  <div class="activity-icon red"><i class="bi bi-box-arrow-right"></i></div>
+                  <div class="activity-text">
+                    <div class="activity-title">Shinobu Kocho Logged Out (PWD)</div>
+                    <div class="activity-sub">Encoder · Today 10:14</div>
+                  </div>
+                </div>
+
+                <div class="activity">
+                  <div class="activity-icon green"><i class="bi bi-person-plus-fill"></i></div>
+                  <div class="activity-text">
+                    <div class="activity-title">Shinobu Kocho Added New Client</div>
+                    <div class="activity-sub">Encoder · Today 10:05</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head-row">
+                  <h3 class="panel-title">Top List Rankings</h3>
+                  <div class="mini-tabs">
+                    <button class="mini-tab active" id="tabDivisions" type="button">Divisions</button>
+                    <button class="mini-tab" id="tabBarangays" type="button">Barangays</button>
+                  </div>
+                </div>
+
+                <div class="rank-list" id="rankList"></div>
+              </div>
+            </div>
+          </div>
+        </section>
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeLogoutModal, { once: true });
         return;
     }
 
-    initializeLogoutModal();
-})();
-</script>
+      </main>
+    </div>
+  </div>
+
+
+  <!-- CanvasJS -->
+  <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
   <script src="index.js"></script>
   <script>
     (() => {
