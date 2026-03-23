@@ -175,7 +175,71 @@
             </main>
         </div>
     </div>
-    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+</div>
+<script>
+(function () {
+    const initializeLogoutModal = () => {
+        const logoutTrigger = document.getElementById('logoutTrigger');
+        const logoutModal = document.getElementById('logoutModal');
+        const cancelLogoutButton = document.getElementById('cancelLogoutButton');
+        const confirmLogoutButton = document.getElementById('confirmLogoutButton');
+        const logoutUrl = logoutTrigger?.getAttribute('href') || '../auth/logout.php';
+
+        if (!logoutTrigger || !logoutModal || !cancelLogoutButton || !confirmLogoutButton || logoutTrigger.dataset.logoutModalBound === 'true') {
+            return;
+        }
+
+        logoutTrigger.dataset.logoutModalBound = 'true';
+
+        const setModalState = (isOpen) => {
+            logoutModal.classList.toggle('active', isOpen);
+            logoutModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+
+            if (isOpen) {
+                cancelLogoutButton.focus();
+                return;
+            }
+
+            logoutTrigger.focus();
+        };
+
+        logoutTrigger.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            if (typeof closeSidebar === 'function') {
+                closeSidebar();
+            }
+
+            setModalState(true);
+        });
+
+        cancelLogoutButton.addEventListener('click', () => setModalState(false));
+        confirmLogoutButton.addEventListener('click', () => {
+            window.location.href = logoutUrl;
+        });
+
+        logoutModal.addEventListener('click', (event) => {
+            if (event.target === logoutModal) {
+                setModalState(false);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && logoutModal.classList.contains('active')) {
+                setModalState(false);
+            }
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeLogoutModal, { once: true });
+        return;
+    }
+
+    initializeLogoutModal();
+})();
+</script>
     <script src="index.js"></script>
 
 
