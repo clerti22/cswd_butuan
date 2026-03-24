@@ -225,24 +225,47 @@ function renderAll(data) {
 }
 
 async function loadReports() {
-    const params = {
-        ...getFilterValues(),
-        page: state.page,
-        per_page: state.per_page,
-        search: state.search,
-        sort_by: state.sort_by,
-        sort_dir: state.sort_dir
-    };
+    try {
+        const params = {
+            ...getFilterValues(),
+            page: state.page,
+            per_page: state.per_page,
+            search: state.search,
+            sort_by: state.sort_by,
+            sort_dir: state.sort_dir
+        };
 
-    const response = await fetch(`get_reports_data.php?${toQuery(params)}`);
-    const payload = await response.json();
+        const response = await fetch(`get_reports_data.php?${toQuery(params)}`);
+        const responseText = await response.text();
+        let payload = null;
 
-    if (!response.ok || !payload.success) {
-        throw new Error(payload.message || 'Failed to load report.');
+        try {
+            payload = JSON.parse(responseText);
+        } catch (parseError) {
+            throw new Error('Report endpoint returned an invalid response.');
+        }
+
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || 'Failed to load report.');
+        }
+
+        renderAll(payload.data);
+        document.getElementById('exportExcelBtn').href = `export_excel.php?${toQuery(getFilterValues())}`;
+    } catch (error) {
+        console.error('loadReports failed:', error);
+        emptyState.textContent = 'Unable to load report data right now. Please refresh the page or try again later.';
+        emptyState.classList.remove('hidden');
+        if (!summaryCards.innerHTML.trim()) {
+            renderSummary({
+                total_beneficiaries: 0,
+                total_households_served: 0,
+                total_programs: 0,
+                total_male: 0,
+                total_female: 0,
+                total_with_two_plus_interventions: 0
+            });
+        }
     }
-
-    renderAll(payload.data);
-    document.getElementById('exportExcelBtn').href = `export_excel.php?${toQuery(getFilterValues())}`;
 }
 
 async function fetchAllFilteredRows() {
@@ -260,24 +283,6 @@ async function fetchAllFilteredRows() {
     if (!firstResponse.ok || !firstPayload.success) {
         throw new Error(firstPayload.message || 'Failed to load rows for PDF export.');
     }
-}
-
-function renderAll(data) {
-    state.data = data;
-
-    renderSummary(data.summary || {});
-
-    renderChart('chartProgram', 'column', asDataPoints(data.charts.beneficiaries_per_program), '#6d28d9');
-    renderChart('chartBarangay', 'bar', asDataPoints(data.charts.beneficiaries_per_barangay), '#0ea5e9');
-    renderChart('chartYear', 'line', asDataPoints(data.charts.beneficiaries_per_year), '#16a34a');
-    renderChart('chartMonth', 'line', asDataPoints(data.charts.beneficiaries_per_month), '#f97316');
-    renderPie('chartSex', asDataPoints(data.charts.by_sex));
-    renderPie('chartAge', asDataPoints(data.charts.by_age_bracket));
-    renderPie('chartSector', asDataPoints(data.charts.by_sector));
-
-    renderTable(data.table.rows || []);
-    renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
-    renderHouseholds(data.household_interventions || []);
 
     const allRows = [...(firstPayload.data?.table?.rows || [])];
     const totalPages = Number(firstPayload.data?.table?.pagination?.total_pages || 1);
