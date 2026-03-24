@@ -260,6 +260,24 @@ async function fetchAllFilteredRows() {
     if (!firstResponse.ok || !firstPayload.success) {
         throw new Error(firstPayload.message || 'Failed to load rows for PDF export.');
     }
+}
+
+function renderAll(data) {
+    state.data = data;
+
+    renderSummary(data.summary || {});
+
+    renderChart('chartProgram', 'column', asDataPoints(data.charts.beneficiaries_per_program), '#6d28d9');
+    renderChart('chartBarangay', 'bar', asDataPoints(data.charts.beneficiaries_per_barangay), '#0ea5e9');
+    renderChart('chartYear', 'line', asDataPoints(data.charts.beneficiaries_per_year), '#16a34a');
+    renderChart('chartMonth', 'line', asDataPoints(data.charts.beneficiaries_per_month), '#f97316');
+    renderPie('chartSex', asDataPoints(data.charts.by_sex));
+    renderPie('chartAge', asDataPoints(data.charts.by_age_bracket));
+    renderPie('chartSector', asDataPoints(data.charts.by_sector));
+
+    renderTable(data.table.rows || []);
+    renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
+    renderHouseholds(data.household_interventions || []);
 
     const allRows = [...(firstPayload.data?.table?.rows || [])];
     const totalPages = Number(firstPayload.data?.table?.pagination?.total_pages || 1);
