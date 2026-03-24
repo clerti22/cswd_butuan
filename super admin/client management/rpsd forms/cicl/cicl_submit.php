@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
+require_once __DIR__ . '/../../../../auth/notification.php';
 
 require_login(['super admin']);
 start_auth_session();
 
 $fullname = (string) ($_SESSION['full_name'] ?? '');
+$username = (string) ($_SESSION['username'] ?? '');
+$userRole = (string) ($_SESSION['role'] ?? '');
 
 header('Content-Type: application/json');
 
@@ -190,6 +193,10 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 $recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
+$userContext = resolve_logged_in_user_notification_context($connection, $username, 'RPSD', 'CICL');
+$userDivision = $userContext['division'];
+$userProgram = $userContext['program'];
+
 try {
     $interviewDate = trim((string) $_POST['interview_date']);
     $firstName = trim((string) $_POST['first_name']);
@@ -317,6 +324,8 @@ try {
             ]
         );
         $mainId = (string) $connection->insert_id;
+
+        insert_client_creation_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $insertMain->close();
     }
 

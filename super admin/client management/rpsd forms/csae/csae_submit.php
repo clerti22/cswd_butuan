@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
+require_once __DIR__ . '/../../../../auth/notification.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -34,6 +35,8 @@ function resolve_foreign_key_column(mysqli $connection, string $tableName, array
 }
 
 $fullname = (string) ($_SESSION['full_name'] ?? '');
+$username = (string) ($_SESSION['username'] ?? '');
+$userRole = (string) ($_SESSION['role'] ?? '');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -137,6 +140,10 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 $recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
+$userContext = resolve_logged_in_user_notification_context($connection, $username, 'RPSD', 'CSAE');
+$userDivision = $userContext['division'];
+$userProgram = $userContext['program'];
+
 try {
     $firstName = trim((string) $_POST['first_name']);
     $middleName = trim((string) ($_POST['middle_name'] ?? ''));
@@ -221,6 +228,8 @@ try {
             [$controlNumber, $firstName, $middleName, $lastName, $suffix, $nickname, $sex, $birthDate, $age, $division, $program, $birthPlace, $presentAddress, $permanentAddress, $barangay, $education, $schoolLastAttended, $schoolAddress, $healthCondition, $contactNumber, $is4ps, $philhealth, $offenseType, $incidentDate, $perpetratorName, $referralDate, $referringParty, $caseStatus, $criminalCaseNo, $infoSource, $complainant, $presentingProblem, $backgroundChild, $backgroundFamily, $backgroundCommunity, $assessment, $recommendation, $served]
         )->close();
         $csaeId = (string) $connection->insert_id;
+
+        insert_client_creation_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
     }
 
     foreach ($familyMembers as $member) {
