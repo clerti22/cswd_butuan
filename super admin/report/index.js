@@ -3,319 +3,389 @@ const overlay = document.getElementById('overlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
 
-function openSidebar() {
-    sidebar.classList.add('open');
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeSidebar() {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-openBtn.addEventListener('click', openSidebar);
-closeBtn.addEventListener('click', closeSidebar);
-overlay.addEventListener('click', closeSidebar);
-
-document.querySelectorAll('.nav-item').forEach((item) => {
-    item.addEventListener('click', () => {
-        if (window.innerWidth < 1024) {
-            closeSidebar();
-        }
-    });
+openBtn?.addEventListener('click', () => {
+    sidebar?.classList.add('open');
+    overlay?.classList.add('active');
 });
 
-window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024) {
-        closeSidebar();
-    }
+closeBtn?.addEventListener('click', () => {
+    sidebar?.classList.remove('open');
+    overlay?.classList.remove('active');
 });
 
-const metricElements = {
-    total_clients: document.getElementById('totalClientsValue'),
-    served_this_week: document.getElementById('servedThisWeekValue'),
-    served_this_month: document.getElementById('servedThisMonthValue'),
-    served_today: document.getElementById('servedTodayValue')
+overlay?.addEventListener('click', () => {
+    sidebar?.classList.remove('open');
+    overlay?.classList.remove('active');
+});
+
+const filters = {
+    program: document.getElementById('filterProgram'),
+    barangay: document.getElementById('filterBarangay'),
+    year: document.getElementById('filterYear'),
+    month: document.getElementById('filterMonth'),
+    sex: document.getElementById('filterSex'),
+    age_bracket: document.getElementById('filterAgeBracket'),
+    sector: document.getElementById('filterSector'),
+    household: document.getElementById('filterHousehold'),
+    date_from: document.getElementById('filterDateFrom'),
+    date_to: document.getElementById('filterDateTo')
 };
 
-const servedChartTabs = document.querySelectorAll('[data-served-tab]');
-const servedChartTitle = document.getElementById('servedChartTitle');
-const weeklyChartTitle = document.getElementById('weeklyChartTitle');
+const summaryCards = document.getElementById('summaryCards');
+const tableBody = document.getElementById('tableBody');
+const householdTableBody = document.getElementById('householdTableBody');
+const tablePagination = document.getElementById('tablePagination');
+const emptyState = document.getElementById('emptyState');
+const tableSearchInput = document.getElementById('tableSearchInput');
 
-const toggleFilterBtn = document.getElementById('toggleFilterBtn');
-const chartFilterPanel = document.getElementById('chartFilterPanel');
-const periodFilter = document.getElementById('periodFilter');
-const referenceFilter = document.getElementById('referenceFilter');
-const divisionFilter = document.getElementById('divisionFilter');
-const applyFilterBtn = document.getElementById('applyFilterBtn');
+const dashboardView = document.getElementById('dashboardView');
+const tableView = document.getElementById('tableView');
+const householdView = document.getElementById('householdView');
 
-let weeklyLineChart = null;
-let servedMainChart = null;
-let genderChart = null;
+const tabButtons = document.querySelectorAll('.tab-btn');
+const sortHeaders = document.querySelectorAll('th[data-sort]');
 
-let reportChartsPayload = {
-    barangay: [],
-    program: {},
-    gender: { Male: 0, Female: 0 }
+const state = {
+    page: 1,
+    per_page: 10,
+    search: '',
+    sort_by: 'created_at',
+    sort_dir: 'desc',
+    data: null
 };
 
-function formatCount(value) {
-    return Number(value || 0).toLocaleString();
+const charts = {};
+
+function getFilterValues() {
+    return Object.fromEntries(
+        Object.entries(filters).map(([key, element]) => [key, (element?.value || '').trim()])
+    );
 }
 
-function setMetricValues(data) {
-    Object.entries(metricElements).forEach(([key, element]) => {
-        if (!element) {
-            return;
+function toQuery(params) {
+    const url = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== '') {
+            url.set(key, String(value));
         }
-
-        element.textContent = formatCount(data[key]);
     });
+    return url.toString();
 }
 
-async function loadReportTotals() {
-    try {
-        const response = await fetch('get_report_totals.php');
-        const payload = await response.json();
-
-        if (!response.ok || !payload.success) {
-            throw new Error(payload.message || 'Unable to load report totals.');
-        }
-
-        setMetricValues(payload.data || {});
-    } catch (error) {
-        console.error('Failed to fetch report totals:', error);
-        setMetricValues({});
-    }
+function asDataPoints(objectData) {
+    return Object.entries(objectData || {}).map(([label, y]) => ({ label, y: Number(y || 0) }));
 }
 
-function renderServedMainChart(tab) {
-    if (typeof CanvasJS === 'undefined') {
-        return;
-    }
+function renderChart(containerId, type, data, color = '#2563eb') {
+    if (typeof CanvasJS === 'undefined') return;
 
-    const isProgram = tab === 'program';
-    if (servedChartTitle) {
-        servedChartTitle.textContent = isProgram
-            ? 'Total Served Clients per Program chart'
-            : 'Total Served Clients per Barangay Chart';
-    }
-
-    const dataPoints = isProgram
-        ? Object.entries(reportChartsPayload.program).map(([label, value]) => ({ label, y: Number(value || 0) }))
-        : (reportChartsPayload.barangay || []).map((entry) => ({
-            label: entry.label,
-            y: Number(entry.count || 0)
-        }));
-
-    if (!servedMainChart) {
-        servedMainChart = new CanvasJS.Chart('servedMainChartContainer', {
+    if (!charts[containerId]) {
+        charts[containerId] = new CanvasJS.Chart(containerId, {
             animationEnabled: true,
-            zoomEnabled: true,
-            theme: 'light1',
-            axisY: {
-                includeZero: true,
-                title: 'Total Served Clients'
-            },
-            axisX: {
-                interval: 1,
-                labelAngle: -50,
-                labelFontSize: 11
-            },
-            data: [{
-                type: 'column',
-                color: '#6d28d9',
-                dataPoints: []
-            }]
+            theme: 'light2',
+            axisX: { labelAngle: -45 },
+            axisY: { includeZero: true },
+            data: [{ type, color, dataPoints: [] }]
         });
     }
 
-    servedMainChart.options.data[0].dataPoints = dataPoints;
-    servedMainChart.render();
+    charts[containerId].options.data[0].dataPoints = data;
+    charts[containerId].render();
 }
 
-function renderGenderChart() {
-    if (typeof CanvasJS === 'undefined') {
-        return;
-    }
+function renderPie(containerId, data) {
+    if (typeof CanvasJS === 'undefined') return;
 
-    const male = Number(reportChartsPayload.gender.Male || 0);
-    const female = Number(reportChartsPayload.gender.Female || 0);
-
-    if (!genderChart) {
-        genderChart = new CanvasJS.Chart('genderChartContainer', {
+    if (!charts[containerId]) {
+        charts[containerId] = new CanvasJS.Chart(containerId, {
             animationEnabled: true,
-            theme: 'light1',
-            legend: {
-                verticalAlign: 'bottom',
-                horizontalAlign: 'center'
-            },
-            data: [{
-                type: 'pie',
-                startAngle: 90,
-                indexLabel: '{label}: {y}',
-                showInLegend: true,
-                legendText: '{label}',
-                dataPoints: []
-            }]
+            theme: 'light2',
+            legend: { verticalAlign: 'bottom', horizontalAlign: 'center' },
+            data: [{ type: 'pie', showInLegend: true, indexLabel: '{label}: {y}', dataPoints: [] }]
         });
     }
 
-    genderChart.options.data[0].dataPoints = [
-        { label: 'Male', y: male, color: '#1d4ed8' },
-        { label: 'Female', y: female, color: '#db2777' }
+    charts[containerId].options.data[0].dataPoints = data;
+    charts[containerId].render();
+}
+
+function renderSummary(summary) {
+    const cards = [
+        ['Total Beneficiaries', summary.total_beneficiaries, '#2563eb'],
+        ['Total Households Served', summary.total_households_served, '#059669'],
+        ['Total Programs', summary.total_programs, '#f97316'],
+        ['Total Male', summary.total_male, '#1d4ed8'],
+        ['Total Female', summary.total_female, '#db2777'],
+        ['Total with 2+ Interventions', summary.total_with_two_plus_interventions, '#7c3aed']
     ];
-    genderChart.render();
+
+    summaryCards.innerHTML = cards.map(([label, value, color]) => `
+        <article class="summary-card" style="background:${color}">
+            <h4>${label}</h4>
+            <p>${Number(value || 0).toLocaleString()}</p>
+        </article>
+    `).join('');
 }
 
-async function loadServedCharts() {
-    try {
-        const response = await fetch('get_report_charts.php');
-        const payload = await response.json();
-
-        if (!response.ok || !payload.success) {
-            throw new Error(payload.message || 'Unable to load chart data.');
-        }
-
-        reportChartsPayload = {
-            barangay: payload.data?.barangay || [],
-            program: payload.data?.program || {},
-            gender: payload.data?.gender || { Male: 0, Female: 0 }
-        };
-    } catch (error) {
-        console.error('Failed to fetch served chart data:', error);
-    }
-
-    renderServedMainChart('barangay');
-    renderGenderChart();
-}
-
-function setReferenceFieldType(period) {
-    if (period === 'week') {
-        referenceFilter.type = 'date';
-        referenceFilter.value = new Date().toISOString().split('T')[0];
-    } else if (period === 'month') {
-        referenceFilter.type = 'month';
-        referenceFilter.value = new Date().toISOString().slice(0, 7);
-    } else {
-        referenceFilter.type = 'number';
-        referenceFilter.min = '2000';
-        referenceFilter.max = '2100';
-        referenceFilter.step = '1';
-        referenceFilter.value = String(new Date().getFullYear());
+function fillSelectOptions(selectElement, values, defaultLabel) {
+    if (!selectElement) return;
+    const current = selectElement.value;
+    const options = [`<option value="">${defaultLabel}</option>`].concat(
+        values.map((value) => `<option value="${value}">${value}</option>`)
+    );
+    selectElement.innerHTML = options.join('');
+    if (values.includes(current)) {
+        selectElement.value = current;
     }
 }
 
-function renderWeeklyLineChart(payload) {
-    if (typeof CanvasJS === 'undefined') {
+function renderTable(rows) {
+    if (!rows.length) {
+        tableBody.innerHTML = '<tr><td colspan="11">No records found.</td></tr>';
         return;
     }
 
-    const dayLabels = payload.days || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const divisionSeries = payload.divisions || {};
-    const colors = {
-        DPSD: '#f97316',
-        PSSD: '#f59e0b',
-        RPSD: '#16a34a'
+    tableBody.innerHTML = rows.map((row) => `
+        <tr>
+            <td>${row.control_number || '-'}</td>
+            <td>${row.full_name || '-'}</td>
+            <td>${row.program || '-'}</td>
+            <td>${row.barangay || '-'}</td>
+            <td>${row.sex || '-'}</td>
+            <td>${row.age ?? '-'}</td>
+            <td>${row.age_bracket || '-'}</td>
+            <td>${row.sector || '-'}</td>
+            <td>${row.household || '-'}</td>
+            <td>${row.interventions || '-'}</td>
+            <td>${row.created_at || '-'}</td>
+        </tr>
+    `).join('');
+}
+
+function renderHouseholds(rows) {
+    if (!rows.length) {
+        householdTableBody.innerHTML = '<tr><td colspan="6">No household has 2 or more interventions in this filter set.</td></tr>';
+        return;
+    }
+
+    householdTableBody.innerHTML = rows.map((row) => `
+        <tr>
+            <td>${row.household_head || '-'}</td>
+            <td>${row.control_number || '-'}</td>
+            <td>${row.barangay || '-'}</td>
+            <td>${row.household || '-'}</td>
+            <td>${row.intervention_count || 0}</td>
+            <td>${row.interventions_received || '-'}</td>
+        </tr>
+    `).join('');
+}
+
+function renderPagination(pagination) {
+    const totalPages = Number(pagination.total_pages || 1);
+    const currentPage = Number(pagination.page || 1);
+
+    tablePagination.innerHTML = '';
+    for (let page = 1; page <= totalPages; page += 1) {
+        const button = document.createElement('button');
+        button.textContent = page;
+        button.classList.toggle('active', page === currentPage);
+        button.addEventListener('click', () => {
+            state.page = page;
+            loadReports();
+        });
+        tablePagination.appendChild(button);
+    }
+}
+
+function renderAll(data) {
+    state.data = data;
+
+    renderSummary(data.summary || {});
+
+    renderChart('chartProgram', 'column', asDataPoints(data.charts.beneficiaries_per_program), '#6d28d9');
+    renderChart('chartBarangay', 'bar', asDataPoints(data.charts.beneficiaries_per_barangay), '#0ea5e9');
+    renderChart('chartYear', 'line', asDataPoints(data.charts.beneficiaries_per_year), '#16a34a');
+    renderChart('chartMonth', 'line', asDataPoints(data.charts.beneficiaries_per_month), '#f97316');
+    renderPie('chartSex', asDataPoints(data.charts.by_sex));
+    renderPie('chartAge', asDataPoints(data.charts.by_age_bracket));
+    renderPie('chartSector', asDataPoints(data.charts.by_sector));
+
+    renderTable(data.table.rows || []);
+    renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
+    renderHouseholds(data.household_interventions || []);
+
+    fillSelectOptions(filters.program, data.filter_options.programs || [], 'All Programs');
+    fillSelectOptions(filters.barangay, data.filter_options.barangays || [], 'All Barangays');
+    fillSelectOptions(filters.year, data.filter_options.years || [], 'All Years');
+    fillSelectOptions(filters.sex, data.filter_options.sexes || [], 'All');
+    fillSelectOptions(filters.age_bracket, data.filter_options.age_brackets || [], 'All Age Brackets');
+    fillSelectOptions(filters.sector, data.filter_options.sectors || [], 'All Sectors');
+
+    emptyState.classList.toggle('hidden', Number(data.table.pagination?.total_rows || 0) > 0);
+}
+
+async function loadReports() {
+    const params = {
+        ...getFilterValues(),
+        page: state.page,
+        per_page: state.per_page,
+        search: state.search,
+        sort_by: state.sort_by,
+        sort_dir: state.sort_dir
     };
 
-    const series = Object.entries(divisionSeries).map(([division, counts]) => ({
-        type: 'line',
-        name: division,
-        showInLegend: true,
-        lineThickness: 2,
-        markerSize: 7,
-        color: colors[division] || '#2563eb',
-        dataPoints: dayLabels.map((day, index) => ({ label: day, y: Number(counts[index] || 0) }))
-    }));
+    const response = await fetch(`get_reports_data.php?${toQuery(params)}`);
+    const payload = await response.json();
 
-    if (!weeklyLineChart) {
-        weeklyLineChart = new CanvasJS.Chart('weeklyLineChartContainer', {
-            animationEnabled: true,
-            theme: 'light1',
-            axisY: {
-                includeZero: true,
-                title: 'Registered Clients'
-            },
-            axisX: {
-                interval: 1,
-                labelAngle: 0
-            },
-            legend: {
-                verticalAlign: 'bottom',
-                horizontalAlign: 'center'
-            },
-            data: []
-        });
+    if (!response.ok || !payload.success) {
+        throw new Error(payload.message || 'Failed to load report.');
     }
 
-    weeklyLineChart.options.data = series;
-    weeklyLineChart.render();
-
-    if (weeklyChartTitle) {
-        weeklyChartTitle.textContent = payload.title || 'Weekly Client Registration';
-    }
+    renderAll(payload.data);
+    document.getElementById('exportExcelBtn').href = `export_excel.php?${toQuery(getFilterValues())}`;
 }
 
-async function loadDivisionTrends() {
-    const params = new URLSearchParams({
-        period: periodFilter.value || 'week',
-        reference: referenceFilter.value || '',
-        division: divisionFilter.value || 'all'
-    });
+async function fetchAllFilteredRows() {
+    const baseParams = {
+        ...getFilterValues(),
+        search: state.search,
+        sort_by: state.sort_by,
+        sort_dir: state.sort_dir,
+        per_page: 100
+    };
 
-    try {
-        const response = await fetch(`get_division_registration_trends.php?${params.toString()}`);
+    const firstResponse = await fetch(`get_reports_data.php?${toQuery({ ...baseParams, page: 1 })}`);
+    const firstPayload = await firstResponse.json();
+
+    if (!firstResponse.ok || !firstPayload.success) {
+        throw new Error(firstPayload.message || 'Failed to load rows for PDF export.');
+    }
+
+    const allRows = [...(firstPayload.data?.table?.rows || [])];
+    const totalPages = Number(firstPayload.data?.table?.pagination?.total_pages || 1);
+
+    for (let page = 2; page <= totalPages; page += 1) {
+        const response = await fetch(`get_reports_data.php?${toQuery({ ...baseParams, page })}`);
         const payload = await response.json();
-
         if (!response.ok || !payload.success) {
-            throw new Error(payload.message || 'Unable to load weekly registration trends.');
+            throw new Error(payload.message || `Failed to load export page ${page}.`);
         }
-
-        renderWeeklyLineChart(payload.data || {});
-    } catch (error) {
-        console.error('Failed to fetch division trend data:', error);
-        renderWeeklyLineChart({
-            title: 'Weekly Client Registration',
-            days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            divisions: {
-                DPSD: [0, 0, 0, 0, 0, 0, 0],
-                PSSD: [0, 0, 0, 0, 0, 0, 0],
-                RPSD: [0, 0, 0, 0, 0, 0, 0]
-            }
-        });
+        allRows.push(...(payload.data?.table?.rows || []));
     }
+
+    return {
+        rows: allRows,
+        totalRows: Number(firstPayload.data?.table?.pagination?.total_rows || allRows.length),
+        summary: firstPayload.data?.summary || {}
+    };
 }
 
-servedChartTabs.forEach((tabButton) => {
-    tabButton.addEventListener('click', () => {
-        servedChartTabs.forEach((btn) => {
-            const isActive = btn === tabButton;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        });
+function switchView(view) {
+    tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.view === view));
+    dashboardView.classList.toggle('hidden', view !== 'dashboard');
+    tableView.classList.toggle('hidden', view !== 'table');
+    householdView.classList.toggle('hidden', view !== 'household');
+}
 
-        renderServedMainChart(tabButton.dataset.servedTab || 'barangay');
+async function exportPdf() {
+    if (!state.data || !window.jspdf) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const appliedFilters = getFilterValues();
+
+    doc.setFontSize(14);
+    doc.text('CSWDD Reports and Analytics', 14, 14);
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 20);
+
+    let y = 26;
+    doc.text('Applied Filters:', 14, y);
+    y += 5;
+
+    Object.entries(appliedFilters).forEach(([key, value]) => {
+        if (value) {
+            doc.text(`${key.replaceAll('_', ' ')}: ${value}`, 16, y);
+            y += 5;
+        }
+    });
+
+    const exportDataset = await fetchAllFilteredRows();
+    const summary = exportDataset.summary || state.data.summary || {};
+    y += 2;
+    doc.text(`Total Beneficiaries: ${summary.total_beneficiaries || 0}`, 14, y); y += 5;
+    doc.text(`Total Rows in Filtered Result: ${exportDataset.totalRows || 0}`, 14, y); y += 5;
+    doc.text(`Total Households Served: ${summary.total_households_served || 0}`, 14, y); y += 5;
+    doc.text(`Total with 2+ Interventions: ${summary.total_with_two_plus_interventions || 0}`, 14, y); y += 6;
+
+    const rows = (exportDataset.rows || []).map((row) => [
+        row.control_number || '-',
+        row.full_name || '-',
+        row.program || '-',
+        row.barangay || '-',
+        row.sex || '-',
+        String(row.age ?? '-'),
+        row.age_bracket || '-',
+        row.created_at || '-'
+    ]);
+
+    doc.autoTable({
+        startY: y,
+        head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Age Bracket', 'Date']],
+        body: rows,
+        styles: { fontSize: 8 }
+    });
+
+    doc.save(`cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
+document.getElementById('generateReportBtn')?.addEventListener('click', () => {
+    state.page = 1;
+    loadReports().catch(console.error);
+});
+
+document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
+    Object.values(filters).forEach((element) => {
+        if (element) element.value = '';
+    });
+    state.page = 1;
+    state.search = '';
+    tableSearchInput.value = '';
+    loadReports().catch(console.error);
+});
+
+document.getElementById('exportPdfBtn')?.addEventListener('click', () => {
+    exportPdf().catch((error) => {
+        console.error(error);
+        alert('Unable to export PDF right now. Please try again.');
     });
 });
 
-toggleFilterBtn?.addEventListener('click', () => {
-    chartFilterPanel.hidden = !chartFilterPanel.hidden;
+tableSearchInput?.addEventListener('input', (event) => {
+    state.search = event.target.value.trim();
+    state.page = 1;
+    loadReports().catch(console.error);
 });
 
-periodFilter?.addEventListener('change', () => {
-    setReferenceFieldType(periodFilter.value);
+sortHeaders.forEach((header) => {
+    header.addEventListener('click', () => {
+        const sortBy = header.dataset.sort;
+        if (!sortBy) return;
+        if (state.sort_by === sortBy) {
+            state.sort_dir = state.sort_dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            state.sort_by = sortBy;
+            state.sort_dir = 'asc';
+        }
+        loadReports().catch(console.error);
+    });
 });
 
-applyFilterBtn?.addEventListener('click', async () => {
-    await loadDivisionTrends();
+tabButtons.forEach((button) => {
+    button.addEventListener('click', () => switchView(button.dataset.view || 'dashboard'));
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-    setReferenceFieldType('week');
-    await loadReportTotals();
-    await loadServedCharts();
-    await loadDivisionTrends();
+document.addEventListener('DOMContentLoaded', () => {
+    switchView('dashboard');
+    loadReports().catch(console.error);
 });
