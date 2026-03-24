@@ -245,6 +245,59 @@ async function loadReports() {
     document.getElementById('exportExcelBtn').href = `export_excel.php?${toQuery(getFilterValues())}`;
 }
 
+async function fetchAllFilteredRows() {
+    const baseParams = {
+        ...getFilterValues(),
+        search: state.search,
+        sort_by: state.sort_by,
+        sort_dir: state.sort_dir,
+        per_page: 100
+    };
+
+    const firstResponse = await fetch(`get_reports_data.php?${toQuery({ ...baseParams, page: 1 })}`);
+    const firstPayload = await firstResponse.json();
+
+    if (!firstResponse.ok || !firstPayload.success) {
+        throw new Error(firstPayload.message || 'Failed to load rows for PDF export.');
+    }
+}
+
+function renderAll(data) {
+    state.data = data;
+
+    renderSummary(data.summary || {});
+
+    renderChart('chartProgram', 'column', asDataPoints(data.charts.beneficiaries_per_program), '#6d28d9');
+    renderChart('chartBarangay', 'bar', asDataPoints(data.charts.beneficiaries_per_barangay), '#0ea5e9');
+    renderChart('chartYear', 'line', asDataPoints(data.charts.beneficiaries_per_year), '#16a34a');
+    renderChart('chartMonth', 'line', asDataPoints(data.charts.beneficiaries_per_month), '#f97316');
+    renderPie('chartSex', asDataPoints(data.charts.by_sex));
+    renderPie('chartAge', asDataPoints(data.charts.by_age_bracket));
+    renderPie('chartSector', asDataPoints(data.charts.by_sector));
+
+    renderTable(data.table.rows || []);
+    renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
+    renderHouseholds(data.household_interventions || []);
+
+    const allRows = [...(firstPayload.data?.table?.rows || [])];
+    const totalPages = Number(firstPayload.data?.table?.pagination?.total_pages || 1);
+
+    for (let page = 2; page <= totalPages; page += 1) {
+        const response = await fetch(`get_reports_data.php?${toQuery({ ...baseParams, page })}`);
+        const payload = await response.json();
+        if (!response.ok || !payload.success) {
+            throw new Error(payload.message || `Failed to load export page ${page}.`);
+        }
+        allRows.push(...(payload.data?.table?.rows || []));
+    }
+
+    return {
+        rows: allRows,
+        totalRows: Number(firstPayload.data?.table?.pagination?.total_rows || allRows.length),
+        summary: firstPayload.data?.summary || {}
+    };
+}
+
 function switchView(view) {
     tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.view === view));
     dashboardView.classList.toggle('hidden', view !== 'dashboard');
@@ -275,13 +328,15 @@ async function exportPdf() {
         }
     });
 
-    const summary = state.data.summary || {};
+    const exportDataset = await fetchAllFilteredRows();
+    const summary = exportDataset.summary || state.data.summary || {};
     y += 2;
     doc.text(`Total Beneficiaries: ${summary.total_beneficiaries || 0}`, 14, y); y += 5;
+    doc.text(`Total Rows in Filtered Result: ${exportDataset.totalRows || 0}`, 14, y); y += 5;
     doc.text(`Total Households Served: ${summary.total_households_served || 0}`, 14, y); y += 5;
     doc.text(`Total with 2+ Interventions: ${summary.total_with_two_plus_interventions || 0}`, 14, y); y += 6;
 
-    const rows = (state.data.table?.rows || []).map((row) => [
+    const rows = (exportDataset.rows || []).map((row) => [
         row.control_number || '-',
         row.full_name || '-',
         row.program || '-',
@@ -317,7 +372,12 @@ document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
     loadReports().catch(console.error);
 });
 
-document.getElementById('exportPdfBtn')?.addEventListener('click', exportPdf);
+document.getElementById('exportPdfBtn')?.addEventListener('click', () => {
+    exportPdf().catch((error) => {
+        console.error(error);
+        alert('Unable to export PDF right now. Please try again.');
+    });
+});
 
 tableSearchInput?.addEventListener('input', (event) => {
     state.search = event.target.value.trim();
