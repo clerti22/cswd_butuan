@@ -10,6 +10,8 @@ require_login(['super admin']);
 start_auth_session();
 
 $fullname = (string) ($_SESSION['full_name'] ?? '');
+$username = (string) ($_SESSION['username'] ?? '');
+$userRole = (string) ($_SESSION['role'] ?? '');
 
 header('Content-Type: application/json');
 
@@ -85,6 +87,56 @@ if ($connection->connect_error) {
 
 $connection->begin_transaction();
 $recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+$userDivision = '';
+$userProgram = '';
+
+if ($username !== '') {
+    $programColumn = '';
+    foreach (['programs', 'program_assigned', 'program'] as $candidateColumn) {
+        $escapedColumn = $connection->real_escape_string($candidateColumn);
+        $columnResult = $connection->query("SHOW COLUMNS FROM users LIKE '{$escapedColumn}'");
+
+        if ($columnResult && $columnResult->num_rows > 0) {
+            $programColumn = $candidateColumn;
+            $columnResult->free();
+            break;
+        }
+
+        if ($columnResult) {
+            $columnResult->free();
+        }
+    }
+
+    $selectProgramColumn = $programColumn !== '' ? $programColumn : "''";
+    $userContextStatement = $connection->prepare(
+        "SELECT division, {$selectProgramColumn} AS user_program FROM users WHERE username = ? LIMIT 1"
+    );
+
+    if ($userContextStatement) {
+        $userContextStatement->bind_param('s', $username);
+
+        if ($userContextStatement->execute()) {
+            $userContextResult = $userContextStatement->get_result();
+            $userContext = $userContextResult ? $userContextResult->fetch_assoc() : null;
+
+            if ($userContext) {
+                $userDivision = trim((string) ($userContext['division'] ?? ''));
+                $userProgram = trim((string) ($userContext['user_program'] ?? ''));
+            }
+        }
+
+        $userContextStatement->close();
+    }
+}
+
+if ($userDivision === '') {
+    $userDivision = 'DPSD';
+}
+
+if ($userProgram === '') {
+    $userProgram = 'PWUD';
+}
 
 try {
     $firstName = trim((string) $_POST['first_name']);
@@ -242,6 +294,23 @@ try {
 
         $pwudId = $connection->insert_id;
         $insertPwud->close();
+
+        $notificationActivity = sprintf('%s added new client', $fullname);
+        $insertNotification = $connection->prepare(
+            'INSERT INTO notifications (name, activity, role, program, division) VALUES (?, ?, ?, ?, ?)'
+        );
+
+        if ($insertNotification) {
+            $insertNotification->bind_param('sssss', $fullname, $notificationActivity, $userRole, $userProgram, $userDivision);
+
+            if (!$insertNotification->execute()) {
+                error_log('Failed to insert PWUD notification: ' . $insertNotification->error);
+            }
+
+            $insertNotification->close();
+        } else {
+            error_log('Failed to prepare PWUD notification insert statement: ' . $connection->error);
+        }
     }
 
     $insertHousehold = $connection->prepare(
