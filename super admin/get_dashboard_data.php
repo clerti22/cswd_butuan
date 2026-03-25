@@ -164,7 +164,7 @@ try {
     }
 
     $activities = [];
-    $notificationsQuery = 'SELECT notification_id, name, activity, `timestamp`, role, program, division FROM notifications ORDER BY `timestamp` DESC, notification_id DESC LIMIT 5';
+    $notificationsQuery = 'SELECT notification_id, name, activity, created_at, role, program, division FROM notifications ORDER BY created_at DESC, notification_id DESC LIMIT 5';
     $notificationsResult = $connection->query($notificationsQuery);
     if ($notificationsResult) {
         while ($row = $notificationsResult->fetch_assoc()) {
@@ -179,12 +179,12 @@ try {
                 'notification_id' => (int) ($row['notification_id'] ?? 0),
                 'name' => $name,
                 'activity' => $activity,
-                'timestamp' => (string) ($row['timestamp'] ?? ''),
+                'created_at' => (string) ($row['created_at'] ?? ''),
                 'role' => trim((string) ($row['role'] ?? 'Unknown')),
                 'program' => trim((string) ($row['program'] ?? '')),
                 'division' => trim((string) ($row['division'] ?? '')),
                 'main_line' => $mainLine,
-                'secondary_line' => trim((string) ($row['role'] ?? 'Unknown')) . ' · ' . format_activity_timestamp((string) ($row['timestamp'] ?? '')),
+                'secondary_line' => trim((string) ($row['role'] ?? 'Unknown')) . ' · ' . format_activity_timestamp((string) ($row['created_at'] ?? '')),
             ];
         }
     }
