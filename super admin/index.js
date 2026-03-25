@@ -53,7 +53,7 @@ const socialWorkersData = [
 const rankingDivisions = [
   { name: "DPSD Division", total: 55 },
   { name: "RPSD Division", total: 2 },
-  { name: "OSCA/PDAO Division", total: 1 },
+  { name: "PSSD Division", total: 1 },
 ];
 
 // ===== TABLE TOGGLE + RENDER =====
@@ -188,7 +188,7 @@ window.addEventListener("load", () => {
 
   // read totals from the cards so they always match
   const dpsd = Number(document.getElementById("dpsdTotal")?.textContent || 0);
-  const osca = Number(document.getElementById("oscaTotal")?.textContent || 0);
+  const pssd = Number(document.getElementById("pssdTotal")?.textContent || 0);
   const rpsd = Number(document.getElementById("rpsdTotal")?.textContent || 0);
 
   const chart = new CanvasJS.Chart("chartContainer", {
@@ -203,7 +203,7 @@ window.addEventListener("load", () => {
       indexLabelPlacement: "outside",
       dataPoints: [
         { label: "RPSD", y: rpsd, indexLabel: String(rpsd) },
-        { label: "OSCA/PDAO", y: osca, indexLabel: String(osca) },
+        { label: "PSSD", y: pssd, indexLabel: String(pssd) },
         { label: "DPSD", y: dpsd, indexLabel: String(dpsd) },
       ]
     }]
