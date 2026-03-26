@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
+require_once __DIR__ . '/scan_copy_helpers.php';
 
 require_login(['super admin']);
 
@@ -70,6 +71,7 @@ $requiredColumns = [
 
 try {
     $connection = get_database_connection();
+    ensure_client_scans_table($connection);
     $allClients = [];
 
     foreach ($tablesByTab[$tab] as $tableName) {
@@ -180,6 +182,16 @@ try {
     $clients = array_slice($allClients, $offset, $perPage);
 
     foreach ($clients as &$client) {
+        $scan = get_latest_client_scan(
+            $connection,
+            (string) ($client['control_number'] ?? ''),
+            (string) ($client['program'] ?? '')
+        );
+
+        $client['has_scan_copy'] = $scan !== null;
+        $client['scan_copy_path'] = $scan['image_path'] ?? '';
+        $client['scan_uploaded_by'] = $scan['uploaded_by'] ?? '';
+        $client['scan_uploaded_at'] = $scan['uploaded_at'] ?? '';
         unset($client['created_at_sort']);
     }
     unset($client);

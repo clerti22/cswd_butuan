@@ -357,6 +357,19 @@ body {
     cursor: not-allowed;
 }
 
+.btn-scan {
+    background: #0f766e;
+}
+
+.btn-scan:hover {
+    background: #115e59;
+}
+
+.btn-scan-disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
 .btn-add {
     margin-left: auto;
     background: #0a7d0a;
@@ -564,6 +577,78 @@ button:hover {
 
 .modal-content button {
     width: 100%;
+}
+
+body.has-modal-open {
+    overflow: hidden;
+}
+
+.scan-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.scan-modal[hidden] {
+    display: none !important;
+}
+
+.scan-modal-card {
+    width: min(520px, 96vw);
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.scan-modal-meta,
+.scan-modal-note {
+    font-size: 0.9rem;
+    color: #334155;
+    margin: 0.35rem 0;
+}
+
+.scan-modal-body {
+    padding: 0.6rem 0;
+}
+
+.scan-qr-wrapper {
+    text-align: center;
+}
+
+.scan-qr-wrapper img {
+    width: 240px;
+    height: 240px;
+    max-width: 100%;
+}
+
+.scan-upload-link {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.scan-preview-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.scan-preview-actions,
+.scan-modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+}
+
+.scan-error {
+    color: #b91c1c;
 }
 
 
