@@ -118,10 +118,6 @@ require_login(['super admin']);
                             <i class="bi bi-search"></i>
                             Search
                         </button>
-                        <button class="btn btn-filter" type="button" id="clientFilterToggleButton" aria-expanded="false" aria-controls="clientFilterPanel">
-                            <i class="bi bi-funnel"></i>
-                            Filter
-                        </button>
                         <div class="add-client">
                             <button class="btn btn-add" type="button" id="addClientBtn" aria-haspopup="true"
                                 aria-expanded="false">
@@ -135,7 +131,7 @@ require_login(['super admin']);
                             </div>
                         </div>
                     </div>
-                    <div class="filter-panel" id="clientFilterPanel" hidden>
+                    <div class="filter-panel" id="clientFilterPanel">
                         <label class="filter-field" for="filterProgramSelect">
                             <span class="search-label">Program</span>
                             <select id="filterProgramSelect" class="filter-select">

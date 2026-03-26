@@ -4,8 +4,6 @@ const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
 const searchInput = document.getElementById('clientSearchInput');
 const searchButton = document.getElementById('clientSearchButton');
-const filterToggleButton = document.getElementById('clientFilterToggleButton');
-const filterPanel = document.getElementById('clientFilterPanel');
 const filterProgramSelect = document.getElementById('filterProgramSelect');
 const filterBarangaySelect = document.getElementById('filterBarangaySelect');
 const filterAgeBracketSelect = document.getElementById('filterAgeBracketSelect');
@@ -585,14 +583,6 @@ tabs.forEach(tab => {
         loadClients(target);
     });
 });
-
-if (filterToggleButton && filterPanel) {
-    filterToggleButton.addEventListener('click', () => {
-        const shouldShow = filterPanel.hidden;
-        filterPanel.hidden = !shouldShow;
-        filterToggleButton.setAttribute('aria-expanded', String(shouldShow));
-    });
-}
 
 if (applyFilterButton) {
     applyFilterButton.addEventListener('click', () => {
