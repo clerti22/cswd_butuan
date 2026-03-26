@@ -32,6 +32,57 @@ function escape_like_pattern(string $value): string
     );
 }
 
+function normalize_filter_value(string $value): string
+{
+    $trimmedValue = trim($value);
+
+    if ($trimmedValue === '') {
+        return '';
+    }
+
+    return function_exists('mb_strtolower')
+        ? mb_strtolower($trimmedValue, 'UTF-8')
+        : strtolower($trimmedValue);
+}
+
+function extract_age_value($age): ?int
+{
+    $ageString = trim((string) $age);
+    if ($ageString === '') {
+        return null;
+    }
+
+    if (!preg_match('/\d+/', $ageString, $matches)) {
+        return null;
+    }
+
+    return (int) $matches[0];
+}
+
+function resolve_age_bracket($age): string
+{
+    $ageValue = extract_age_value($age);
+
+    if ($ageValue === null || $ageValue < 0) {
+        return '';
+    }
+
+    if ($ageValue <= 12) {
+        return '0-12';
+    }
+    if ($ageValue <= 17) {
+        return '13-17';
+    }
+    if ($ageValue <= 30) {
+        return '18-30';
+    }
+    if ($ageValue <= 59) {
+        return '31-59';
+    }
+
+    return '60+';
+}
+
 $tab = strtolower(trim((string) ($_GET['tab'] ?? '')));
 $tablesByTab = [
     'dpsd' => ['pwud_table', 'pyap_table', 'soloparent_info_table'],
@@ -52,6 +103,10 @@ if ($page < 1) {
 $perPage = 10;
 $searchKeyword = normalize_search_keyword((string) ($_GET['search'] ?? ''));
 $searchPattern = '%' . escape_like_pattern($searchKeyword) . '%';
+$programFilter = trim((string) ($_GET['program'] ?? ''));
+$barangayFilter = trim((string) ($_GET['barangay'] ?? ''));
+$ageBracketFilter = trim((string) ($_GET['age_bracket'] ?? ''));
+$sexFilter = trim((string) ($_GET['sex'] ?? ''));
 
 $requiredColumns = [
     'key_id',
@@ -172,14 +227,50 @@ try {
         }
     );
 
-    $totalRows = count($allClients);
+    $programOptions = [];
+    $barangayOptions = [];
+    foreach ($allClients as $client) {
+        $program = trim((string) ($client['program'] ?? ''));
+        $barangay = trim((string) ($client['barangay'] ?? ''));
+        if ($program !== '') {
+            $programOptions[$program] = true;
+        }
+        if ($barangay !== '') {
+            $barangayOptions[$barangay] = true;
+        }
+    }
+
+    $filteredClients = array_values(array_filter(
+        $allClients,
+        static function (array $client) use ($programFilter, $barangayFilter, $ageBracketFilter, $sexFilter): bool {
+            if ($programFilter !== '' && normalize_filter_value((string) ($client['program'] ?? '')) !== normalize_filter_value($programFilter)) {
+                return false;
+            }
+
+            if ($barangayFilter !== '' && normalize_filter_value((string) ($client['barangay'] ?? '')) !== normalize_filter_value($barangayFilter)) {
+                return false;
+            }
+
+            if ($sexFilter !== '' && normalize_filter_value((string) ($client['sex'] ?? '')) !== normalize_filter_value($sexFilter)) {
+                return false;
+            }
+
+            if ($ageBracketFilter !== '' && resolve_age_bracket($client['age'] ?? '') !== $ageBracketFilter) {
+                return false;
+            }
+
+            return true;
+        }
+    ));
+
+    $totalRows = count($filteredClients);
     $totalPages = max(1, (int) ceil($totalRows / $perPage));
     if ($page > $totalPages) {
         $page = $totalPages;
     }
 
     $offset = ($page - 1) * $perPage;
-    $clients = array_slice($allClients, $offset, $perPage);
+    $clients = array_slice($filteredClients, $offset, $perPage);
 
     foreach ($clients as &$client) {
         $scan = get_latest_client_scan(
@@ -198,6 +289,11 @@ try {
 
     $connection->close();
 
+    $programValues = array_keys($programOptions);
+    $barangayValues = array_keys($barangayOptions);
+    natcasesort($programValues);
+    natcasesort($barangayValues);
+
     echo json_encode([
         'clients' => $clients,
         'pagination' => [
@@ -205,6 +301,10 @@ try {
             'per_page' => $perPage,
             'total_rows' => $totalRows,
             'total_pages' => $totalPages,
+        ],
+        'filter_options' => [
+            'programs' => array_values($programValues),
+            'barangays' => array_values($barangayValues),
         ],
     ]);
 } catch (Throwable $exception) {
