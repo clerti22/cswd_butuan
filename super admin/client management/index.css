@@ -594,6 +594,10 @@ body.has-modal-open {
     padding: 1rem;
 }
 
+.scan-modal[hidden] {
+    display: none !important;
+}
+
 .scan-modal-card {
     width: min(520px, 96vw);
     background: #fff;
