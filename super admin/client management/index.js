@@ -267,16 +267,24 @@ async function fetchQrUploadLink(clientControlNumber, program) {
     if (!response.ok) {
         throw new Error(payload.message || 'Unable to generate QR link.');
     }
-    return payload.mobile_upload_url || '';
+    return {
+        mobileUploadUrl: String(payload.mobile_upload_url || ''),
+        publicOrigin: String(payload.public_origin || ''),
+    };
 }
 
-function buildQrMarkup(mobileUploadUrl) {
-    const absoluteUploadUrl = new URL(mobileUploadUrl, window.location.href).toString();
+function buildQrMarkup(qrData) {
+    const absoluteUploadUrl = String(qrData.mobileUploadUrl || '').trim();
     const qrSource = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(absoluteUploadUrl)}`;
+    const isLikelyUnreachable = /^https?:\/\/(localhost|127\.0\.0\.1|::1)([:/]|$)/i.test(absoluteUploadUrl);
+    const warningMarkup = isLikelyUnreachable
+        ? '<p class="scan-error">This QR uses localhost/loopback. Set <code>CCIMS_PUBLIC_ORIGIN</code> in your server (example: <code>http://192.168.1.20</code>) so phones on your Wi‑Fi can open the upload page.</p>'
+        : '';
 
     return `
         <div class="scan-qr-wrapper">
             <img src="${escapeHtml(qrSource)}" alt="QR code for scan copy upload">
+            ${warningMarkup}
             <p class="scan-upload-link">Open link directly: <a href="${escapeHtml(absoluteUploadUrl)}" target="_blank" rel="noopener">Mobile Upload Page</a></p>
         </div>
     `;
@@ -302,9 +310,9 @@ async function renderScanModal(client, forceQrView = false) {
         const hasScan = Boolean(scanPayload.has_scan);
 
         if (!hasScan || forceQrView) {
-            const mobileUploadUrl = await fetchQrUploadLink(client.controlNumber, client.program);
+            const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
             scanCopyInstruction.textContent = 'Scan this QR code using your phone to capture and upload a scan copy.';
-            scanModalBody.innerHTML = buildQrMarkup(mobileUploadUrl);
+            scanModalBody.innerHTML = buildQrMarkup(qrData);
             scanGenerateQrAgainButton.hidden = false;
             return;
         }
@@ -328,9 +336,9 @@ async function renderScanModal(client, forceQrView = false) {
         const reuploadButton = document.getElementById('scanReuploadButton');
         if (reuploadButton) {
             reuploadButton.addEventListener('click', async () => {
-                const mobileUploadUrl = await fetchQrUploadLink(client.controlNumber, client.program);
+                const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
                 scanCopyInstruction.textContent = 'Scan this QR code using your phone to retake and replace the scan copy.';
-                scanModalBody.innerHTML = buildQrMarkup(mobileUploadUrl);
+                scanModalBody.innerHTML = buildQrMarkup(qrData);
                 scanGenerateQrAgainButton.hidden = false;
             });
         }

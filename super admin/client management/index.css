@@ -651,6 +651,12 @@ body.has-modal-open {
     color: #b91c1c;
 }
 
+.scan-error code {
+    background: #fee2e2;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+}
+
 
 .form-grid {
     display: grid;
