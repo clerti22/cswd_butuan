@@ -17,6 +17,12 @@ function is_loopback_host(string $host): bool
 
 function find_private_server_ip(): string
 {
+    $candidates = find_private_server_ips();
+    return $candidates[0] ?? '';
+}
+
+function find_private_server_ips(): array
+{
     $candidates = [];
 
     $serverAddr = trim((string) ($_SERVER['SERVER_ADDR'] ?? ''));
@@ -42,11 +48,11 @@ function find_private_server_ip(): string
         }
 
         if (preg_match('/^(10\\.|172\\.(1[6-9]|2\\d|3[0-1])\\.|192\\.168\\.)/', $candidate) === 1) {
-            return $candidate;
+            $candidates[] = $candidate;
         }
     }
 
-    return '';
+    return array_values(array_unique($candidates));
 }
 
 function build_public_origin(): string
@@ -94,12 +100,22 @@ try {
     $scriptDirectory = rtrim(str_replace('\\', '/', dirname((string) ($_SERVER['SCRIPT_NAME'] ?? ''))), '/');
     $mobilePath = $scriptDirectory . '/mobile_scan_upload.php?token=' . rawurlencode($token);
     $mobileUrl = $origin . $mobilePath;
+    $port = (string) ($_SERVER['SERVER_PORT'] ?? '');
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $candidateOrigins = [];
+    foreach (find_private_server_ips() as $candidateIp) {
+        $isDefaultPort = ($scheme === 'http' && $port === '80') || ($scheme === 'https' && $port === '443');
+        $candidateHost = $isDefaultPort || $port === '' ? $candidateIp : $candidateIp . ':' . $port;
+        $candidateOrigins[] = $scheme . '://' . $candidateHost;
+    }
+    $candidateOrigins = array_values(array_unique($candidateOrigins));
 
     echo json_encode([
         'mobile_upload_url' => $mobileUrl,
         'mobile_upload_path' => $mobilePath,
         'expires_at' => $tokenPayload['exp'],
         'public_origin' => $origin,
+        'candidate_origins' => $candidateOrigins,
     ]);
 } catch (Throwable $exception) {
     http_response_code(500);
