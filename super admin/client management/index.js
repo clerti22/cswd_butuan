@@ -4,6 +4,12 @@ const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
 const searchInput = document.getElementById('clientSearchInput');
 const searchButton = document.getElementById('clientSearchButton');
+const filterProgramSelect = document.getElementById('filterProgramSelect');
+const filterBarangaySelect = document.getElementById('filterBarangaySelect');
+const filterAgeBracketSelect = document.getElementById('filterAgeBracketSelect');
+const filterSexSelect = document.getElementById('filterSexSelect');
+const applyFilterButton = document.getElementById('applyFilterButton');
+const clearFilterButton = document.getElementById('clearFilterButton');
 
 function openSidebar() {
     sidebar.classList.add('open');
@@ -65,6 +71,18 @@ const tabSearchState = {
     dpsd: '',
     pssd: '',
     rpsd: ''
+};
+
+const tabFilterState = {
+    dpsd: { program: '', barangay: '', age_bracket: '', sex: '' },
+    pssd: { program: '', barangay: '', age_bracket: '', sex: '' },
+    rpsd: { program: '', barangay: '', age_bracket: '', sex: '' }
+};
+
+const tabFilterOptionsState = {
+    dpsd: { programs: [], barangays: [] },
+    pssd: { programs: [], barangays: [] },
+    rpsd: { programs: [], barangays: [] }
 };
 
 const prevButton = document.querySelector('.pagination .pager-btn:first-child');
@@ -354,7 +372,48 @@ function getActiveTabKey() {
 function getCacheKey(tabKey) {
     const pagination = tabPaginationState[tabKey] || { page: 1 };
     const searchTerm = tabSearchState[tabKey] || '';
-    return `${pagination.page}::${searchTerm}`;
+    const filters = tabFilterState[tabKey] || {};
+    return `${pagination.page}::${searchTerm}::${filters.program || ''}::${filters.barangay || ''}::${filters.age_bracket || ''}::${filters.sex || ''}`;
+}
+
+function setSelectOptions(selectElement, values, allLabel, selectedValue) {
+    if (!selectElement) {
+        return;
+    }
+
+    const normalizedValues = Array.isArray(values) ? values : [];
+    const optionsHtml = [`<option value="">${escapeHtml(allLabel)}</option>`]
+        .concat(normalizedValues.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`))
+        .join('');
+    selectElement.innerHTML = optionsHtml;
+    selectElement.value = selectedValue || '';
+}
+
+function syncFilterInputs(tabKey) {
+    const filters = tabFilterState[tabKey] || { program: '', barangay: '', age_bracket: '', sex: '' };
+
+    if (filterAgeBracketSelect) {
+        filterAgeBracketSelect.value = filters.age_bracket || '';
+    }
+
+    if (filterSexSelect) {
+        filterSexSelect.value = filters.sex || '';
+    }
+
+    if (filterProgramSelect) {
+        filterProgramSelect.value = filters.program || '';
+    }
+
+    if (filterBarangaySelect) {
+        filterBarangaySelect.value = filters.barangay || '';
+    }
+}
+
+function syncFilterOptions(tabKey, options = {}) {
+    const filters = tabFilterState[tabKey] || { program: '', barangay: '', age_bracket: '', sex: '' };
+    setSelectOptions(filterProgramSelect, options.programs || [], 'All Programs', filters.program || '');
+    setSelectOptions(filterBarangaySelect, options.barangays || [], 'All Barangays', filters.barangay || '');
+    syncFilterInputs(tabKey);
 }
 
 function updatePaginationButtons(tabKey) {
@@ -372,10 +431,12 @@ async function loadClients(tabKey) {
     const pagination = tabPaginationState[tabKey] || { page: 1, totalPages: 1 };
     const currentPage = pagination.page;
     const searchTerm = tabSearchState[tabKey] || '';
+    const filters = tabFilterState[tabKey] || { program: '', barangay: '', age_bracket: '', sex: '' };
     const cacheKey = getCacheKey(tabKey);
 
     if (clientDataCache[tabKey] && clientDataCache[tabKey][cacheKey]) {
         renderClients(tabKey, clientDataCache[tabKey][cacheKey]);
+        syncFilterOptions(tabKey, tabFilterOptionsState[tabKey] || {});
         updatePaginationButtons(tabKey);
         return;
     }
@@ -389,7 +450,11 @@ async function loadClients(tabKey) {
         const params = new URLSearchParams({
             tab: tabKey,
             page: String(currentPage),
-            search: searchTerm
+            search: searchTerm,
+            program: filters.program || '',
+            barangay: filters.barangay || '',
+            age_bracket: filters.age_bracket || '',
+            sex: filters.sex || ''
         });
         const response = await fetch(`get_clients.php?${params.toString()}`);
         const payload = await response.json();
@@ -411,8 +476,10 @@ async function loadClients(tabKey) {
         }
 
         clientDataCache[tabKey][cacheKey] = clients;
+        tabFilterOptionsState[tabKey] = payload.filter_options || { programs: [], barangays: [] };
 
         renderClients(tabKey, clients);
+        syncFilterOptions(tabKey, tabFilterOptionsState[tabKey]);
         updatePaginationButtons(tabKey);
     } catch (error) {
         if (panel) {
@@ -433,6 +500,30 @@ function syncSearchInput(tabKey) {
 function applySearch(tabKey, searchValue) {
     const normalizedSearchValue = String(searchValue ?? '').trim();
     tabSearchState[tabKey] = normalizedSearchValue;
+    tabPaginationState[tabKey] = {
+        page: 1,
+        totalPages: 1
+    };
+    loadClients(tabKey);
+}
+
+function applyFilter(tabKey) {
+    tabFilterState[tabKey] = {
+        program: filterProgramSelect ? String(filterProgramSelect.value || '').trim() : '',
+        barangay: filterBarangaySelect ? String(filterBarangaySelect.value || '').trim() : '',
+        age_bracket: filterAgeBracketSelect ? String(filterAgeBracketSelect.value || '').trim() : '',
+        sex: filterSexSelect ? String(filterSexSelect.value || '').trim() : ''
+    };
+    tabPaginationState[tabKey] = {
+        page: 1,
+        totalPages: 1
+    };
+    loadClients(tabKey);
+}
+
+function clearFilter(tabKey) {
+    tabFilterState[tabKey] = { program: '', barangay: '', age_bracket: '', sex: '' };
+    syncFilterInputs(tabKey);
     tabPaginationState[tabKey] = {
         page: 1,
         totalPages: 1
@@ -487,10 +578,23 @@ tabs.forEach(tab => {
         addClientMenu.classList.remove('open');
         addClientBtn.setAttribute('aria-expanded', 'false');
         syncSearchInput(target);
+        syncFilterInputs(target);
         updatePaginationButtons(target);
         loadClients(target);
     });
 });
+
+if (applyFilterButton) {
+    applyFilterButton.addEventListener('click', () => {
+        applyFilter(getActiveTabKey());
+    });
+}
+
+if (clearFilterButton) {
+    clearFilterButton.addEventListener('click', () => {
+        clearFilter(getActiveTabKey());
+    });
+}
 
 tabPanels.forEach((panel) => {
     panel.addEventListener('click', async (event) => {

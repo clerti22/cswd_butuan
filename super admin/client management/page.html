@@ -118,10 +118,6 @@ require_login(['super admin']);
                             <i class="bi bi-search"></i>
                             Search
                         </button>
-                        <button class="btn btn-filter" type="button">
-                            <i class="bi bi-funnel"></i>
-                            Filter
-                        </button>
                         <div class="add-client">
                             <button class="btn btn-add" type="button" id="addClientBtn" aria-haspopup="true"
                                 aria-expanded="false">
@@ -133,6 +129,43 @@ require_login(['super admin']);
                                 <button type="button" class="menu-item" role="menuitem">Solo Parent</button>
                                 <button type="button" class="menu-item" role="menuitem">PWUD</button>
                             </div>
+                        </div>
+                    </div>
+                    <div class="filter-panel" id="clientFilterPanel">
+                        <label class="filter-field" for="filterProgramSelect">
+                            <span class="search-label">Program</span>
+                            <select id="filterProgramSelect" class="filter-select">
+                                <option value="">All Programs</option>
+                            </select>
+                        </label>
+                        <label class="filter-field" for="filterBarangaySelect">
+                            <span class="search-label">Barangay</span>
+                            <select id="filterBarangaySelect" class="filter-select">
+                                <option value="">All Barangays</option>
+                            </select>
+                        </label>
+                        <label class="filter-field" for="filterAgeBracketSelect">
+                            <span class="search-label">Age Bracket</span>
+                            <select id="filterAgeBracketSelect" class="filter-select">
+                                <option value="">All Ages</option>
+                                <option value="0-12">0–12</option>
+                                <option value="13-17">13–17</option>
+                                <option value="18-30">18–30</option>
+                                <option value="31-59">31–59</option>
+                                <option value="60+">60+</option>
+                            </select>
+                        </label>
+                        <label class="filter-field" for="filterSexSelect">
+                            <span class="search-label">Sex</span>
+                            <select id="filterSexSelect" class="filter-select">
+                                <option value="">All</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </label>
+                        <div class="filter-actions">
+                            <button class="btn btn-search" type="button" id="applyFilterButton">Apply Filter</button>
+                            <button class="btn btn-print" type="button" id="clearFilterButton">Clear Filter</button>
                         </div>
                     </div>
 
