@@ -41,11 +41,19 @@ const tabs = document.querySelectorAll('.tab');
 const tabPanels = document.querySelectorAll('.tab-panel');
 const addClientBtn = document.getElementById('addClientBtn');
 const addClientMenu = document.getElementById('addClientMenu');
+const scanCopyModal = document.getElementById('scanCopyModal');
+const scanCopyModalTitle = document.getElementById('scanCopyModalTitle');
+const scanCopyClientMeta = document.getElementById('scanCopyClientMeta');
+const scanCopyInstruction = document.getElementById('scanCopyInstruction');
+const scanModalBody = document.getElementById('scanModalBody');
+const scanGenerateQrAgainButton = document.getElementById('scanGenerateQrAgainButton');
+const scanCloseModalButton = document.getElementById('scanCloseModalButton');
 const clientDataCache = {
     dpsd: {},
     pssd: {},
     rpsd: {}
 };
+let activeScanClient = null;
 
 const tabPaginationState = {
     dpsd: { page: 1, totalPages: 1 },
@@ -176,6 +184,13 @@ function createClientRow(client) {
         ? '<button class="btn btn-sm btn-print" type="button" disabled title="Print is not available for this record.">Print</button>'
         : `<a class="btn btn-sm btn-print" href="${escapeHtml(printRoute)}">Print</a>`;
 
+    const program = String(client.program ?? '').trim().toUpperCase();
+    const scanNotApplicable = program === 'CIU';
+    const scanLabel = client.has_scan_copy ? 'Show Scan Copy' : 'Scan Copy';
+    const scanButton = scanNotApplicable
+        ? '<button class="btn btn-scan-disabled" type="button" disabled title="Scan copy is not applicable for CIU records.">N/A</button>'
+        : `<button class="btn btn-scan" type="button" data-action="scan-copy" data-control-number="${escapeHtml(client.control_number)}" data-program="${escapeHtml(client.program)}" data-full-name="${escapeHtml(client.full_name)}">${scanLabel}</button>`;
+
     return `
         <tr>
             <td>${escapeHtml(client.control_number)}</td>
@@ -190,6 +205,7 @@ function createClientRow(client) {
             <td>
                 ${showButton}
                 ${printButton}
+                ${scanButton}
             </td>
         </tr>
     `;
@@ -208,6 +224,127 @@ function renderClients(tabKey, clients) {
     }
 
     panel.innerHTML = clients.map(createClientRow).join('');
+}
+
+function openScanModal() {
+    if (!scanCopyModal) {
+        return;
+    }
+    scanCopyModal.hidden = false;
+    document.body.classList.add('has-modal-open');
+}
+
+function closeScanModal() {
+    if (!scanCopyModal) {
+        return;
+    }
+    scanCopyModal.hidden = true;
+    if (!document.querySelector('.scan-modal:not([hidden])')) {
+        document.body.classList.remove('has-modal-open');
+    }
+}
+
+async function fetchScanDetails(clientControlNumber, program) {
+    const params = new URLSearchParams({
+        client_control_number: clientControlNumber,
+        program
+    });
+    const response = await fetch(`get_scan_copy.php?${params.toString()}`);
+    const payload = await response.json();
+    if (!response.ok) {
+        throw new Error(payload.message || 'Unable to fetch scan copy.');
+    }
+    return payload;
+}
+
+async function fetchQrUploadLink(clientControlNumber, program) {
+    const params = new URLSearchParams({
+        client_control_number: clientControlNumber,
+        program
+    });
+    const response = await fetch(`generate_scan_qr.php?${params.toString()}`);
+    const payload = await response.json();
+    if (!response.ok) {
+        throw new Error(payload.message || 'Unable to generate QR link.');
+    }
+    return {
+        mobileUploadUrl: String(payload.mobile_upload_url || ''),
+        publicOrigin: String(payload.public_origin || ''),
+    };
+}
+
+function buildQrMarkup(qrData) {
+    const absoluteUploadUrl = String(qrData.mobileUploadUrl || '').trim();
+    const qrSource = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(absoluteUploadUrl)}`;
+    const isLikelyUnreachable = /^https?:\/\/(localhost|127\.0\.0\.1|::1)([:/]|$)/i.test(absoluteUploadUrl);
+    const warningMarkup = isLikelyUnreachable
+        ? '<p class="scan-error">This QR uses localhost/loopback. Set <code>CCIMS_PUBLIC_ORIGIN</code> in your server (example: <code>http://192.168.1.20</code>) so phones on your Wi‑Fi can open the upload page.</p>'
+        : '';
+
+    return `
+        <div class="scan-qr-wrapper">
+            <img src="${escapeHtml(qrSource)}" alt="QR code for scan copy upload">
+            ${warningMarkup}
+            <p class="scan-upload-link">Open link directly: <a href="${escapeHtml(absoluteUploadUrl)}" target="_blank" rel="noopener">Mobile Upload Page</a></p>
+        </div>
+    `;
+}
+
+async function renderScanModal(client, forceQrView = false) {
+    if (!scanCopyModal || !scanModalBody || !scanCopyInstruction || !scanCopyClientMeta) {
+        return;
+    }
+
+    activeScanClient = client;
+    openScanModal();
+
+    const safeName = String(client.fullName || '');
+    scanCopyModalTitle.textContent = 'Scan Copy';
+    scanCopyClientMeta.textContent = `${safeName} • ${client.controlNumber} • ${client.program}`;
+    scanModalBody.innerHTML = '<p>Loading scan copy details...</p>';
+    scanCopyInstruction.textContent = '';
+    scanGenerateQrAgainButton.hidden = true;
+
+    try {
+        const scanPayload = await fetchScanDetails(client.controlNumber, client.program);
+        const hasScan = Boolean(scanPayload.has_scan);
+
+        if (!hasScan || forceQrView) {
+            const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
+            scanCopyInstruction.textContent = 'Scan this QR code using your phone to capture and upload a scan copy.';
+            scanModalBody.innerHTML = buildQrMarkup(qrData);
+            scanGenerateQrAgainButton.hidden = false;
+            return;
+        }
+
+        const scan = scanPayload.scan || {};
+        const imagePath = String(scan.image_path || '');
+        const uploadedBy = String(scan.uploaded_by || 'Unknown');
+        const uploadedAt = String(scan.uploaded_at || '');
+
+        scanCopyInstruction.textContent = `Uploaded by ${uploadedBy}${uploadedAt ? ` on ${uploadedAt}` : ''}.`;
+        scanModalBody.innerHTML = `
+            <div class="scan-preview-wrap">
+                <img src="${escapeHtml(imagePath)}" alt="Client scan copy" class="scan-preview-image">
+            </div>
+            <div class="scan-preview-actions">
+                <button class="btn btn-scan" type="button" id="scanReuploadButton">Re-upload / Replace Image</button>
+            </div>
+        `;
+        scanGenerateQrAgainButton.hidden = false;
+
+        const reuploadButton = document.getElementById('scanReuploadButton');
+        if (reuploadButton) {
+            reuploadButton.addEventListener('click', async () => {
+                const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
+                scanCopyInstruction.textContent = 'Scan this QR code using your phone to retake and replace the scan copy.';
+                scanModalBody.innerHTML = buildQrMarkup(qrData);
+                scanGenerateQrAgainButton.hidden = false;
+            });
+        }
+    } catch (error) {
+        scanModalBody.innerHTML = `<p class="scan-error">${escapeHtml(error.message || 'Unable to load scan copy flow.')}</p>`;
+    }
 }
 
 function getActiveTabKey() {
@@ -355,6 +492,43 @@ tabs.forEach(tab => {
         loadClients(target);
     });
 });
+
+tabPanels.forEach((panel) => {
+    panel.addEventListener('click', async (event) => {
+        const trigger = event.target.closest('[data-action="scan-copy"]');
+        if (!trigger) {
+            return;
+        }
+
+        event.preventDefault();
+        await renderScanModal({
+            controlNumber: String(trigger.dataset.controlNumber || ''),
+            program: String(trigger.dataset.program || ''),
+            fullName: String(trigger.dataset.fullName || ''),
+        });
+    });
+});
+
+if (scanGenerateQrAgainButton) {
+    scanGenerateQrAgainButton.addEventListener('click', async () => {
+        if (!activeScanClient) {
+            return;
+        }
+        await renderScanModal(activeScanClient, true);
+    });
+}
+
+if (scanCloseModalButton) {
+    scanCloseModalButton.addEventListener('click', closeScanModal);
+}
+
+if (scanCopyModal) {
+    scanCopyModal.addEventListener('click', (event) => {
+        if (event.target === scanCopyModal) {
+            closeScanModal();
+        }
+    });
+}
 
 addClientBtn.addEventListener('click', () => {
     const isOpen = addClientMenu.classList.toggle('open');
