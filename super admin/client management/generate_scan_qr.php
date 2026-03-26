@@ -62,6 +62,11 @@ function build_public_origin(): string
         return rtrim($configuredOrigin, '/');
     }
 
+    $preferredDefaultOrigin = 'http://192.168.254.100';
+    if ($preferredDefaultOrigin !== '') {
+        return rtrim($preferredDefaultOrigin, '/');
+    }
+
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $hostHeader = trim((string) ($_SERVER['HTTP_HOST'] ?? ''));
     $host = $hostHeader !== '' ? $hostHeader : trim((string) ($_SERVER['SERVER_NAME'] ?? ''));

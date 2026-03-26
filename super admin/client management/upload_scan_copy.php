@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../auth/db.php';
 require_once __DIR__ . '/scan_copy_helpers.php';
 
 header('Content-Type: application/json; charset=utf-8');
+const MAX_SCAN_IMAGE_BYTES = 20 * 1024 * 1024;
 
 $token = (string) ($_POST['token'] ?? '');
 $payload = verify_scan_copy_token($token);
@@ -31,22 +32,69 @@ if ((int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
 
 $tmpPath = (string) ($file['tmp_name'] ?? '');
 $size = (int) ($file['size'] ?? 0);
-if ($tmpPath === '' || $size <= 0 || $size > 8 * 1024 * 1024) {
+if ($tmpPath === '' || $size <= 0) {
     http_response_code(400);
     echo json_encode(['message' => 'Invalid image file.']);
     exit;
 }
 
-$mimeType = mime_content_type($tmpPath);
+$maxImageSizeMb = (string) (MAX_SCAN_IMAGE_BYTES / (1024 * 1024));
+if ($size > MAX_SCAN_IMAGE_BYTES) {
+    http_response_code(400);
+    echo json_encode(['message' => "Image is too large. Max allowed is {$maxImageSizeMb}MB."]);
+    exit;
+}
+
+$mimeType = '';
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+if ($finfo !== false) {
+    $detected = finfo_file($finfo, $tmpPath);
+    if (is_string($detected) && $detected !== '') {
+        $mimeType = $detected;
+    }
+    finfo_close($finfo);
+}
+
+if ($mimeType === '' && function_exists('mime_content_type')) {
+    $detected = mime_content_type($tmpPath);
+    if (is_string($detected) && $detected !== '') {
+        $mimeType = $detected;
+    }
+}
+
+if ($mimeType === '' && function_exists('exif_imagetype')) {
+    $imageType = @exif_imagetype($tmpPath);
+    $mimeByType = [
+        IMAGETYPE_JPEG => 'image/jpeg',
+        IMAGETYPE_PNG => 'image/png',
+        IMAGETYPE_WEBP => 'image/webp',
+    ];
+    if (isset($mimeByType[$imageType])) {
+        $mimeType = $mimeByType[$imageType];
+    }
+}
+
+$originalName = strtolower((string) ($file['name'] ?? ''));
+$extensionFromName = pathinfo($originalName, PATHINFO_EXTENSION);
 $allowedMimeTypes = [
     'image/jpeg' => 'jpg',
     'image/png' => 'png',
     'image/webp' => 'webp',
+    'image/heic' => 'heic',
+    'image/heif' => 'heif',
+];
+$allowedExtensions = [
+    'jpg' => 'jpg',
+    'jpeg' => 'jpg',
+    'png' => 'png',
+    'webp' => 'webp',
+    'heic' => 'heic',
+    'heif' => 'heif',
 ];
 
-if (!isset($allowedMimeTypes[$mimeType])) {
+if (!isset($allowedMimeTypes[$mimeType]) && !isset($allowedExtensions[$extensionFromName])) {
     http_response_code(400);
-    echo json_encode(['message' => 'Only JPG, PNG, or WEBP images are allowed.']);
+    echo json_encode(['message' => 'Unsupported image type. Use JPG, PNG, WEBP, HEIC, or HEIF.']);
     exit;
 }
 
@@ -67,7 +115,7 @@ if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)
     exit;
 }
 
-$extension = $allowedMimeTypes[$mimeType];
+$extension = $allowedMimeTypes[$mimeType] ?? $allowedExtensions[$extensionFromName] ?? 'jpg';
 $sanitizedControl = preg_replace('/[^A-Za-z0-9_-]/', '_', $controlNumber) ?: 'client';
 $sanitizedProgram = preg_replace('/[^A-Za-z0-9_-]/', '_', $program) ?: 'program';
 $fileName = sprintf('%s_%s_%s.%s', $sanitizedControl, $sanitizedProgram, date('Ymd_His'), $extension);
