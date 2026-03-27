@@ -42,6 +42,31 @@ body {
 
 .header-image { width: 100%; display: block; }
 
+.print-template {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.print-template td {
+  padding: 0;
+  vertical-align: top;
+}
+
+.print-page-header,
+.print-page-footer {
+  background: #fff;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
 .meta-row {
   margin-top: 10px;
   display: flex;
@@ -204,6 +229,18 @@ h1 {
   background: linear-gradient(90deg, #37ace0 0%, #1587c5 33%, #0d6296 65%, #0a3f73 100%);
 }
 
+
+
+.meta-row,
+.section-block,
+.family-table,
+.signature-block,
+.privacy-consent,
+.time-row {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
 @media print {
   @page { size: auto; margin: 0; }
 
@@ -220,7 +257,36 @@ h1 {
     margin: 0;
     width: 100%;
     min-height: auto;
-    padding: 10px 14px 0;
+    padding: 0 14px;
     box-shadow: none;
+    background: transparent;
+  }
+
+  .print-template {
+    width: 100%;
+  }
+
+  .print-template__head {
+    display: table-header-group;
+  }
+
+  .print-template__foot {
+    display: table-footer-group;
+  }
+
+  .print-template__body {
+    display: table-row-group;
+  }
+
+  .page-content {
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+
+  .print-page-header,
+  .print-page-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
