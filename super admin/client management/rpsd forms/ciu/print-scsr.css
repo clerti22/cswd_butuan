@@ -48,7 +48,9 @@ body {
   border-spacing: 0;
 }
 
-.print-template td {
+.print-template > thead > tr > td,
+.print-template > tbody > tr > td,
+.print-template > tfoot > tr > td {
   padding: 0;
   vertical-align: top;
 }
@@ -268,9 +270,9 @@ h1 {
   }
 
   .print-template,
-  .print-template tbody,
-  .print-template tr,
-  .print-template td {
+  .print-template > tbody,
+  .print-template > tbody > tr,
+  .print-template > tbody > tr > td {
     display: block;
     width: 100%;
   }
