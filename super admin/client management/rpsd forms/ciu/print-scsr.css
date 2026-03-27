@@ -48,9 +48,7 @@ body {
   border-spacing: 0;
 }
 
-.print-template > thead > tr > td,
-.print-template > tbody > tr > td,
-.print-template > tfoot > tr > td {
+.print-template td {
   padding: 0;
   vertical-align: top;
 }
@@ -234,6 +232,7 @@ h1 {
 
 
 .meta-row,
+.section-block,
 .family-table,
 .signature-block,
 .privacy-consent,
@@ -242,16 +241,8 @@ h1 {
   page-break-inside: avoid;
 }
 
-.privacy-consent {
-  break-before: auto;
-  page-break-before: auto;
-}
-
 @media print {
-  @page {
-    size: auto;
-    margin: 0;
-  }
+  @page { size: auto; margin: 0; }
 
   html,
   body {
@@ -260,9 +251,7 @@ h1 {
     print-color-adjust: exact;
   }
 
-  .print-toolbar {
-    display: none;
-  }
+  .print-toolbar { display: none; }
 
   .print-page {
     margin: 0;
@@ -273,51 +262,31 @@ h1 {
     background: transparent;
   }
 
-
-
   .print-template {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
   }
 
   .print-template__head {
     display: table-header-group;
   }
 
-  .print-template__body {
-    display: table-row-group;
-  }
-
   .print-template__foot {
     display: table-footer-group;
   }
 
-  .print-page-header {
-    position: fixed;
-    top: 0;
-    left: 14px;
-    right: 14px;
-    z-index: 20;
-    background: #fff;
-  }
-
-  .print-page-footer {
-    position: fixed;
-    left: 14px;
-    right: 14px;
-    bottom: 0;
-    z-index: 20;
-    background: #fff;
+  .print-template__body {
+    display: table-row-group;
   }
 
   .page-content {
     display: block;
-    padding-top: 124px;
-    padding-bottom: 130px;
+    padding-top: 10px;
+    padding-bottom: 12px;
   }
 
-  .sheet-footer {
-    margin-top: 0;
+  .print-page-header,
+  .print-page-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
