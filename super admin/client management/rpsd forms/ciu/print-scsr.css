@@ -242,7 +242,10 @@ h1 {
 }
 
 @media print {
-  @page { size: auto; margin: 0; }
+  @page {
+    size: auto;
+    margin: 0;
+  }
 
   html,
   body {
@@ -251,7 +254,9 @@ h1 {
     print-color-adjust: exact;
   }
 
-  .print-toolbar { display: none; }
+  .print-toolbar {
+    display: none;
+  }
 
   .print-page {
     margin: 0;
@@ -262,31 +267,40 @@ h1 {
     background: transparent;
   }
 
-  .print-template {
+  .print-template,
+  .print-template tbody,
+  .print-template tr,
+  .print-template td {
+    display: block;
     width: 100%;
   }
 
-  .print-template__head {
-    display: table-header-group;
+
+  .print-page-header {
+    position: fixed;
+    top: 0;
+    left: 14px;
+    right: 14px;
+    z-index: 20;
+    background: #fff;
   }
 
-  .print-template__foot {
-    display: table-footer-group;
-  }
-
-  .print-template__body {
-    display: table-row-group;
+  .print-page-footer {
+    position: fixed;
+    left: 14px;
+    right: 14px;
+    bottom: 0;
+    z-index: 20;
+    background: #fff;
   }
 
   .page-content {
     display: block;
-    padding-top: 10px;
-    padding-bottom: 12px;
+    padding-top: 124px;
+    padding-bottom: 130px;
   }
 
-  .print-page-header,
-  .print-page-footer {
-    break-inside: avoid;
-    page-break-inside: avoid;
+  .sheet-footer {
+    margin-top: 0;
   }
 }
