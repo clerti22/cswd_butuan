@@ -567,10 +567,6 @@ button:hover {
     color: #1f2937;
 }
 
-.data-privacy-consent .consent-check {
-    align-items: flex-start;
-    line-height: 1.5;
-}
 .span-2 {
     grid-column: span 2;
 }

@@ -312,13 +312,10 @@ function validateMainForm() {
     if (isScsrForm) {
         const hasPresentProblem = getInputValue('present_problem') !== '';
         const hasRecommendation = getInputValue('recommendation') !== '';
-        const hasPrivacyConsent = isChecked('data_privacy_consent');
-
         setFieldValidity('present_problem', hasPresentProblem);
         setFieldValidity('recommendation', hasRecommendation);
-        setCheckboxValidity('data_privacy_consent', hasPrivacyConsent);
 
-        if (!hasPresentProblem || !hasRecommendation || !hasPrivacyConsent) {
+        if (!hasPresentProblem || !hasRecommendation) {
             isValid = false;
         }
     }
@@ -384,7 +381,6 @@ function collectMainFormData() {
         service_others: isScsrForm ? '' : getInputValue('service_others'),
         present_problem: getInputValue('present_problem'),
         recommendation: getInputValue('recommendation'),
-        data_privacy_consent: isChecked('data_privacy_consent') ? 'Yes' : 'No',
         form_variant: formVariant,
         ...memberFlags,
         ...serviceFlags
@@ -433,7 +429,7 @@ ciuForm?.addEventListener('submit', async (event) => {
     const { isValid } = validateMainForm();
 
     if (!isValid) {
-        alert(isScsrForm ? 'Please complete all required SCSR fields, confirm data privacy consent, and add at least one family composition row.' : 'Please complete all required CIU fields and add at least one family composition row.');
+        alert(isScsrForm ? 'Please complete all required SCSR fields and add at least one family composition row.' : 'Please complete all required CIU fields and add at least one family composition row.');
         return;
     }
 

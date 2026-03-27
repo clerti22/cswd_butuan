@@ -72,7 +72,7 @@ if (!$isScsrForm) {
         'service_burial', 'service_laboratory', 'service_legal_assistance'
     ]);
 } else {
-    $requiredFields = array_merge($requiredFields, ['present_problem', 'recommendation', 'data_privacy_consent']);
+    $requiredFields = array_merge($requiredFields, ['present_problem', 'recommendation']);
 }
 foreach ($requiredFields as $field) {
     if (!isset($_POST[$field]) || trim((string) $_POST[$field]) === '') {

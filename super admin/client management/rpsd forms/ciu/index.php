@@ -316,13 +316,6 @@ $formHeading = $isScsrForm ? 'Social Case Study Report (SCSR)' : 'CIU Intake She
                                 </label>
                             </div>
 
-                            <div class="ciu-section data-privacy-consent">
-                                <p class="section-title">Data Privacy Consent</p>
-                                <label class="checkbox-item consent-check">
-                                    <input type="checkbox" name="data_privacy_consent" value="Yes">
-                                    I hereby consent to the collection and processing of my personal information for SCSR documentation and related social welfare services.
-                                </label>
-                            </div>
                         <?php endif; ?>
 
                         <div class="ciu-section family-section">
