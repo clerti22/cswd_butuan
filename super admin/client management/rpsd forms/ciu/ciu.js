@@ -40,6 +40,8 @@ const familyForm = document.querySelector('#familyModal .modal-form');
 const saveFamilyEntryButton = document.getElementById('saveFamilyEntry');
 const familyTableBody = document.querySelector('.family-table tbody');
 const ciuForm = document.querySelector('.ciu-body');
+const formVariant = String(ciuForm?.dataset.formVariant || 'ciu').toLowerCase() === 'scsr' ? 'scsr' : 'ciu';
+const isScsrForm = formVariant === 'scsr';
 const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
 const familyMembers = [];
@@ -296,12 +298,26 @@ function validateMainForm() {
         isValid = false;
     }
 
-    const hasServiceSelection = serviceCheckboxes.some((name) => isChecked(name));
-    serviceCheckboxes.forEach((name) => {
-        setCheckboxValidity(name, hasServiceSelection);
-    });
-    if (!hasServiceSelection) {
-        isValid = false;
+    let hasServiceSelection = false;
+    if (!isScsrForm) {
+        hasServiceSelection = serviceCheckboxes.some((name) => isChecked(name));
+        serviceCheckboxes.forEach((name) => {
+            setCheckboxValidity(name, hasServiceSelection);
+        });
+        if (!hasServiceSelection) {
+            isValid = false;
+        }
+    }
+
+    if (isScsrForm) {
+        const hasPresentProblem = getInputValue('present_problem') !== '';
+        const hasRecommendation = getInputValue('recommendation') !== '';
+        setFieldValidity('present_problem', hasPresentProblem);
+        setFieldValidity('recommendation', hasRecommendation);
+
+        if (!hasPresentProblem || !hasRecommendation) {
+            isValid = false;
+        }
     }
 
     if (familyMembers.length === 0) {
@@ -324,15 +340,25 @@ function collectMainFormData() {
         member_4ps: isChecked('member_4ps') ? 'Yes' : 'No'
     };
 
-    const serviceFlags = {
-        service_prescribed_medicine: isChecked('service_prescribed_medicine') ? 'Yes' : 'No',
-        service_certificate_minor: isChecked('service_certificate_minor') ? 'Yes' : 'No',
-        service_hospital_bill: isChecked('service_hospital_bill') ? 'Yes' : 'No',
-        service_tesda_certificate: isChecked('service_tesda_certificate') ? 'Yes' : 'No',
-        service_burial: isChecked('service_burial') ? 'Yes' : 'No',
-        service_laboratory: isChecked('service_laboratory') ? 'Yes' : 'No',
-        service_legal_assistance: isChecked('service_legal_assistance') ? 'Yes' : 'No'
-    };
+    const serviceFlags = isScsrForm
+        ? {
+            service_prescribed_medicine: 'No',
+            service_certificate_minor: 'No',
+            service_hospital_bill: 'No',
+            service_tesda_certificate: 'No',
+            service_burial: 'No',
+            service_laboratory: 'No',
+            service_legal_assistance: 'No'
+        }
+        : {
+            service_prescribed_medicine: isChecked('service_prescribed_medicine') ? 'Yes' : 'No',
+            service_certificate_minor: isChecked('service_certificate_minor') ? 'Yes' : 'No',
+            service_hospital_bill: isChecked('service_hospital_bill') ? 'Yes' : 'No',
+            service_tesda_certificate: isChecked('service_tesda_certificate') ? 'Yes' : 'No',
+            service_burial: isChecked('service_burial') ? 'Yes' : 'No',
+            service_laboratory: isChecked('service_laboratory') ? 'Yes' : 'No',
+            service_legal_assistance: isChecked('service_legal_assistance') ? 'Yes' : 'No'
+        };
 
     return {
         first_name: getInputValue('first_name'),
@@ -352,7 +378,10 @@ function collectMainFormData() {
         address: getInputValue('address'),
         barangay: getInputValue('barangay'),
         member_others: getInputValue('member_others'),
-        service_others: getInputValue('service_others'),
+        service_others: isScsrForm ? '' : getInputValue('service_others'),
+        present_problem: getInputValue('present_problem'),
+        recommendation: getInputValue('recommendation'),
+        form_variant: formVariant,
         ...memberFlags,
         ...serviceFlags
     };
@@ -400,7 +429,7 @@ ciuForm?.addEventListener('submit', async (event) => {
     const { isValid } = validateMainForm();
 
     if (!isValid) {
-        alert('Please complete all required CIU fields and add at least one family composition row.');
+        alert(isScsrForm ? 'Please complete all required SCSR fields and add at least one family composition row.' : 'Please complete all required CIU fields and add at least one family composition row.');
         return;
     }
 
@@ -442,13 +471,17 @@ ciuForm?.addEventListener('submit', async (event) => {
         }
 
         if (!response.ok || !result || !result.success) {
-            throw new Error((result && result.message) || 'Failed to save CIU record.');
+            throw new Error((result && result.message) || `Failed to save ${isScsrForm ? 'SCSR' : 'CIU'} record.`);
         }
 
-        alert(recordId ? 'CIU record updated successfully.' : 'CIU record saved successfully.');
+        alert(recordId ? `${isScsrForm ? 'SCSR' : 'CIU'} record updated successfully.` : `${isScsrForm ? 'SCSR' : 'CIU'} record saved successfully.`);
 
         if (recordId) {
-            window.location.href = `${window.location.pathname}?id=${encodeURIComponent(String(recordId))}`;
+            const viewParams = new URLSearchParams({ id: String(recordId) });
+            if (isScsrForm) {
+                viewParams.set('variant', 'scsr');
+            }
+            window.location.href = `${window.location.pathname}?${viewParams.toString()}`;
             return;
         }
 
