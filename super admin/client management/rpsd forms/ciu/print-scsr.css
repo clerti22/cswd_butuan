@@ -234,13 +234,17 @@ h1 {
 
 
 .meta-row,
-.section-block,
 .family-table,
 .signature-block,
 .privacy-consent,
 .time-row {
   break-inside: avoid;
   page-break-inside: avoid;
+}
+
+.privacy-consent {
+  break-before: auto;
+  page-break-before: auto;
 }
 
 @media print {
@@ -269,14 +273,25 @@ h1 {
     background: transparent;
   }
 
-  .print-template,
-  .print-template > tbody,
-  .print-template > tbody > tr,
-  .print-template > tbody > tr > td {
-    display: block;
+
+
+  .print-template {
     width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
   }
 
+  .print-template__head {
+    display: table-header-group;
+  }
+
+  .print-template__body {
+    display: table-row-group;
+  }
+
+  .print-template__foot {
+    display: table-footer-group;
+  }
 
   .print-page-header {
     position: fixed;
