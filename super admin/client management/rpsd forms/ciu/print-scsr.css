@@ -284,9 +284,13 @@ h1 {
     display: table-row-group;
   }
 
+  .print-template__body > tr > td {
+    width: 100%;
+  }
+
   .page-content {
     display: block;
-    padding-top: 30mm;
+    padding-top: 10px;
     padding-bottom: 36mm;
   }
 
@@ -307,22 +311,7 @@ h1 {
   }
 
   .print-page-header {
-    position: fixed;
-    left: 5mm;
-    right: 5mm;
-    top: 6mm;
-    background: #fff;
-    z-index: 20;
-  }
-
-  .print-template__head > tr > td {
-    padding: 0;
-    height: 0;
-  }
-
-  .print-template__foot > tr > td {
-    padding: 0;
-    height: 0;
+    position: static;
   }
 
   .privacy-consent--page-two {
