@@ -36,6 +36,7 @@ body {
 .print-hint { margin: 0; font-size: 12px; }
 
 .print-page {
+  position: relative;
   width: var(--sheet-width);
   min-height: 297mm;
   margin: 0 auto 16px;
