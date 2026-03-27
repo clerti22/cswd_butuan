@@ -291,6 +291,12 @@ h1 {
     background: #fff;
   }
 
+  .print-template__head > tr > td,
+  .print-template__foot > tr > td {
+    padding: 0;
+    height: 0;
+  }
+
   .page-content {
     display: block;
     padding: 0;
