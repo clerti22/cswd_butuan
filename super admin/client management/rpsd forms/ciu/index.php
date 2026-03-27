@@ -6,6 +6,14 @@ require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../includes/navigation.php';
 require_login(['super admin']);
 
+$formVariant = strtolower(trim((string) ($_GET['variant'] ?? 'ciu')));
+if (!in_array($formVariant, ['ciu', 'scsr'], true)) {
+    $formVariant = 'ciu';
+}
+
+$isScsrForm = $formVariant === 'scsr';
+$formTitle = $isScsrForm ? 'SCSR Form' : 'CIU Form';
+$formHeading = $isScsrForm ? 'Social Case Study Report (SCSR)' : 'CIU Intake Sheet Form';
 
 ?>
 
@@ -16,7 +24,7 @@ require_login(['super admin']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCIMS -CIU Form</title>
+    <title>CCIMS - <?php echo htmlspecialchars($formTitle, ENT_QUOTES, "UTF-8"); ?></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -56,10 +64,11 @@ require_login(['super admin']);
                             </div>
                             <img src="../../../images-logo/cswd-logo.png" alt="CSWD Logo">
                         </div>
-                        <h2>CIU Intake Sheet Form</h2>
+                        <h2><?php echo htmlspecialchars($formHeading, ENT_QUOTES, "UTF-8"); ?></h2>
                     </div>
 
-                    <form class="ciu-body">
+                    <form class="ciu-body" data-form-variant="<?php echo htmlspecialchars($formVariant, ENT_QUOTES, "UTF-8"); ?>">
+                        <input type="hidden" name="form_variant" value="<?php echo htmlspecialchars($formVariant, ENT_QUOTES, "UTF-8"); ?>">
                         <div class="form-grid">
                             <label class="field">
                                 First Name:
@@ -237,7 +246,10 @@ require_login(['super admin']);
                         </div>
 
                         <div class="ciu-section">
-                            <p class="section-title">Member(s) of:</p>
+                            <p class="section-title"><?php echo $isScsrForm ? "Clientele Category:" : "Member(s) of:"; ?></p>
+                            <?php if ($isScsrForm): ?>
+                                <p class="clientele-note">This client is categorized as <strong>Member/s from CIU</strong>.</p>
+                            <?php endif; ?>
                             <div class="checkbox-grid">
                                 <label class="checkbox-item">
                                     <input type="checkbox" name="member_senior"> Senior Citizen
@@ -258,36 +270,60 @@ require_login(['super admin']);
                             </label>
                         </div>
 
-                        <div class="ciu-section">
-                            <p class="section-title">Services Needed:</p>
-                            <div class="services-grid">
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_prescribed_medicine"> Prescribed Medicine Assistance
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_certificate_minor"> Certificate of Travelling Minor
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_hospital_bill"> Hospital Bill Assistance
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_tesda_certificate"> TESDA Certificate
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_burial"> Burial Assistance
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_laboratory"> Laboratory Assistance
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="service_legal_assistance"> Certificate to avail for Free Legal Assistance
-                                </label>
-                                <label class="field others-field">
-                                    Others Specify:
-                                    <input type="text" name="service_others">
+                        <?php if (!$isScsrForm): ?>
+                            <div class="ciu-section">
+                                <p class="section-title">Services Needed:</p>
+                                <div class="services-grid">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_prescribed_medicine"> Prescribed Medicine Assistance
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_certificate_minor"> Certificate of Travelling Minor
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_hospital_bill"> Hospital Bill Assistance
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_tesda_certificate"> TESDA Certificate
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_burial"> Burial Assistance
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_laboratory"> Laboratory Assistance
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="service_legal_assistance"> Certificate to avail for Free Legal Assistance
+                                    </label>
+                                    <label class="field others-field">
+                                        Others Specify:
+                                        <input type="text" name="service_others">
+                                    </label>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="ciu-section">
+                                <p class="section-title">Presenting Problem:</p>
+                                <label class="field full-width-field">
+                                    <textarea name="present_problem" rows="4" placeholder="Enter presenting problem"></textarea>
                                 </label>
                             </div>
-                        </div>
+
+                            <div class="ciu-section">
+                                <p class="section-title">Evaluation and Recommendation:</p>
+                                <label class="field full-width-field">
+                                    <textarea name="recommendation" rows="4" placeholder="Enter evaluation and recommendation"></textarea>
+                                </label>
+                            </div>
+
+                            <div class="ciu-section data-privacy-consent">
+                                <p class="section-title">Data Privacy Consent</p>
+                                <label class="checkbox-item consent-check">
+                                    <input type="checkbox" name="data_privacy_consent" value="Yes">
+                                    I hereby consent to the collection and processing of my personal information for SCSR documentation and related social welfare services.
+                                </label>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="ciu-section family-section">
                             <div class="family-header">

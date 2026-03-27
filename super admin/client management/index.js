@@ -134,7 +134,7 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
-function getShowRoute(client) {
+function getShowRoute(client, variant = 'ciu') {
     const keyId = Number(client.key_id);
 
     if (!Number.isInteger(keyId) || keyId <= 0) {
@@ -160,7 +160,12 @@ function getShowRoute(client) {
         return '#';
     }
 
-    return `${baseRoute}?id=${encodeURIComponent(String(keyId))}`;
+    const params = new URLSearchParams({ id: String(keyId) });
+    if (sourceTable === 'ciu_table' && String(variant).toLowerCase() === 'scsr') {
+        params.set('variant', 'scsr');
+    }
+
+    return `${baseRoute}?${params.toString()}`;
 }
 
 function getPrintRoute(client) {
@@ -195,9 +200,20 @@ function getPrintRoute(client) {
 function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const printRoute = getPrintRoute(client);
+    const sourceTable = String(client.source_table || '');
+    const ciuFormRoute = getShowRoute(client, 'ciu');
+    const scsrFormRoute = getShowRoute(client, 'scsr');
     const showButton = showRoute === '#'
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
-        : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
+        : sourceTable === 'ciu_table'
+            ? `<div class="show-dropdown">
+                <button class="btn btn-sm btn-show show-dropdown-toggle" type="button" data-action="toggle-show-options" aria-haspopup="true" aria-expanded="false">Show</button>
+                <div class="show-dropdown-menu" role="menu">
+                    <a class="show-dropdown-item" href="${escapeHtml(ciuFormRoute)}" role="menuitem">CIU Form</a>
+                    <a class="show-dropdown-item" href="${escapeHtml(scsrFormRoute)}" role="menuitem">Social Case Study Report (SCSR)</a>
+                </div>
+            </div>`
+            : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
     const printButton = printRoute === '#'
         ? '<button class="btn btn-sm btn-print" type="button" disabled title="Print is not available for this record.">Print</button>'
         : `<a class="btn btn-sm btn-print" href="${escapeHtml(printRoute)}">Print</a>`;
@@ -598,6 +614,27 @@ if (clearFilterButton) {
 
 tabPanels.forEach((panel) => {
     panel.addEventListener('click', async (event) => {
+        const showToggle = event.target.closest('[data-action="toggle-show-options"]');
+        if (showToggle) {
+            event.preventDefault();
+            const dropdown = showToggle.closest('.show-dropdown');
+            document.querySelectorAll('.show-dropdown.open').forEach((node) => {
+                if (node !== dropdown) {
+                    node.classList.remove('open');
+                    const button = node.querySelector('.show-dropdown-toggle');
+                    if (button) {
+                        button.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            if (dropdown) {
+                const isOpen = dropdown.classList.toggle('open');
+                showToggle.setAttribute('aria-expanded', String(isOpen));
+            }
+            return;
+        }
+
         const trigger = event.target.closest('[data-action="scan-copy"]');
         if (!trigger) {
             return;
@@ -609,6 +646,20 @@ tabPanels.forEach((panel) => {
             program: String(trigger.dataset.program || ''),
             fullName: String(trigger.dataset.fullName || ''),
         });
+    });
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target.closest('.show-dropdown')) {
+        return;
+    }
+
+    document.querySelectorAll('.show-dropdown.open').forEach((node) => {
+        node.classList.remove('open');
+        const button = node.querySelector('.show-dropdown-toggle');
+        if (button) {
+            button.setAttribute('aria-expanded', 'false');
+        }
     });
 });
 

@@ -20,6 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$formVariant = strtolower(trim((string) ($_POST['form_variant'] ?? 'ciu')));
+if (!in_array($formVariant, ['ciu', 'scsr'], true)) {
+    $formVariant = 'ciu';
+}
+$isScsrForm = $formVariant === 'scsr';
+
 function bind_all_params(mysqli_stmt $statement, array $params): void
 {
     if (count($params) === 0) {
@@ -57,10 +63,17 @@ function execute_statement(mysqli $connection, string $query, array $params = []
 
 $requiredFields = [
     'first_name', 'last_name', 'birth_date', 'birth_place', 'age', 'sex', 'civil_status', 'contact_number', 'monthly_income',
-    'religion', 'occupation', 'education', 'address', 'barangay', 'member_senior', 'member_solo_parent', 'member_pwd', 'member_4ps',
-    'service_prescribed_medicine', 'service_certificate_minor', 'service_hospital_bill', 'service_tesda_certificate',
-    'service_burial', 'service_laboratory', 'service_legal_assistance'
+    'religion', 'occupation', 'education', 'address', 'barangay', 'member_senior', 'member_solo_parent', 'member_pwd', 'member_4ps'
 ];
+
+if (!$isScsrForm) {
+    $requiredFields = array_merge($requiredFields, [
+        'service_prescribed_medicine', 'service_certificate_minor', 'service_hospital_bill', 'service_tesda_certificate',
+        'service_burial', 'service_laboratory', 'service_legal_assistance'
+    ]);
+} else {
+    $requiredFields = array_merge($requiredFields, ['present_problem', 'recommendation', 'data_privacy_consent']);
+}
 foreach ($requiredFields as $field) {
     if (!isset($_POST[$field]) || trim((string) $_POST[$field]) === '') {
         http_response_code(422);
@@ -82,17 +95,19 @@ if (!$hasMemberSelection) {
     exit;
 }
 
-$hasServiceSelection = false;
-foreach (['service_prescribed_medicine', 'service_certificate_minor', 'service_hospital_bill', 'service_tesda_certificate', 'service_burial', 'service_laboratory', 'service_legal_assistance'] as $field) {
-    if (trim((string) $_POST[$field]) === 'Yes') {
-        $hasServiceSelection = true;
-        break;
+if (!$isScsrForm) {
+    $hasServiceSelection = false;
+    foreach (['service_prescribed_medicine', 'service_certificate_minor', 'service_hospital_bill', 'service_tesda_certificate', 'service_burial', 'service_laboratory', 'service_legal_assistance'] as $field) {
+        if (trim((string) $_POST[$field]) === 'Yes') {
+            $hasServiceSelection = true;
+            break;
+        }
     }
-}
-if (!$hasServiceSelection) {
-    http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Select at least one Services Needed option.']);
-    exit;
+    if (!$hasServiceSelection) {
+        http_response_code(422);
+        echo json_encode(['success' => false, 'message' => 'Select at least one Services Needed option.']);
+        exit;
+    }
 }
 
 $familyPayload = trim((string) ($_POST['family_composition'] ?? ''));
@@ -156,14 +171,16 @@ try {
     $memberPwd = trim((string) $_POST['member_pwd']);
     $member4ps = trim((string) $_POST['member_4ps']);
     $memberOthers = trim((string) ($_POST['member_others'] ?? ''));
-    $servicePrescribedMedicine = trim((string) $_POST['service_prescribed_medicine']);
-    $serviceCertificateMinor = trim((string) $_POST['service_certificate_minor']);
-    $serviceHospitalBill = trim((string) $_POST['service_hospital_bill']);
-    $serviceTesdaCertificate = trim((string) $_POST['service_tesda_certificate']);
-    $serviceBurial = trim((string) $_POST['service_burial']);
-    $serviceLaboratory = trim((string) $_POST['service_laboratory']);
-    $serviceLegalAssistance = trim((string) $_POST['service_legal_assistance']);
-    $serviceOthers = trim((string) ($_POST['service_others'] ?? ''));
+    $servicePrescribedMedicine = $isScsrForm ? 'No' : trim((string) $_POST['service_prescribed_medicine']);
+    $serviceCertificateMinor = $isScsrForm ? 'No' : trim((string) $_POST['service_certificate_minor']);
+    $serviceHospitalBill = $isScsrForm ? 'No' : trim((string) $_POST['service_hospital_bill']);
+    $serviceTesdaCertificate = $isScsrForm ? 'No' : trim((string) $_POST['service_tesda_certificate']);
+    $serviceBurial = $isScsrForm ? 'No' : trim((string) $_POST['service_burial']);
+    $serviceLaboratory = $isScsrForm ? 'No' : trim((string) $_POST['service_laboratory']);
+    $serviceLegalAssistance = $isScsrForm ? 'No' : trim((string) $_POST['service_legal_assistance']);
+    $serviceOthers = $isScsrForm ? '' : trim((string) ($_POST['service_others'] ?? ''));
+    $presentProblem = trim((string) ($_POST['present_problem'] ?? ''));
+    $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
     $served = $fullname;
 
     if ($recordId !== false && $recordId !== null) {
@@ -173,9 +190,9 @@ try {
                 first_name = ?, middle_name = ?, last_name = ?, suffix = ?, birth_date = ?, birth_place = ?, age = ?, division = ?, program = ?, sex = ?, civil_status = ?,
                 contact_number = ?, monthly_income = ?, religion = ?, occupation = ?, education = ?, address = ?, barangay = ?, member_senior = ?, member_solo_parent = ?,
                 member_pwd = ?, member_4ps = ?, member_others = ?, service_prescribed_medicine = ?, service_certificate_minor = ?, service_hospital_bill = ?,
-                service_tesda_certificate = ?, service_burial = ?, service_laboratory = ?, service_legal_assistance = ?, service_others = ?, served_by = ?
+                service_tesda_certificate = ?, service_burial = ?, service_laboratory = ?, service_legal_assistance = ?, service_others = ?, present_problem = ?, recommendation = ?, served_by = ?
              WHERE key_id = ?',
-            [$firstName, $middleName, $lastName, $suffix, $birthDate, $birthPlace, $age, $division, $program, $sex, $civilStatus, $contactNumber, $monthlyIncome, $religion, $occupation, $education, $address, $barangay, $memberSenior, $memberSoloParent, $memberPwd, $member4ps, $memberOthers, $servicePrescribedMedicine, $serviceCertificateMinor, $serviceHospitalBill, $serviceTesdaCertificate, $serviceBurial, $serviceLaboratory, $serviceLegalAssistance, $serviceOthers, $served, (string) $recordId]
+            [$firstName, $middleName, $lastName, $suffix, $birthDate, $birthPlace, $age, $division, $program, $sex, $civilStatus, $contactNumber, $monthlyIncome, $religion, $occupation, $education, $address, $barangay, $memberSenior, $memberSoloParent, $memberPwd, $member4ps, $memberOthers, $servicePrescribedMedicine, $serviceCertificateMinor, $serviceHospitalBill, $serviceTesdaCertificate, $serviceBurial, $serviceLaboratory, $serviceLegalAssistance, $serviceOthers, $presentProblem, $recommendation, $served, (string) $recordId]
         );
         $updateMain->close();
         $ciuId = (string) $recordId;
@@ -209,9 +226,9 @@ try {
                 control_number, first_name, middle_name, last_name, suffix, birth_date, birth_place, age, division, program, sex, civil_status,
                 contact_number, monthly_income, religion, occupation, education, address, barangay,
                 member_senior, member_solo_parent, member_pwd, member_4ps, member_others,
-                service_prescribed_medicine, service_certificate_minor, service_hospital_bill, service_tesda_certificate, service_burial, service_laboratory, service_legal_assistance, service_others, served_by
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [$controlNumber, $firstName, $middleName, $lastName, $suffix, $birthDate, $birthPlace, $age, $division, $program, $sex, $civilStatus, $contactNumber, $monthlyIncome, $religion, $occupation, $education, $address, $barangay, $memberSenior, $memberSoloParent, $memberPwd, $member4ps, $memberOthers, $servicePrescribedMedicine, $serviceCertificateMinor, $serviceHospitalBill, $serviceTesdaCertificate, $serviceBurial, $serviceLaboratory, $serviceLegalAssistance, $serviceOthers, $served]
+                service_prescribed_medicine, service_certificate_minor, service_hospital_bill, service_tesda_certificate, service_burial, service_laboratory, service_legal_assistance, service_others, present_problem, recommendation, served_by
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [$controlNumber, $firstName, $middleName, $lastName, $suffix, $birthDate, $birthPlace, $age, $division, $program, $sex, $civilStatus, $contactNumber, $monthlyIncome, $religion, $occupation, $education, $address, $barangay, $memberSenior, $memberSoloParent, $memberPwd, $member4ps, $memberOthers, $servicePrescribedMedicine, $serviceCertificateMinor, $serviceHospitalBill, $serviceTesdaCertificate, $serviceBurial, $serviceLaboratory, $serviceLegalAssistance, $serviceOthers, $presentProblem, $recommendation, $served]
         );
         $ciuId = (string) $connection->insert_id;
 
@@ -231,7 +248,7 @@ try {
     }
 
     $connection->commit();
-    echo json_encode(['success' => true, 'message' => $recordId ? 'CIU record updated successfully.' : 'CIU record saved successfully.', 'record_id' => $ciuId]);
+    echo json_encode(['success' => true, 'message' => $recordId ? ($isScsrForm ? 'SCSR record updated successfully.' : 'CIU record updated successfully.') : ($isScsrForm ? 'SCSR record saved successfully.' : 'CIU record saved successfully.'), 'record_id' => $ciuId]);
 } catch (Throwable $exception) {
     $connection->rollback();
     http_response_code(500);
