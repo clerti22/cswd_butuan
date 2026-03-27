@@ -295,4 +295,15 @@ h1 {
     break-inside: avoid;
     page-break-inside: avoid;
   }
+
+  .privacy-consent--page-two {
+    break-before: page;
+    page-break-before: always;
+    margin-top: 8px;
+  }
+
+  .privacy-consent--page-two + .time-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
