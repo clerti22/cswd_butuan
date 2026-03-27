@@ -33,30 +33,29 @@ body {
 .print-hint { margin: 0; font-size: 12px; }
 
 .print-page {
+  position: relative;
   width: var(--sheet-width);
   min-height: 297mm;
   margin: 0 auto 16px;
   background: #fff;
-  padding: 10px 14px 0;
+  padding: 40mm 14px 42mm;
 }
 
 .header-image { width: 100%; display: block; }
 
-.print-template {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+.print-page-header {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  background: #fff;
 }
 
-.print-template > thead > tr > td,
-.print-template > tbody > tr > td,
-.print-template > tfoot > tr > td {
-  padding: 0;
-  vertical-align: top;
-}
-
-.print-page-header,
 .print-page-footer {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
   background: #fff;
 }
 
@@ -64,8 +63,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding-top: 10px;
-  padding-bottom: 10px;
 }
 
 
@@ -249,12 +246,13 @@ h1 {
 
 @media print {
   @page {
-    size: auto;
-    margin: 0;
+    size: A4;
+    margin: 34mm 10mm 42mm;
   }
 
   html,
   body {
+    margin: 0;
     background: #fff;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -268,53 +266,60 @@ h1 {
     margin: 0;
     width: 100%;
     min-height: auto;
-    padding: 0 14px;
+    padding: 0;
     box-shadow: none;
     background: transparent;
-  }
-
-
-
-  .print-template {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  .print-template__head {
-    display: table-header-group;
-  }
-
-  .print-template__body {
-    display: table-row-group;
-  }
-
-  .print-template__foot {
-    display: table-footer-group;
   }
 
   .print-page-header {
     position: fixed;
     top: 0;
-    left: 14px;
-    right: 14px;
-    z-index: 20;
+    left: 10mm;
+    right: 10mm;
+    height: 30mm;
+    z-index: 10;
     background: #fff;
   }
 
   .print-page-footer {
     position: fixed;
-    left: 14px;
-    right: 14px;
+    left: 10mm;
+    right: 10mm;
     bottom: 0;
-    z-index: 20;
+    min-height: 36mm;
+    z-index: 10;
     background: #fff;
   }
 
   .page-content {
     display: block;
-    padding-top: 124px;
-    padding-bottom: 130px;
+    padding: 0;
+  }
+
+  .section-block,
+  .signature-block,
+  .privacy-consent,
+  .time-row {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .family-table {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .family-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .section-block h2,
+  .meta-row,
+  .signature-block p,
+  .privacy-title {
+    orphans: 3;
+    widows: 3;
   }
 
   .sheet-footer {
