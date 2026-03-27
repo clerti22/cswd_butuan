@@ -33,30 +33,29 @@ body {
 .print-hint { margin: 0; font-size: 12px; }
 
 .print-page {
+  position: relative;
   width: var(--sheet-width);
   min-height: 297mm;
   margin: 0 auto 16px;
   background: #fff;
-  padding: 10px 14px 0;
+  padding: 40mm 14px 42mm;
 }
 
 .header-image { width: 100%; display: block; }
 
-.print-template {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+.print-page-header {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  background: #fff;
 }
 
-.print-template > thead > tr > td,
-.print-template > tbody > tr > td,
-.print-template > tfoot > tr > td {
-  padding: 0;
-  vertical-align: top;
-}
-
-.print-page-header,
 .print-page-footer {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
   background: #fff;
 }
 
@@ -64,8 +63,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding-top: 10px;
-  padding-bottom: 10px;
 }
 
 
@@ -272,17 +269,6 @@ h1 {
     padding: 0;
     box-shadow: none;
     background: transparent;
-  }
-
-  .print-template {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  .print-template__head,
-  .print-template__foot {
-    display: table-row-group;
   }
 
   .print-page-header {
