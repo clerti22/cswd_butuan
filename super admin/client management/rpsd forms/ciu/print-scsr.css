@@ -46,7 +46,7 @@ body {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
-  font-size: 22px;
+  font-size: 10px;
 }
 
 .line {
@@ -56,16 +56,16 @@ body {
 }
 
 h1 {
-  margin: 20px 0 14px;
+  margin: 8px 0 6px;
   text-align: center;
-  font-size: 42px;
+  font-size: 17px;
   font-weight: 700;
 }
 
-.section-block { margin-bottom: 14px; }
+.section-block { margin-bottom: 8px; }
 .section-block h2 {
-  margin: 0 0 8px;
-  font-size: 46px;
+  margin: 0 0 4px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -73,13 +73,13 @@ h1 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 4px;
-  font-size: 38px;
-  margin-left: 52px;
+  font-size: 10px;
+  margin-left: 0;
 }
 
 .identifying-grid > div {
   display: grid;
-  grid-template-columns: 280px 24px 1fr;
+  grid-template-columns: 120px 12px 1fr;
   align-items: end;
 }
 
@@ -87,66 +87,66 @@ h1 {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: 28px;
+  font-size: 8.5px;
 }
 
 .family-table th,
 .family-table td {
   border: 1px solid #000;
-  padding: 8px;
-  height: 58px;
+  padding: 4px 5px;
+  height: 28px;
   text-align: left;
 }
 
 .family-table th { font-weight: 700; }
 
 .text-area {
-  min-height: 120px;
+  min-height: 70px;
   border-bottom: 1px solid #999;
-  font-size: 34px;
+  font-size: 10px;
   line-height: 1.4;
   padding: 6px 2px;
 }
 
 .signature-block {
-  margin-top: 22px;
-  font-size: 34px;
+  margin-top: 8px;
+  font-size: 10px;
   line-height: 1.35;
 }
 
 .signature-block p { margin: 0; }
 
 .privacy-consent {
-  margin: 18px auto 12px;
+  margin: 10px auto 8px;
   border: 2px solid #000;
-  border-radius: 24px;
-  padding: 12px 18px;
+  border-radius: 12px;
+  padding: 8px 10px;
   max-width: 92%;
   text-align: center;
 }
 
 .privacy-title {
-  font-size: 28px;
+  font-size: 8.5px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .privacy-consent p {
   margin: 8px 0;
-  font-size: 22px;
+  font-size: 10px;
   line-height: 1.35;
   text-align: justify;
 }
 
 .consent-signature {
   margin-top: 12px;
-  font-size: 26px;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .time-row {
   margin: 10px 0;
-  font-size: 32px;
+  font-size: 10px;
 }
 
 .time-row div { margin-bottom: 4px; }
@@ -172,7 +172,7 @@ h1 {
   gap: 9px;
   margin-bottom: 2px;
   color: #5b74a1;
-  font-size: 30px;
+  font-size: 14px;
   line-height: 1.04;
 }
 
@@ -188,11 +188,11 @@ h1 {
 .footer-code {
   margin: 0 0 4px;
   color: #5e78a5;
-  font-size: 30px;
+  font-size: 14px;
 }
 
 .footer-logo {
-  width: 260px;
+  width: 200px;
   max-width: 100%;
   display: block;
   margin: 0 auto;
