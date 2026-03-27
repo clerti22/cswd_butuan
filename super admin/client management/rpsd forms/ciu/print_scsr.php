@@ -214,7 +214,7 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
                 <p>CGDH-II/CSWDO</p>
               </section>
 
-              <section class="privacy-consent">
+              <section class="privacy-consent privacy-consent--page-two">
                 <div class="privacy-title">Data Privacy Consent</div>
                 <p>On behalf of all the members of my household, I confirm that the information I have provided in this form is true and represents accurate information of our household.</p>
                 <p>I understand that the data collected from this report will be processed, managed and maintained in a secure database by the City Social Welfare and Development (CSWD). Such data will be used to determine poverty status, serve as basis for research, and in the development and implementation of Social Protection Programs and Services, to promote the interest of the poor.</p>

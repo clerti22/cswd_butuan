@@ -48,9 +48,7 @@ body {
   border-spacing: 0;
 }
 
-.print-template > thead > tr > td,
-.print-template > tbody > tr > td,
-.print-template > tfoot > tr > td {
+.print-template td {
   padding: 0;
   vertical-align: top;
 }
@@ -234,6 +232,7 @@ h1 {
 
 
 .meta-row,
+.section-block,
 .family-table,
 .signature-block,
 .privacy-consent,
@@ -242,16 +241,8 @@ h1 {
   page-break-inside: avoid;
 }
 
-.privacy-consent {
-  break-before: auto;
-  page-break-before: auto;
-}
-
 @media print {
-  @page {
-    size: auto;
-    margin: 0;
-  }
+  @page { size: auto; margin: 6mm 5mm; }
 
   html,
   body {
@@ -260,61 +251,82 @@ h1 {
     print-color-adjust: exact;
   }
 
-  .print-toolbar {
-    display: none;
-  }
+  .print-toolbar { display: none; }
 
   .print-page {
     margin: 0;
     width: 100%;
     min-height: auto;
-    padding: 0 14px;
+    padding: 0 10px;
     box-shadow: none;
     background: transparent;
   }
 
-
-
   .print-template {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
   }
 
   .print-template__head {
     display: table-header-group;
   }
 
-  .print-template__body {
-    display: table-row-group;
-  }
-
   .print-template__foot {
     display: table-footer-group;
   }
 
-  .print-page-header {
-    position: fixed;
-    top: 0;
-    left: 14px;
-    right: 14px;
-    z-index: 20;
-    background: #fff;
-  }
-
-  .print-page-footer {
-    position: fixed;
-    left: 14px;
-    right: 14px;
-    bottom: 0;
-    z-index: 20;
-    background: #fff;
+  .print-template__body {
+    display: table-row-group;
   }
 
   .page-content {
     display: block;
-    padding-top: 124px;
-    padding-bottom: 130px;
+    padding-top: 30mm;
+    padding-bottom: 36mm;
+  }
+
+  .print-page-header,
+  .print-page-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-page-footer {
+    position: fixed;
+    left: 5mm;
+    right: 5mm;
+    bottom: 6mm;
+    background: #fff;
+    z-index: 20;
+  }
+
+  .print-page-header {
+    position: fixed;
+    left: 5mm;
+    right: 5mm;
+    top: 6mm;
+    background: #fff;
+    z-index: 20;
+  }
+
+  .print-template__head > tr > td {
+    padding: 0;
+    height: 0;
+  }
+
+  .print-template__foot > tr > td {
+    padding: 0;
+    height: 0;
+  }
+
+  .privacy-consent--page-two {
+    break-before: page;
+    page-break-before: always;
+    margin-top: 8px;
+  }
+
+  .privacy-consent--page-two + .time-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .sheet-footer {
