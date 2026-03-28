@@ -364,7 +364,7 @@ async function renderScanModal(client, forceQrView = false) {
 
         if (!hasScan || forceQrView) {
             const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
-            scanCopyInstruction.textContent = 'Scan this QR code using your phone to capture and upload a scan copy.';
+            scanCopyInstruction.textContent = 'Scan this QR code using your phone to capture and upload a scan copy. Uploaded photos are stored in the database.';
             scanModalBody.innerHTML = buildQrMarkup(qrData);
             scanGenerateQrAgainButton.hidden = false;
             return;
@@ -375,7 +375,7 @@ async function renderScanModal(client, forceQrView = false) {
         const uploadedBy = String(scan.uploaded_by || 'Unknown');
         const uploadedAt = String(scan.uploaded_at || '');
 
-        scanCopyInstruction.textContent = `Uploaded by ${uploadedBy}${uploadedAt ? ` on ${uploadedAt}` : ''}.`;
+        scanCopyInstruction.textContent = `Uploaded by ${uploadedBy}${uploadedAt ? ` on ${uploadedAt}` : ''}. Uploaded photos are stored in the database.`;
         scanModalBody.innerHTML = `
             <div class="scan-preview-wrap">
                 <img src="${escapeHtml(imagePath)}" alt="Client scan copy" class="scan-preview-image">
@@ -390,7 +390,7 @@ async function renderScanModal(client, forceQrView = false) {
         if (reuploadButton) {
             reuploadButton.addEventListener('click', async () => {
                 const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
-                scanCopyInstruction.textContent = 'Scan this QR code using your phone to retake and replace the scan copy.';
+                scanCopyInstruction.textContent = 'Scan this QR code using your phone to retake and replace the scan copy. Uploaded photos are stored in the database.';
                 scanModalBody.innerHTML = buildQrMarkup(qrData);
                 scanGenerateQrAgainButton.hidden = false;
             });
