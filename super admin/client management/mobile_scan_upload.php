@@ -39,6 +39,7 @@ $program = $payload ? normalize_scan_value((string) ($payload['program'] ?? ''))
         <?php else: ?>
             <p class="muted">Client: <strong><?php echo htmlspecialchars($controlNumber, ENT_QUOTES, 'UTF-8'); ?></strong> &middot; Program: <strong><?php echo htmlspecialchars($program, ENT_QUOTES, 'UTF-8'); ?></strong></p>
             <p class="muted">Capture or select an image, review preview, then confirm upload.</p>
+            <p class="muted">Uploaded photos are stored in the database as part of the scan copy record.</p>
             <label class="btn-file">
                 Capture / Choose Picture
                 <input id="scanImageInput" type="file" accept="image/*" capture="environment">

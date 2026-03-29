@@ -233,10 +233,16 @@ function createClientRow(client) {
             : `<a class="btn btn-sm btn-print" href="${escapeHtml(printRoute)}">Print</a>`;
 
     const program = String(client.program ?? '').trim().toUpperCase();
-    const scanNotApplicable = program === 'CIU';
+    const isCiuProgram = program === 'CIU';
     const scanLabel = client.has_scan_copy ? 'Show Scan Copy' : 'Scan Copy';
-    const scanButton = scanNotApplicable
-        ? '<button class="btn btn-scan-disabled" type="button" disabled title="Scan copy is not applicable for CIU records.">N/A</button>'
+    const scanButton = isCiuProgram
+        ? `<div class="scan-dropdown">
+                <button class="btn btn-scan scan-dropdown-toggle" type="button" data-action="toggle-scan-options" aria-haspopup="true" aria-expanded="false">${scanLabel}</button>
+                <div class="scan-dropdown-menu" role="menu">
+                    <button class="scan-dropdown-item" type="button" role="menuitem" data-action="scan-copy" data-control-number="${escapeHtml(client.control_number)}" data-program="CIU Form" data-full-name="${escapeHtml(client.full_name)}">CIU Form</button>
+                    <button class="scan-dropdown-item" type="button" role="menuitem" data-action="scan-copy" data-control-number="${escapeHtml(client.control_number)}" data-program="Social Case Study Report (SCSR)" data-full-name="${escapeHtml(client.full_name)}">Social Case Study Report (SCSR)</button>
+                </div>
+            </div>`
         : `<button class="btn btn-scan" type="button" data-action="scan-copy" data-control-number="${escapeHtml(client.control_number)}" data-program="${escapeHtml(client.program)}" data-full-name="${escapeHtml(client.full_name)}">${scanLabel}</button>`;
 
     return `
@@ -358,7 +364,7 @@ async function renderScanModal(client, forceQrView = false) {
 
         if (!hasScan || forceQrView) {
             const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
-            scanCopyInstruction.textContent = 'Scan this QR code using your phone to capture and upload a scan copy.';
+            scanCopyInstruction.textContent = 'Scan this QR code using your phone to capture and upload a scan copy. Uploaded photos are stored in the database.';
             scanModalBody.innerHTML = buildQrMarkup(qrData);
             scanGenerateQrAgainButton.hidden = false;
             return;
@@ -369,7 +375,7 @@ async function renderScanModal(client, forceQrView = false) {
         const uploadedBy = String(scan.uploaded_by || 'Unknown');
         const uploadedAt = String(scan.uploaded_at || '');
 
-        scanCopyInstruction.textContent = `Uploaded by ${uploadedBy}${uploadedAt ? ` on ${uploadedAt}` : ''}.`;
+        scanCopyInstruction.textContent = `Uploaded by ${uploadedBy}${uploadedAt ? ` on ${uploadedAt}` : ''}. Uploaded photos are stored in the database.`;
         scanModalBody.innerHTML = `
             <div class="scan-preview-wrap">
                 <img src="${escapeHtml(imagePath)}" alt="Client scan copy" class="scan-preview-image">
@@ -384,7 +390,7 @@ async function renderScanModal(client, forceQrView = false) {
         if (reuploadButton) {
             reuploadButton.addEventListener('click', async () => {
                 const qrData = await fetchQrUploadLink(client.controlNumber, client.program);
-                scanCopyInstruction.textContent = 'Scan this QR code using your phone to retake and replace the scan copy.';
+                scanCopyInstruction.textContent = 'Scan this QR code using your phone to retake and replace the scan copy. Uploaded photos are stored in the database.';
                 scanModalBody.innerHTML = buildQrMarkup(qrData);
                 scanGenerateQrAgainButton.hidden = false;
             });
@@ -670,6 +676,27 @@ tabPanels.forEach((panel) => {
             return;
         }
 
+        const scanToggle = event.target.closest('[data-action="toggle-scan-options"]');
+        if (scanToggle) {
+            event.preventDefault();
+            const dropdown = scanToggle.closest('.scan-dropdown');
+            document.querySelectorAll('.scan-dropdown.open').forEach((node) => {
+                if (node !== dropdown) {
+                    node.classList.remove('open');
+                    const button = node.querySelector('.scan-dropdown-toggle');
+                    if (button) {
+                        button.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            if (dropdown) {
+                const isOpen = dropdown.classList.toggle('open');
+                scanToggle.setAttribute('aria-expanded', String(isOpen));
+            }
+            return;
+        }
+
         const trigger = event.target.closest('[data-action="scan-copy"]');
         if (!trigger) {
             return;
@@ -699,6 +726,16 @@ document.addEventListener('click', (event) => {
         document.querySelectorAll('.print-dropdown.open').forEach((node) => {
             node.classList.remove('open');
             const button = node.querySelector('.print-dropdown-toggle');
+            if (button) {
+                button.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    if (!event.target.closest('.scan-dropdown')) {
+        document.querySelectorAll('.scan-dropdown.open').forEach((node) => {
+            node.classList.remove('open');
+            const button = node.querySelector('.scan-dropdown-toggle');
             if (button) {
                 button.setAttribute('aria-expanded', 'false');
             }
