@@ -196,6 +196,7 @@ try {
              WHERE key_id = ?',
             [$firstName, $middleName, $lastName, $suffix, $nickname, $sex, $birthDate, $age, $division, $program, $birthPlace, $presentAddress, $permanentAddress, $barangay, $education, $schoolLastAttended, $schoolAddress, $healthCondition, $contactNumber, $is4ps, $philhealth, $offenseType, $incidentDate, $perpetratorName, $referralDate, $referringParty, $caseStatus, $criminalCaseNo, $infoSource, $complainant, $presentingProblem, $backgroundChild, $backgroundFamily, $backgroundCommunity, $assessment, $recommendation, $served, (string) $recordId]
         )->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $csaeId = (string) $recordId;
         execute_statement($connection, sprintf('DELETE FROM `csae_family_information_table` WHERE `%s` = ?', $familyForeignKey), [$csaeId])->close();
         execute_statement($connection, sprintf('DELETE FROM `csae_treatment_plan_table` WHERE `%s` = ?', $treatmentForeignKey), [$csaeId])->close();

@@ -294,6 +294,7 @@ try {
         }
 
         $updateSoloParent->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $soloParentId = $recordId;
 
         $deleteHouseholdMembers = $connection->prepare('DELETE FROM household_members_soloparent WHERE solo_parent_id = ?');

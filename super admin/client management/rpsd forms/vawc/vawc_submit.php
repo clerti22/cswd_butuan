@@ -172,6 +172,7 @@ try {
             [$firstName, $middleName, $lastName, $suffix, $birthPlace, $birthDate, $age, $division, $program, $education, $religion, $address, $barangay, $occupation, $monthlyIncome, $contactNumber, $civilStatus, $is4ps, $isUct, $isNhts, $presentingProblem, $familyEnvironment, $community, $familyHistory, $recommendation, $served, (string) $recordId]
         );
         $updateMain->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $vawcId = (string) $recordId;
         execute_statement($connection, 'DELETE FROM `vawc_family_information_table` WHERE `vawc_id` = ?', [$vawcId])->close();
         execute_statement($connection, 'DELETE FROM `vawc_initial_treatment_plan_table` WHERE `vawc_id` = ?', [$vawcId])->close();

@@ -230,6 +230,7 @@ try {
         }
 
         $updatePyap->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $pyapId = $recordId;
 
         foreach (['pyap_family_composition_table', 'pyap_membership_table'] as $tableName) {

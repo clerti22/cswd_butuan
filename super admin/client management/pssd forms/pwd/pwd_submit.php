@@ -158,6 +158,7 @@ try {
         }
 
         $updatePwud->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $pwudId = $recordId;
 
         $deleteHousehold = $connection->prepare('DELETE FROM pwd_household_table WHERE pwd_key_id = ?');

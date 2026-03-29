@@ -158,6 +158,7 @@ try {
         }
 
         $updatePwud->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $snrId = $recordId;
 
         $deleteHousehold = $connection->prepare('DELETE FROM snr_household_table WHERE snr_key_id = ?');
