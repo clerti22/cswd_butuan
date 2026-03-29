@@ -107,3 +107,29 @@ function insert_client_creation_notification(
 
     $insertNotification->close();
 }
+
+function insert_client_update_notification(
+    mysqli $connection,
+    string $name,
+    string $role,
+    string $program,
+    string $division
+): void {
+    $activity = sprintf('%s updated client', $name);
+    $insertNotification = $connection->prepare(
+        'INSERT INTO notifications (name, activity, role, program, division) VALUES (?, ?, ?, ?, ?)'
+    );
+
+    if (!$insertNotification) {
+        error_log('Failed to prepare update notification insert statement: ' . $connection->error);
+        return;
+    }
+
+    $insertNotification->bind_param('sssss', $name, $activity, $role, $program, $division);
+
+    if (!$insertNotification->execute()) {
+        error_log('Failed to insert update notification: ' . $insertNotification->error);
+    }
+
+    $insertNotification->close();
+}
