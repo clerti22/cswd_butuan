@@ -195,6 +195,7 @@ try {
             [$firstName, $middleName, $lastName, $suffix, $birthDate, $birthPlace, $age, $division, $program, $sex, $civilStatus, $contactNumber, $monthlyIncome, $religion, $occupation, $education, $address, $barangay, $memberSenior, $memberSoloParent, $memberPwd, $member4ps, $memberOthers, $servicePrescribedMedicine, $serviceCertificateMinor, $serviceHospitalBill, $serviceTesdaCertificate, $serviceBurial, $serviceLaboratory, $serviceLegalAssistance, $serviceOthers, $presentProblem, $recommendation, $served, (string) $recordId]
         );
         $updateMain->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $ciuId = (string) $recordId;
         $deleteFamily = execute_statement($connection, 'DELETE FROM `ciu_family_composition_table` WHERE `ciu_id` = ?', [$ciuId]);
         $deleteFamily->close();

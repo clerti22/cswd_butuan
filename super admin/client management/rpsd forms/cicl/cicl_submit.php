@@ -270,6 +270,7 @@ try {
             ]
         );
         $updateMain->close();
+        insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
         $mainId = (string) $recordId;
 
         delete_related_rows($connection, 'cicl_family_composition_table', 'cicl_id', $mainId);
