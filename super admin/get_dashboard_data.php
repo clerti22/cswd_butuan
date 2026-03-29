@@ -164,7 +164,7 @@ try {
     }
 
     $activities = [];
-    $notificationsQuery = 'SELECT notification_id, name, activity, created_at, role, program, division FROM notifications ORDER BY created_at DESC, notification_id DESC LIMIT 5';
+    $notificationsQuery = 'SELECT notification_id, name, activity, created_at, role, program, division FROM notifications ORDER BY created_at DESC, notification_id DESC LIMIT 3';
     $notificationsResult = $connection->query($notificationsQuery);
     if ($notificationsResult) {
         while ($row = $notificationsResult->fetch_assoc()) {
@@ -185,8 +185,16 @@ try {
                 'division' => trim((string) ($row['division'] ?? '')),
                 'main_line' => $mainLine,
                 'secondary_line' => trim((string) ($row['role'] ?? 'Unknown')) . ' · ' . format_activity_timestamp((string) ($row['created_at'] ?? '')),
+                'formatted_created_at' => format_activity_timestamp((string) ($row['created_at'] ?? '')),
             ];
         }
+    }
+
+    $notificationCount = 0;
+    $notificationCountResult = $connection->query('SELECT COUNT(*) AS total FROM notifications');
+    if ($notificationCountResult) {
+        $countRow = $notificationCountResult->fetch_assoc();
+        $notificationCount = (int) ($countRow['total'] ?? 0);
     }
 
     $connection->close();
@@ -198,6 +206,7 @@ try {
         'clients' => $clientRows,
         'social_workers' => $socialWorkers,
         'recent_activities' => $activities,
+        'notification_count' => $notificationCount,
     ]);
 } catch (Throwable $exception) {
     http_response_code(500);
@@ -208,6 +217,7 @@ try {
         'clients' => [],
         'social_workers' => [],
         'recent_activities' => [],
+        'notification_count' => 0,
         'message' => 'Unable to load dashboard data.',
     ]);
 }
