@@ -273,11 +273,27 @@ try {
     $clients = array_slice($filteredClients, $offset, $perPage);
 
     foreach ($clients as &$client) {
-        $scan = get_latest_client_scan(
-            $connection,
-            (string) ($client['control_number'] ?? ''),
-            (string) ($client['program'] ?? '')
-        );
+        $controlNumber = (string) ($client['control_number'] ?? '');
+        $program = (string) ($client['program'] ?? '');
+        $sourceTable = (string) ($client['source_table'] ?? '');
+        $scan = null;
+
+        if ($sourceTable === 'ciu_table') {
+            $ciuScanPrograms = [
+                $program,
+                'CIU Form',
+                'Social Case Study Report (SCSR)',
+            ];
+
+            foreach (array_values(array_unique(array_filter($ciuScanPrograms, static fn(string $value): bool => trim($value) !== ''))) as $scanProgram) {
+                $scan = get_latest_client_scan($connection, $controlNumber, $scanProgram);
+                if ($scan !== null) {
+                    break;
+                }
+            }
+        } else {
+            $scan = get_latest_client_scan($connection, $controlNumber, $program);
+        }
 
         $client['has_scan_copy'] = $scan !== null;
         $client['scan_copy_path'] = $scan['image_path'] ?? '';

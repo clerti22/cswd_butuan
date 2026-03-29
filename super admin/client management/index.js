@@ -237,7 +237,7 @@ function createClientRow(client) {
     const scanLabel = client.has_scan_copy ? 'Show Scan Copy' : 'Scan Copy';
     const scanButton = isCiuProgram
         ? `<div class="scan-dropdown">
-                <button class="btn btn-scan scan-dropdown-toggle" type="button" data-action="toggle-scan-options" aria-haspopup="true" aria-expanded="false">Scan Copy</button>
+                <button class="btn btn-scan scan-dropdown-toggle" type="button" data-action="toggle-scan-options" aria-haspopup="true" aria-expanded="false">${scanLabel}</button>
                 <div class="scan-dropdown-menu" role="menu">
                     <button class="scan-dropdown-item" type="button" role="menuitem" data-action="scan-copy" data-control-number="${escapeHtml(client.control_number)}" data-program="CIU Form" data-full-name="${escapeHtml(client.full_name)}">CIU Form</button>
                     <button class="scan-dropdown-item" type="button" role="menuitem" data-action="scan-copy" data-control-number="${escapeHtml(client.control_number)}" data-program="Social Case Study Report (SCSR)" data-full-name="${escapeHtml(client.full_name)}">Social Case Study Report (SCSR)</button>
