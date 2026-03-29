@@ -38,6 +38,7 @@ let clientsData = [];
 let socialWorkersData = [];
 let rankingDivisions = [];
 let recentActivities = [];
+let totalNotifications = 0;
 
 // ===== TABLE TOGGLE + RENDER =====
 const btnClients = document.getElementById('btnClients');
@@ -47,6 +48,7 @@ const tableBody = document.getElementById('tableBody');
 const searchInput = document.getElementById('searchInput');
 const btnSearch = document.getElementById('btnSearch');
 const recentActivitiesContainer = document.getElementById('recentActivities');
+const seeAllNotificationsLink = document.getElementById('seeAllNotifications');
 
 let currentTable = 'clients';
 
@@ -171,15 +173,18 @@ function renderRecentActivities() {
   if (!recentActivitiesContainer) return;
 
   recentActivitiesContainer.innerHTML = '';
+  if (seeAllNotificationsLink) {
+    seeAllNotificationsLink.hidden = totalNotifications <= 3;
+  }
 
   if (!recentActivities.length) {
     const empty = document.createElement('div');
-    empty.className = 'activity';
+    empty.className = 'notification-card empty';
     empty.innerHTML = `
-      <div class="activity-icon blue"><i class="bi bi-info-circle"></i></div>
-      <div class="activity-text">
-        <div class="activity-title">No recent activities found.</div>
-        <div class="activity-sub">System · --</div>
+      <div class="notification-icon blue"><i class="bi bi-info-circle"></i></div>
+      <div class="notification-content">
+        <div class="notification-title">No notifications available.</div>
+        <div class="notification-subline">System · --</div>
       </div>
     `;
     recentActivitiesContainer.appendChild(empty);
@@ -188,17 +193,23 @@ function renderRecentActivities() {
 
   const iconClasses = ['blue', 'red', 'green'];
   recentActivities.forEach((item, index) => {
-    const activity = document.createElement('div');
-    activity.className = 'activity';
-    activity.innerHTML = `
-      <div class="activity-icon ${iconClasses[index % iconClasses.length]}"><i class="bi bi-clock-history"></i></div>
-      <div class="activity-text">
-        <div class="activity-title">${sanitizeText(item.main_line, 'Unknown activity')}</div>
-        <div class="activity-sub">${sanitizeText(item.secondary_line, 'Unknown · --')}</div>
+    const notificationCard = document.createElement('article');
+    notificationCard.className = 'notification-card compact';
+    notificationCard.innerHTML = `
+      <div class="notification-icon ${iconClasses[index % iconClasses.length]}"><i class="bi bi-clock-history"></i></div>
+      <div class="notification-content">
+        <div class="notification-title"><strong>${sanitizeText(item.name, 'Unknown User')}</strong> ${sanitizeText(item.activity, 'performed an activity')}</div>
+        <div class="notification-meta">
+          <span>Role: ${sanitizeText(item.role)}</span>
+          <span>Program: ${sanitizeText(item.program)}</span>
+          <span>Division: ${sanitizeText(item.division)}</span>
+        </div>
+        <div class="notification-subline">Time: ${sanitizeText(item.formatted_created_at, sanitizeText(item.created_at, '--'))}</div>
       </div>
     `;
-    recentActivitiesContainer.appendChild(activity);
+    recentActivitiesContainer.appendChild(notificationCard);
   });
+
 }
 
 function renderChart() {
@@ -252,6 +263,7 @@ async function loadDashboardData() {
     clientsData = Array.isArray(payload?.clients) ? payload.clients.slice(0, 5) : [];
     socialWorkersData = Array.isArray(payload?.social_workers) ? payload.social_workers.slice(0, 5) : [];
     recentActivities = Array.isArray(payload?.recent_activities) ? payload.recent_activities : [];
+    totalNotifications = Number(payload?.notification_count) || 0;
 
     rankingDivisions = [
       { name: 'DPSD Division', total: Number(totals.dpsd) || 0 },
