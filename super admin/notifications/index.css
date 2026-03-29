@@ -1,66 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+@import url('../index.css');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* Notifications page-specific styles only.
+   Core layout/sidebar styling comes from ../index.css to keep parity with other Super Admin pages. */
 
-:root {
-  --sidebar-w: 280px;
-  --bg: #d9d9d9;
-  --card: #ffffff;
-  --text: #111827;
-  --muted: #64748b;
-  --border: rgba(0, 0, 0, 0.08);
+.content {
+  padding: 1.5rem;
 }
-
-body { font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh; overflow: hidden; }
-.container { display: flex; height: 100vh; }
-
-.sidebar {
-  width: var(--sidebar-w);
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  z-index: 1000;
-}
-
-.sidebar.open { transform: translateX(0); }
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s;
-  z-index: 999;
-}
-
-.overlay.active { opacity: 1; visibility: visible; }
-
-.main-content { flex: 1; margin-left: 0; display: flex; flex-direction: column; }
-
-.topbar {
-  background: #fff;
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.menu-btn {
-  border: none;
-  background: transparent;
-  margin-right: 1rem;
-  cursor: pointer;
-  color: #64748b;
-}
-
-.topbar-title { color: #0f172a; font-size: 1.25rem; }
-
-.content { flex: 1; overflow-y: auto; padding: 1.5rem; }
-.section { margin-bottom: 1rem; }
 
 .notifications-panel {
   background: var(--card);
@@ -70,16 +15,15 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh;
   padding: 1.2rem;
 }
 
-.panel-head-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+.page-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
 }
 
-.page-title { font-size: 1.6rem; color: var(--text); font-weight: 800; }
-.page-subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+.page-subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
 
 .total-badge {
   font-size: 0.8rem;
@@ -91,7 +35,10 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh;
   padding: 0.35rem 0.75rem;
 }
 
-.notification-group { margin-bottom: 1.4rem; }
+.notification-group {
+  margin-top: 1.1rem;
+}
+
 .group-label {
   font-size: 0.95rem;
   font-weight: 800;
@@ -123,8 +70,17 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh;
   flex-shrink: 0;
 }
 
-.notification-main { flex: 1; min-width: 0; }
-.notification-title { font-size: 0.95rem; color: #0f172a; line-height: 1.35; }
+.notification-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-size: 0.95rem;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
 .notification-meta {
   margin-top: 0.45rem;
   display: grid;
@@ -134,7 +90,12 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh;
   font-size: 0.78rem;
 }
 
-.notification-time { margin-top: 0.5rem; font-size: 0.76rem; color: #64748b; }
+.notification-time {
+  margin-top: 0.5rem;
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
 .empty-state {
   border: 1px dashed #cbd5e1;
   border-radius: 12px;
@@ -144,13 +105,8 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh;
   font-size: 0.9rem;
 }
 
-@media (min-width: 1024px) {
-  .sidebar { transform: translateX(0); }
-  .main-content { margin-left: var(--sidebar-w); }
-  .menu-btn { display: none; }
-}
-
 @media (max-width: 768px) {
-  .notification-meta { grid-template-columns: 1fr; }
-  .panel-head-row { flex-direction: column; align-items: flex-start; }
+  .notification-meta {
+    grid-template-columns: 1fr;
+  }
 }
