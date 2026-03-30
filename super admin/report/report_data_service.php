@@ -21,6 +21,7 @@ final class ReportDataService
         'VAWC' => 'vawc_table',
         'CSAE' => 'csae_table',
         'CICL' => 'cicl_table',
+        'FACED' => 'faced_table',
     ];
 
     /** @var array<string, array<int, string>> */

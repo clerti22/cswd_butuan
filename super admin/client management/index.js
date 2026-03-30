@@ -57,32 +57,37 @@ const scanCloseModalButton = document.getElementById('scanCloseModalButton');
 const clientDataCache = {
     dpsd: {},
     pssd: {},
-    rpsd: {}
+    rpsd: {},
+    cod: {}
 };
 let activeScanClient = null;
 
 const tabPaginationState = {
     dpsd: { page: 1, totalPages: 1 },
     pssd: { page: 1, totalPages: 1 },
-    rpsd: { page: 1, totalPages: 1 }
+    rpsd: { page: 1, totalPages: 1 },
+    cod: { page: 1, totalPages: 1 }
 };
 
 const tabSearchState = {
     dpsd: '',
     pssd: '',
-    rpsd: ''
+    rpsd: '',
+    cod: ''
 };
 
 const tabFilterState = {
     dpsd: { program: '', barangay: '', age_bracket: '', sex: '' },
     pssd: { program: '', barangay: '', age_bracket: '', sex: '' },
-    rpsd: { program: '', barangay: '', age_bracket: '', sex: '' }
+    rpsd: { program: '', barangay: '', age_bracket: '', sex: '' },
+    cod: { program: '', barangay: '', age_bracket: '', sex: '' }
 };
 
 const tabFilterOptionsState = {
     dpsd: { programs: [], barangays: [] },
     pssd: { programs: [], barangays: [] },
-    rpsd: { programs: [], barangays: [] }
+    rpsd: { programs: [], barangays: [] },
+    cod: { programs: [], barangays: [] }
 };
 
 const prevButton = document.querySelector('.pagination .pager-btn:first-child');
@@ -91,7 +96,8 @@ const nextButton = document.querySelector('.pagination .pager-btn:last-child');
 const addClientOptions = {
     dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
     pssd: ['Senior Citizen', 'PWD'],
-    rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU']
+    rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU'],
+    cod: ['FACED']
 };
 
 const addClientRoutes = {
@@ -110,6 +116,9 @@ const addClientRoutes = {
         'CAR': 'rpsd forms/car/index.php',
         'CICL': 'rpsd forms/cicl/index.php',
         'CIU': 'rpsd forms/ciu/index.php'
+    },
+    cod: {
+        'FACED': 'cod forms/faced/index.php'
     }
 };
 
@@ -135,13 +144,18 @@ function escapeHtml(value) {
 }
 
 function getShowRoute(client, variant = 'ciu') {
+    const sourceTable = String(client.source_table || '');
+    if (sourceTable === 'faced_table') {
+        const cn = String(client.control_number || '').trim();
+        return cn ? `cod forms/faced/index.php?control_number=${encodeURIComponent(cn)}` : '#';
+    }
+
     const keyId = Number(client.key_id);
 
     if (!Number.isInteger(keyId) || keyId <= 0) {
         return '#';
     }
 
-    const sourceTable = String(client.source_table || '');
     const routesByTable = {
         pwud_table: 'dpsd forms/pwud/index.php',
         pyap_table: 'dpsd forms/pyap/index.php',
@@ -152,7 +166,8 @@ function getShowRoute(client, variant = 'ciu') {
         cicl_table: 'rpsd forms/cicl/index.php',
         ciu_table: 'rpsd forms/ciu/index.php',
         csae_table: 'rpsd forms/csae/index.php',
-        vawc_table: 'rpsd forms/vawc/index.php'
+        vawc_table: 'rpsd forms/vawc/index.php',
+        faced_table: 'cod forms/faced/index.php'
     };
 
     const baseRoute = routesByTable[sourceTable];
@@ -205,6 +220,7 @@ function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const printRoute = getPrintRoute(client);
     const sourceTable = String(client.source_table || '');
+    const isCodRecord = sourceTable === 'faced_table';
     const ciuFormRoute = getShowRoute(client, 'ciu');
     const scsrFormRoute = getShowRoute(client, 'scsr');
     const ciuPrintRoute = getPrintRoute(client, 'ciu');
@@ -257,9 +273,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.contact_number)}</td>
             <td>${escapeHtml(client.created_at)}</td>
             <td>
-                ${showButton}
-                ${printButton}
-                ${scanButton}
+                ${isCodRecord ? showButton : `${showButton}${printButton}${scanButton}`}
             </td>
         </tr>
     `;

@@ -88,6 +88,7 @@ $tablesByTab = [
     'dpsd' => ['pwud_table', 'pyap_table', 'soloparent_info_table'],
     'pssd' => ['pwd_table', 'snr_table'],
     'rpsd' => ['car_table', 'cicl_table', 'ciu_table', 'csae_table', 'vawc_table'],
+    'cod' => ['faced_table'],
 ];
 
 if (!isset($tablesByTab[$tab])) {
@@ -109,7 +110,6 @@ $ageBracketFilter = trim((string) ($_GET['age_bracket'] ?? ''));
 $sexFilter = trim((string) ($_GET['sex'] ?? ''));
 
 $requiredColumns = [
-    'key_id',
     'control_number',
     'first_name',
     'middle_name',
@@ -149,7 +149,9 @@ try {
             }
         }
 
-        $query = "SELECT key_id, control_number, first_name, middle_name, last_name, suffix, age, sex, barangay, program, division, contact_number, created_at FROM `{$tableName}`";
+        $hasKeyId = isset($availableColumns['key_id']);
+        $keyIdSelect = $hasKeyId ? 'key_id' : 'NULL AS key_id';
+        $query = "SELECT {$keyIdSelect}, control_number, first_name, middle_name, last_name, suffix, age, sex, barangay, program, division, contact_number, created_at FROM `{$tableName}`";
 
         if ($searchKeyword !== '') {
             $query .= " WHERE LOWER(COALESCE(first_name, '')) LIKE ? ESCAPE '\\\\'"

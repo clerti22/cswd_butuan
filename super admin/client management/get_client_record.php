@@ -41,6 +41,24 @@ function fetch_related_rows(mysqli $connection, string $query, string $types, ar
     return $rows;
 }
 
+
+function fetch_main_record_by_control_number(mysqli $connection, string $tableName, string $controlNumber): ?array
+{
+    $statement = $connection->prepare(sprintf('SELECT * FROM %s WHERE control_number = ? LIMIT 1', $tableName));
+
+    if (!$statement) {
+        throw new RuntimeException('Failed to prepare record query.');
+    }
+
+    $statement->bind_param('s', $controlNumber);
+    $statement->execute();
+    $result = $statement->get_result();
+    $record = $result ? $result->fetch_assoc() : null;
+    $statement->close();
+
+    return $record ?: null;
+}
+
 function fetch_main_record(mysqli $connection, string $tableName, int $recordId): ?array
 {
     $statement = $connection->prepare(sprintf('SELECT * FROM %s WHERE key_id = ? LIMIT 1', $tableName));
@@ -60,8 +78,9 @@ function fetch_main_record(mysqli $connection, string $tableName, int $recordId)
 
 $recordId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $program = strtolower(trim((string) ($_GET['program'] ?? '')));
+$controlNumber = trim((string) ($_GET['control_number'] ?? ''));
 
-if ($recordId === false || $recordId === null) {
+if (($recordId === false || $recordId === null) && $controlNumber === '') {
     respond_json(400, ['success' => false, 'message' => 'Invalid or missing client id.']);
 }
 
@@ -183,13 +202,32 @@ try {
                 ],
             ],
         ],
+        'faced' => [
+            'table' => 'faced_table',
+            'related' => [
+                'family_information' => [
+                    'query' => 'SELECT family_member, relation_to_head AS relation, birthdate, age, sex, highest_educational_attainment AS education, occupation, remarks FROM faced_family_information_table WHERE control_number = ? ORDER BY id ASC',
+                    'types' => 's',
+                ],
+            ],
+        ],
     ];
 
     if (!isset($config[$program])) {
         respond_json(400, ['success' => false, 'message' => 'Unsupported client program.']);
     }
 
-    $record = fetch_main_record($connection, $config[$program]['table'], $recordId);
+    if ($program === 'faced') {
+        if ($controlNumber === '') {
+            respond_json(400, ['success' => false, 'message' => 'Missing FACED control number.']);
+        }
+        $record = fetch_main_record_by_control_number($connection, $config[$program]['table'], $controlNumber);
+    } else {
+        if ($recordId === false || $recordId === null) {
+            respond_json(400, ['success' => false, 'message' => 'Invalid or missing client id.']);
+        }
+        $record = fetch_main_record($connection, $config[$program]['table'], $recordId);
+    }
 
     if ($record === null) {
         respond_json(404, ['success' => false, 'message' => 'Client record not found.']);
@@ -197,7 +235,7 @@ try {
 
     $related = [];
     foreach ($config[$program]['related'] as $key => $definition) {
-        $related[$key] = fetch_related_rows($connection, $definition['query'], $definition['types'], [$recordId]);
+        $related[$key] = fetch_related_rows($connection, $definition['query'], $definition['types'], [$program === 'faced' ? $controlNumber : $recordId]);
     }
 
     $connection->close();
