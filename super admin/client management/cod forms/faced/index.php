@@ -12,6 +12,8 @@ require_login(['super admin']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCIMS - FACED Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="faced.css">
 </head>
 <body>
@@ -20,7 +22,13 @@ require_login(['super admin']);
     <?php echo render_super_admin_sidebar('clients', '../../..'); ?>
     <div class="main-content">
         <header class="topbar">
-            <button class="menu-btn" id="openSidebar">☰</button>
+            <button class="menu-btn" id="openSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
             <h3 class="topbar-title">Clients Management</h3>
         </header>
         <main class="form-page">
