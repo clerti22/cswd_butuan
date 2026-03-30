@@ -46,7 +46,7 @@ require_login(['super admin']);
                 </header>
 
                 <section class="form-section">
-                    <h2 class="section-title">📍 Location of the affected family</h2>
+                    <h2 class="section-title"><i class="bi bi-geo-alt" aria-hidden="true"></i> Location of the affected family</h2>
                     <div class="form-grid three">
                         <label>Region<input id="region" type="text"></label>
                         <label>Province<input id="province" type="text"></label>
@@ -58,7 +58,7 @@ require_login(['super admin']);
                 </section>
 
                 <section class="form-section">
-                    <h2 class="section-title">👤 Head of the Family</h2>
+                    <h2 class="section-title"><i class="bi bi-person" aria-hidden="true"></i> Head of the Family</h2>
                     <div class="form-grid four">
                         <label>First Name<input id="first_name" type="text"></label>
                         <label>Middle Name<input id="middle_name" type="text"></label>
@@ -90,7 +90,7 @@ require_login(['super admin']);
 
                 <section class="form-section">
                     <div class="family-head">
-                        <h2 class="section-title">👤 Family Information</h2>
+                        <h2 class="section-title"><i class="bi bi-people" aria-hidden="true"></i> Family Information</h2>
                         <button id="openFamilyModal" class="add-btn" type="button">+ Add</button>
                     </div>
                     <div class="family-table-wrap">
