@@ -115,7 +115,7 @@ function insert_client_update_notification(
     string $program,
     string $division
 ): void {
-    $activity = sprintf('%s updated client', $name);
+    $activity = sprintf('updated client');
     $insertNotification = $connection->prepare(
         'INSERT INTO notifications (name, activity, role, program, division) VALUES (?, ?, ?, ?, ?)'
     );
