@@ -916,6 +916,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border: 0;
     background: transparent;
     font-size: 1.6rem;
+    color: #1f2937;
+    line-height: 1;
+    padding: 0.15rem 0.45rem;
+}
+
+.modal-card .form-actions {
+    grid-column: 1 / -1;
 }
 
 .invalid-input {
