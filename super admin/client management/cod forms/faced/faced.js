@@ -41,9 +41,12 @@ const familyTableBody = document.getElementById('familyTableBody');
 const submitBtn = document.getElementById('submitBtn');
 const alertBox = document.getElementById('alertBox');
 const modalAlert = document.getElementById('modalAlert');
+const formPage = document.querySelector('.form-page');
 
 const familyRows = [];
 const controlNumber = new URLSearchParams(window.location.search).get('control_number') || '';
+let originalRecordSnapshot = null;
+let recordControls = null;
 
 function showAlert(message, inModal = false) {
   const node = inModal ? modalAlert : alertBox;
@@ -100,6 +103,27 @@ familyForm?.addEventListener('submit', (e) => {
 
 function checkedValue(name) {
   return document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+}
+
+function setRadioValue(name, value) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+    input.checked = input.value === String(value ?? '');
+  });
+}
+
+function populateRecord(record = {}, related = {}) {
+  Object.keys(record).forEach((key) => {
+    const field = document.getElementById(key);
+    if (field) field.value = record[key] ?? '';
+  });
+
+  ['sex', 'is_4ps', 'is_ip', 'house_ownership', 'shelter_damage'].forEach((name) => {
+    setRadioValue(name, record?.[name] ?? '');
+  });
+
+  familyRows.length = 0;
+  (related.family_information || []).forEach((member) => familyRows.push({ ...member }));
+  renderFamilyRows();
 }
 
 function collectPayload() {
@@ -179,18 +203,62 @@ async function loadRecord() {
   const res = await fetch(`../../get_client_record.php?program=faced&control_number=${encodeURIComponent(controlNumber)}`);
   const data = await res.json();
   if (!res.ok || !data.success) return;
-  const r = data.record || {};
-  Object.keys(r).forEach((key) => {
-    const field = document.getElementById(key);
-    if (field) field.value = r[key] ?? '';
+
+  originalRecordSnapshot = {
+    record: { ...(data.record || {}) },
+    related: {
+      family_information: (data.related?.family_information || []).map((member) => ({ ...member }))
+    }
+  };
+  populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related);
+}
+
+function setEditMode(isEditable) {
+  window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
+
+  if (openFamilyModal) {
+    openFamilyModal.disabled = !isEditable;
+  }
+
+  if (closeFamilyModal) {
+    closeFamilyModal.disabled = !isEditable;
+  }
+
+  familyForm?.querySelectorAll('button').forEach((button) => {
+    button.disabled = !isEditable;
   });
-  ['sex','is_4ps','is_ip','house_ownership','shelter_damage'].forEach((name) => {
-    const value = r[name] || '';
-    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => { input.checked = input.value === value; });
-  });
-  familyRows.length = 0;
-  (data.related?.family_information || []).forEach((m) => familyRows.push(m));
-  renderFamilyRows();
+
+  if (submitBtn && controlNumber) {
+    submitBtn.disabled = !isEditable;
+  }
+
+  if (!isEditable) {
+    toggleModal(false);
+  }
+}
+
+async function loadRecordForViewMode() {
+  if (!controlNumber) return;
+
+  await loadRecord();
+  if (!originalRecordSnapshot) return;
+
+  setEditMode(false);
+  recordControls = window.clientRecordMode?.mountControls({
+    anchor: formPage,
+    submitButton: submitBtn,
+    onEnableEdit: () => {
+      setEditMode(true);
+      resetInvalid();
+    },
+    onCancelEdit: () => {
+      if (!originalRecordSnapshot) return;
+      populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
+      setEditMode(false);
+      resetInvalid();
+    },
+    onSaveStateChange: () => {}
+  }) || null;
 }
 
 submitBtn?.addEventListener('click', async () => {
@@ -210,10 +278,19 @@ submitBtn?.addEventListener('click', async () => {
   }
 
   showAlert(controlNumber ? 'FACED record updated successfully.' : 'FACED record saved successfully.');
-  if (!controlNumber && result.control_number) {
+  if (controlNumber) {
+    originalRecordSnapshot = {
+      record: { ...payload },
+      related: {
+        family_information: familyRows.map((member) => ({ ...member }))
+      }
+    };
+    setEditMode(false);
+    recordControls?.setEditing(false);
+  } else if (result.control_number) {
     window.location.href = `${window.location.pathname}?control_number=${encodeURIComponent(result.control_number)}`;
   }
 });
 
 renderFamilyRows();
-loadRecord();
+loadRecordForViewMode();

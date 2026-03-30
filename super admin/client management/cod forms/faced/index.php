@@ -153,6 +153,7 @@ require_login(['super admin']);
     </div>
 </div>
 
+<script src="../../shared/client-record-mode.js"></script>
 <script src="../../shared/form-submit-confirm.js"></script>
 <script src="faced.js"></script>
 </body>
