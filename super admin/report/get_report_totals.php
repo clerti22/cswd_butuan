@@ -17,7 +17,8 @@ $tables = [
     'ciu_table',
     'vawc_table',
     'csae_table',
-    'cicl_table'
+    'cicl_table',
+    'faced_table'
 ];
 
 $connection = new mysqli('localhost', 'root', '', 'cswd_db');

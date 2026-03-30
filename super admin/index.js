@@ -216,6 +216,7 @@ function renderChart() {
   const dpsd = Number(document.getElementById('dpsdTotal')?.textContent || 0);
   const pssd = Number(document.getElementById('pssdTotal')?.textContent || 0);
   const rpsd = Number(document.getElementById('rpsdTotal')?.textContent || 0);
+  const cod = Number(document.getElementById('codTotal')?.textContent || 0);
 
   const chart = new CanvasJS.Chart('chartContainer', {
     animationEnabled: true,
@@ -229,6 +230,7 @@ function renderChart() {
       indexLabelPlacement: 'outside',
       dataPoints: [
         { label: 'RPSD', y: rpsd, indexLabel: String(rpsd) },
+        { label: 'COD', y: cod, indexLabel: String(cod) },
         { label: 'PSSD', y: pssd, indexLabel: String(pssd) },
         { label: 'DPSD', y: dpsd, indexLabel: String(dpsd) },
       ]
@@ -257,6 +259,7 @@ async function loadDashboardData() {
     setStatusValue('dpsdTotal', totals.dpsd || 0);
     setStatusValue('pssdTotal', totals.pssd || 0);
     setStatusValue('rpsdTotal', totals.rpsd || 0);
+    setStatusValue('codTotal', totals.cod || 0);
     setStatusValue('activeSW', payload?.active_social_workers || 0);
     setStatusValue('todayTotal', payload?.today_total || 0);
 
@@ -269,6 +272,7 @@ async function loadDashboardData() {
       { name: 'DPSD Division', total: Number(totals.dpsd) || 0 },
       { name: 'RPSD Division', total: Number(totals.rpsd) || 0 },
       { name: 'PSSD Division', total: Number(totals.pssd) || 0 },
+      { name: 'COD Division', total: Number(totals.cod) || 0 },
     ];
 
     renderTable();
