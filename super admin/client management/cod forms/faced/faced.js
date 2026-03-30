@@ -112,8 +112,12 @@ function setRadioValue(name, value) {
 }
 
 function populateRecord(record = {}, related = {}) {
+  const fieldIdByRecordKey = {
+    city_municipality: 'city'
+  };
+
   Object.keys(record).forEach((key) => {
-    const field = document.getElementById(key);
+    const field = document.getElementById(fieldIdByRecordKey[key] || key);
     if (field) field.value = record[key] ?? '';
   });
 
