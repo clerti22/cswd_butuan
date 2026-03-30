@@ -225,6 +225,7 @@ function createClientRow(client) {
     const scsrFormRoute = getShowRoute(client, 'scsr');
     const ciuPrintRoute = getPrintRoute(client, 'ciu');
     const scsrPrintRoute = getPrintRoute(client, 'scsr');
+    const primaryActionLabel = sourceTable === 'faced_table' ? 'Edit' : 'Show';
     const showButton = showRoute === '#'
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
         : sourceTable === 'ciu_table'
@@ -235,7 +236,7 @@ function createClientRow(client) {
                     <a class="show-dropdown-item" href="${escapeHtml(scsrFormRoute)}" role="menuitem">Social Case Study Report (SCSR)</a>
                 </div>
             </div>`
-            : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">Show</a>`;
+            : `<a class="btn btn-sm btn-show" href="${escapeHtml(showRoute)}">${primaryActionLabel}</a>`;
     const printButton = printRoute === '#'
         ? '<button class="btn btn-sm btn-print" type="button" disabled title="Print is not available for this record.">Print</button>'
         : sourceTable === 'ciu_table'
@@ -273,7 +274,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.contact_number)}</td>
             <td>${escapeHtml(client.created_at)}</td>
             <td>
-                ${isCodRecord ? showButton : `${showButton}${printButton}${scanButton}`}
+                ${isCodRecord ? `${showButton}${scanButton}` : `${showButton}${printButton}${scanButton}`}
             </td>
         </tr>
     `;
