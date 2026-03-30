@@ -101,11 +101,26 @@ require_login(['super admin']);
                     </div>
 
                     <div class="summary-grid">
-                        <label>No. of Vulnerable Family Members<input id="vulnerable_count" type="number" min="0"></label>
-                        <label>No. of Older Persons<input id="older_persons" type="number" min="0"></label>
-                        <label>No. of Pregnant Women<input id="pregnant_women" type="number" min="0"></label>
-                        <label>No. of Lactating Women<input id="lactating_women" type="number" min="0"></label>
-                        <label>No. of PWDs due to Medical Condition/s<input id="pwds_medical" type="number" min="0"></label>
+                        <label class="summary-item summary-item--wide">
+                            <span class="summary-item__text">No. of Vulnerable Family Members:</span>
+                            <input id="vulnerable_count" type="number" min="0">
+                        </label>
+                        <label class="summary-item">
+                            <span class="summary-item__text">No. of Older Persons</span>
+                            <input id="older_persons" type="number" min="0">
+                        </label>
+                        <label class="summary-item">
+                            <span class="summary-item__text">No. of Pregnant Women</span>
+                            <input id="pregnant_women" type="number" min="0">
+                        </label>
+                        <label class="summary-item">
+                            <span class="summary-item__text">No. of Lactating Women</span>
+                            <input id="lactating_women" type="number" min="0">
+                        </label>
+                        <label class="summary-item">
+                            <span class="summary-item__text">No. of PWDs due to Medical Condition/s</span>
+                            <input id="pwds_medical" type="number" min="0">
+                        </label>
                     </div>
 
                     <div class="choice-grid">
