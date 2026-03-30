@@ -436,3 +436,62 @@ ON DUPLICATE KEY UPDATE
     age = VALUES(age),
     gender = VALUES(gender),
     phone_number = VALUES(phone_number);
+
+CREATE TABLE IF NOT EXISTS faced_table (
+    control_number VARCHAR(100) PRIMARY KEY,
+    region VARCHAR(120) NOT NULL,
+    province VARCHAR(120) NOT NULL,
+    district VARCHAR(120) NOT NULL,
+    city_municipality VARCHAR(120) NOT NULL,
+    barangay VARCHAR(120) NOT NULL,
+    evacuation_site VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100) NULL,
+    last_name VARCHAR(100) NOT NULL,
+    suffix VARCHAR(50) NULL,
+    birth_date DATE NOT NULL,
+    birth_place VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    sex VARCHAR(20) NOT NULL,
+    civil_status VARCHAR(50) NOT NULL,
+    contact_number VARCHAR(30) NOT NULL,
+    mother_maiden_name VARCHAR(255) NOT NULL,
+    religion VARCHAR(100) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    monthly_income VARCHAR(120) NOT NULL,
+    id_card_presented VARCHAR(255) NOT NULL,
+    id_card_number VARCHAR(255) NOT NULL,
+    is_4ps VARCHAR(10) NOT NULL,
+    is_ip VARCHAR(10) NOT NULL,
+    ethnicity_type VARCHAR(255) NOT NULL,
+    full_address VARCHAR(255) NOT NULL,
+    vulnerable_count INT NOT NULL,
+    older_persons INT NOT NULL,
+    pregnant_women INT NOT NULL,
+    lactating_women INT NOT NULL,
+    pwds_medical INT NOT NULL,
+    house_ownership VARCHAR(30) NOT NULL,
+    shelter_damage VARCHAR(50) NOT NULL,
+    division VARCHAR(20) NOT NULL DEFAULT 'COD',
+    program VARCHAR(20) NOT NULL DEFAULT 'FACED',
+    served_by VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS faced_family_information_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    control_number VARCHAR(100) NOT NULL,
+    family_member VARCHAR(150) NOT NULL,
+    relation_to_head VARCHAR(150) NOT NULL,
+    birthdate DATE NOT NULL,
+    age INT NOT NULL,
+    sex VARCHAR(20) NOT NULL,
+    highest_educational_attainment VARCHAR(255) NOT NULL,
+    occupation VARCHAR(255) NOT NULL,
+    remarks VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_faced_family_control
+        FOREIGN KEY (control_number) REFERENCES faced_table(control_number)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);

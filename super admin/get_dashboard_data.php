@@ -59,12 +59,14 @@ try {
         'DPSD' => ['PWUD', 'SOLO PARENT', 'PYAP'],
         'PSSD' => ['PWD', 'SENIOR CITIZEN'],
         'RPSD' => ['CIU', 'CICL', 'CSAE', 'CAR', 'VAWC'],
+        'COD' => ['FACED'],
     ];
 
     $totals = [
         'dpsd' => 0,
         'pssd' => 0,
         'rpsd' => 0,
+        'cod' => 0,
     ];
 
     $todayCount = 0;
@@ -79,6 +81,8 @@ try {
             $totals['pssd']++;
         } elseif (in_array($program, $divisionPrograms['RPSD'], true)) {
             $totals['rpsd']++;
+        } elseif (in_array($program, $divisionPrograms['COD'], true)) {
+            $totals['cod']++;
         }
 
         if ((string) ($record['created_at'] ?? '') === $todayDate) {
@@ -211,7 +215,7 @@ try {
 } catch (Throwable $exception) {
     http_response_code(500);
     echo json_encode([
-        'totals' => ['dpsd' => 0, 'pssd' => 0, 'rpsd' => 0],
+        'totals' => ['dpsd' => 0, 'pssd' => 0, 'rpsd' => 0, 'cod' => 0],
         'today_total' => 0,
         'active_social_workers' => 0,
         'clients' => [],

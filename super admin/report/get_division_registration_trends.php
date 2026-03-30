@@ -10,7 +10,8 @@ header('Content-Type: application/json');
 $divisionTables = [
     'DPSD' => ['pyap_table', 'soloparent_info_table', 'pwud_table'],
     'PSSD' => ['pwd_table', 'snr_table'],
-    'RPSD' => ['car_table', 'cicl_table', 'ciu_table', 'csae_table', 'vawc_table']
+    'RPSD' => ['car_table', 'cicl_table', 'ciu_table', 'csae_table', 'vawc_table'],
+    'COD' => ['faced_table']
 ];
 
 $days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
