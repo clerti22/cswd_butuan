@@ -897,7 +897,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .choice-grid fieldset {
     border: 1px solid #9f9f9f;
-    padding: 0.8rem 1rem;
+    padding: 0.9rem 1rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.2rem;
 }
 
 .choice-grid legend {
@@ -909,6 +913,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     text-align: center;
     color: #fff;
     background: #980568;
+}
+
+.choice-grid fieldset label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    white-space: nowrap;
 }
 
 .alert-box,
