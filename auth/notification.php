@@ -89,7 +89,7 @@ function insert_client_creation_notification(
     string $program,
     string $division
 ): void {
-    $activity = sprintf('%s added new client', $name);
+    $activity = sprintf('added a new client');
     $insertNotification = $connection->prepare(
         'INSERT INTO notifications (name, activity, role, program, division) VALUES (?, ?, ?, ?, ?)'
     );
@@ -115,7 +115,7 @@ function insert_client_update_notification(
     string $program,
     string $division
 ): void {
-    $activity = sprintf('updated client');
+    $activity = sprintf('updated a client');
     $insertNotification = $connection->prepare(
         'INSERT INTO notifications (name, activity, role, program, division) VALUES (?, ?, ?, ?, ?)'
     );
