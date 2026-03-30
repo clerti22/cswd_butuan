@@ -845,7 +845,42 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-top: 0.65rem;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 0.9rem;
+    align-items: start;
+}
+
+.summary-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 58px;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.summary-item__text {
+    font-size: 1rem;
+    line-height: 1;
+    color: #111827;
+}
+
+.summary-item input {
+    width: 58px;
+    min-width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    border: 2px solid #c4bcc9;
+    background: #ffffff;
+    padding: 0 0.35rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.summary-item--wide .summary-item__text {
+    max-width: 175px;
+}
+
+.summary-item:not(.summary-item--wide) .summary-item__text {
+    max-width: 136px;
+    line-height: 1;
 }
 
 .choice-grid {
@@ -916,6 +951,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border: 0;
     background: transparent;
     font-size: 1.6rem;
+    color: #1f2937;
+    line-height: 1;
+    padding: 0.15rem 0.45rem;
+}
+
+.modal-card .form-actions {
+    grid-column: 1 / -1;
 }
 
 .invalid-input {
@@ -944,6 +986,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .choice-grid,
     .form-grid.two {
         grid-template-columns: 1fr;
+    }
+
+    .summary-item__text,
+    .summary-item:not(.summary-item--wide) .summary-item__text {
+        max-width: none;
+        font-size: 1rem;
+        line-height: 1.2;
     }
 
     .span-2,
