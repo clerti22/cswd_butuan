@@ -47,12 +47,17 @@ const controlNumber = new URLSearchParams(window.location.search).get('control_n
 let originalRecordSnapshot = null;
 let recordControls = null;
 
-function showAlert(message, inModal = false) {
+function showAlert(message, inModal = false, variant = 'error') {
   const node = inModal ? modalAlert : alertBox;
   if (!node) return;
   node.textContent = message;
+  node.classList.toggle('is-success', variant === 'success');
+  node.classList.toggle('is-error', variant !== 'success');
   node.hidden = false;
-  window.setTimeout(() => { node.hidden = true; }, 2400);
+  window.setTimeout(() => {
+    node.hidden = true;
+    node.classList.remove('is-success', 'is-error');
+  }, 2400);
 }
 
 function resetInvalid() {
@@ -282,7 +287,7 @@ submitBtn?.addEventListener('click', async () => {
     return;
   }
 
-  showAlert(controlNumber ? 'FACED record updated successfully.' : 'FACED record saved successfully.');
+  showAlert(controlNumber ? 'FACED record updated successfully.' : 'FACED record saved successfully.', false, 'success');
   if (controlNumber) {
     originalRecordSnapshot = {
       record: { ...payload },
