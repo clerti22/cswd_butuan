@@ -319,6 +319,13 @@ body {
     color: #fff;
 }
 
+.client-action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+}
+
 .btn-search {
     background: #078607;
 }

@@ -882,6 +882,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     animation: facedAlertIn 0.24s ease;
 }
 
+.alert-box.is-success,
+.modal-alert.is-success {
+    background: #ecfdf3;
+    border-color: #86efac;
+    color: #166534;
+}
+
+.alert-box.is-error,
+.modal-alert.is-error {
+    background: #ffefef;
+    border-color: #f6b4b4;
+    color: #b20909;
+}
+
 .modal {
     position: fixed;
     inset: 0;
