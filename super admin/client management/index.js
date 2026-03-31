@@ -225,7 +225,7 @@ function createClientRow(client) {
     const scsrFormRoute = getShowRoute(client, 'scsr');
     const ciuPrintRoute = getPrintRoute(client, 'ciu');
     const scsrPrintRoute = getPrintRoute(client, 'scsr');
-    const primaryActionLabel = sourceTable === 'faced_table' ? 'Edit' : 'Show';
+    const primaryActionLabel = 'Show';
     const showButton = showRoute === '#'
         ? '<button class="btn btn-sm btn-show" type="button" disabled title="Show is currently available for PWUD, PYAP, Solo Parent, PWD, Senior Citizen, CAR, CICL, CSAE, and VAWC records only.">Show</button>'
         : sourceTable === 'ciu_table'
@@ -274,7 +274,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.contact_number)}</td>
             <td>${escapeHtml(client.created_at)}</td>
             <td>
-                ${isCodRecord ? `${showButton}${scanButton}` : `${showButton}${printButton}${scanButton}`}
+                <div class="client-action-buttons">${isCodRecord ? `${showButton}${scanButton}` : `${showButton}${printButton}${scanButton}`}</div>
             </td>
         </tr>
     `;
