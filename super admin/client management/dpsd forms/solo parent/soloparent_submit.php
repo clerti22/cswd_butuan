@@ -6,6 +6,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
+require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -238,6 +239,18 @@ try {
         $indigenousAffiliation = '';
     }
 
+    enforce_unique_client_identity(
+        $connection,
+        'soloparent_info_table',
+        'key_id',
+        'date_of_birth',
+        $firstName,
+        $lastName,
+        $dateOfBirth,
+        $brgy,
+        $recordId !== false ? $recordId : null
+    );
+
     if ($recordId !== false && $recordId !== null) {
         $updateSoloParent = $connection->prepare(
             'UPDATE soloparent_info_table SET
@@ -409,6 +422,10 @@ try {
         'message' => $recordId ? 'Solo parent information and household members updated successfully.' : 'Solo parent information and household members saved successfully.',
         'solo_parent_id' => $soloParentId
     ]);
+} catch (DuplicateClientException $exception) {
+    $connection->rollback();
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
 } catch (Exception $exception) {
     $connection->rollback();
     http_response_code(500);
