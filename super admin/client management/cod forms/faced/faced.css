@@ -848,6 +848,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 1rem;
 }
 
+.summary-grid label {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 92px;
+    gap: 0.55rem;
+}
+
+.summary-grid input {
+    margin-top: auto;
+}
+
 .choice-grid {
     margin-top: 1.1rem;
     display: grid;
@@ -860,6 +872,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 0.8rem 1rem;
 }
 
+
+.choice-grid fieldset label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.choice-grid fieldset input[type="radio"] {
+    margin-right: 0.4rem;
+}
 .choice-grid legend {
     display: block;
     width: calc(100% + 2rem);
@@ -928,8 +951,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .modal-header button {
     border: 0;
-    background: transparent;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #374151;
     font-size: 1.6rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-header button:hover {
+    background: #e5e7eb;
+}
+
+#familyForm .form-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
 }
 
 .invalid-input {
