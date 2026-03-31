@@ -251,7 +251,7 @@ body {
 ========================= */
 .status-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -261,6 +261,9 @@ body {
   padding: 1rem 1.1rem;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
 }
 
 .status-card-head {
@@ -275,6 +278,7 @@ body {
   align-items: center;
   justify-content: space-between;
   min-height: 64px;
+  flex: 1;
 }
 
 .status-left {
@@ -308,27 +312,6 @@ body {
 .center-value {
   width: 100%;
   text-align: right;
-}
-
-/* placements similar to screenshot */
-.status-grid .status-card:nth-child(1) {
-  grid-column: span 5;
-}
-
-.status-grid .status-card:nth-child(2) {
-  grid-column: span 4;
-}
-
-.status-grid .status-card:nth-child(3) {
-  grid-column: span 3;
-}
-
-.status-grid .status-card:nth-child(4) {
-  grid-column: span 5;
-}
-
-.status-grid .status-card:nth-child(5) {
-  grid-column: span 4;
 }
 
 /* =========================
