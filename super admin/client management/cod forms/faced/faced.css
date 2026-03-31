@@ -872,6 +872,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 0.8rem 1rem;
 }
 
+
+.choice-grid fieldset label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.choice-grid fieldset input[type="radio"] {
+    margin-right: 0.4rem;
+}
 .choice-grid legend {
     display: block;
     width: calc(100% + 2rem);
