@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../auth/db.php';
 
 const PROFILE_ALLOWED_GENDERS = ['Male', 'Female', 'Prefer not to say'];
+const PROFILE_ALLOWED_POSITIONS = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
 
 function profile_get_existing_columns(mysqli $connection): array
 {
@@ -133,6 +134,8 @@ function profile_validate_input(array $input): array
 
     if ($position === '') {
         $errors['position'] = 'Position is required.';
+    } elseif (!in_array($position, PROFILE_ALLOWED_POSITIONS, true)) {
+        $errors['position'] = 'Position must be SWO I, SWO II, SWO III, or SWO IV.';
     }
 
     if ($phoneNumber === '') {

@@ -49,6 +49,7 @@ const editButton = document.getElementById('edit-button');
 const saveButton = document.getElementById('save-button');
 const cancelButton = document.getElementById('cancel-button');
 const changePasswordButton = document.getElementById('change-password-button');
+const allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
 
 let originalProfile = {
     full_name: profileData.full_name || '',
@@ -192,6 +193,8 @@ function validateProfileData(data) {
 
     if (!data.position) {
         errors.position = 'Position is required.';
+    } else if (!allowedPositions.includes(data.position)) {
+        errors.position = 'Position must be SWO I, SWO II, SWO III, or SWO IV.';
     }
 
     if (!data.phone_number) {

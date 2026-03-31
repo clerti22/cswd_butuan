@@ -84,7 +84,13 @@
                                 </div>
                                 <div class="profile-field">
                                     <label for="position">Position <span class="required-mark">*</span></label>
-                                    <input type="text" id="position" name="position" readonly required>
+                                    <select id="position" name="position" disabled required>
+                                        <option value="">Select position</option>
+                                        <option value="SWO I">SWO I</option>
+                                        <option value="SWO II">SWO II</option>
+                                        <option value="SWO III">SWO III</option>
+                                        <option value="SWO IV">SWO IV</option>
+                                    </select>
                                     <p class="field-error" data-error-for="position"></p>
                                 </div>
                                 <div class="profile-field profile-field-wide">

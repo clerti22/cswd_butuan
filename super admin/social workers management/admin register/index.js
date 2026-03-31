@@ -51,6 +51,7 @@ const divisionPrograms = {
     PSSD: ['PWD', 'Senior Citizen'],
     RPSD: ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 };
+const allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
 
 function showRegistrationAlert(message, status) {
     if (!registrationAlert) {
@@ -273,10 +274,18 @@ if (adminRegistrationForm) {
         const emailField = adminRegistrationForm.elements.namedItem('email');
         const emailValue = emailField ? emailField.value.trim() : '';
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+        const positionField = adminRegistrationForm.elements.namedItem('position');
+        const positionValue = positionField ? positionField.value.trim() : '';
 
         if (!isValidEmail) {
             event.preventDefault();
             showRegistrationAlert('Please provide a valid email address.', 'error');
+            return;
+        }
+
+        if (!allowedPositions.includes(positionValue)) {
+            event.preventDefault();
+            showRegistrationAlert('Position must be SWO I, SWO II, SWO III, or SWO IV.', 'error');
             return;
         }
 

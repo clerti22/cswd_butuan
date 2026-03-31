@@ -30,6 +30,7 @@ $encoderProgramsByDivision = [
     'PSSD' => ['PWD', 'Senior Citizen'],
     'RPSD' => ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 ];
+$allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $fullName = trim((string) ($_POST['full_name'] ?? ''));
@@ -78,6 +79,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif ($position === '') {
         $formState['status'] = 'error';
         $formState['message'] = 'Position is required.';
+    } elseif (!in_array($position, $allowedPositions, true)) {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Position must be SWO I, SWO II, SWO III, or SWO IV.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please provide a valid email address.';
