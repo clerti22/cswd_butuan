@@ -49,6 +49,9 @@ const searchInput = document.getElementById('searchInput');
 const btnSearch = document.getElementById('btnSearch');
 const recentActivitiesContainer = document.getElementById('recentActivities');
 const seeAllNotificationsLink = document.getElementById('seeAllNotifications');
+const rightStack = document.querySelector('.right-stack');
+const chartContainer = document.getElementById('chartContainer');
+let dashboardChart = null;
 
 let currentTable = 'clients';
 
@@ -213,12 +216,19 @@ function renderRecentActivities() {
 }
 
 function renderChart() {
+  if (!chartContainer) return;
+
+  const rightStackHeight = rightStack?.offsetHeight || 0;
+  if (rightStackHeight > 0) {
+    chartContainer.style.height = `${Math.max(370, rightStackHeight - 16)}px`;
+  }
+
   const dpsd = Number(document.getElementById('dpsdTotal')?.textContent || 0);
   const pssd = Number(document.getElementById('pssdTotal')?.textContent || 0);
   const rpsd = Number(document.getElementById('rpsdTotal')?.textContent || 0);
   const cod = Number(document.getElementById('codTotal')?.textContent || 0);
 
-  const chart = new CanvasJS.Chart('chartContainer', {
+  dashboardChart = new CanvasJS.Chart('chartContainer', {
     animationEnabled: true,
     exportEnabled: true,
     theme: 'light1',
@@ -237,7 +247,7 @@ function renderChart() {
     }]
   });
 
-  chart.render();
+  dashboardChart.render();
 }
 
 async function loadDashboardData() {
@@ -296,4 +306,13 @@ tabDivisions?.addEventListener('click', () => {
 window.addEventListener('load', () => {
   setActiveTable('clients');
   loadDashboardData();
+});
+
+window.addEventListener('resize', () => {
+  if (!dashboardChart || !chartContainer) return;
+  const rightStackHeight = rightStack?.offsetHeight || 0;
+  if (rightStackHeight > 0) {
+    chartContainer.style.height = `${Math.max(370, rightStackHeight - 16)}px`;
+  }
+  dashboardChart.render();
 });
