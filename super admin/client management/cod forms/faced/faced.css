@@ -452,11 +452,6 @@ button:hover {
     color: #1d4ed8;
 }
 
-.section-title .bi {
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
 .section-title h2 {
     font-size: 16px;
     font-weight: 600;
@@ -850,42 +845,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-top: 0.65rem;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.9rem;
-    align-items: start;
-}
-
-.summary-item {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 58px;
-    align-items: center;
-    gap: 0.7rem;
-}
-
-.summary-item__text {
-    font-size: 1rem;
-    line-height: 1;
-    color: #111827;
-}
-
-.summary-item input {
-    width: 58px;
-    min-width: 58px;
-    height: 58px;
-    border-radius: 14px;
-    border: 2px solid #c4bcc9;
-    background: #ffffff;
-    padding: 0 0.35rem;
-    font-size: 1rem;
-    text-align: center;
-}
-
-.summary-item--wide .summary-item__text {
-    max-width: 175px;
-}
-
-.summary-item:not(.summary-item--wide) .summary-item__text {
-    max-width: 136px;
-    line-height: 1;
+    gap: 1rem;
 }
 
 .choice-grid {
@@ -897,11 +857,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .choice-grid fieldset {
     border: 1px solid #9f9f9f;
-    padding: 0.9rem 1rem 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem 1.2rem;
+    padding: 0.8rem 1rem;
 }
 
 .choice-grid legend {
@@ -913,14 +869,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     text-align: center;
     color: #fff;
     background: #980568;
-}
-
-.choice-grid fieldset label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin: 0;
-    white-space: nowrap;
 }
 
 .alert-box,
@@ -968,13 +916,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border: 0;
     background: transparent;
     font-size: 1.6rem;
-    color: #1f2937;
-    line-height: 1;
-    padding: 0.15rem 0.45rem;
-}
-
-.modal-card .form-actions {
-    grid-column: 1 / -1;
 }
 
 .invalid-input {
@@ -1003,13 +944,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .choice-grid,
     .form-grid.two {
         grid-template-columns: 1fr;
-    }
-
-    .summary-item__text,
-    .summary-item:not(.summary-item--wide) .summary-item__text {
-        max-width: none;
-        font-size: 1rem;
-        line-height: 1.2;
     }
 
     .span-2,

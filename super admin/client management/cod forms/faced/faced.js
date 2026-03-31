@@ -41,12 +41,9 @@ const familyTableBody = document.getElementById('familyTableBody');
 const submitBtn = document.getElementById('submitBtn');
 const alertBox = document.getElementById('alertBox');
 const modalAlert = document.getElementById('modalAlert');
-const formPage = document.querySelector('.form-page');
 
 const familyRows = [];
 const controlNumber = new URLSearchParams(window.location.search).get('control_number') || '';
-let originalRecordSnapshot = null;
-let recordControls = null;
 
 function showAlert(message, inModal = false) {
   const node = inModal ? modalAlert : alertBox;
@@ -105,6 +102,7 @@ function checkedValue(name) {
   return document.querySelector(`input[name="${name}"]:checked`)?.value || '';
 }
 
+<<<<<<< HEAD
 function setRadioValue(name, value) {
   document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
     input.checked = input.value === String(value ?? '');
@@ -130,6 +128,8 @@ function populateRecord(record = {}, related = {}) {
   renderFamilyRows();
 }
 
+=======
+>>>>>>> parent of d8c6b39 (Show FACED success alerts in green styling)
 function collectPayload() {
   return {
     control_number: controlNumber,
@@ -207,62 +207,18 @@ async function loadRecord() {
   const res = await fetch(`../../get_client_record.php?program=faced&control_number=${encodeURIComponent(controlNumber)}`);
   const data = await res.json();
   if (!res.ok || !data.success) return;
-
-  originalRecordSnapshot = {
-    record: { ...(data.record || {}) },
-    related: {
-      family_information: (data.related?.family_information || []).map((member) => ({ ...member }))
-    }
-  };
-  populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related);
-}
-
-function setEditMode(isEditable) {
-  window.clientRecordMode?.toggleContainerEditState(formPage, isEditable);
-
-  if (openFamilyModal) {
-    openFamilyModal.disabled = !isEditable;
-  }
-
-  if (closeFamilyModal) {
-    closeFamilyModal.disabled = !isEditable;
-  }
-
-  familyForm?.querySelectorAll('button').forEach((button) => {
-    button.disabled = !isEditable;
+  const r = data.record || {};
+  Object.keys(r).forEach((key) => {
+    const field = document.getElementById(key);
+    if (field) field.value = r[key] ?? '';
   });
-
-  if (submitBtn && controlNumber) {
-    submitBtn.disabled = !isEditable;
-  }
-
-  if (!isEditable) {
-    toggleModal(false);
-  }
-}
-
-async function loadRecordForViewMode() {
-  if (!controlNumber) return;
-
-  await loadRecord();
-  if (!originalRecordSnapshot) return;
-
-  setEditMode(false);
-  recordControls = window.clientRecordMode?.mountControls({
-    anchor: formPage,
-    submitButton: submitBtn,
-    onEnableEdit: () => {
-      setEditMode(true);
-      resetInvalid();
-    },
-    onCancelEdit: () => {
-      if (!originalRecordSnapshot) return;
-      populateRecord(originalRecordSnapshot.record, originalRecordSnapshot.related || {});
-      setEditMode(false);
-      resetInvalid();
-    },
-    onSaveStateChange: () => {}
-  }) || null;
+  ['sex','is_4ps','is_ip','house_ownership','shelter_damage'].forEach((name) => {
+    const value = r[name] || '';
+    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => { input.checked = input.value === value; });
+  });
+  familyRows.length = 0;
+  (data.related?.family_information || []).forEach((m) => familyRows.push(m));
+  renderFamilyRows();
 }
 
 submitBtn?.addEventListener('click', async () => {
@@ -282,6 +238,7 @@ submitBtn?.addEventListener('click', async () => {
   }
 
   showAlert(controlNumber ? 'FACED record updated successfully.' : 'FACED record saved successfully.');
+<<<<<<< HEAD
   if (controlNumber) {
     originalRecordSnapshot = {
       record: { ...payload },
@@ -292,9 +249,12 @@ submitBtn?.addEventListener('click', async () => {
     setEditMode(false);
     recordControls?.setEditing(false);
   } else if (result.control_number) {
+=======
+  if (!controlNumber && result.control_number) {
+>>>>>>> parent of d8c6b39 (Show FACED success alerts in green styling)
     window.location.href = `${window.location.pathname}?control_number=${encodeURIComponent(result.control_number)}`;
   }
 });
 
 renderFamilyRows();
-loadRecordForViewMode();
+loadRecord();
