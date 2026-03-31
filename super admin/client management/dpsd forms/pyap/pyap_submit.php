@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
+require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -174,6 +175,18 @@ try {
     $interventionNeeded = implode(', ', array_map(static fn ($value) => trim((string) $value), $_POST['intervention_needed']));
     $interventionSpecify = trim((string) $_POST['intervention_specify']);
     $served = $fullname;
+
+    enforce_unique_client_identity(
+        $connection,
+        'pyap_table',
+        'key_id',
+        'income_data',
+        $firstName,
+        $lastName,
+        $dateOfBirth,
+        $brgy,
+        $recordId !== false ? $recordId : null
+    );
 
     if ($recordId !== false && $recordId !== null) {
         $updatePyap = $connection->prepare(
@@ -409,6 +422,10 @@ try {
         'message' => $recordId ? 'PYAP information updated successfully.' : 'PYAP information saved successfully.',
         'pyap_id' => $pyapId
     ]);
+} catch (DuplicateClientException $exception) {
+    $connection->rollback();
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
 } catch (Exception $exception) {
     $connection->rollback();
     http_response_code(500);

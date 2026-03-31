@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
+require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -183,6 +184,18 @@ try {
     $recommendation = trim((string) ($_POST['recommendation'] ?? ''));
     $served = $fullname;
 
+    enforce_unique_client_identity(
+        $connection,
+        'ciu_table',
+        'key_id',
+        'birth_date',
+        $firstName,
+        $lastName,
+        $birthDate,
+        $barangay,
+        $recordId !== false ? $recordId : null
+    );
+
     if ($recordId !== false && $recordId !== null) {
         $updateMain = execute_statement(
             $connection,
@@ -250,6 +263,10 @@ try {
 
     $connection->commit();
     echo json_encode(['success' => true, 'message' => $recordId ? ($isScsrForm ? 'SCSR record updated successfully.' : 'CIU record updated successfully.') : ($isScsrForm ? 'SCSR record saved successfully.' : 'CIU record saved successfully.'), 'record_id' => $ciuId]);
+} catch (DuplicateClientException $exception) {
+    $connection->rollback();
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
 } catch (Throwable $exception) {
     $connection->rollback();
     http_response_code(500);

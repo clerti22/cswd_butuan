@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
+require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
 require_login(['super admin']);
 
@@ -114,6 +115,18 @@ try {
     $contactNumber = trim((string) $_POST['contact_number']);
     $servicesNeeded = trim((string) $_POST['services_needed']);
     $served_by = $fullname;
+
+    enforce_unique_client_identity(
+        $connection,
+        'pwd_table',
+        'key_id',
+        'date_of_birth',
+        $firstName,
+        $lastName,
+        $dateOfBirth,
+        $brgy,
+        $recordId !== false ? $recordId : null
+    );
 
     if ($recordId !== false && $recordId !== null) {
         $updatePwud = $connection->prepare(
@@ -293,6 +306,10 @@ try {
         'message' => $recordId ? 'PWD record updated successfully.' : 'PWD record and household members saved successfully.',
         'key_id' => $pwudId
     ]);
+} catch (DuplicateClientException $exception) {
+    $connection->rollback();
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
 } catch (Exception $exception) {
     $connection->rollback();
     http_response_code(500);
