@@ -24,6 +24,7 @@ $sanitizedInput = [
     'email' => trim((string) ($payload['email'] ?? '')),
     'age' => trim((string) ($payload['age'] ?? '')),
     'gender' => trim((string) ($payload['gender'] ?? '')),
+    'position' => trim((string) ($payload['position'] ?? '')),
     'phone_number' => trim((string) ($payload['phone_number'] ?? '')),
 ];
 
@@ -61,7 +62,7 @@ try {
     }
 
     $updateStatement = $connection->prepare(
-        'UPDATE users SET full_name = ?, username = ?, email = ?, age = ?, gender = ?, phone_number = ? WHERE username = ? LIMIT 1'
+        'UPDATE users SET full_name = ?, username = ?, email = ?, age = ?, gender = ?, position = ?, phone_number = ? WHERE username = ? LIMIT 1'
     );
 
     if ($updateStatement === false) {
@@ -70,12 +71,13 @@ try {
 
     $age = (int) $sanitizedInput['age'];
     $updateStatement->bind_param(
-        'sssisss',
+        'sssissss',
         $sanitizedInput['full_name'],
         $sanitizedInput['username'],
         $sanitizedInput['email'],
         $age,
         $sanitizedInput['gender'],
+        $sanitizedInput['position'],
         $sanitizedInput['phone_number'],
         $currentUsername
     );

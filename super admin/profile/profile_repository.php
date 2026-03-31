@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../auth/db.php';
 
 const PROFILE_ALLOWED_GENDERS = ['Male', 'Female', 'Prefer not to say'];
+const PROFILE_ALLOWED_POSITIONS = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
 
 function profile_get_existing_columns(mysqli $connection): array
 {
@@ -30,6 +31,7 @@ function profile_ensure_optional_columns(mysqli $connection): array
     $definitions = [
         'age' => 'ALTER TABLE users ADD COLUMN age INT NULL AFTER email_address',
         'gender' => "ALTER TABLE users ADD COLUMN gender VARCHAR(30) NULL AFTER age",
+        'position' => 'ALTER TABLE users ADD COLUMN position VARCHAR(120) NULL AFTER gender',
         'phone_number' => 'ALTER TABLE users ADD COLUMN phone_number VARCHAR(30) NULL AFTER gender',
     ];
 
@@ -54,9 +56,10 @@ function profile_build_select(array $columns): string
 
     $age = isset($columns['age']) ? 'age' : 'NULL AS age';
     $gender = isset($columns['gender']) ? 'COALESCE(gender, "") AS gender' : '"" AS gender';
+    $position = isset($columns['position']) ? 'COALESCE(position, "") AS position' : '"" AS position';
     $phone = isset($columns['phone_number']) ? 'COALESCE(phone_number, "") AS phone_number' : '"" AS phone_number';
 
-    return "SELECT {$fullName}, username, role, {$email}, {$age}, {$gender}, {$phone} FROM users WHERE username = ? LIMIT 1";
+    return "SELECT {$fullName}, username, role, {$email}, {$age}, {$gender}, {$position}, {$phone} FROM users WHERE username = ? LIMIT 1";
 }
 
 function profile_fetch_user(mysqli $connection, string $username): ?array
@@ -85,6 +88,7 @@ function profile_fetch_user(mysqli $connection, string $username): ?array
         'email' => trim((string) ($user['email'] ?? '')),
         'age' => $user['age'] === null ? '' : (string) $user['age'],
         'gender' => trim((string) ($user['gender'] ?? '')),
+        'position' => trim((string) ($user['position'] ?? '')),
         'phone_number' => trim((string) ($user['phone_number'] ?? '')),
     ];
 }
@@ -97,6 +101,7 @@ function profile_validate_input(array $input): array
     $email = trim((string) ($input['email'] ?? ''));
     $age = trim((string) ($input['age'] ?? ''));
     $gender = trim((string) ($input['gender'] ?? ''));
+    $position = trim((string) ($input['position'] ?? ''));
     $phoneNumber = trim((string) ($input['phone_number'] ?? ''));
 
     if ($fullName === '') {
@@ -125,6 +130,12 @@ function profile_validate_input(array $input): array
         $errors['gender'] = 'Gender is required.';
     } elseif (!in_array($gender, PROFILE_ALLOWED_GENDERS, true)) {
         $errors['gender'] = 'Please select a valid gender option.';
+    }
+
+    if ($position === '') {
+        $errors['position'] = 'Position is required.';
+    } elseif (!in_array($position, PROFILE_ALLOWED_POSITIONS, true)) {
+        $errors['position'] = 'Position must be SWO I, SWO II, SWO III, or SWO IV.';
     }
 
     if ($phoneNumber === '') {
