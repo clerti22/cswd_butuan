@@ -951,8 +951,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .modal-header button {
     border: 0;
-    background: transparent;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #374151;
     font-size: 1.6rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-header button:hover {
+    background: #e5e7eb;
+}
+
+#familyForm .form-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
 }
 
 .invalid-input {
