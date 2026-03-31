@@ -19,6 +19,7 @@ $profile = [
     'age' => '',
     'gender' => '',
     'phone_number' => '',
+    'position' => '',
 ];
 
 if ($username !== '') {

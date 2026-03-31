@@ -63,7 +63,7 @@ try {
         }
     }
 
-    $baseColumns = ['full_name', 'username', 'email', 'role', 'age', 'phone_number', 'gender', 'statuz'];
+    $baseColumns = ['full_name', 'username', 'email', 'role', 'age', 'phone_number', 'gender', 'position', 'statuz'];
     foreach ($baseColumns as $requiredColumn) {
         if (!isset($availableColumns[$requiredColumn])) {
             throw new RuntimeException('Missing users column: ' . $requiredColumn);
@@ -104,7 +104,7 @@ try {
 
     $offset = ($page - 1) * $perPage;
 
-    $query = "SELECT full_name, username, email, role, {$assignmentColumn} AS assignment, age, phone_number, gender, statuz FROM users WHERE LOWER(role) = ?";
+    $query = "SELECT full_name, username, email, role, {$assignmentColumn} AS assignment, age, phone_number, gender, position, statuz FROM users WHERE LOWER(role) = ?";
     if ($searchKeyword !== '') {
         $query .= " AND LOWER(COALESCE(full_name, '')) LIKE ? ESCAPE '\\\\'";
     }
@@ -136,6 +136,7 @@ try {
             'age' => (string) ($row['age'] ?? ''),
             'phone_number' => (string) ($row['phone_number'] ?? ''),
             'gender' => (string) ($row['gender'] ?? ''),
+            'position' => (string) ($row['position'] ?? ''),
             'statuz' => (string) ($row['statuz'] ?? ''),
         ];
     }

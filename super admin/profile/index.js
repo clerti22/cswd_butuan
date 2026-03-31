@@ -57,6 +57,7 @@ let originalProfile = {
     email: profileData.email || '',
     age: profileData.age || '',
     gender: profileData.gender || '',
+    position: profileData.position || '',
     phone_number: profileData.phone_number || '',
 };
 
@@ -150,6 +151,7 @@ function getProfileFormData() {
         email: String(formData.get('email') || '').trim(),
         age: String(formData.get('age') || '').trim(),
         gender: String(formData.get('gender') || '').trim(),
+        position: String(formData.get('position') || '').trim(),
         phone_number: String(formData.get('phone_number') || '').trim(),
     };
 }
@@ -186,6 +188,10 @@ function validateProfileData(data) {
 
     if (!data.gender) {
         errors.gender = 'Gender is required.';
+    }
+
+    if (!data.position) {
+        errors.position = 'Position is required.';
     }
 
     if (!data.phone_number) {

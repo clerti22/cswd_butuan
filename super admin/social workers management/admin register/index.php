@@ -17,6 +17,7 @@ $formState = [
         'email' => '',
         'phone_number' => '',
         'gender' => '',
+        'position' => '',
         'age' => '',
         'role' => '',
         'division' => '',
@@ -36,6 +37,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $email = trim((string) ($_POST['email'] ?? ''));
     $phoneNumber = trim((string) ($_POST['phone_number'] ?? ''));
     $gender = trim((string) ($_POST['gender'] ?? ''));
+    $position = trim((string) ($_POST['position'] ?? ''));
     $age = trim((string) ($_POST['age'] ?? ''));
     $role = strtolower(trim((string) ($_POST['role'] ?? '')));
     $division = strtoupper(trim((string) ($_POST['division'] ?? '')));
@@ -49,6 +51,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         'email' => $email,
         'phone_number' => $phoneNumber,
         'gender' => $gender,
+        'position' => $position,
         'age' => $age,
         'role' => $role,
         'division' => $division,
@@ -61,6 +64,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $email === '' ||
         $phoneNumber === '' ||
         $gender === '' ||
+        $position === '' ||
         $age === '' ||
         $role === '' ||
         $password === '' ||
@@ -71,6 +75,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif (!ctype_digit($age) || (int) $age <= 0) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please provide a valid age.';
+    } elseif ($position === '') {
+        $formState['status'] = 'error';
+        $formState['message'] = 'Position is required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $formState['status'] = 'error';
         $formState['message'] = 'Please provide a valid email address.';
@@ -119,7 +126,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $columnsResult->free();
             }
 
-            $requiredColumns = ['full_name', 'username', 'email', 'phone_number', 'division', 'gender', 'age', 'password', 'role'];
+            $requiredColumns = ['full_name', 'username', 'email', 'phone_number', 'division', 'gender', 'position', 'age', 'password', 'role'];
 
             foreach ($requiredColumns as $requiredColumn) {
                 if (!isset($columns[$requiredColumn])) {
@@ -151,9 +158,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $programValue = $role === 'encoder' ? $programAssigned : '';
                 $statusValue = 'Offline';
 
-                $columnsForInsert = ['full_name', 'username', 'email', 'phone_number', 'division', 'gender', 'age', 'password', 'role'];
-                $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?'];
-                $types = 'ssssssiss';
+                $columnsForInsert = ['full_name', 'username', 'email', 'phone_number', 'division', 'gender', 'position', 'age', 'password', 'role'];
+                $placeholders = ['?', '?', '?', '?', '?', '?', '?', '?', '?', '?'];
+                $types = 'sssssssiss';
                 $values = [
                     $fullName,
                     $username,
@@ -161,6 +168,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     $phoneNumber,
                     $normalizedDivision,
                     $gender,
+                    $position,
                     $ageValue,
                     $hashedPassword,
                     $role,
@@ -204,6 +212,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     'email' => '',
                     'phone_number' => '',
                     'gender' => '',
+                    'position' => '',
                     'age' => '',
                     'role' => '',
                     'division' => '',
