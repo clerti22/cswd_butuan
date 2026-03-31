@@ -814,9 +814,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 10px;
     background: #108a1b;
     color: #fff;
-    min-height: 36px;
+    min-height: 40px;
     padding: 0.4rem 1rem;
-    font-size: 1rem;
+    font-size: 1.7rem;
     line-height: 1;
 }
 

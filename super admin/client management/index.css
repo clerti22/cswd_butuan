@@ -307,14 +307,6 @@ body {
     box-shadow: 0 0 0 3px rgba(10, 125, 10, 0.12);
 }
 
-
-.client-action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-}
-
 .btn {
     display: inline-flex;
     align-items: center;
