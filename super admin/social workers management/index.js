@@ -59,6 +59,7 @@ const showAssignmentLabel = document.getElementById('showAssignmentLabel');
 const showAssignment = document.getElementById('showAssignment');
 const showPhoneNumber = document.getElementById('showPhoneNumber');
 const showGender = document.getElementById('showGender');
+const showPosition = document.getElementById('showPosition');
 const showAge = document.getElementById('showAge');
 const showRole = document.getElementById('showRole');
 const showEmail = document.getElementById('showEmail');
@@ -158,6 +159,10 @@ function buildUserDetails(user) {
 
     if (showGender) {
         showGender.textContent = String(user.gender ?? '');
+    }
+
+    if (showPosition) {
+        showPosition.textContent = String(user.position ?? '');
     }
 
     if (showAge) {

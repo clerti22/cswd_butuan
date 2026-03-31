@@ -220,6 +220,7 @@ if (adminRegistrationForm) {
             'email',
             'phone_number',
             'gender',
+            'position',
             'age',
             'role',
             'password',
