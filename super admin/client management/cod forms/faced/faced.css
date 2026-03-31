@@ -848,6 +848,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 1rem;
 }
 
+.summary-grid label {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 92px;
+    gap: 0.55rem;
+}
+
+.summary-grid input {
+    margin-top: auto;
+}
+
 .choice-grid {
     margin-top: 1.1rem;
     display: grid;
