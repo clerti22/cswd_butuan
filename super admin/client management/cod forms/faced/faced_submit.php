@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
+require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -76,6 +77,18 @@ try {
     $isUpdate = (bool)$existsStmt->get_result()?->fetch_assoc();
     $existsStmt->close();
 
+    enforce_unique_client_identity(
+        $connection,
+        'faced_table',
+        'control_number',
+        'birth_date',
+        $values[6],
+        $values[8],
+        $values[10],
+        $values[4],
+        $isUpdate ? $controlNumber : null
+    );
+
     if ($isUpdate) {
         $sql = 'UPDATE faced_table SET region=?,province=?,district=?,city_municipality=?,barangay=?,evacuation_site=?,first_name=?,middle_name=?,last_name=?,suffix=?,birth_date=?,birth_place=?,age=?,sex=?,civil_status=?,contact_number=?,mother_maiden_name=?,religion=?,occupation=?,monthly_income=?,id_card_presented=?,id_card_number=?,is_4ps=?,is_ip=?,ethnicity_type=?,full_address=?,vulnerable_count=?,older_persons=?,pregnant_women=?,lactating_women=?,pwds_medical=?,house_ownership=?,shelter_damage=?,division="COD",program="FACED",served_by=? WHERE control_number=?';
         $stmt = $connection->prepare($sql);
@@ -124,6 +137,10 @@ try {
 
     $connection->commit();
     echo json_encode(['success' => true, 'control_number' => $controlNumber]);
+} catch (DuplicateClientException $e) {
+    $connection->rollback();
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 } catch (Throwable $e) {
     $connection->rollback();
     http_response_code(500);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
+require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
 require_login(['super admin']);
 start_auth_session();
@@ -185,6 +186,18 @@ try {
     $familyForeignKey = resolve_foreign_key_column($connection, 'csae_family_information_table', ['case_id', 'csae_id']);
     $treatmentForeignKey = resolve_foreign_key_column($connection, 'csae_treatment_plan_table', ['case_id', 'csae_id']);
 
+    enforce_unique_client_identity(
+        $connection,
+        'csae_table',
+        'key_id',
+        'birth_date',
+        $firstName,
+        $lastName,
+        $birthDate,
+        $barangay,
+        $recordId !== false ? $recordId : null
+    );
+
     if ($recordId !== false && $recordId !== null) {
         execute_statement(
             $connection,
@@ -251,6 +264,10 @@ try {
 
     $connection->commit();
     echo json_encode(['success' => true, 'message' => $recordId ? 'CSAE record updated successfully.' : 'CSAE record saved successfully.', 'record_id' => $csaeId]);
+} catch (DuplicateClientException $exception) {
+    $connection->rollback();
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
 } catch (Throwable $exception) {
     $connection->rollback();
     http_response_code(500);
