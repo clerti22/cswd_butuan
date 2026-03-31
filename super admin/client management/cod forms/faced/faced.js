@@ -48,12 +48,16 @@ const controlNumber = new URLSearchParams(window.location.search).get('control_n
 let originalRecordSnapshot = null;
 let recordControls = null;
 
-function showAlert(message, inModal = false) {
+function showAlert(message, inModal = false, type = 'error') {
   const node = inModal ? modalAlert : alertBox;
   if (!node) return;
   node.textContent = message;
+  node.classList.toggle('is-success', type === 'success');
   node.hidden = false;
-  window.setTimeout(() => { node.hidden = true; }, 2400);
+  window.setTimeout(() => {
+    node.hidden = true;
+    node.classList.remove('is-success');
+  }, 2400);
 }
 
 function resetInvalid() {
@@ -112,12 +116,8 @@ function setRadioValue(name, value) {
 }
 
 function populateRecord(record = {}, related = {}) {
-  const fieldIdByRecordKey = {
-    city_municipality: 'city'
-  };
-
   Object.keys(record).forEach((key) => {
-    const field = document.getElementById(fieldIdByRecordKey[key] || key);
+    const field = document.getElementById(key);
     if (field) field.value = record[key] ?? '';
   });
 
@@ -281,7 +281,7 @@ submitBtn?.addEventListener('click', async () => {
     return;
   }
 
-  showAlert(controlNumber ? 'FACED record updated successfully.' : 'FACED record saved successfully.');
+  showAlert(controlNumber ? 'FACED record updated successfully.' : 'FACED record saved successfully.', false, 'success');
   if (controlNumber) {
     originalRecordSnapshot = {
       record: { ...payload },

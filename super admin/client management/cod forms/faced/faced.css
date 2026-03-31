@@ -934,6 +934,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     animation: facedAlertIn 0.24s ease;
 }
 
+.alert-box.is-success,
+.modal-alert.is-success {
+    background: #ecfdf3;
+    border-color: #86efac;
+    color: #166534;
+}
+
 .modal {
     position: fixed;
     inset: 0;
