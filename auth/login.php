@@ -20,7 +20,23 @@ if ($username === '' || $password === '') {
 
 try {
     $connection = get_database_connection();
-    $statement = $connection->prepare('SELECT full_name,username, password, role FROM users WHERE username = ? LIMIT 1');
+
+    $columnsResult = $connection->query('SHOW COLUMNS FROM users');
+    if (!$columnsResult) {
+        throw new RuntimeException('Unable to inspect users table.');
+    }
+
+    $availableColumns = [];
+    while ($column = $columnsResult->fetch_assoc()) {
+        $field = strtolower((string) ($column['Field'] ?? ''));
+        if ($field !== '') {
+            $availableColumns[$field] = true;
+        }
+    }
+
+    $statusColumn = isset($availableColumns['status']) ? 'status' : (isset($availableColumns['statuz']) ? 'statuz' : "'' AS status");
+
+    $statement = $connection->prepare("SELECT full_name, username, password, role, division, programs, {$statusColumn} AS account_status FROM users WHERE username = ? LIMIT 1");
 
     if ($statement === false) {
         throw new RuntimeException('Failed to prepare login statement.');
@@ -43,9 +59,14 @@ if (!$user) {
     exit;
 }
 
+$status = strtolower(trim((string) ($user['account_status'] ?? 'active')));
+if (in_array($status, ['disabled', 'disabled account'], true)) {
+    header('Location: /login form/index.php?error=account_disabled');
+    exit;
+}
+
 $storedPassword = (string) ($user['password'] ?? '');
 
-// Support both bcrypt hashes and legacy plaintext VARCHAR passwords.
 $isHashedPassword = password_get_info($storedPassword)['algo'] !== null;
 $isValidPassword = $isHashedPassword
     ? password_verify($password, $storedPassword)
@@ -56,7 +77,6 @@ if (!$isValidPassword) {
     exit;
 }
 
-// If account still uses plaintext or an outdated hash, migrate it to bcrypt after successful login.
 $shouldUpgradePassword = !$isHashedPassword || password_needs_rehash($storedPassword, PASSWORD_BCRYPT);
 
 if ($shouldUpgradePassword) {
@@ -78,7 +98,7 @@ if ($shouldUpgradePassword) {
 }
 
 $role = strtolower(trim((string) ($user['role'] ?? '')));
-$full_name = (trim((string) ($user['full_name'] ?? '')));
+$full_name = trim((string) ($user['full_name'] ?? ''));
 $allowedRoles = ['super admin', 'admin', 'encoder'];
 
 if (!in_array($role, $allowedRoles, true)) {
@@ -86,6 +106,27 @@ if (!in_array($role, $allowedRoles, true)) {
     exit;
 }
 
-login_user($full_name,$username, $role);
+$division = strtoupper(trim((string) ($user['division'] ?? '')));
+$program = strtoupper(trim((string) ($user['programs'] ?? '')));
+$divisionPrograms = division_program_map();
+
+if ($role === 'admin' && !array_key_exists($division, $divisionPrograms)) {
+    header('Location: /login form/index.php?error=invalid_division');
+    exit;
+}
+
+if ($role === 'encoder') {
+    if (!array_key_exists($division, $divisionPrograms)) {
+        header('Location: /login form/index.php?error=invalid_encoder_division');
+        exit;
+    }
+
+    if ($program === '' || !in_array($program, $divisionPrograms[$division], true)) {
+        header('Location: /login form/index.php?error=invalid_program_assignment');
+        exit;
+    }
+}
+
+login_user($full_name, $username, $role, $division, $program);
 header('Location: ' . role_dashboard_path($role));
 exit;
