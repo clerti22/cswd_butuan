@@ -34,7 +34,7 @@ function start_auth_session(): void
     $_SESSION['last_activity'] = time();
 }
 
-function login_user(string $full_name, string $username, string $role): void
+function login_user(string $full_name, string $username, string $role, string $division = '', string $program = ''): void
 {
     start_auth_session();
 
@@ -42,6 +42,8 @@ function login_user(string $full_name, string $username, string $role): void
     $_SESSION['full_name'] = $full_name;
     $_SESSION['username'] = $username;
     $_SESSION['role'] = $role;
+    $_SESSION['division'] = strtoupper(trim($division));
+    $_SESSION['program'] = trim($program);
     $_SESSION['last_activity'] = time();
 }
 
@@ -80,11 +82,45 @@ function require_login(array $allowedRoles): void
     }
 }
 
+
+
+function current_user_division(): string
+{
+    start_auth_session();
+    return strtoupper(trim((string) ($_SESSION['division'] ?? '')));
+}
+
+function current_user_program(): string
+{
+    start_auth_session();
+    return trim((string) ($_SESSION['program'] ?? ''));
+}
+
+/**
+ * @return array<string, array<int, string>>
+ */
+function division_program_map(): array
+{
+    return [
+        'DPSD' => ['PYAP', 'SOLO PARENT', 'PWUD'],
+        'PSSD' => ['PWD', 'SENIOR CITIZEN'],
+        'RPSD' => ['VAWC', 'CIU', 'CSAE', 'CAR', 'CICL'],
+    ];
+}
+
 function role_dashboard_path(string $role): string
 {
+    if ($role === 'admin') {
+        $division = current_user_division();
+        if (!in_array($division, ['DPSD', 'PSSD', 'RPSD'], true)) {
+            return '/login form/index.php?error=invalid_division';
+        }
+
+        return '/cswd_project/cswd/cswd_butuan/admin/index.php?division=' . urlencode($division);
+    }
+
     return match ($role) {
         'super admin' => '/cswd_project/cswd/cswd_butuan/super admin/index.php',
-        'admin' => '/cswd_project/cswd/cswd_butuan/admin/index.php',
         'encoder' => '/cswd_project/cswd/cswd_butuan/encoders/index.php',
         default => '/login form/index.php?error=invalid_role',
     };
