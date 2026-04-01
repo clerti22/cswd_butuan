@@ -179,19 +179,8 @@ $householdRows = max(4, count($householdMembers));
   <main class="print-page" id="printPage">
     <table class="document-table" aria-label="Solo Parent application form">
       <tr>
-        <td colspan="12" class="header-cell no-border-bottom">
-          <table class="header-table">
-            <tr>
-              <td class="seal-cell left-seal"><img src="../../../images-logo/butuanseal.png" alt="Butuan City seal" /></td>
-              <td class="title-cell">
-                <div class="header-line small">Republic of the Philippines</div>
-                <div class="header-line main">CITY GOVERNMENT OF BUTUAN</div>
-                <div class="header-line main second">City Social Welfare and Development Department</div>
-                <div class="header-line small address">J.P. Rosales Ave., Tandang Sora, Butuan City</div>
-              </td>
-              <td class="seal-cell right-seal"><img src="../../../images-logo/cswd-logo.png" alt="CSWD seal" /></td>
-            </tr>
-          </table>
+        <td colspan="12" class="header-cell header-image-cell no-border-bottom">
+          <img src="../pwud/print form/header.png" alt="CSWD Header" class="header-image" />
         </td>
       </tr>
       <tr>
@@ -340,19 +329,22 @@ $householdRows = max(4, count($householdMembers));
         </td>
       </tr>
       <tr>
-        <td colspan="7" class="footer-left-cell">
-          <div>Phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+639562241679 / +639816016317</div>
-          <div>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cswdobutuan@gmail.com</div>
-          <div>Website:&nbsp;&nbsp;&nbsp;&nbsp;http://www.butuan.gov.ph</div>
-        </td>
-        <td colspan="5" class="footer-right-cell">
-          <div class="footer-brand">BUTUAN<span>ON</span></div>
-          <div class="footer-sub">A City Ascending</div>
-          <div class="footer-code">CSWDD.DPSD.F.112.REV03</div>
+        <td colspan="12" class="footer-main-cell">
+          <div class="footer-content">
+            <div class="footer-left">
+              <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
+              <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
+              <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+            </div>
+            <div class="footer-right">
+              <p class="footer-code">CSWDD.DPSD.F.112.REV03</p>
+              <img src="../pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+            </div>
+          </div>
         </td>
       </tr>
       <tr>
-        <td colspan="12" class="footer-bar-cell"></td>
+        <td colspan="12" class="footer-bar-cell"><div class="footer-bar"></div></td>
       </tr>
     </table>
   </main>
