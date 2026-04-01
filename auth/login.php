@@ -20,7 +20,7 @@ if ($username === '' || $password === '') {
 
 try {
     $connection = get_database_connection();
-    $statement = $connection->prepare('SELECT full_name,username, password, role FROM users WHERE username = ? LIMIT 1');
+    $statement = $connection->prepare('SELECT full_name, username, password, role, division, programs, statuz FROM users WHERE username = ? LIMIT 1');
 
     if ($statement === false) {
         throw new RuntimeException('Failed to prepare login statement.');
@@ -43,9 +43,13 @@ if (!$user) {
     exit;
 }
 
+if (!is_active_status((string) ($user['statuz'] ?? ''))) {
+    header('Location: /login form/index.php?error=account_disabled');
+    exit;
+}
+
 $storedPassword = (string) ($user['password'] ?? '');
 
-// Support both bcrypt hashes and legacy plaintext VARCHAR passwords.
 $isHashedPassword = password_get_info($storedPassword)['algo'] !== null;
 $isValidPassword = $isHashedPassword
     ? password_verify($password, $storedPassword)
@@ -56,7 +60,6 @@ if (!$isValidPassword) {
     exit;
 }
 
-// If account still uses plaintext or an outdated hash, migrate it to bcrypt after successful login.
 $shouldUpgradePassword = !$isHashedPassword || password_needs_rehash($storedPassword, PASSWORD_BCRYPT);
 
 if ($shouldUpgradePassword) {
@@ -77,15 +80,31 @@ if ($shouldUpgradePassword) {
     }
 }
 
-$role = strtolower(trim((string) ($user['role'] ?? '')));
-$full_name = (trim((string) ($user['full_name'] ?? '')));
-$allowedRoles = ['super admin', 'admin', 'encoder'];
+$role = normalize_role((string) ($user['role'] ?? ''));
+$fullName = trim((string) ($user['full_name'] ?? ''));
+$division = normalize_division((string) ($user['division'] ?? ''));
+$program = normalize_program((string) ($user['programs'] ?? ''));
 
-if (!in_array($role, $allowedRoles, true)) {
+if (!in_array($role, RBAC_ALLOWED_ROLES, true)) {
     header('Location: /login form/index.php?error=invalid_role');
     exit;
 }
 
-login_user($full_name,$username, $role);
-header('Location: ' . role_dashboard_path($role));
+if ($role === 'admin' && !is_supported_division($division)) {
+    header('Location: /login form/index.php?error=invalid_division');
+    exit;
+}
+
+if ($role === 'encoder' && !is_supported_program($division, $program)) {
+    header('Location: /login form/index.php?error=invalid_program');
+    exit;
+}
+
+if ($role === 'super_admin') {
+    $division = '';
+    $program = '';
+}
+
+login_user($fullName, $username, $role, $division, $program);
+header('Location: ' . role_home_path($role, $division, $program));
 exit;
