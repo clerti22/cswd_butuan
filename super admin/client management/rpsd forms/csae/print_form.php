@@ -214,15 +214,8 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
   <main class="print-document" id="printPage">
     <section class="sheet-page">
       <div class="sheet-page-content">
-        <header class="sheet-branding">
-          <img src="../../../images-logo/cswd-logo.png" alt="CSWD logo" class="sheet-branding__logo" />
-          <div class="sheet-branding__text">
-            <div>Republic of the Philippines</div>
-            <div class="sheet-branding__strong">CITY GOVERNMENT OF BUTUAN</div>
-            <div class="sheet-branding__strong">City Social Welfare and Development Department</div>
-            <div>J.P. Rosales Avenue, Doongan, Butuan City</div>
-          </div>
-          <img src="../../../images-logo/butuanseal.png" alt="Butuan City seal" class="sheet-branding__logo" />
+        <header class="sheet-branding sheet-branding--compact">
+          <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
         </header>
 
         <div class="title-area">
