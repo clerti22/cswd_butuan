@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth.php';
 require_once __DIR__ . '/includes/navigation.php';
-require_login(['super_admin']);
+require_login(['super admin']);
 
 $pagePath = __DIR__ . '/dashboard.html';
 $pageHtml = file_get_contents($pagePath);
