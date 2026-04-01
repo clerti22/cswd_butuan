@@ -144,7 +144,8 @@ body {
 }
 
 .section-block--tight {
-  gap: 3px;
+  gap: 6px;
+  margin-top: 2px;
 }
 
 .section-block--grow {
@@ -176,20 +177,20 @@ body {
 .option-sections {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 12px;
 }
 
 .option-card {
   border: 1px solid var(--line-color);
-  padding: 5px 6px 6px;
+  padding: 8px 10px 9px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .option-grid {
   display: grid;
-  gap: 4px 8px;
+  gap: 6px 12px;
   font-size: 9.5px;
 }
 
@@ -200,7 +201,7 @@ body {
 
 .option-item {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 4px;
   min-width: 0;
 }
