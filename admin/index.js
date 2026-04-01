@@ -21,13 +21,17 @@ overlay.addEventListener('click', closeSidebar);
 
 // Close sidebar when clicking nav items on mobile
 document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
+    item.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
     });
 });
+
+const topbarTitle = document.querySelector('.topbar-title');
+if (topbarTitle && window.adminDivision) {
+    topbarTitle.textContent = `Dashboard (${window.adminDivision})`;
+}
 
 // Handle window resize
 window.addEventListener('resize', () => {

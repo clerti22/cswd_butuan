@@ -20,7 +20,7 @@ if ($username === '' || $password === '') {
 
 try {
     $connection = get_database_connection();
-    $statement = $connection->prepare('SELECT full_name,username, password, role FROM users WHERE username = ? LIMIT 1');
+    $statement = $connection->prepare('SELECT full_name, username, password, role, division, programs, status FROM users WHERE username = ? LIMIT 1');
 
     if ($statement === false) {
         throw new RuntimeException('Failed to prepare login statement.');
@@ -40,6 +40,12 @@ try {
 
 if (!$user) {
     header('Location: /login form/index.php?error=user_not_found');
+    exit;
+}
+
+$status = strtolower(trim((string) ($user['status'] ?? 'active')));
+if (in_array($status, ['disabled', 'disabled account'], true)) {
+    header('Location: /login form/index.php?error=account_disabled');
     exit;
 }
 
@@ -86,6 +92,29 @@ if (!in_array($role, $allowedRoles, true)) {
     exit;
 }
 
-login_user($full_name,$username, $role);
+$division = strtoupper(trim((string) ($user['division'] ?? '')));
+$program = strtoupper(trim((string) ($user['programs'] ?? '')));
+$divisionPrograms = division_program_map();
+
+if ($role === 'admin') {
+    if (!array_key_exists($division, $divisionPrograms)) {
+        header('Location: /login form/index.php?error=invalid_division');
+        exit;
+    }
+}
+
+if ($role === 'encoder') {
+    if (!array_key_exists($division, $divisionPrograms)) {
+        header('Location: /login form/index.php?error=invalid_encoder_division');
+        exit;
+    }
+
+    if ($program === '' || !in_array($program, $divisionPrograms[$division], true)) {
+        header('Location: /login form/index.php?error=invalid_program_assignment');
+        exit;
+    }
+}
+
+login_user($full_name, $username, $role, $division, $program);
 header('Location: ' . role_dashboard_path($role));
 exit;
