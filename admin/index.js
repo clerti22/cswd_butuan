@@ -209,10 +209,18 @@ function renderProgramStatus(totals) {
 
   slots.forEach((slot, index) => {
     const entry = entries[index];
-    const titleElement = document.querySelector(`#${slot}Total`)?.closest('.status-card')?.querySelector('.status-card-head');
+    const valueElement = document.getElementById(`${slot}Total`);
+    const cardElement = valueElement?.closest('.status-card');
+    const titleElement = cardElement?.querySelector('.status-card-head');
+
+    if (cardElement) {
+      cardElement.style.display = entry ? '' : 'none';
+    }
+
     if (titleElement) {
       titleElement.textContent = entry ? `Total Served Clients (${entry.name})` : 'Total Served Clients';
     }
+
     setStatusValue(`${slot}Total`, entry ? entry.total : 0);
   });
 }
