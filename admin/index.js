@@ -35,13 +35,11 @@ if (topbarTitle && window.adminDivision) {
 }
 
 let clientsData = [];
-let socialWorkersData = [];
 let rankingPrograms = [];
 let recentActivities = [];
 let totalNotifications = 0;
 
 const btnClients = document.getElementById('btnClients');
-const btnSW = document.getElementById('btnSW');
 const tableHeadRow = document.getElementById('tableHeadRow');
 const tableBody = document.getElementById('tableBody');
 const searchInput = document.getElementById('searchInput');
@@ -54,7 +52,6 @@ const rankList = document.getElementById('rankList');
 const tabPrograms = document.getElementById('tabPrograms');
 
 let dashboardChart = null;
-let currentTable = 'clients';
 
 function sanitizeText(value, fallback = 'N/A') {
   if (value === null || value === undefined) return fallback;
@@ -72,10 +69,8 @@ function setStatusValue(id, value) {
   element.textContent = Number.isFinite(Number(value)) ? String(Number(value)) : '0';
 }
 
-function setActiveTable(next) {
-  currentTable = next;
-  btnClients?.classList.toggle('active', next === 'clients');
-  btnSW?.classList.toggle('active', next === 'sw');
+function setActiveTable() {
+  btnClients?.classList.add('active');
   if (searchInput) {
     searchInput.value = '';
     searchInput.placeholder = '';
@@ -90,55 +85,31 @@ function renderTable() {
 
   const query = (searchInput?.value || '').trim().toLowerCase();
 
-  if (currentTable === 'clients') {
-    ['Control Number', 'Full Name', 'Age', 'Sex', 'Barangay', 'Contact Details'].forEach((h) => {
-      const th = document.createElement('th');
-      th.textContent = h;
-      tableHeadRow.appendChild(th);
-    });
+  ['Control Number', 'Full Name', 'Age', 'Sex', 'Barangay', 'Contact Details'].forEach((h) => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    tableHeadRow.appendChild(th);
+  });
 
-    clientsData
-      .filter((r) =>
-        toLower(r.control_number).includes(query)
-        || toLower(r.full_name).includes(query)
-        || toLower(r.barangay).includes(query)
-        || toLower(r.contact_details).includes(query)
-      )
-      .forEach((row) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${sanitizeText(row.control_number)}</td>
-          <td>${sanitizeText(row.full_name)}</td>
-          <td>${sanitizeText(row.age)}</td>
-          <td>${sanitizeText(row.sex)}</td>
-          <td>${sanitizeText(row.barangay)}</td>
-          <td>${sanitizeText(row.contact_details)}</td>
-        `;
-        tableBody.appendChild(tr);
-      });
-  } else {
-    ['Full Name', 'Email', 'Phone Number'].forEach((h) => {
-      const th = document.createElement('th');
-      th.textContent = h;
-      tableHeadRow.appendChild(th);
+  clientsData
+    .filter((r) =>
+      toLower(r.control_number).includes(query)
+      || toLower(r.full_name).includes(query)
+      || toLower(r.barangay).includes(query)
+      || toLower(r.contact_details).includes(query)
+    )
+    .forEach((row) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${sanitizeText(row.control_number)}</td>
+        <td>${sanitizeText(row.full_name)}</td>
+        <td>${sanitizeText(row.age)}</td>
+        <td>${sanitizeText(row.sex)}</td>
+        <td>${sanitizeText(row.barangay)}</td>
+        <td>${sanitizeText(row.contact_details)}</td>
+      `;
+      tableBody.appendChild(tr);
     });
-
-    socialWorkersData
-      .filter((r) =>
-        toLower(r.full_name).includes(query)
-        || toLower(r.email).includes(query)
-        || toLower(r.phone_number).includes(query)
-      )
-      .forEach((row) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${sanitizeText(row.full_name)}</td>
-          <td>${sanitizeText(row.email)}</td>
-          <td>${sanitizeText(row.phone_number)}</td>
-        `;
-        tableBody.appendChild(tr);
-      });
-  }
 }
 
 function renderRankings() {
@@ -265,7 +236,6 @@ async function loadDashboardData() {
     setStatusValue('todayTotal', payload?.today_total || 0);
 
     clientsData = Array.isArray(payload?.clients) ? payload.clients.slice(0, 5) : [];
-    socialWorkersData = Array.isArray(payload?.social_workers) ? payload.social_workers.slice(0, 5) : [];
     recentActivities = Array.isArray(payload?.recent_activities) ? payload.recent_activities : [];
     totalNotifications = Number(payload?.notification_count) || 0;
 
@@ -286,8 +256,7 @@ async function loadDashboardData() {
   }
 }
 
-btnClients?.addEventListener('click', () => setActiveTable('clients'));
-btnSW?.addEventListener('click', () => setActiveTable('sw'));
+btnClients?.addEventListener('click', () => setActiveTable());
 btnSearch?.addEventListener('click', renderTable);
 searchInput?.addEventListener('input', renderTable);
 
@@ -297,7 +266,7 @@ tabPrograms?.addEventListener('click', () => {
 });
 
 window.addEventListener('load', () => {
-  setActiveTable('clients');
+  setActiveTable();
   loadDashboardData();
 });
 
