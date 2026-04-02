@@ -416,7 +416,16 @@ async function renderScanModal(client, forceQrView = false) {
 
 function getActiveTabKey() {
     const activeTab = document.querySelector('.tab.active');
-    return activeTab ? activeTab.dataset.tab : 'dpsd';
+    if (activeTab?.dataset?.tab) {
+        return activeTab.dataset.tab;
+    }
+
+    const division = String(window.adminDivision || '').trim().toLowerCase();
+    if (division && Object.prototype.hasOwnProperty.call(tabPaginationState, division)) {
+        return division;
+    }
+
+    return 'dpsd';
 }
 
 function getCacheKey(tabKey) {
@@ -634,6 +643,12 @@ tabs.forEach(tab => {
     });
 });
 
+function setActiveTabPanel(tabKey) {
+    tabPanels.forEach((panel) => {
+        panel.classList.toggle('active', panel.dataset.tabContent === tabKey);
+    });
+}
+
 if (applyFilterButton) {
     applyFilterButton.addEventListener('click', () => {
         applyFilter(getActiveTabKey());
@@ -840,16 +855,10 @@ nextButton.addEventListener('click', () => {
     loadClients(activeTabKey);
 });
 
-setAddClientMenu('dpsd');
-syncSearchInput('dpsd');
-updatePaginationButtons('dpsd');
-loadClients('dpsd');
-
-if (window.adminDivision) {
-  const tab = String(window.adminDivision).toLowerCase();
-  document.querySelectorAll('.tab-button').forEach((btn) => {
-    if (btn.dataset.tab !== tab) {
-      btn.style.display = 'none';
-    }
-  });
-}
+const initialTabKey = getActiveTabKey();
+setActiveTabPanel(initialTabKey);
+setAddClientMenu(initialTabKey);
+syncSearchInput(initialTabKey);
+syncFilterInputs(initialTabKey);
+updatePaginationButtons(initialTabKey);
+loadClients(initialTabKey);
