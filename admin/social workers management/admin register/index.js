@@ -47,11 +47,15 @@ const programAssignedFieldWrapper = document.getElementById('program-assigned-fi
 const programAssignedField = document.getElementById('program_assigned');
 
 const divisionPrograms = {
-    DPSD: ['PWUD', 'Solo Parent', 'PYAP'],
-    PSSD: ['PWD', 'Senior Citizen'],
+    DPSD: ['PWUD', 'SOLO PARENT', 'PYAP'],
+    PSSD: ['PWD', 'SENIOR CITIZEN'],
     RPSD: ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 };
 const allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
+const adminDivision = String(registrationState?.admin_division || '').trim().toUpperCase();
+const divisionProgramsFromServer = Array.isArray(registrationState?.allowed_programs)
+    ? registrationState.allowed_programs.map((program) => String(program || '').trim().toUpperCase()).filter(Boolean)
+    : [];
 
 function showRegistrationAlert(message, status) {
     if (!registrationAlert) {
@@ -86,7 +90,9 @@ function updateProgramAssignedOptions(divisionValue, selectedProgram = '') {
         return;
     }
 
-    const availablePrograms = divisionPrograms[divisionValue] || [];
+    const availablePrograms = divisionValue === adminDivision && divisionProgramsFromServer.length > 0
+        ? divisionProgramsFromServer
+        : (divisionPrograms[divisionValue] || []);
     programAssignedField.innerHTML = '';
 
     const defaultOption = document.createElement('option');
@@ -108,65 +114,26 @@ function updateProgramAssignedOptions(divisionValue, selectedProgram = '') {
 }
 
 function updateRoleBasedFields(selectedProgram = '') {
-    const roleValue = roleField ? roleField.value.trim().toLowerCase() : '';
-
     if (!adminDivisionField || !hiddenDivisionField || !programAssignedField) {
         return;
     }
 
-    if (roleValue === 'admin') {
-        setFieldVisibility(adminDivisionFieldWrapper, true);
-        setFieldVisibility(encoderDivisionFieldWrapper, false);
-        setFieldVisibility(programAssignedFieldWrapper, false);
+    setFieldVisibility(adminDivisionFieldWrapper, false);
+    setFieldVisibility(encoderDivisionFieldWrapper, false);
+    setFieldVisibility(programAssignedFieldWrapper, true);
 
-        adminDivisionField.required = true;
-        encoderDivisionFields.forEach((field) => {
-            field.required = false;
-        });
-        programAssignedField.required = false;
-        programAssignedField.value = '';
-
-        hiddenDivisionField.value = adminDivisionField.value.trim();
-    } else if (roleValue === 'encoder') {
-        setFieldVisibility(adminDivisionFieldWrapper, false);
-        setFieldVisibility(encoderDivisionFieldWrapper, true);
-
-        adminDivisionField.required = false;
-        adminDivisionField.value = '';
-
-        const selectedEncoderDivision = Array.from(encoderDivisionFields).find((field) => field.checked);
-        const encoderDivisionValue = selectedEncoderDivision ? selectedEncoderDivision.value : '';
-
-        encoderDivisionFields.forEach((field) => {
-            field.required = !encoderDivisionValue;
-        });
-
-        hiddenDivisionField.value = encoderDivisionValue;
-
-        if (encoderDivisionValue) {
-            setFieldVisibility(programAssignedFieldWrapper, true);
-            programAssignedField.required = true;
-            updateProgramAssignedOptions(encoderDivisionValue, selectedProgram);
-        } else {
-            setFieldVisibility(programAssignedFieldWrapper, false);
-            programAssignedField.required = false;
-            updateProgramAssignedOptions('');
-        }
-    } else {
-        setFieldVisibility(adminDivisionFieldWrapper, false);
-        setFieldVisibility(encoderDivisionFieldWrapper, false);
-        setFieldVisibility(programAssignedFieldWrapper, false);
-
-        adminDivisionField.required = false;
-        adminDivisionField.value = '';
-
-        resetEncoderDivisionSelection();
-
-        hiddenDivisionField.value = '';
-        programAssignedField.required = false;
-        programAssignedField.value = '';
-        updateProgramAssignedOptions('');
+    if (roleField) {
+        roleField.value = 'encoder';
     }
+
+    adminDivisionField.required = false;
+    adminDivisionField.value = adminDivision;
+
+    resetEncoderDivisionSelection();
+    hiddenDivisionField.value = adminDivision;
+
+    programAssignedField.required = true;
+    updateProgramAssignedOptions(adminDivision, selectedProgram);
 }
 
 if (registrationState && registrationState.old && adminRegistrationForm) {
@@ -192,24 +159,6 @@ if (registrationState && registrationState.old && adminRegistrationForm) {
         showRegistrationAlert(registrationState.message, registrationState.status);
     }
 }
-
-if (roleField) {
-    roleField.addEventListener('change', () => {
-        updateRoleBasedFields();
-    });
-}
-
-if (adminDivisionField) {
-    adminDivisionField.addEventListener('change', () => {
-        hiddenDivisionField.value = adminDivisionField.value.trim();
-    });
-}
-
-encoderDivisionFields.forEach((field) => {
-    field.addEventListener('change', () => {
-        updateRoleBasedFields();
-    });
-});
 
 if (adminRegistrationForm) {
     updateRoleBasedFields();
@@ -239,17 +188,11 @@ if (adminRegistrationForm) {
             return;
         }
 
-        const roleValue = roleField ? roleField.value.trim().toLowerCase() : '';
+        const roleValue = 'encoder';
         const divisionValue = hiddenDivisionField ? hiddenDivisionField.value.trim().toUpperCase() : '';
 
-        if (roleValue === 'admin' && !divisionValue) {
-            event.preventDefault();
-            showRegistrationAlert('Division assigned is required for admin accounts.', 'error');
-            return;
-        }
-
         if (roleValue === 'encoder') {
-            const programValue = programAssignedField ? programAssignedField.value.trim() : '';
+            const programValue = programAssignedField ? programAssignedField.value.trim().toUpperCase() : '';
 
             if (!divisionValue) {
                 event.preventDefault();
@@ -263,7 +206,9 @@ if (adminRegistrationForm) {
                 return;
             }
 
-            const validPrograms = divisionPrograms[divisionValue] || [];
+            const validPrograms = divisionProgramsFromServer.length > 0
+                ? divisionProgramsFromServer
+                : (divisionPrograms[divisionValue] || []);
             if (!validPrograms.includes(programValue)) {
                 event.preventDefault();
                 showRegistrationAlert('Program assigned is invalid for the selected division.', 'error');
@@ -311,15 +256,11 @@ if (window.adminRegistrationState) {
     const state = window.adminRegistrationState;
     const roleField = document.getElementById('role');
     const hiddenDivisionField = document.getElementById('division');
-    const divisionLabel = document.querySelector('label[for="division"]');
     if (roleField) {
         roleField.value = 'encoder';
         roleField.disabled = true;
     }
     if (hiddenDivisionField) {
         hiddenDivisionField.value = state.admin_division || '';
-    }
-    if (divisionLabel) {
-        divisionLabel.textContent = `Division Assigned: ${state.admin_division || ''}`;
     }
 }
