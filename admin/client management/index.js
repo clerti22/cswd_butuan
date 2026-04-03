@@ -121,6 +121,11 @@ const addClientRoutes = {
         'FACED': 'cod forms/faced/index.php'
     }
 };
+const formRoutePrefix = '../../super admin/client management/';
+
+function buildFormRoute(path) {
+    return `${formRoutePrefix}${path}`;
+}
 
 function setAddClientMenu(tabKey) {
     const options = addClientOptions[tabKey] || [];
@@ -128,7 +133,7 @@ function setAddClientMenu(tabKey) {
 
     addClientMenu.innerHTML = options
         .map(option => {
-            const route = routes[option] || '#';
+            const route = routes[option] ? buildFormRoute(routes[option]) : '#';
             return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
         })
         .join('');
@@ -147,7 +152,7 @@ function getShowRoute(client, variant = 'ciu') {
     const sourceTable = String(client.source_table || '');
     if (sourceTable === 'faced_table') {
         const cn = String(client.control_number || '').trim();
-        return cn ? `cod forms/faced/index.php?control_number=${encodeURIComponent(cn)}` : '#';
+        return cn ? `${buildFormRoute('cod forms/faced/index.php')}?control_number=${encodeURIComponent(cn)}` : '#';
     }
 
     const keyId = Number(client.key_id);
@@ -180,7 +185,7 @@ function getShowRoute(client, variant = 'ciu') {
         params.set('variant', 'scsr');
     }
 
-    return `${baseRoute}?${params.toString()}`;
+    return `${buildFormRoute(baseRoute)}?${params.toString()}`;
 }
 
 function getPrintRoute(client, variant = 'ciu') {
@@ -213,7 +218,7 @@ function getPrintRoute(client, variant = 'ciu') {
         return '#';
     }
 
-    return `${baseRoute}?id=${encodeURIComponent(String(keyId))}`;
+    return `${buildFormRoute(baseRoute)}?id=${encodeURIComponent(String(keyId))}`;
 }
 
 function createClientRow(client) {
