@@ -15,6 +15,18 @@ function super_admin_sidebar_path(string $basePrefix, string $path): string
 
 function render_super_admin_sidebar(string $activeSection, string $basePrefixToSuperAdmin = '.'): string
 {
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
+    $currentRole = (string) ($_SESSION['role'] ?? '');
+    if ($currentRole === 'admin') {
+        require_once __DIR__ . '/../../admin/includes/navigation.php';
+        $adminBasePrefix = super_admin_sidebar_path($basePrefixToSuperAdmin, '../admin');
+
+        return render_admin_sidebar($activeSection, $adminBasePrefix);
+    }
+
     $items = [
         'dashboard' => [
             'label' => 'Dashboard',
