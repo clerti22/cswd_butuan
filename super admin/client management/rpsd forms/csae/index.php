@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../auth/auth.php';
 require_once __DIR__ . '/../../../includes/navigation.php';
-require_login(['super admin']);
+require_login(['super admin', 'admin']);
 
 
 ?>
