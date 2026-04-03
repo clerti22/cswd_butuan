@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
 require_once __DIR__ . '/scan_copy_helpers.php';
 
-require_login(['super admin']);
+require_login(['super admin', 'admin']);
 
 header('Content-Type: application/json; charset=utf-8');
 
