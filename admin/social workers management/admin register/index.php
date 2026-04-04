@@ -35,6 +35,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } else {
         try {
             $connection = get_database_connection();
+            $columnsResult = $connection->query('SHOW COLUMNS FROM users');
+            if ($columnsResult === false) {
+                throw new RuntimeException('Unable to inspect users table columns.');
+            }
+
+            $userColumns = [];
+            while ($column = $columnsResult->fetch_assoc()) {
+                $field = strtolower(trim((string) ($column['Field'] ?? '')));
+                if ($field !== '') {
+                    $userColumns[$field] = true;
+                }
+            }
+
+            $statusColumn = isset($userColumns['status']) ? 'status' : (isset($userColumns['statuz']) ? 'statuz' : '');
+            if ($statusColumn === '') {
+                throw new RuntimeException('Unable to resolve account status column.');
+            }
+
             $existing = $connection->prepare('SELECT username, email FROM users WHERE username = ? OR email = ? LIMIT 1');
             $existing->bind_param('ss', $username, $email);
             $existing->execute();
@@ -49,7 +67,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
                 $ageValue = (int) $age;
 
-                $insert = $connection->prepare('INSERT INTO users (full_name, username, email, phone_number, division, gender, position, age, password, role, programs, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                $insertQuery = "INSERT INTO users (full_name, username, email, phone_number, division, gender, position, age, password, role, programs, {$statusColumn}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $insert = $connection->prepare($insertQuery);
                 $insert->bind_param('sssssssissss', $fullName, $username, $email, $phoneNumber, $adminDivision, $gender, $position, $ageValue, $hashedPassword, $role, $programAssigned, $status);
                 $insert->execute();
                 $insert->close();
