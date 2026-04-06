@@ -52,6 +52,7 @@ const divisionPrograms = {
     RPSD: ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 };
 const allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
+const allowedGenders = ['Male', 'Female'];
 const adminDivision = String(registrationState?.admin_division || '').trim().toUpperCase();
 const divisionProgramsFromServer = Array.isArray(registrationState?.allowed_programs)
     ? registrationState.allowed_programs.map((program) => String(program || '').trim().toUpperCase()).filter(Boolean)
@@ -221,6 +222,8 @@ if (adminRegistrationForm) {
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
         const positionField = adminRegistrationForm.elements.namedItem('position');
         const positionValue = positionField ? positionField.value.trim() : '';
+        const genderField = adminRegistrationForm.elements.namedItem('gender');
+        const genderValue = genderField ? genderField.value.trim() : '';
 
         if (!isValidEmail) {
             event.preventDefault();
@@ -231,6 +234,12 @@ if (adminRegistrationForm) {
         if (!allowedPositions.includes(positionValue)) {
             event.preventDefault();
             showRegistrationAlert('Position must be SWO I, SWO II, SWO III, or SWO IV.', 'error');
+            return;
+        }
+
+        if (!allowedGenders.includes(genderValue)) {
+            event.preventDefault();
+            showRegistrationAlert('Gender must be Male or Female.', 'error');
             return;
         }
 
