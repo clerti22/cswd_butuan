@@ -13,6 +13,7 @@ $adminDivision = admin_scope_division();
 $programsByDivision = division_program_map();
 $allowedPrograms = $programsByDivision[$adminDivision] ?? [];
 $allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
+$allowedGenders = ['Male', 'Female'];
 
 $formState = ['status' => '', 'message' => '', 'old' => []];
 
@@ -30,7 +31,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     if ($fullName === '' || $username === '' || $email === '' || $phoneNumber === '' || $gender === '' || $position === '' || $age === '' || $programAssigned === '' || $password === '' || $confirmPassword === '') {
         $formState = ['status' => 'error', 'message' => 'Please complete all fields before submitting.', 'old' => $_POST];
-    } elseif (!ctype_digit($age) || (int) $age <= 0 || !in_array($position, $allowedPositions, true) || !filter_var($email, FILTER_VALIDATE_EMAIL) || !in_array($programAssigned, $allowedPrograms, true) || !hash_equals($password, $confirmPassword)) {
+    } elseif (!ctype_digit($age) || (int) $age <= 0 || !in_array($position, $allowedPositions, true) || !in_array($gender, $allowedGenders, true) || !filter_var($email, FILTER_VALIDATE_EMAIL) || !in_array($programAssigned, $allowedPrograms, true) || !hash_equals($password, $confirmPassword)) {
         $formState = ['status' => 'error', 'message' => 'Please check the provided values and try again.', 'old' => $_POST];
     } else {
         try {
