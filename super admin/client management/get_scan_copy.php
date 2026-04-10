@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
 require_once __DIR__ . '/scan_copy_helpers.php';
 
-require_login(['super admin', 'admin']);
+require_login(['super admin', 'admin', 'encoder']);
 header('Content-Type: application/json; charset=utf-8');
 
 $controlNumber = normalize_scan_value((string) ($_GET['client_control_number'] ?? ''));
