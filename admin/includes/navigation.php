@@ -13,7 +13,7 @@ function admin_sidebar_path(string $basePrefix, string $path): string
     return $normalizedBase . '/' . ltrim($path, '/');
 }
 
-function render_admin_sidebar(string $activeSection, string $basePrefix = '.'): string
+function render_admin_sidebar(string $activeSection, string $basePrefix = '.', string $role = 'admin'): string
 {
     $items = [
         'dashboard' => [
@@ -63,6 +63,10 @@ HTML,
 HTML,
         ],
     ];
+
+    if ($role !== 'admin') {
+        unset($items['social_workers']);
+    }
 
     $logoutPath = admin_sidebar_path($basePrefix, '../auth/logout.php');
     $logoutModalStylesPath = admin_sidebar_path($basePrefix, 'includes/logout-confirmation.css');
