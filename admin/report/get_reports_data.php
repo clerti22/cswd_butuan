@@ -5,14 +5,15 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/report_data_service.php';
 require_once __DIR__ . '/../division_scope.php';
+require_once __DIR__ . '/../../auth/access_control.php';
 
-require_login(['admin']);
+require_operational_access();
 header('Content-Type: application/json; charset=utf-8');
 
 try {
     $service = new ReportDataService();
     $allRecords = $service->getAllRecords();
-    $allowedPrograms = array_map('strtoupper', admin_scope_programs());
+    $allowedPrograms = array_map('strtoupper', scoped_programs());
     $allRecords = array_values(array_filter($allRecords, static function (array $row) use ($allowedPrograms): bool {
         $program = strtoupper(trim((string) ($row['program'] ?? '')));
         return in_array($program, $allowedPrograms, true);
@@ -30,6 +31,12 @@ try {
         'date_from' => trim((string) ($_GET['date_from'] ?? '')),
         'date_to' => trim((string) ($_GET['date_to'] ?? '')),
     ];
+
+    if (current_user_role() === 'encoder' && $filters['program'] !== '' && !is_program_in_scope($filters['program'])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Access denied for requested program filter.']);
+        exit;
+    }
 
     $filtered = apply_report_filters($allRecords, $filters);
 

@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
 require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
-require_login(['super admin', 'admin']);
+require_login(['super admin', 'admin', 'encoder']);
 
 start_auth_session();
 

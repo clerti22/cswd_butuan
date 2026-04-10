@@ -1,4 +1,6 @@
 const sidebar = document.getElementById('sidebar');
+const currentRole = String(window.currentRole || 'admin').toLowerCase();
+const currentProgram = String(window.currentProgram || '').trim().toUpperCase();
 const overlay = document.getElementById('overlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
@@ -214,7 +216,9 @@ function renderAll(data) {
     renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
     renderHouseholds(data.household_interventions || []);
 
-    fillSelectOptions(filters.program, data.filter_options.programs || [], 'All Programs');
+    const programOptions = currentRole === 'encoder' ? (data.filter_options.programs || []).filter((item) => String(item).trim().toUpperCase() === currentProgram) : (data.filter_options.programs || []);
+    fillSelectOptions(filters.program, programOptions, 'All Programs');
+    if (currentRole === 'encoder' && filters.program) { filters.program.value = currentProgram; }
     fillSelectOptions(filters.barangay, data.filter_options.barangays || [], 'All Barangays');
     fillSelectOptions(filters.year, data.filter_options.years || [], 'All Years');
     fillSelectOptions(filters.sex, data.filter_options.sexes || [], 'All');
@@ -416,4 +420,10 @@ document.addEventListener('DOMContentLoaded', () => {
 if (window.adminDivision) {
   const divisionLabel = document.getElementById('reportDivisionLabel');
   if (divisionLabel) divisionLabel.textContent = window.adminDivision;
+}
+
+if (currentRole === 'encoder') {
+    document.getElementById('exportPdfBtn')?.classList.add('hidden');
+    document.getElementById('exportExcelBtn')?.classList.add('hidden');
+    document.querySelector('.tab-btn[data-view="household"]')?.classList.add('hidden');
 }
