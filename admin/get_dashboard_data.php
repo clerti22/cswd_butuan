@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth.php';
+require_once __DIR__ . '/../auth/access_control.php';
 require_once __DIR__ . '/../auth/db.php';
-require_once __DIR__ . '/division_scope.php';
 require_once __DIR__ . '/report/report_data_service.php';
 
-require_login(['admin']);
+require_operational_access();
 header('Content-Type: application/json; charset=utf-8');
 
 /**
@@ -53,8 +53,9 @@ function format_activity_timestamp(?string $rawTimestamp): string
 }
 
 try {
-    $division = admin_scope_division();
-    $programs = array_map(static fn(string $program): string => strtoupper(trim($program)), admin_scope_programs());
+    $division = scoped_division();
+    $role = current_user_role();
+    $programs = array_map(static fn(string $program): string => strtoupper(trim($program)), scoped_programs());
 
     $service = new ReportDataService();
     $records = $service->getAllRecords();
@@ -64,31 +65,29 @@ try {
         return in_array($program, $programs, true);
     }));
 
-    $programTotals = [];
-    foreach ($programs as $program) {
-        $programTotals[$program] = 0;
-    }
-
     $todayCount = 0;
     $todayDate = date('Y-m-d');
+    $barangayTotals = [];
 
     foreach ($filteredRecords as $record) {
-        $program = strtoupper(trim((string) ($record['program'] ?? '')));
-        if (isset($programTotals[$program])) {
-            $programTotals[$program]++;
-        }
-
-        if ((string) ($record['created_at'] ?? '') === $todayDate) {
+        $createdDate = substr((string) ($record['created_at'] ?? ''), 0, 10);
+        if ($createdDate === $todayDate) {
             $todayCount++;
         }
+
+        $barangay = trim((string) ($record['barangay'] ?? ''));
+        $key = $barangay !== '' ? $barangay : 'Unspecified';
+        $barangayTotals[$key] = ($barangayTotals[$key] ?? 0) + 1;
     }
+
+    arsort($barangayTotals);
 
     usort(
         $filteredRecords,
         static fn(array $a, array $b): int => ((int) ($b['created_at_timestamp'] ?? 0)) <=> ((int) ($a['created_at_timestamp'] ?? 0))
     );
 
-    $clientRows = array_map('format_client_row', array_slice($filteredRecords, 0, 5));
+    $clientRows = array_map('format_client_row', array_slice($filteredRecords, 0, 10));
 
     $connection = get_database_connection();
 
@@ -101,60 +100,6 @@ try {
                 $userColumns[$name] = true;
             }
         }
-    }
-
-    $hasFullNameColumn = isset($userColumns['full_name']);
-    $nameParts = ['first_name', 'middle_name', 'last_name', 'suffix'];
-    $availableNameParts = [];
-    foreach ($nameParts as $partColumn) {
-        if (isset($userColumns[$partColumn])) {
-            $availableNameParts[] = $partColumn;
-        }
-    }
-
-    $nameSelectParts = [];
-    if ($hasFullNameColumn) {
-        $nameSelectParts[] = "COALESCE(NULLIF(TRIM(full_name), ''), '')";
-    }
-
-    foreach ($availableNameParts as $column) {
-        $nameSelectParts[] = "COALESCE(NULLIF(TRIM({$column}), ''), '')";
-    }
-
-    $nameSelect = $nameSelectParts === []
-        ? "'N/A'"
-        : "TRIM(CONCAT_WS(' ', " . implode(', ', $nameSelectParts) . '))';
-
-    $emailSelect = isset($userColumns['email']) ? 'COALESCE(NULLIF(TRIM(email), \'\'), \'N/A\')' : "'N/A'";
-    $phoneSelect = isset($userColumns['phone_number'])
-        ? 'COALESCE(NULLIF(TRIM(phone_number), \'\'), \'N/A\')'
-        : (isset($userColumns['contact_number']) ? 'COALESCE(NULLIF(TRIM(contact_number), \'\'), \'N/A\')' : "'N/A'");
-
-    $orderColumn = isset($userColumns['created_at'])
-        ? 'created_at DESC'
-        : (isset($userColumns['id']) ? 'id DESC' : (isset($userColumns['user_id']) ? 'user_id DESC' : 'full_name ASC'));
-
-    $divisionWhere = isset($userColumns['division']) ? 'WHERE UPPER(TRIM(division)) = ?' : '';
-    $socialWorkersQuery = "SELECT {$nameSelect} AS full_name, {$emailSelect} AS email, {$phoneSelect} AS phone_number FROM users {$divisionWhere} ORDER BY {$orderColumn} LIMIT 5";
-    $socialWorkersStatement = $connection->prepare($socialWorkersQuery);
-
-    if ($socialWorkersStatement && $divisionWhere !== '') {
-        $socialWorkersStatement->bind_param('s', $division);
-    }
-
-    $socialWorkers = [];
-    if ($socialWorkersStatement && $socialWorkersStatement->execute()) {
-        $result = $socialWorkersStatement->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $socialWorkers[] = [
-                'full_name' => trim((string) ($row['full_name'] ?? '')) !== '' ? (string) $row['full_name'] : 'N/A',
-                'email' => (string) ($row['email'] ?? 'N/A'),
-                'phone_number' => (string) ($row['phone_number'] ?? 'N/A'),
-            ];
-        }
-    }
-    if ($socialWorkersStatement) {
-        $socialWorkersStatement->close();
     }
 
     $statusColumn = isset($userColumns['statuz']) ? 'statuz' : (isset($userColumns['status']) ? 'status' : '');
@@ -175,50 +120,93 @@ try {
     }
 
     $activities = [];
-    $notificationsQuery = 'SELECT notification_id, name, activity, created_at, role, program, division FROM notifications WHERE UPPER(TRIM(division)) = ? ORDER BY created_at DESC, notification_id DESC LIMIT 3';
-    $notificationsStatement = $connection->prepare($notificationsQuery);
-    if ($notificationsStatement) {
-        $notificationsStatement->bind_param('s', $division);
-        if ($notificationsStatement->execute()) {
-            $notificationsResult = $notificationsStatement->get_result();
-            while ($row = $notificationsResult->fetch_assoc()) {
-                $activities[] = [
-                    'notification_id' => (int) ($row['notification_id'] ?? 0),
-                    'name' => trim((string) ($row['name'] ?? '')),
-                    'activity' => trim((string) ($row['activity'] ?? '')),
-                    'created_at' => (string) ($row['created_at'] ?? ''),
-                    'role' => trim((string) ($row['role'] ?? 'Unknown')),
-                    'program' => trim((string) ($row['program'] ?? '')),
-                    'division' => trim((string) ($row['division'] ?? '')),
-                    'formatted_created_at' => format_activity_timestamp((string) ($row['created_at'] ?? '')),
-                ];
-            }
-        }
-        $notificationsStatement->close();
-    }
-
     $notificationCount = 0;
-    $notificationCountQuery = 'SELECT COUNT(*) AS total FROM notifications WHERE UPPER(TRIM(division)) = ?';
-    $notificationCountStatement = $connection->prepare($notificationCountQuery);
-    if ($notificationCountStatement) {
-        $notificationCountStatement->bind_param('s', $division);
-        if ($notificationCountStatement->execute()) {
-            $countResult = $notificationCountStatement->get_result();
-            $countRow = $countResult ? $countResult->fetch_assoc() : null;
-            $notificationCount = (int) ($countRow['total'] ?? 0);
+
+    if ($role === 'encoder') {
+        $program = $programs[0] ?? '';
+        $notificationsQuery = 'SELECT notification_id, name, activity, created_at, role, program, division FROM notifications WHERE UPPER(TRIM(division)) = ? AND UPPER(TRIM(program)) = ? ORDER BY created_at DESC, notification_id DESC LIMIT 3';
+        $notificationsStatement = $connection->prepare($notificationsQuery);
+        if ($notificationsStatement) {
+            $notificationsStatement->bind_param('ss', $division, $program);
+            if ($notificationsStatement->execute()) {
+                $notificationsResult = $notificationsStatement->get_result();
+                while ($row = $notificationsResult->fetch_assoc()) {
+                    $activities[] = [
+                        'notification_id' => (int) ($row['notification_id'] ?? 0),
+                        'name' => trim((string) ($row['name'] ?? '')),
+                        'activity' => trim((string) ($row['activity'] ?? '')),
+                        'created_at' => (string) ($row['created_at'] ?? ''),
+                        'role' => trim((string) ($row['role'] ?? 'Unknown')),
+                        'program' => trim((string) ($row['program'] ?? '')),
+                        'division' => trim((string) ($row['division'] ?? '')),
+                        'formatted_created_at' => format_activity_timestamp((string) ($row['created_at'] ?? '')),
+                    ];
+                }
+            }
+            $notificationsStatement->close();
         }
-        $notificationCountStatement->close();
+
+        $notificationCountQuery = 'SELECT COUNT(*) AS total FROM notifications WHERE UPPER(TRIM(division)) = ? AND UPPER(TRIM(program)) = ?';
+        $notificationCountStatement = $connection->prepare($notificationCountQuery);
+        if ($notificationCountStatement) {
+            $notificationCountStatement->bind_param('ss', $division, $program);
+            if ($notificationCountStatement->execute()) {
+                $countResult = $notificationCountStatement->get_result();
+                $countRow = $countResult ? $countResult->fetch_assoc() : null;
+                $notificationCount = (int) ($countRow['total'] ?? 0);
+            }
+            $notificationCountStatement->close();
+        }
+    } else {
+        $notificationsQuery = 'SELECT notification_id, name, activity, created_at, role, program, division FROM notifications WHERE UPPER(TRIM(division)) = ? ORDER BY created_at DESC, notification_id DESC LIMIT 3';
+        $notificationsStatement = $connection->prepare($notificationsQuery);
+        if ($notificationsStatement) {
+            $notificationsStatement->bind_param('s', $division);
+            if ($notificationsStatement->execute()) {
+                $notificationsResult = $notificationsStatement->get_result();
+                while ($row = $notificationsResult->fetch_assoc()) {
+                    $activities[] = [
+                        'notification_id' => (int) ($row['notification_id'] ?? 0),
+                        'name' => trim((string) ($row['name'] ?? '')),
+                        'activity' => trim((string) ($row['activity'] ?? '')),
+                        'created_at' => (string) ($row['created_at'] ?? ''),
+                        'role' => trim((string) ($row['role'] ?? 'Unknown')),
+                        'program' => trim((string) ($row['program'] ?? '')),
+                        'division' => trim((string) ($row['division'] ?? '')),
+                        'formatted_created_at' => format_activity_timestamp((string) ($row['created_at'] ?? '')),
+                    ];
+                }
+            }
+            $notificationsStatement->close();
+        }
+
+        $notificationCountQuery = 'SELECT COUNT(*) AS total FROM notifications WHERE UPPER(TRIM(division)) = ?';
+        $notificationCountStatement = $connection->prepare($notificationCountQuery);
+        if ($notificationCountStatement) {
+            $notificationCountStatement->bind_param('s', $division);
+            if ($notificationCountStatement->execute()) {
+                $countResult = $notificationCountStatement->get_result();
+                $countRow = $countResult ? $countResult->fetch_assoc() : null;
+                $notificationCount = (int) ($countRow['total'] ?? 0);
+            }
+            $notificationCountStatement->close();
+        }
     }
 
     $connection->close();
 
+    $scopeLabel = $role === 'encoder'
+        ? ((string) ($programs[0] ?? 'Assigned Program'))
+        : 'Division';
+
     echo json_encode([
         'division' => $division,
-        'program_totals' => $programTotals,
+        'total_beneficiaries' => count($filteredRecords),
+        'beneficiary_scope_label' => $scopeLabel,
         'today_total' => $todayCount,
         'active_social_workers' => $activeSocialWorkers,
         'clients' => $clientRows,
-        'social_workers' => $socialWorkers,
+        'barangay_totals' => $barangayTotals,
         'recent_activities' => $activities,
         'notification_count' => $notificationCount,
     ]);
@@ -226,11 +214,12 @@ try {
     http_response_code(500);
     echo json_encode([
         'division' => '',
-        'program_totals' => [],
+        'total_beneficiaries' => 0,
+        'beneficiary_scope_label' => 'Assigned Scope',
         'today_total' => 0,
         'active_social_workers' => 0,
         'clients' => [],
-        'social_workers' => [],
+        'barangay_totals' => [],
         'recent_activities' => [],
         'notification_count' => 0,
         'message' => 'Unable to load dashboard data.',
