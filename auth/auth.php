@@ -80,52 +80,10 @@ function require_login(array $allowedRoles): void
         header('Location: ' . role_dashboard_path($role));
         exit;
     }
-
-    enforce_encoder_program_scope();
 }
 
 
 
-
-function enforce_encoder_program_scope(): void
-{
-    start_auth_session();
-
-    $role = strtolower(trim((string) ($_SESSION['role'] ?? '')));
-    if ($role !== 'encoder') {
-        return;
-    }
-
-    $assignedProgram = strtoupper(trim((string) ($_SESSION['program'] ?? '')));
-    $requestUri = strtoupper(urldecode((string) ($_SERVER['REQUEST_URI'] ?? '')));
-
-    $programTokens = [
-        'PWUD',
-        'PYAP',
-        'SOLO PARENT',
-        'PWD',
-        'SENIOR CITIZEN',
-        'CAR',
-        'CICL',
-        'CSAE',
-        'CIU',
-        'VAWC',
-        'FACED',
-    ];
-
-    $requestedProgram = '';
-    foreach ($programTokens as $token) {
-        if (str_contains($requestUri, $token)) {
-            $requestedProgram = $token;
-            break;
-        }
-    }
-
-    if ($requestedProgram !== '' && $requestedProgram !== $assignedProgram) {
-        header('Location: /login form/index.php?error=unauthorized');
-        exit;
-    }
-}
 function current_user_division(): string
 {
     start_auth_session();

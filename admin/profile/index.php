@@ -7,18 +7,16 @@ require_once __DIR__ . '/../../auth/db.php';
 require_once __DIR__ . '/profile_repository.php';
 require_once __DIR__ . '/../includes/navigation.php';
 require_once __DIR__ . '/../division_scope.php';
-require_once __DIR__ . '/../../auth/access_control.php';
 
-require_operational_access();
-$adminDivision = scoped_division();
-$currentRole = current_user_role();
+require_login(['admin']);
+$adminDivision = admin_scope_division();
 start_auth_session();
 
 $username = (string) ($_SESSION['username'] ?? '');
 $profile = [
     'full_name' => (string) ($_SESSION['full_name'] ?? ''),
     'username' => $username,
-    'role' => $currentRole === 'encoder' ? 'Encoder' : 'Admin',
+    'role' => 'Admin',
     'email' => '',
     'age' => '',
     'gender' => '',
@@ -48,7 +46,7 @@ if ($pageHtml === false) {
     exit('Unable to load profile page.');
 }
 
-$sidebarMarkup = render_admin_sidebar('profile', '..', $currentRole);
+$sidebarMarkup = render_admin_sidebar('profile', '..');
 $renderedPage = preg_replace('/<nav class="sidebar" id="sidebar">.*?<\/nav>/s', $sidebarMarkup, $pageHtml, 1);
 
 $profileJson = json_encode($profile, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);

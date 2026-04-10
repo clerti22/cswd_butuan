@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../../../auth/db.php';
 require_once __DIR__ . '/../../../../auth/notification.php';
 require_once __DIR__ . '/../../shared/client-duplicate-check.php';
 
-require_login(['super admin', 'admin', 'encoder']);
+require_login(['super admin', 'admin']);
 start_auth_session();
 
 $fullname = (string) ($_SESSION['full_name'] ?? '');

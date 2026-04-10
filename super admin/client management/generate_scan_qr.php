@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/scan_copy_helpers.php';
 
-require_login(['super admin', 'admin', 'encoder']);
+require_login(['super admin', 'admin']);
 
 header('Content-Type: application/json; charset=utf-8');
 

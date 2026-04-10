@@ -6,9 +6,8 @@ require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
 require_once __DIR__ . '/scan_copy_helpers.php';
 require_once __DIR__ . '/../division_scope.php';
-require_once __DIR__ . '/../../auth/access_control.php';
 
-require_operational_access();
+require_login(['admin']);
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -85,8 +84,7 @@ function resolve_age_bracket($age): string
     return '60+';
 }
 
-$division = strtolower(scoped_division());
-$allowedPrograms = scoped_programs();
+$division = strtolower(admin_scope_division());
 $tab = $division;
 $tablesByTab = [
     'dpsd' => ['pwud_table', 'pyap_table', 'soloparent_info_table'],
@@ -205,11 +203,6 @@ try {
                     $timestamp = $parsedTime;
                     $createdAt = date('m/d/y', $timestamp);
                 }
-            }
-
-            $rowProgram = strtoupper(trim((string) ($row['program'] ?? '')));
-            if (!in_array($rowProgram, $allowedPrograms, true)) {
-                continue;
             }
 
             $allClients[] = [
