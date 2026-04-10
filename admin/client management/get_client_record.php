@@ -5,8 +5,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../auth/auth.php';
 require_once __DIR__ . '/../../auth/db.php';
 require_once __DIR__ . '/../division_scope.php';
+require_once __DIR__ . '/../../auth/access_control.php';
 
-require_login(['admin']);
+require_operational_access();
 
 header('Content-Type: application/json');
 
@@ -91,7 +92,7 @@ if ($program === '') {
 
 try {
     $connection = get_database_connection();
-    $adminDivision = admin_scope_division();
+    $adminDivision = scoped_division();
 
 
     $config = [
@@ -228,7 +229,7 @@ try {
     }
 
     $recordDivision = strtoupper(trim((string) ($record['division'] ?? '')));
-    if ($recordDivision !== $adminDivision) {
+    if ($recordDivision !== $adminDivision || !is_program_in_scope((string) ($record['program'] ?? ''))) {
         respond_json(403, ['success' => false, 'message' => 'Access denied for this client record.']);
     }
 

@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../auth/auth.php';
+require_once __DIR__ . '/../../auth/access_control.php';
 require_once __DIR__ . '/scan_copy_helpers.php';
 
-require_login(['super admin', 'admin']);
+require_login(['super admin', 'admin', 'encoder']);
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -98,6 +99,12 @@ $tokenPayload = [
     'uploaded_by' => (string) ($_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Unknown user'),
     'exp' => time() + SCAN_COPY_TOKEN_TTL_SECONDS,
 ];
+
+if (current_user_role() === 'encoder' && !is_program_in_scope($program)) {
+    http_response_code(403);
+    echo json_encode(['message' => 'Access denied for this program.']);
+    exit;
+}
 
 try {
     $token = create_scan_copy_token($tokenPayload);

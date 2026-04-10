@@ -1,4 +1,7 @@
 const sidebar = document.getElementById('sidebar');
+const currentRole = String(window.currentRole || 'admin').toLowerCase();
+const currentProgram = String(window.currentProgram || '').trim().toUpperCase();
+
 const overlay = document.getElementById('overlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
@@ -130,13 +133,20 @@ function buildFormRoute(path) {
 function setAddClientMenu(tabKey) {
     const options = addClientOptions[tabKey] || [];
     const routes = addClientRoutes[tabKey] || {};
+    const scopedOptions = currentRole === 'encoder'
+        ? options.filter((option) => option.trim().toUpperCase() === currentProgram)
+        : options;
 
-    addClientMenu.innerHTML = options
+    addClientMenu.innerHTML = scopedOptions
         .map(option => {
             const route = routes[option] ? buildFormRoute(routes[option]) : '#';
             return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
         })
         .join('');
+
+    if (addClientBtn) {
+        addClientBtn.style.display = scopedOptions.length > 0 ? '' : 'none';
+    }
 }
 
 function escapeHtml(value) {
@@ -867,3 +877,14 @@ syncSearchInput(initialTabKey);
 syncFilterInputs(initialTabKey);
 updatePaginationButtons(initialTabKey);
 loadClients(initialTabKey);
+
+if (currentRole === 'encoder') {
+    if (filterProgramSelect) {
+        filterProgramSelect.addEventListener('change', () => {
+            const value = String(filterProgramSelect.value || '').trim().toUpperCase();
+            if (value !== '' && value !== currentProgram) {
+                filterProgramSelect.value = currentProgram;
+            }
+        });
+    }
+}
