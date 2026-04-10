@@ -94,14 +94,50 @@
 
           <div class="status-grid">
             <div class="status-card">
-              <div class="status-card-head" id="beneficiaryCardTitle">Total Beneficiaries (Assigned Scope)</div>
+              <div class="status-card-head">Total Served Clients (DPSD)</div>
               <div class="status-card-body">
                 <div class="status-left">
                   <div class="big-icon">
                     <i class="bi bi-people-fill"></i>
                   </div>
                 </div>
-                <div class="status-value" id="beneficiariesTotal">0</div>
+                <div class="status-value" id="dpsdTotal">0</div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="status-card-head">Total Served Clients (PSSD)</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                </div>
+                <div class="status-value center-value" id="pssdTotal">0</div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="status-card-head">Total Served Clients (RPSD)</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                </div>
+                <div class="status-value center-value" id="rpsdTotal">0</div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="status-card-head">Total Served Clients (COD)</div>
+              <div class="status-card-body">
+                <div class="status-left">
+                  <div class="big-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                </div>
+                <div class="status-value center-value" id="codTotal">0</div>
               </div>
             </div>
 
@@ -119,7 +155,7 @@
             </div>
 
             <div class="status-card">
-              <div class="status-card-head">Total Served Clients (Today)</div>
+              <div class="status-card-head">Total served clients (today)</div>
               <div class="status-card-body">
                 <div class="status-left">
                   <div class="big-icon">
@@ -162,7 +198,7 @@
         <section class="section">
           <div class="two-col">
             <div class="panel chart-panel">
-              <h3 class="panel-title">Total Served Clients per Barangay</h3>
+              <h3 class="panel-title">Total Served Clients per Program</h3>
               <div id="chartContainer"></div>
             </div>
 
@@ -175,6 +211,16 @@
                 <div id="recentActivities"></div>
               </div>
 
+              <div class="panel">
+                <div class="panel-head-row">
+                  <h3 class="panel-title">Top List Rankings</h3>
+                  <div class="mini-tabs">
+                    <button class="mini-tab active" id="tabPrograms" type="button">Programs</button>
+                  </div>
+                </div>
+
+                <div class="rank-list" id="rankList"></div>
+              </div>
             </div>
           </div>
         </section>
