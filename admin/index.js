@@ -35,7 +35,7 @@ if (topbarTitle && window.adminDivision) {
 }
 
 let clientsData = [];
-let rankingPrograms = [];
+let chartBarangays = [];
 let recentActivities = [];
 let totalNotifications = 0;
 
@@ -48,8 +48,6 @@ const recentActivitiesContainer = document.getElementById('recentActivities');
 const seeAllNotificationsLink = document.getElementById('seeAllNotifications');
 const rightStack = document.querySelector('.right-stack');
 const chartContainer = document.getElementById('chartContainer');
-const rankList = document.getElementById('rankList');
-const tabPrograms = document.getElementById('tabPrograms');
 
 let dashboardChart = null;
 
@@ -112,24 +110,6 @@ function renderTable() {
     });
 }
 
-function renderRankings() {
-  if (!rankList) return;
-  rankList.innerHTML = '';
-
-  rankingPrograms.forEach((item) => {
-    const div = document.createElement('div');
-    div.className = 'rank-item';
-    div.innerHTML = `
-      <div class="rank-icon"><i class="bi bi-people-fill"></i></div>
-      <div>
-        <div class="rank-name">${sanitizeText(item.name, 'Unknown Program')}</div>
-        <div class="rank-sub">${Number(item.total) || 0} Clients</div>
-      </div>
-    `;
-    rankList.appendChild(div);
-  });
-}
-
 function renderRecentActivities() {
   if (!recentActivitiesContainer) return;
   recentActivitiesContainer.innerHTML = '';
@@ -190,7 +170,7 @@ function renderChart() {
       indexLabelFontColor: '#5A5757',
       indexLabelFontSize: 14,
       indexLabelPlacement: 'outside',
-      dataPoints: rankingPrograms.map((item) => ({
+      dataPoints: chartBarangays.map((item) => ({
         label: item.name,
         y: Number(item.total) || 0,
         indexLabel: String(Number(item.total) || 0),
@@ -201,28 +181,12 @@ function renderChart() {
   dashboardChart.render();
 }
 
-function renderProgramStatus(totals) {
-  const slots = ['dpsd', 'pssd', 'rpsd', 'cod'];
-  const entries = Object.entries(totals || {})
-    .map(([name, total]) => ({ name, total: Number(total) || 0 }))
-    .sort((a, b) => b.total - a.total);
-
-  slots.forEach((slot, index) => {
-    const entry = entries[index];
-    const valueElement = document.getElementById(`${slot}Total`);
-    const cardElement = valueElement?.closest('.status-card');
-    const titleElement = cardElement?.querySelector('.status-card-head');
-
-    if (cardElement) {
-      cardElement.style.display = entry ? '' : 'none';
-    }
-
-    if (titleElement) {
-      titleElement.textContent = entry ? `Total Served Clients (${entry.name})` : 'Total Served Clients';
-    }
-
-    setStatusValue(`${slot}Total`, entry ? entry.total : 0);
-  });
+function renderBeneficiaryStatus(total, label) {
+  const title = document.getElementById('beneficiaryCardTitle');
+  if (title) {
+    title.textContent = `Total Beneficiaries (${label || 'Assigned Scope'})`;
+  }
+  setStatusValue('beneficiariesTotal', total);
 }
 
 async function loadDashboardData() {
@@ -237,9 +201,8 @@ async function loadDashboardData() {
     }
 
     const payload = await response.json();
-    const totals = payload?.program_totals || {};
-
-    renderProgramStatus(totals);
+    const totalBeneficiaries = Number(payload?.total_beneficiaries || 0);
+    renderBeneficiaryStatus(totalBeneficiaries, payload?.beneficiary_scope_label || 'Assigned Scope');
     setStatusValue('activeSW', payload?.active_social_workers || 0);
     setStatusValue('todayTotal', payload?.today_total || 0);
 
@@ -247,18 +210,16 @@ async function loadDashboardData() {
     recentActivities = Array.isArray(payload?.recent_activities) ? payload.recent_activities : [];
     totalNotifications = Number(payload?.notification_count) || 0;
 
-    rankingPrograms = Object.entries(totals)
+    chartBarangays = Object.entries(payload?.barangay_totals || {})
       .map(([name, total]) => ({ name, total: Number(total) || 0 }))
       .sort((a, b) => b.total - a.total);
 
     renderTable();
-    renderRankings();
     renderRecentActivities();
     renderChart();
   } catch (error) {
     console.error(error);
     renderTable();
-    renderRankings();
     renderRecentActivities();
     renderChart();
   }
@@ -267,11 +228,6 @@ async function loadDashboardData() {
 btnClients?.addEventListener('click', () => setActiveTable());
 btnSearch?.addEventListener('click', renderTable);
 searchInput?.addEventListener('input', renderTable);
-
-tabPrograms?.addEventListener('click', () => {
-  tabPrograms.classList.add('active');
-  renderRankings();
-});
 
 window.addEventListener('load', () => {
   setActiveTable();
