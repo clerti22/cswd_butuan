@@ -4,25 +4,32 @@ const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
 
 function openSidebar() {
+    if (!sidebar || !overlay) {
+        return;
+    }
+
     sidebar.classList.add('open');
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeSidebar() {
+    if (!sidebar || !overlay) {
+        return;
+    }
+
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
     document.body.style.overflow = '';
 }
 
-openBtn.addEventListener('click', openSidebar);
-closeBtn.addEventListener('click', closeSidebar);
-overlay.addEventListener('click', closeSidebar);
+openBtn?.addEventListener('click', openSidebar);
+closeBtn?.addEventListener('click', closeSidebar);
+overlay?.addEventListener('click', closeSidebar);
 
-// Close sidebar when clicking nav items on mobile
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
+// Close sidebar when clicking nav items on mobile without blocking navigation.
+document.querySelectorAll('.nav-item').forEach((item) => {
+    item.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
             closeSidebar();
         }
@@ -34,4 +41,4 @@ window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
         closeSidebar();
     }
-})
+});
