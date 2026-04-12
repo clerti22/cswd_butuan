@@ -61,7 +61,6 @@ const clientDataCache = {
     cod: {}
 };
 let activeScanClient = null;
-let scopedAddClientRoute = '';
 
 const tabPaginationState = {
     dpsd: { page: 1, totalPages: 1 },
@@ -141,15 +140,6 @@ function getScopedAddClientOptions(tabKey) {
 function setAddClientMenu(tabKey) {
     const options = getScopedAddClientOptions(tabKey);
     const routes = addClientRoutes[tabKey] || {};
-    const scopedProgram = String((window.encoderScope && window.encoderScope.program) || '').trim().toUpperCase();
-
-    scopedAddClientRoute = '';
-    if (scopedProgram) {
-        const matchedOption = options.find((option) => option.toUpperCase() === scopedProgram);
-        if (matchedOption && routes[matchedOption]) {
-            scopedAddClientRoute = buildFormRoute(routes[matchedOption]);
-        }
-    }
 
     if (addClientBtn) { addClientBtn.style.display = options.length ? '' : 'none'; }
     addClientMenu.innerHTML = options
@@ -158,12 +148,6 @@ function setAddClientMenu(tabKey) {
             return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
         })
         .join('');
-
-    if (scopedAddClientRoute) {
-        addClientMenu.classList.remove('open');
-        addClientMenu.setAttribute('aria-hidden', 'true');
-        addClientBtn?.setAttribute('aria-expanded', 'false');
-    }
 }
 
 function escapeHtml(value) {
@@ -826,11 +810,6 @@ if (scanCopyModal) {
 }
 
 addClientBtn.addEventListener('click', () => {
-    if (scopedAddClientRoute) {
-        window.location.href = scopedAddClientRoute;
-        return;
-    }
-
     const isOpen = addClientMenu.classList.toggle('open');
     addClientBtn.setAttribute('aria-expanded', String(isOpen));
     addClientMenu.setAttribute('aria-hidden', String(!isOpen));

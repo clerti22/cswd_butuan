@@ -21,6 +21,5 @@ $sidebarMarkup = render_encoder_sidebar('clients', '..');
 $renderedPage = preg_replace('/<nav class="sidebar" id="sidebar">.*?<\/nav>/s', $sidebarMarkup, $pageHtml, 1);
 
 $resultPage = $renderedPage === null ? $pageHtml : $renderedPage;
-$scopeScript = '<script>window.encoderScope = ' . json_encode(['division' => $encoderDivision, 'program' => $encoderProgram]) . ';</script>';
-$resultPage = str_replace('<script src="index.js"></script>', $scopeScript . PHP_EOL . '    <script src="index.js"></script>', $resultPage);
+$resultPage = str_replace('</body>', '    <script>window.encoderScope = ' . json_encode(['division' => $encoderDivision, 'program' => $encoderProgram]) . ';</script>' . PHP_EOL . '</body>', $resultPage);
 echo $resultPage;
