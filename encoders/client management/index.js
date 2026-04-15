@@ -122,29 +122,56 @@ const addClientRoutes = {
     }
 };
 const formRoutePrefix = '../../super admin/client management/';
+const normalizedProgramAliases = {
+    SOLOPARENT: 'SOLO PARENT'
+};
+const programRouteCatalog = Object.entries(addClientRoutes).reduce((catalog, [, routes]) => {
+    Object.entries(routes).forEach(([programName, route]) => {
+        const normalizedProgramName = String(programName || '').trim().toUpperCase().replace(/\s+/g, ' ');
+        if (normalizedProgramName) {
+            catalog[normalizedProgramName] = {
+                label: programName,
+                route
+            };
+        }
+    });
+    return catalog;
+}, {});
 
 function buildFormRoute(path) {
     return `${formRoutePrefix}${path}`;
 }
 
+function normalizeProgramName(programName) {
+    const normalized = String(programName || '').trim().toUpperCase().replace(/\s+/g, ' ');
+    const collapsed = normalized.replace(/\s+/g, '');
+    return normalizedProgramAliases[collapsed] || normalized;
+}
 
 function getScopedAddClientOptions(tabKey) {
-    const scopedProgram = String((window.encoderScope && window.encoderScope.program) || '').trim().toUpperCase();
+    const scopedProgram = normalizeProgramName((window.encoderScope && window.encoderScope.program) || '');
     const options = addClientOptions[tabKey] || [];
+
     if (!scopedProgram) {
         return options;
     }
 
-    return options.filter((option) => option.toUpperCase() === scopedProgram);
+    if (programRouteCatalog[scopedProgram]) {
+        return [programRouteCatalog[scopedProgram].label];
+    }
+
+    return options.filter((option) => normalizeProgramName(option) === scopedProgram);
 }
 function setAddClientMenu(tabKey) {
     const options = getScopedAddClientOptions(tabKey);
-    const routes = addClientRoutes[tabKey] || {};
 
     if (addClientBtn) { addClientBtn.style.display = options.length ? '' : 'none'; }
     addClientMenu.innerHTML = options
         .map(option => {
-            const route = routes[option] ? buildFormRoute(routes[option]) : '#';
+            const normalizedOption = normalizeProgramName(option);
+            const scopedRoute = programRouteCatalog[normalizedOption]?.route;
+            const fallbackRoute = (addClientRoutes[tabKey] || {})[option];
+            const route = scopedRoute ? buildFormRoute(scopedRoute) : fallbackRoute ? buildFormRoute(fallbackRoute) : '#';
             return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
         })
         .join('');
