@@ -46,7 +46,6 @@ window.addEventListener('resize', () => {
 const tabs = document.querySelectorAll('.tab');
 const tabPanels = document.querySelectorAll('.tab-panel');
 const addClientBtn = document.getElementById('addClientBtn');
-const addClientMenu = document.getElementById('addClientMenu');
 const scanCopyModal = document.getElementById('scanCopyModal');
 const scanCopyModalTitle = document.getElementById('scanCopyModalTitle');
 const scanCopyClientMeta = document.getElementById('scanCopyClientMeta');
@@ -162,19 +161,31 @@ function getScopedAddClientOptions(tabKey) {
 
     return options.filter((option) => normalizeProgramName(option) === scopedProgram);
 }
-function setAddClientMenu(tabKey) {
+let addClientDirectRoute = '#';
+function setAddClientRoute(tabKey) {
     const options = getScopedAddClientOptions(tabKey);
+    const [selectedOption] = options;
 
-    if (addClientBtn) { addClientBtn.style.display = options.length ? '' : 'none'; }
-    addClientMenu.innerHTML = options
-        .map(option => {
-            const normalizedOption = normalizeProgramName(option);
-            const scopedRoute = programRouteCatalog[normalizedOption]?.route;
-            const fallbackRoute = (addClientRoutes[tabKey] || {})[option];
-            const route = scopedRoute ? buildFormRoute(scopedRoute) : fallbackRoute ? buildFormRoute(fallbackRoute) : '#';
-            return `<button type="button" class="menu-item" role="menuitem" data-route="${route}">${option}</button>`;
-        })
-        .join('');
+    if (!selectedOption) {
+        addClientDirectRoute = '#';
+        if (addClientBtn) {
+            addClientBtn.style.display = 'none';
+            addClientBtn.title = 'No assigned intake form available.';
+        }
+        return;
+    }
+
+    const normalizedOption = normalizeProgramName(selectedOption);
+    const scopedRoute = programRouteCatalog[normalizedOption]?.route;
+    const fallbackRoute = (addClientRoutes[tabKey] || {})[selectedOption];
+    const resolvedPath = scopedRoute || fallbackRoute || '';
+
+    addClientDirectRoute = resolvedPath ? buildFormRoute(resolvedPath) : '#';
+
+    if (addClientBtn) {
+        addClientBtn.style.display = '';
+        addClientBtn.title = `Add ${selectedOption}`;
+    }
 }
 
 function escapeHtml(value) {
@@ -676,9 +687,7 @@ tabs.forEach(tab => {
 
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
-        setAddClientMenu(target);
-        addClientMenu.classList.remove('open');
-        addClientBtn.setAttribute('aria-expanded', 'false');
+        setAddClientRoute(target);
         syncSearchInput(target);
         syncFilterInputs(target);
         updatePaginationButtons(target);
@@ -836,35 +845,13 @@ if (scanCopyModal) {
     });
 }
 
-addClientBtn.addEventListener('click', () => {
-    const isOpen = addClientMenu.classList.toggle('open');
-    addClientBtn.setAttribute('aria-expanded', String(isOpen));
-    addClientMenu.setAttribute('aria-hidden', String(!isOpen));
-});
-
-document.addEventListener('click', (event) => {
-    if (!addClientBtn.contains(event.target) && !addClientMenu.contains(event.target)) {
-        addClientMenu.classList.remove('open');
-        addClientBtn.setAttribute('aria-expanded', 'false');
-        addClientMenu.setAttribute('aria-hidden', 'true');
-    }
-});
-
-addClientMenu.addEventListener('click', (event) => {
-    const menuItem = event.target.closest('.menu-item');
-    if (!menuItem) {
-        return;
-    }
-
-    const route = menuItem.dataset.route || '#';
-    addClientMenu.classList.remove('open');
-    addClientBtn.setAttribute('aria-expanded', 'false');
-    addClientMenu.setAttribute('aria-hidden', 'true');
-
-    if (route !== '#') {
-        window.location.href = route;
-    }
-});
+if (addClientBtn) {
+    addClientBtn.addEventListener('click', () => {
+        if (addClientDirectRoute && addClientDirectRoute !== '#') {
+            window.location.href = addClientDirectRoute;
+        }
+    });
+}
 
 prevButton.addEventListener('click', () => {
     const activeTabKey = getActiveTabKey();
@@ -900,7 +887,7 @@ nextButton.addEventListener('click', () => {
 
 const initialTabKey = getActiveTabKey();
 setActiveTabPanel(initialTabKey);
-setAddClientMenu(initialTabKey);
+setAddClientRoute(initialTabKey);
 syncSearchInput(initialTabKey);
 syncFilterInputs(initialTabKey);
 updatePaginationButtons(initialTabKey);
