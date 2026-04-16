@@ -136,7 +136,12 @@ const programAddClientRoutes = {
 };
 const formRoutePrefix = '../../super admin/client management/';
 const normalizedProgramAliases = {
-    SOLOPARENT: 'SOLO PARENT'
+    SOLOPARENT: 'SOLO PARENT',
+    'SOLO-PARENT': 'SOLO PARENT',
+    SOLO_PARENT: 'SOLO PARENT',
+    SENIORCITIZEN: 'SENIOR CITIZEN',
+    'SENIOR-CITIZEN': 'SENIOR CITIZEN',
+    SENIOR_CITIZEN: 'SENIOR CITIZEN'
 };
 
 function buildFormRoute(path) {
@@ -154,10 +159,14 @@ function setAddClientRoute() {
     const scopedProgram = normalizeProgramName((window.encoderScope && window.encoderScope.program) || '');
     const targetProgram = programAddClientRoutes[scopedProgram];
 
+    if (addClientBtn) {
+        addClientBtn.style.display = '';
+    }
+
     if (!targetProgram) {
         addClientDirectRoute = '#';
         if (addClientBtn) {
-            addClientBtn.style.display = 'none';
+            addClientBtn.disabled = true;
             addClientBtn.title = 'No assigned client intake form available for your program.';
         }
         return;
@@ -166,7 +175,7 @@ function setAddClientRoute() {
     addClientDirectRoute = buildFormRoute(targetProgram.route);
 
     if (addClientBtn) {
-        addClientBtn.style.display = '';
+        addClientBtn.disabled = false;
         addClientBtn.title = `Add ${targetProgram.label}`;
     }
 }
