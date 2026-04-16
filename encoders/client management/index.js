@@ -92,50 +92,52 @@ const tabFilterOptionsState = {
 const prevButton = document.querySelector('.pagination .pager-btn:first-child');
 const nextButton = document.querySelector('.pagination .pager-btn:last-child');
 
-const addClientOptions = {
-    dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
-    pssd: ['Senior Citizen', 'PWD'],
-    rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU'],
-    cod: ['FACED']
-};
-
-const addClientRoutes = {
-    dpsd: {
-        'PYAP': 'dpsd forms/pyap/index.php',
-        'Solo Parent': 'dpsd forms/solo parent/index.php',
-        'PWUD': 'dpsd forms/pwud/index.php'
+const programAddClientRoutes = {
+    PWUD: {
+        label: 'PWUD',
+        route: 'dpsd forms/pwud/index.php'
     },
-    pssd: {
-        'Senior Citizen': 'pssd forms/senior citizen/index.php',
-        'PWD': 'pssd forms/pwd/index.php'
+    'SOLO PARENT': {
+        label: 'Solo Parent',
+        route: 'dpsd forms/solo parent/index.php'
     },
-    rpsd: {
-        'VAWC': 'rpsd forms/vawc/index.php',
-        'CSAE': 'rpsd forms/csae/index.php',
-        'CAR': 'rpsd forms/car/index.php',
-        'CICL': 'rpsd forms/cicl/index.php',
-        'CIU': 'rpsd forms/ciu/index.php'
+    PYAP: {
+        label: 'PYAP',
+        route: 'dpsd forms/pyap/index.php'
     },
-    cod: {
-        'FACED': 'cod forms/faced/index.php'
+    PWD: {
+        label: 'PWD',
+        route: 'pssd forms/pwd/index.php'
+    },
+    'SENIOR CITIZEN': {
+        label: 'Senior Citizen',
+        route: 'pssd forms/senior citizen/index.php'
+    },
+    CICL: {
+        label: 'CICL',
+        route: 'rpsd forms/cicl/index.php'
+    },
+    CAR: {
+        label: 'CAR',
+        route: 'rpsd forms/car/index.php'
+    },
+    CSAE: {
+        label: 'CSAE',
+        route: 'rpsd forms/csae/index.php'
+    },
+    CIU: {
+        label: 'CIU',
+        route: 'rpsd forms/ciu/index.php'
+    },
+    VAWC: {
+        label: 'VAWC',
+        route: 'rpsd forms/vawc/index.php'
     }
 };
 const formRoutePrefix = '../../super admin/client management/';
 const normalizedProgramAliases = {
     SOLOPARENT: 'SOLO PARENT'
 };
-const programRouteCatalog = Object.entries(addClientRoutes).reduce((catalog, [, routes]) => {
-    Object.entries(routes).forEach(([programName, route]) => {
-        const normalizedProgramName = String(programName || '').trim().toUpperCase().replace(/\s+/g, ' ');
-        if (normalizedProgramName) {
-            catalog[normalizedProgramName] = {
-                label: programName,
-                route
-            };
-        }
-    });
-    return catalog;
-}, {});
 
 function buildFormRoute(path) {
     return `${formRoutePrefix}${path}`;
@@ -147,44 +149,25 @@ function normalizeProgramName(programName) {
     return normalizedProgramAliases[collapsed] || normalized;
 }
 
-function getScopedAddClientOptions(tabKey) {
-    const scopedProgram = normalizeProgramName((window.encoderScope && window.encoderScope.program) || '');
-    const options = addClientOptions[tabKey] || [];
-
-    if (!scopedProgram) {
-        return options;
-    }
-
-    if (programRouteCatalog[scopedProgram]) {
-        return [programRouteCatalog[scopedProgram].label];
-    }
-
-    return options.filter((option) => normalizeProgramName(option) === scopedProgram);
-}
 let addClientDirectRoute = '#';
-function setAddClientRoute(tabKey) {
-    const options = getScopedAddClientOptions(tabKey);
-    const [selectedOption] = options;
+function setAddClientRoute() {
+    const scopedProgram = normalizeProgramName((window.encoderScope && window.encoderScope.program) || '');
+    const targetProgram = programAddClientRoutes[scopedProgram];
 
-    if (!selectedOption) {
+    if (!targetProgram) {
         addClientDirectRoute = '#';
         if (addClientBtn) {
             addClientBtn.style.display = 'none';
-            addClientBtn.title = 'No assigned intake form available.';
+            addClientBtn.title = 'No assigned client intake form available for your program.';
         }
         return;
     }
 
-    const normalizedOption = normalizeProgramName(selectedOption);
-    const scopedRoute = programRouteCatalog[normalizedOption]?.route;
-    const fallbackRoute = (addClientRoutes[tabKey] || {})[selectedOption];
-    const resolvedPath = scopedRoute || fallbackRoute || '';
-
-    addClientDirectRoute = resolvedPath ? buildFormRoute(resolvedPath) : '#';
+    addClientDirectRoute = buildFormRoute(targetProgram.route);
 
     if (addClientBtn) {
         addClientBtn.style.display = '';
-        addClientBtn.title = `Add ${selectedOption}`;
+        addClientBtn.title = `Add ${targetProgram.label}`;
     }
 }
 
@@ -687,7 +670,6 @@ tabs.forEach(tab => {
 
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
-        setAddClientRoute(target);
         syncSearchInput(target);
         syncFilterInputs(target);
         updatePaginationButtons(target);
@@ -887,7 +869,7 @@ nextButton.addEventListener('click', () => {
 
 const initialTabKey = getActiveTabKey();
 setActiveTabPanel(initialTabKey);
-setAddClientRoute(initialTabKey);
+setAddClientRoute();
 syncSearchInput(initialTabKey);
 syncFilterInputs(initialTabKey);
 updatePaginationButtons(initialTabKey);
