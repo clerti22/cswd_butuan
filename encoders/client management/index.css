@@ -319,11 +319,6 @@ body {
     color: #fff;
 }
 
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
 .client-action-buttons {
     display: flex;
     flex-wrap: wrap;
