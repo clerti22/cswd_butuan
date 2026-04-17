@@ -1,0 +1,688 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../../../auth/auth.php';
+require_once __DIR__ . '/../../../includes/navigation.php';
+require_once __DIR__ . '/../../shared/form_access.php';
+require_encoder_program_access('CICL');
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCIMS Client Management - CICL Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="cicl.css">
+</head>
+
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <?php echo render_encoder_sidebar('clients', '../../..'); ?>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="topbar">
+                <button class="menu-btn" id="openSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h3 class="topbar-title" style="font-weight: bold;">Clients Management</h3>
+            </header>
+
+            <main class="form-page">
+                <div class="form-sheet">
+                    <header class="form-header">
+                        <img class="form-header__logo" src="../../../images-logo/cswd-logo.png" alt="CSWD logo">
+                        <div class="form-header__text">
+                            <p class="form-header__line">Republic of the Philippines</p>
+                            <p class="form-header__line form-header__line--bold">CITY GOVERNMENT OF BUTUAN</p>
+                            <p class="form-header__line form-header__line--bold">City Social Welfare and Development Department</p>
+                            <p class="form-header__line">City Hall Building, J.P. Rosales Ave., Doongan, Butuan City</p>
+                        </div>
+                        <img class="form-header__logo" src="../../../images-logo/butuanseal.png" alt="Butuan City logo">
+                    </header>
+
+                    <h1 class="form-title">CICL Intake Sheet</h1>
+
+                    <section class="form-section">
+                        <form class="form-grid">
+                            <div class="field field--span-2">
+                                <label for="interview-date">Petsa Nga Gi Interbyu:</label>
+                                <div class="input-icon">
+                                    <input id="interview-date" type="date">
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="section-title">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M12 12.75a4.25 4.25 0 1 0-4.25-4.25A4.26 4.26 0 0 0 12 12.75Zm0 1.5c-3.65 0-6.75 1.88-6.75 4.25V20h13.5v-1.5c0-2.37-3.1-4.25-6.75-4.25Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Personal Information</h2>
+                        </div>
+
+                        <form class="form-grid">
+                            <div class="field">
+                                <label for="first-name">First Name:</label>
+                                <input id="first-name" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="middle-name">Middle Name:</label>
+                                <input id="middle-name" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="last-name">Last Name:</label>
+                                <input id="last-name" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="suffix">Suffix:</label>
+                                <input id="suffix" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="nickname">Nickname:</label>
+                                <input id="nickname" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="birth-date">Birthdate:</label>
+                                <div class="input-icon">
+                                    <input id="birth-date" type="date">
+                                </div>
+                            </div>
+                            <div class="field field--span-2">
+                                <label for="birth-place">Lugar nga natawhan:</label>
+                                <input id="birth-place" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="religion">Relihiyon:</label>
+                                <select id="religion">
+                                    <option value="" selected></option>
+                                    <option>Roman Catholic</option>
+                                    <option>Islam</option>
+                                    <option>Protestant</option>
+                                    <option>Others</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="civil-status">Civil Status:</label>
+                                <select id="civil-status">
+                                    <option value="" selected></option>
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="age">Age:</label>
+                                <input id="age" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="sex">Sex:</label>
+                                <select id="sex">
+                                    <option value="" selected></option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </div>
+
+                            <div class="field field--span-4">
+                                <label for="education">Edukasyon:</label>
+                                <input id="education" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section">
+                        <form class="form-grid">
+                            <div class="field field--span-4">
+                                <label for="present-address">Kasamtangan nga Address:</label>
+                                <input id="present-address" type="text">
+                            </div>
+
+                            <div class="field field--span-2">
+                                <label for="permanent-address">Permanenteng Address:</label>
+                                <input id="permanent-address" type="text">
+                            </div>
+
+                            <div class="field field--span-2">
+                                <label for="barangay">Barangay:</label>
+                                <input list="barangay-list" name="barangay" id="barangay">
+                                <datalist id="barangay-list">
+                                    <option value="Maon">
+                                    <option value="Golden Ribbon">
+                                    <option value="Agao">
+                                    <option value="Rajah Soliman">
+                                    <option value="Silongan">
+                                    <option value="Diego Silang">
+                                    <option value="Dagohoy">
+                                    <option value="Lapu-lapu">
+                                    <option value="Urduja">
+                                    <option value="Sikatuna">
+                                    <option value="Humabon">
+                                    <option value="Tandang Sora">
+                                    <option value="Leon Kilat">
+                                    <option value="Limaha">
+                                    <option value="San Ignacio">
+                                    <option value="Ong Yiu">
+                                    <option value="Fort Poyohon">
+                                    <option value="Obrero">
+                                    <option value="Buhangin">
+                                    <option value="Baan Riverside">
+                                    <option value="Mahogany">
+                                    <option value="Bading">
+                                    <option value="Holy Redeemer">
+                                    <option value="Imadejas">
+                                    <option value="Jose P. Rizal">
+                                    <option value="New Society Village">
+                                    <option value="Bayanihan">
+                                    <option value="Agusan Pequeño">
+                                    <option value="Ambago">
+                                    <option value="Amparo">
+                                    <option value="Ampayon">
+                                    <option value="Anticala">
+                                    <option value="Antongalon">
+                                    <option value="Aupagan">
+                                    <option value="Baan Km.3">
+                                    <option value="Babag">
+                                    <option value="Bancasi">
+                                    <option value="Banza">
+                                    <option value="Baobaoan">
+                                    <option value="Basag">
+                                    <option value="Bilay">
+                                    <option value="Bitan-agan">
+                                    <option value="Bit-os">
+                                    <option value="Bobon">
+                                    <option value="Bonbon">
+                                    <option value="Bugsukan">
+                                    <option value="Cabcabon">
+                                    <option value="Camayahan">
+                                    <option value="Dankias">
+                                    <option value="De Oro">
+                                    <option value="Don Francisco">
+                                    <option value="Doongan">
+                                    <option value="Dulag">
+                                    <option value="Dumalagan">
+                                    <option value="Florida">
+                                    <option value="Kinamlutan">
+                                    <option value="Lemon">
+                                    <option value="Libertad">
+                                    <option value="Los Angeles">
+                                    <option value="Lumbocan">
+                                    <option value="Maguinda">
+                                    <option value="Mahay">
+                                    <option value="Maibu">
+                                    <option value="Mandamo">
+                                    <option value="Manila de Bugabus">
+                                    <option value="Manuel J. Santos">
+                                    <option value="Masao">
+                                    <option value="Maug">
+                                    <option value="Nongnong">
+                                    <option value="Pagatpatan">
+                                    <option value="Pangabugan">
+                                    <option value="Pianing">
+                                    <option value="Pigdaulan">
+                                    <option value="Pinamanculan">
+                                    <option value="Salvacion">
+                                    <option value="San Mateo">
+                                    <option value="San Vicente">
+                                    <option value="Santo Niño">
+                                    <option value="Sumile">
+                                    <option value="Sumilihon">
+                                    <option value="Tagabaca">
+                                    <option value="Taguibo">
+                                    <option value="Taligaman">
+                                    <option value="Tiniwisan">
+                                    <option value="Tungao">
+                                    <option value="Villa Kananga">
+                                </datalist>
+                            </div>
+
+                            <div class="field field--span-4 field--spouse-name">
+                                <label for="spouse-first-name">Kung Minyo nga Babae(full name):</label>
+                            </div>
+
+                            <div class="field">
+                                <input id="spouse-first-name" type="text">
+                                <span class="field-note">First Name</span>
+                            </div>
+                            <div class="field">
+                                <input id="spouse-middle-name" type="text">
+                                <span class="field-note">Middle Name</span>
+                            </div>
+                            <div class="field">
+                                <input id="spouse-last-name" type="text">
+                                <span class="field-note">Last Name</span>
+                            </div>
+                            <div class="field">
+                                <input id="spouse-suffix" type="text">
+                                <span class="field-note">Suffix</span>
+                            </div>
+
+                            <div class="field">
+                                <label for="years-together">Gibana-bana nga binulan nga kita:</label>
+                                <input id="years-together" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="number-children">Tinubdan sa Kita:</label>
+                                <input id="number-children" type="text">
+                            </div>
+                            <div class="field field--span-2 field--radio-inline">
+                                <label>4Ps/PWD/PhilHealth(?):</label>
+                                <div class="radio-group radio-group--wide">
+                                    <label class="radio-option">
+                                        <input type="radio" name="assistance-status" value="Yes">
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="assistance-status" value="No">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section form-section--expenses">
+                        <div class="section-title section-title--expenses">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5Zm2.5-1a1 1 0 0 0-1 1v1h15v-1a1 1 0 0 0-1-1Zm14 3.5h-15v6.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1ZM12 11.25A2.75 2.75 0 1 0 14.75 14 2.76 2.76 0 0 0 12 11.25Zm0 1.5A1.25 1.25 0 1 1 10.75 14 1.25 1.25 0 0 1 12 12.75Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Binulan nga gastos sa pamilya</h2>
+                        </div>
+
+                        <form class="form-grid">
+                            <div class="field">
+                                <label for="food-expense">Pagkaon (P):</label>
+                                <input id="food-expense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="house-lot-expense">Balay ug Lote:</label>
+                                <input id="house-lot-expense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="education-expense">Edukasyon:</label>
+                                <input id="education-expense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="transport-expense">Transportasyon:</label>
+                                <input id="transport-expense" type="text">
+                            </div>
+
+                            <div class="field">
+                                <label for="misc-expense">Miscellaneous:</label>
+                                <input id="misc-expense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="total-expenses" class="label-small">Total na binulan nga gastos:</label>
+                                <input id="total-expenses" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="total-income" class="label-small">Total na binulan nga kita:</label>
+                                <input id="total-income" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="net-income">Net Income (P):</label>
+                                <input id="net-income" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section form-section--classification">
+                        <div class="section-title section-title--classification">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M4 2.75A1.75 1.75 0 0 0 2.25 4.5v15A1.75 1.75 0 0 0 4 21.25h8.5a.75.75 0 0 0 0-1.5H4a.25.25 0 0 1-.25-.25V4.5A.25.25 0 0 1 4 4.25h6.19a.25.25 0 0 1 .18.07l2.81 2.82a.25.25 0 0 1 .07.18V9a.75.75 0 0 0 1.5 0V7.32a1.75 1.75 0 0 0-.51-1.24L11.43 3.26a1.75 1.75 0 0 0-1.24-.51Zm11.25 1.5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5ZM8 8.75h2.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Zm0 4h4.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Zm0 4h4.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Classification sa Minor/Kliyente</h2>
+                        </div>
+
+                        <form class="classification-grid">
+                            <div class="classification-column">
+                                <label class="check-option"><input type="checkbox">Children in Street Situations</label>
+                                <label class="check-option"><input type="checkbox">Trafficking in Person</label>
+                                <label class="check-option"><input type="checkbox">Child Laborer</label>
+                                <label class="check-option"><input type="checkbox">Abandoned/Neglected Children</label>
+                                <label class="check-option"><input type="checkbox">Foster Care</label>
+                                <label class="check-option"><input type="checkbox">Foundling</label>
+                                <label class="check-option"><input type="checkbox">Person Deprived of Liberty (PDL)</label>
+                                <label class="check-option"><input type="checkbox">Online Sexual Abuse or Exploitation of Children (OSAEC)</label>
+                                <label class="check-option"><input type="checkbox">Children Sexual Abuse or Exploitation Materials (CSAEM)</label>
+                                <label class="check-option"><input type="checkbox">Community Work Service Clients</label>
+                                <label class="check-option"><input type="checkbox">Adoption</label>
+                            </div>
+
+                            <div class="classification-column">
+                                <label class="check-option"><input type="checkbox">Children Sexually Abused and Exploited</label>
+                                <label class="check-option"><input type="checkbox">Children In Conflict with the Law (CICL)</label>
+                                <label class="check-option"><input type="checkbox">Children at Risk(CAR)</label>
+                                <label class="check-option"><input type="checkbox">Children Involved in Armed Conflict</label>
+                                <label class="check-option"><input type="checkbox">Children in Situation of Armed Conflict</label>
+                                <label class="check-option"><input type="checkbox">Mentally Challenged Individuals</label>
+                                <label class="check-option"><input type="checkbox">Stranded Individuals</label>
+                            </div>
+
+                            <div class="field classification-other-field">
+                                <label for="classification-other">Others:</label>
+                                <input id="classification-other" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section form-section--abuse-classification">
+                        <div class="section-title section-title--classification">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M4 2.75A1.75 1.75 0 0 0 2.25 4.5v15A1.75 1.75 0 0 0 4 21.25h8.5a.75.75 0 0 0 0-1.5H4a.25.25 0 0 1-.25-.25V4.5A.25.25 0 0 1 4 4.25h6.19a.25.25 0 0 1 .18.07l2.81 2.82a.25.25 0 0 1 .07.18V9a.75.75 0 0 0 1.5 0V7.32a1.75 1.75 0 0 0-.51-1.24L11.43 3.26a1.75 1.75 0 0 0-1.24-.51Zm11.25 1.5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm0 5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5ZM8 8.75h2.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Zm0 4h4.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Zm0 4h4.5a.75.75 0 0 0 0-1.5H8a.75.75 0 0 0 0 1.5Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Classification sa pangabuso</h2>
+                        </div>
+
+                        <form class="abuse-classification-form">
+                            <label class="check-option"><input type="checkbox">Pisikal</label>
+                            <label class="check-option"><input type="checkbox">Emosyonal</label>
+                            <label class="check-option"><input type="checkbox">Mental</label>
+                            <label class="check-option"><input type="checkbox">Sexual</label>
+                            <label class="check-option"><input type="checkbox">Pinansyal</label>
+
+                            <div class="field abuse-other-field">
+                                <label for="abuse-other">Others, please specify:</label>
+                                <input id="abuse-other" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section form-section--offense">
+                        <div class="section-title section-title--offense">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M12 3.25a2.25 2.25 0 1 0 0 4.5a2.25 2.25 0 0 0 0-4.5ZM5 9.25a.75.75 0 0 0-.53 1.28L8 14.06V20a1.25 1.25 0 0 0 2.5 0v-3.5h3V20a1.25 1.25 0 0 0 2.5 0v-5.94l3.53-3.53A.75.75 0 1 0 18.47 9.47L15.25 12.7h-6.5L5.53 9.47A.75.75 0 0 0 5 9.25Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            <h2>Offense committed by the child</h2>
+                        </div>
+
+                        <form class="offense-grid">
+                            <div class="field">
+                                <label for="type-offense">Type of Offense:</label>
+                                <input id="type-offense" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="date-apprehension">Date of Apprehension:</label>
+                                <input id="date-apprehension" type="date">
+                            </div>
+                            <div class="field">
+                                <label for="by-whom">By Whom:</label>
+                                <input id="by-whom" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="date-offense">Date of Offense Committed:</label>
+                                <input id="date-offense" type="date">
+                            </div>
+                            <div class="field">
+                                <label for="source-info">Source of Information:</label>
+                                <input id="source-info" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="complainant">Complainant:</label>
+                                <input id="complainant" type="text">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="form-section form-section--problem">
+                        <div class="section-title section-title--problem">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M12 2.25a1 1 0 0 1 .87.5l9.1 15.75A1 1 0 0 1 21.1 20H2.9a1 1 0 0 1-.87-1.5l9.1-15.75a1 1 0 0 1 .87-.5Zm0 5.25a1 1 0 0 0-1 1V13a1 1 0 1 0 2 0V8.5a1 1 0 0 0-1-1Zm0 8.5a1.1 1.1 0 1 0 0 2.2a1.1 1.1 0 0 0 0-2.2Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Problema nga gipresentar</h2>
+                        </div>
+                        <div class="field">
+                            <textarea id="presented-problem" class="form-textarea" rows="3"></textarea>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-section--household">
+                        <div class="section-title section-title--household">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M16 11a3 3 0 1 0-2.96-3.5h-2.08a3 3 0 1 0 0 1h2.08A3 3 0 0 0 16 11Zm-8 0a3 3 0 1 0-2.95-3.5h-2.05a1 1 0 1 0 0 2h2.05A3 3 0 0 0 8 11Zm8 2c-2.24 0-4.16.99-5.27 2.39A5.94 5.94 0 0 0 8 14c-3.31 0-6 1.79-6 4v1a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-1c0-2.84-2.69-5-6-5ZM4 18c0-1.68 1.84-3 4-3c1.73 0 3.2.84 3.76 2.01l.2.41c.09.2.2.39.32.58H4Zm16 0h-5.92a4.88 4.88 0 0 1-.18-.31l-.2-.43C13.14 16.08 14.47 15 16 15c2.16 0 4 1.32 4 3Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Komposisyon sa panimalay</h2>
+                        </div>
+
+                        <div class="household-actions">
+                            <button type="button" class="household-add-btn" id="openHouseholdModal">
+                                <span aria-hidden="true">+</span> Add
+                            </button>
+                        </div>
+
+                        <div class="household-table-wrap">
+                            <table class="household-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pangalan</th>
+                                        <th>Edad</th>
+                                        <th>Gender</th>
+                                        <th>Status Sibil</th>
+                                        <th>Relasyon sa Kliyente</th>
+                                        <th>Trabaho</th>
+                                        <th>Binulan nga kita</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="householdTableBody">
+                                    <tr class="household-empty-row">
+                                        <td colspan="8"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-section--initial-description">
+                        <div class="section-title section-title--initial-description">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path
+                                        d="M4 3.25A1.75 1.75 0 0 0 2.25 5v14A1.75 1.75 0 0 0 4 20.75h16A1.75 1.75 0 0 0 21.75 19V5A1.75 1.75 0 0 0 20 3.25Zm0 1.5h16a.25.25 0 0 1 .25.25v14a.25.25 0 0 1-.25.25H4a.25.25 0 0 1-.25-.25V5A.25.25 0 0 1 4 4.75Zm2.5 2a.75.75 0 0 0 0 1.5h11a.75.75 0 0 0 0-1.5Zm0 3.5a.75.75 0 0 0 0 1.5h11a.75.75 0 0 0 0-1.5Zm0 3.5a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Initial Description of the (below):</h2>
+                        </div>
+
+                        <div class="initial-description-stack">
+                            <div class="field">
+                                <label for="family-environment">Family Environment:</label>
+                                <textarea id="family-environment" class="form-textarea" rows="4"></textarea>
+                            </div>
+                            <div class="field">
+                                <label for="community-description">Community:</label>
+                                <textarea id="community-description" class="form-textarea" rows="4"></textarea>
+                            </div>
+                            <div class="field">
+                                <label for="family-history-background">Family and History Background:</label>
+                                <textarea id="family-history-background" class="form-textarea" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-section--treatment">
+                        <div class="section-title section-title--treatment">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M7.5 2.75A2.75 2.75 0 0 0 4.75 5.5v13A2.75 2.75 0 0 0 7.5 21.25h9A2.75 2.75 0 0 0 19.25 18.5v-9a.75.75 0 0 0-.22-.53l-5-5a.75.75 0 0 0-.53-.22Zm0 1.5h5.44l4.81 4.81v9.44c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-13c0-.69.56-1.25 1.25-1.25Zm2 4a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5Zm0 3.5a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5Zm0 3.5a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5Zm-2.75-7.5a.75.75 0 0 0 0 1.5h.25a.75.75 0 0 0 0-1.5Zm0 3.5a.75.75 0 0 0 0 1.5h.25a.75.75 0 0 0 0-1.5Zm0 3.5a.75.75 0 0 0 0 1.5h.25a.75.75 0 0 0 0-1.5Zm13.62-.03l-1.34 1.34l-.38-.38a.75.75 0 1 0-1.06 1.06l.91.91a.75.75 0 0 0 1.06 0l1.87-1.87a.75.75 0 1 0-1.06-1.06Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <h2>Initial Treatment Plan</h2>
+                        </div>
+
+                        <div class="treatment-head-row">
+                            <label for="general-goal">General Goal:</label>
+                            <button type="button" class="household-add-btn" id="openTreatmentModal">
+                                <span aria-hidden="true">+</span> Add
+                            </button>
+                        </div>
+
+                        <div class="household-table-wrap treatment-table-wrap">
+                            <table class="household-table treatment-table">
+                                <thead>
+                                    <tr>
+                                        <th>Objectives</th>
+                                        <th>Activities</th>
+                                        <th>Responsible Person</th>
+                                        <th>Resources Needed</th>
+                                        <th>Expected Output</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="treatmentTableBody">
+                                    <tr class="household-empty-row">
+                                        <td colspan="5"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-section--recommendation">
+                        <div class="section-title section-title--recommendation">
+                            <span class="section-title__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M12 2.75a2.25 2.25 0 0 1 2.2 1.8l.12.58l.58.12a2.25 2.25 0 0 1 1.74 1.74l.12.58l.58.12a2.25 2.25 0 0 1 1.74 1.74l.12.58l.58.12a2.25 2.25 0 0 1 0 4.42l-.58.12l-.12.58a2.25 2.25 0 0 1-1.74 1.74l-.58.12l-.12.58a2.25 2.25 0 0 1-1.74 1.74l-.58.12l-.12.58a2.25 2.25 0 0 1-4.42 0l-.12-.58l-.58-.12a2.25 2.25 0 0 1-1.74-1.74l-.12-.58l-.58-.12a2.25 2.25 0 0 1-1.74-1.74l-.12-.58l-.58-.12a2.25 2.25 0 0 1 0-4.42l.58-.12l.12-.58a2.25 2.25 0 0 1 1.74-1.74l.58-.12l.12-.58a2.25 2.25 0 0 1 1.74-1.74l.58-.12l.12-.58A2.25 2.25 0 0 1 12 2.75Zm0 3a.75.75 0 0 0-.73.6l-.2.95a.75.75 0 0 1-.58.58l-.95.2a.75.75 0 0 0-.58.58l-.2.95a.75.75 0 0 1-.58.58l-.95.2a.75.75 0 0 0 0 1.46l.95.2a.75.75 0 0 1 .58.58l.2.95a.75.75 0 0 0 .58.58l.95.2a.75.75 0 0 1 .58.58l.2.95a.75.75 0 0 0 .58.58l.95.2a.75.75 0 0 1 .58.58l.2.95a.75.75 0 0 0 1.46 0l.2-.95a.75.75 0 0 1 .58-.58l.95-.2a.75.75 0 0 0 .58-.58l.2-.95a.75.75 0 0 1 .58-.58l.95-.2a.75.75 0 0 0 .58-.58l.2-.95a.75.75 0 0 1 .58-.58l.95-.2a.75.75 0 0 0 0-1.46l-.95-.2a.75.75 0 0 1-.58-.58l-.2-.95a.75.75 0 0 0-.58-.58l-.95-.2a.75.75 0 0 1-.58-.58l-.2-.95a.75.75 0 0 0-.58-.58l-.95-.2a.75.75 0 0 1-.58-.58l-.2-.95a.75.75 0 0 0-.73-.6Zm0 3.25a3 3 0 1 1 0 6a3 3 0 0 1 0-6Zm0 1.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            <h2>Rekomendasyon:</h2>
+                        </div>
+                        <div class="field">
+                            <textarea id="recommendation" class="form-textarea" rows="4"></textarea>
+                        </div>
+                        <p id="carFormMessage" class="form-message" aria-live="polite"></p>
+                        <div class="final-submit-wrap">
+                            <button type="button" class="household-save-btn final-submit-btn">Submit</button>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal" id="householdModal" aria-hidden="true">
+        <div class="modal-content household-modal">
+            <div class="household-modal__header">
+                <h2>Komposisyon sa panimalay</h2>
+                <button class="household-modal__close" type="button" id="closeHouseholdModal" aria-label="Close">&times;</button>
+            </div>
+            <form id="householdForm" class="household-modal-grid">
+                <div class="field">
+                    <label for="hm-name">Pangalan:</label>
+                    <input id="hm-name" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-age">Edad:</label>
+                    <input id="hm-age" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-gender">Gender:</label>
+                    <input id="hm-gender" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-status">Status Sibil:</label>
+                    <input id="hm-status" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-relation">Relasyon sa Kliyente:</label>
+                    <input id="hm-relation" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-work">Trabaho:</label>
+                    <input id="hm-work" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-income">Binulan nga kita:</label>
+                    <input id="hm-income" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="hm-remarks">Remarks:</label>
+                    <input id="hm-remarks" type="text">
+                </div>
+
+                <button type="submit" class="household-save-btn">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="treatmentModal" aria-hidden="true">
+        <div class="modal-content household-modal">
+            <div class="household-modal__header">
+                <h2>Initial Treatment Plan</h2>
+                <button class="household-modal__close" type="button" id="closeTreatmentModal" aria-label="Close">&times;</button>
+            </div>
+            <form id="treatmentForm" class="household-modal-grid">
+                <div class="field">
+                    <label for="tm-objectives">Objectives:</label>
+                    <input id="tm-objectives" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="tm-activities">Activities:</label>
+                    <input id="tm-activities" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="tm-responsible">Responsible Person:</label>
+                    <input id="tm-responsible" type="text" required>
+                </div>
+                <div class="field">
+                    <label for="tm-resources">Resources Needed:</label>
+                    <input id="tm-resources" type="text" required>
+                </div>
+                <div class="field field--span-2">
+                    <label for="tm-output">Expected Output:</label>
+                    <input id="tm-output" type="text" required>
+                </div>
+
+                <button type="submit" class="household-save-btn">Save</button>
+            </form>
+        </div>
+    </div>
+    <script src="../../shared/client-record-mode.js"></script>
+    <script src="../../shared/form-submit-confirm.js"></script>
+    <script src="cicl.js"></script>
+
+
+</body>
+
+</html>

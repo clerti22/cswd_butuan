@@ -92,48 +92,27 @@ const tabFilterOptionsState = {
 const prevButton = document.querySelector('.pagination .pager-btn:first-child');
 const nextButton = document.querySelector('.pagination .pager-btn:last-child');
 
-const addClientOptions = {
-    dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
-    pssd: ['Senior Citizen', 'PWD'],
-    rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU'],
-    cod: ['FACED']
-};
-
 const addClientRoutes = {
-    dpsd: {
-        'PYAP': 'dpsd forms/pyap/index.php',
-        'Solo Parent': 'dpsd forms/solo parent/index.php',
-        'PWUD': 'dpsd forms/pwud/index.php'
-    },
-    pssd: {
-        'Senior Citizen': 'pssd forms/senior citizen/index.php',
-        'PWD': 'pssd forms/pwd/index.php'
-    },
-    rpsd: {
-        'VAWC': 'rpsd forms/vawc/index.php',
-        'CSAE': 'rpsd forms/csae/index.php',
-        'CAR': 'rpsd forms/car/index.php',
-        'CICL': 'rpsd forms/cicl/index.php',
-        'CIU': 'rpsd forms/ciu/index.php'
-    },
-    cod: {
-        'FACED': 'cod forms/faced/index.php'
-    }
+    'PYAP': 'dpsd forms/pyap/index.php',
+    'SOLO PARENT': 'dpsd forms/solo parent/index.php',
+    'PWUD': 'dpsd forms/pwud/index.php',
+    'SENIOR CITIZEN': 'pssd forms/senior citizen/index.php',
+    'PWD': 'pssd forms/pwd/index.php',
+    'VAWC': 'rpsd forms/vawc/index.php',
+    'CSAE': 'rpsd forms/csae/index.php',
+    'CAR': 'rpsd forms/car/index.php',
+    'CICL': 'rpsd forms/cicl/index.php',
+    'CIU': 'rpsd forms/ciu/index.php'
 };
-const formRoutePrefix = '../../super admin/client management/';
+const formRoutePrefix = '';
 const normalizedProgramAliases = {
     SOLOPARENT: 'SOLO PARENT'
 };
-const programRouteCatalog = Object.entries(addClientRoutes).reduce((catalog, [, routes]) => {
-    Object.entries(routes).forEach(([programName, route]) => {
-        const normalizedProgramName = String(programName || '').trim().toUpperCase().replace(/\s+/g, ' ');
-        if (normalizedProgramName) {
-            catalog[normalizedProgramName] = {
-                label: programName,
-                route
-            };
-        }
-    });
+const programRouteCatalog = Object.entries(addClientRoutes).reduce((catalog, [programName, route]) => {
+    const normalizedProgramName = String(programName || '').trim().toUpperCase().replace(/\s+/g, ' ');
+    if (normalizedProgramName) {
+        catalog[normalizedProgramName] = { route };
+    }
     return catalog;
 }, {});
 
@@ -147,26 +126,19 @@ function normalizeProgramName(programName) {
     return normalizedProgramAliases[collapsed] || normalized;
 }
 
-function getScopedAddClientOptions(tabKey) {
+function getScopedAddClientRoute() {
     const scopedProgram = normalizeProgramName((window.encoderScope && window.encoderScope.program) || '');
-    const options = addClientOptions[tabKey] || [];
-
-    if (!scopedProgram) {
-        return options;
+    if (!scopedProgram || !programRouteCatalog[scopedProgram]) {
+        return '';
     }
 
-    if (programRouteCatalog[scopedProgram]) {
-        return [programRouteCatalog[scopedProgram].label];
-    }
-
-    return options.filter((option) => normalizeProgramName(option) === scopedProgram);
+    return programRouteCatalog[scopedProgram].route;
 }
 let addClientDirectRoute = '#';
-function setAddClientRoute(tabKey) {
-    const options = getScopedAddClientOptions(tabKey);
-    const [selectedOption] = options;
+function setAddClientRoute() {
+    const route = getScopedAddClientRoute();
 
-    if (!selectedOption) {
+    if (!route) {
         addClientDirectRoute = '#';
         if (addClientBtn) {
             addClientBtn.style.display = 'none';
@@ -175,16 +147,11 @@ function setAddClientRoute(tabKey) {
         return;
     }
 
-    const normalizedOption = normalizeProgramName(selectedOption);
-    const scopedRoute = programRouteCatalog[normalizedOption]?.route;
-    const fallbackRoute = (addClientRoutes[tabKey] || {})[selectedOption];
-    const resolvedPath = scopedRoute || fallbackRoute || '';
-
-    addClientDirectRoute = resolvedPath ? buildFormRoute(resolvedPath) : '#';
+    addClientDirectRoute = buildFormRoute(route);
 
     if (addClientBtn) {
         addClientBtn.style.display = '';
-        addClientBtn.title = `Add ${selectedOption}`;
+        addClientBtn.title = 'Add Client';
     }
 }
 
@@ -687,7 +654,7 @@ tabs.forEach(tab => {
 
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
-        setAddClientRoute(target);
+        setAddClientRoute();
         syncSearchInput(target);
         syncFilterInputs(target);
         updatePaginationButtons(target);
@@ -887,7 +854,7 @@ nextButton.addEventListener('click', () => {
 
 const initialTabKey = getActiveTabKey();
 setActiveTabPanel(initialTabKey);
-setAddClientRoute(initialTabKey);
+setAddClientRoute();
 syncSearchInput(initialTabKey);
 syncFilterInputs(initialTabKey);
 updatePaginationButtons(initialTabKey);
