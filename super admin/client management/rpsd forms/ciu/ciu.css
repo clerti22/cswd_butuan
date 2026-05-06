@@ -300,6 +300,9 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    z-index: 1000;
 }
 
 .modal.active {
@@ -308,10 +311,13 @@ button:hover {
 
 .modal-content {
     background-color: white;
-    padding: 30px;
+    padding: 24px 24px 18px;
     border-radius: 10px;
-    width: 500px;
+    width: min(100%, 620px);
+    max-height: 90vh;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-header {
@@ -330,7 +336,7 @@ button:hover {
 }
 
 .modal-content h2 {
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .modal-content input,
@@ -350,6 +356,10 @@ button:hover {
 .modal-form {
     display: grid;
     gap: 12px;
+    margin-top: 16px;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 6px;
 }
 
 .modal-form label {
@@ -358,6 +368,13 @@ button:hover {
     gap: 6px;
     font-size: 12px;
     color: #111827;
+}
+
+.modal-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    background: #fff;
 }
 
 .form-page {

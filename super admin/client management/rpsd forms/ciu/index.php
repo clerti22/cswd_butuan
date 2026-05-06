@@ -393,8 +393,10 @@ $formHeading = $isScsrForm ? 'Social Case Study Report (SCSR)' : 'CIU Intake She
                     Income
                     <input type="text" name="family_income">
                 </label>
-                <button class="submit-btn" type="button" id="saveFamilyEntry">Save</button>
             </form>
+            <div class="modal-footer">
+                <button class="submit-btn" type="button" id="saveFamilyEntry">Save</button>
+            </div>
         </div>
     </div>
     <script src="../../shared/client-record-mode.js"></script>
