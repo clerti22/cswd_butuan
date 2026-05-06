@@ -93,6 +93,61 @@ function setCheckboxValidity(name, isValid) {
     }
 }
 
+function setFieldErrorMessage(field, message) {
+    if (!field) {
+        return;
+    }
+
+    const container = field.closest('.field') || field.parentElement;
+    if (!container) {
+        return;
+    }
+
+    let errorNode = container.querySelector('.field-error');
+    if (!message) {
+        if (errorNode) {
+            errorNode.remove();
+        }
+        return;
+    }
+
+    if (!errorNode) {
+        errorNode = document.createElement('small');
+        errorNode.className = 'field-error';
+        container.appendChild(errorNode);
+    }
+
+    errorNode.textContent = message;
+}
+
+function setFieldValidationState(name, isValid, message = 'This field is required.') {
+    const field = ciuForm?.querySelector(`[name="${name}"]`);
+    setFieldValidity(name, isValid);
+    setFieldErrorMessage(field, isValid ? '' : message);
+}
+
+function setGroupValidationState(selector, isValid, message) {
+    const group = ciuForm?.querySelector(selector);
+    if (!group) {
+        return;
+    }
+
+    group.classList.toggle('invalid-group', !isValid);
+    setFieldErrorMessage(group, isValid ? '' : message);
+}
+
+function setFamilyCompositionValidation(isValid) {
+    const section = ciuForm?.querySelector('.family-section');
+    const table = section?.querySelector('.family-table');
+
+    if (!table) {
+        return;
+    }
+
+    table.classList.toggle('invalid-input', !isValid);
+    setFieldErrorMessage(table, isValid ? '' : 'Please add at least one family composition row.');
+}
+
 function clearFamilyTable() {
     if (!familyTableBody) {
         return;
@@ -243,57 +298,51 @@ async function loadRecordForViewMode() {
 function validateMainForm() {
     let isValid = true;
 
-    const requiredInputs = [
-        'first_name',
-        'last_name',
-        'birth_date',
-        'birth_place',
-        'age',
-        'civil_status',
-        'contact_number',
-        'monthly_income',
-        'religion',
-        'occupation',
-        'education',
-        'address',
-        'barangay'
+    const requiredFields = [
+        { name: 'first_name' },
+        { name: 'last_name' },
+        { name: 'birth_date' },
+        { name: 'birth_place' },
+        {
+            name: 'age',
+            validator: (value) => /^\d+$/.test(value) && Number(value) >= 0,
+            invalidMessage: 'Please enter a valid age.'
+        },
+        { name: 'civil_status' },
+        { name: 'contact_number' },
+        { name: 'monthly_income' },
+        { name: 'religion' },
+        { name: 'occupation' },
+        { name: 'education' },
+        { name: 'address' },
+        { name: 'barangay' }
     ];
 
-    requiredInputs.forEach((name) => {
-        const valid = getInputValue(name) !== '';
-        setFieldValidity(name, valid);
+    requiredFields.forEach(({ name, validator, invalidMessage }) => {
+        const value = getInputValue(name);
+        const hasValue = value !== '';
+        const valid = hasValue && (validator ? validator(value) : true);
+        const message = !hasValue ? 'This field is required.' : (invalidMessage || 'This field is required.');
+        setFieldValidationState(name, valid, message);
         if (!valid) {
             isValid = false;
         }
     });
 
     const sexValue = getRadioValue('sex');
-    setRadioValidity('sex', sexValue !== '');
-    if (!sexValue) {
+    const sexValid = sexValue !== '';
+    setRadioValidity('sex', sexValid);
+    setGroupValidationState('.radio-group', sexValid, 'This field is required.');
+    if (!sexValid) {
         isValid = false;
     }
 
-    const memberCheckboxes = [
-        'member_senior',
-        'member_solo_parent',
-        'member_pwd',
-        'member_4ps'
-    ];
-
-    const serviceCheckboxes = [
-        'service_prescribed_medicine',
-        'service_certificate_minor',
-        'service_hospital_bill',
-        'service_tesda_certificate',
-        'service_burial',
-        'service_laboratory',
-        'service_legal_assistance'
-    ];
+    const memberCheckboxes = ['member_senior', 'member_solo_parent', 'member_pwd', 'member_4ps'];
+    const serviceCheckboxes = ['service_prescribed_medicine', 'service_certificate_minor', 'service_hospital_bill', 'service_tesda_certificate', 'service_burial', 'service_laboratory', 'service_legal_assistance'];
 
     const hasMemberSelection = memberCheckboxes.some((name) => isChecked(name));
-    memberCheckboxes.forEach((name) => {
-        setCheckboxValidity(name, hasMemberSelection);
-    });
+    memberCheckboxes.forEach((name) => setCheckboxValidity(name, hasMemberSelection));
+    setGroupValidationState('.checkbox-grid', hasMemberSelection, 'Please select at least one client category.');
     if (!hasMemberSelection) {
         isValid = false;
     }
@@ -301,9 +350,8 @@ function validateMainForm() {
     let hasServiceSelection = false;
     if (!isScsrForm) {
         hasServiceSelection = serviceCheckboxes.some((name) => isChecked(name));
-        serviceCheckboxes.forEach((name) => {
-            setCheckboxValidity(name, hasServiceSelection);
-        });
+        serviceCheckboxes.forEach((name) => setCheckboxValidity(name, hasServiceSelection));
+        setGroupValidationState('.services-grid', hasServiceSelection, 'Please select a service needed.');
         if (!hasServiceSelection) {
             isValid = false;
         }
@@ -312,24 +360,21 @@ function validateMainForm() {
     if (isScsrForm) {
         const hasPresentProblem = getInputValue('present_problem') !== '';
         const hasRecommendation = getInputValue('recommendation') !== '';
-        setFieldValidity('present_problem', hasPresentProblem);
-        setFieldValidity('recommendation', hasRecommendation);
+        setFieldValidationState('present_problem', hasPresentProblem);
+        setFieldValidationState('recommendation', hasRecommendation);
 
         if (!hasPresentProblem || !hasRecommendation) {
             isValid = false;
         }
     }
 
-    if (familyMembers.length === 0) {
+    const hasFamilyComposition = familyMembers.length > 0;
+    setFamilyCompositionValidation(hasFamilyComposition);
+    if (!hasFamilyComposition) {
         isValid = false;
     }
 
-    return {
-        isValid,
-        sexValue,
-        hasMemberSelection,
-        hasServiceSelection
-    };
+    return { isValid, sexValue, hasMemberSelection, hasServiceSelection };
 }
 
 function collectMainFormData() {
@@ -390,8 +435,12 @@ function collectMainFormData() {
 function resetForm() {
     ciuForm?.reset();
 
-    ciuForm?.querySelectorAll('.invalid-input').forEach((node) => {
-        node.classList.remove('invalid-input');
+    ciuForm?.querySelectorAll('.invalid-input, .invalid-group').forEach((node) => {
+        node.classList.remove('invalid-input', 'invalid-group');
+    });
+
+    ciuForm?.querySelectorAll('.field-error').forEach((node) => {
+        node.remove();
     });
 
     familyMembers.length = 0;
@@ -419,6 +468,7 @@ saveFamilyEntryButton?.addEventListener('click', () => {
 
     familyMembers.push(row);
     renderFamilyTable();
+    setFamilyCompositionValidation(true);
     familyForm?.reset();
     toggleModal(familyModal, false);
 });
@@ -429,7 +479,6 @@ ciuForm?.addEventListener('submit', async (event) => {
     const { isValid } = validateMainForm();
 
     if (!isValid) {
-        alert(isScsrForm ? 'Please complete all required SCSR fields and add at least one family composition row.' : 'Please complete all required CIU fields and add at least one family composition row.');
         return;
     }
 
@@ -492,6 +541,34 @@ ciuForm?.addEventListener('submit', async (event) => {
         if (submitButton) {
             submitButton.disabled = false;
         }
+    }
+});
+
+ciuForm?.addEventListener('input', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+        return;
+    }
+
+    if (target.matches('input[name], select[name], textarea[name]')) {
+        target.classList.remove('invalid-input');
+        setFieldErrorMessage(target, '');
+    }
+
+    if (target.matches('input[name="sex"]')) {
+        const valid = getRadioValue('sex') !== '';
+        setRadioValidity('sex', valid);
+        setGroupValidationState('.radio-group', valid, 'This field is required.');
+    }
+
+    if (target.matches('input[name^="member_"]')) {
+        const valid = ['member_senior', 'member_solo_parent', 'member_pwd', 'member_4ps'].some((name) => isChecked(name));
+        setGroupValidationState('.checkbox-grid', valid, 'Please select at least one client category.');
+    }
+
+    if (target.matches('input[name^="service_"]')) {
+        const valid = ['service_prescribed_medicine', 'service_certificate_minor', 'service_hospital_bill', 'service_tesda_certificate', 'service_burial', 'service_laboratory', 'service_legal_assistance'].some((name) => isChecked(name));
+        setGroupValidationState('.services-grid', valid, 'Please select a service needed.');
     }
 });
 
