@@ -596,3 +596,20 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+
+
+.invalid-input {
+    border-color: #dc2626 !important;
+}
+
+.invalid-group {
+    padding: 8px;
+    border: 1px solid #dc2626;
+    border-radius: 8px;
+}
+
+.field-error {
+    margin-top: -6px;
+    font-size: 11px;
+    color: #dc2626;
+}
