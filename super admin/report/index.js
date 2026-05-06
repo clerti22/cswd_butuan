@@ -25,8 +25,6 @@ const filters = {
     month: document.getElementById('filterMonth'),
     sex: document.getElementById('filterSex'),
     age_bracket: document.getElementById('filterAgeBracket'),
-    sector: document.getElementById('filterSector'),
-    household: document.getElementById('filterHousehold'),
     date_from: document.getElementById('filterDateFrom'),
     date_to: document.getElementById('filterDateTo')
 };
@@ -219,7 +217,6 @@ function renderAll(data) {
     fillSelectOptions(filters.year, data.filter_options.years || [], 'All Years');
     fillSelectOptions(filters.sex, data.filter_options.sexes || [], 'All');
     fillSelectOptions(filters.age_bracket, data.filter_options.age_brackets || [], 'All Age Brackets');
-    fillSelectOptions(filters.sector, data.filter_options.sectors || [], 'All Sectors');
 
     emptyState.classList.toggle('hidden', Number(data.table.pagination?.total_rows || 0) > 0);
 }
