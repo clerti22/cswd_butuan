@@ -74,9 +74,68 @@ body {
   border-right: none !important;
 }
 
-.header-image {
-  width: 100%;
+.custom-header-cell {
+  padding: 4px 8px 0 !important;
+  border: none !important;
+}
+
+.solo-print-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 0 4px;
+}
+
+.city-seal-logo {
+  width: 91.84px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.government-text-block {
+  padding-top: 3px;
+  line-height: 1.08;
+}
+
+.gov-line {
+  color: #001a4d;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.gov-line-1 {
+  font-size: 13px;
+}
+
+.gov-line-2 {
+  font-size: 16px;
+  margin-top: 1px;
+  letter-spacing: 0.1px;
+}
+
+.city-name-highlight {
+  color: #7a0d0d;
+}
+
+.gov-line-3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.gov-line-4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.header-rule-wrap {
+  height: 8px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
   display: block;
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 .no-border-top {
@@ -283,12 +342,14 @@ body {
   border-right: none !important;
   border-bottom: none !important;
   padding: 0 !important;
+  line-height: 0 !important;
 }
 
 .sheet-footer {
   position: relative;
-  padding: 8px 0 10px;
+  padding: 8px 0 0;
   margin-top: 8px;
+  margin-bottom: 0;
 }
 
 .footer-content {
@@ -363,18 +424,24 @@ body {
 
 .footer-bar {
   height: 8px;
-  margin-top: 8px;
+  margin-top: 6px;
   background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+  display: block;
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 @page {
   size: A4 portrait;
-  margin: 8mm;
+  margin: 8mm 8mm 0 8mm;
 }
 
 @media print {
   body {
     background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .print-toolbar {
