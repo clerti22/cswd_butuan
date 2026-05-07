@@ -252,7 +252,7 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
             <footer class="print-page-footer sheet-footer" aria-label="Contact footer">
               <div class="footer-content">
                 <div class="footer-left">
-                  <img src="../../../../images-logo/d6f0fc2d-e45d-4c22-9aac-c585faf5e803.jpg" alt="CSWDO QR Code" class="footer-qr" />
+                  <img src="../../../images-logo/d6f0fc2d-e45d-4c22-9aac-c585faf5e803.jpg" alt="CSWDO QR Code" class="footer-qr" />
                   <div class="footer-contact-text">
                     <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
                     <p>Email: cswdd@butuan.gov.ph</p>
@@ -268,7 +268,7 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
                 </div>
 
                 <div class="footer-right">
-                  <img src="../../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+                  <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
                   <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
                 </div>
               </div>
