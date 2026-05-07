@@ -289,6 +289,7 @@ body {
 .sheet-footer {
   position: relative;
   padding: 8px 0 10px;
+  margin-top: 8px;
 }
 
 .footer-content {
@@ -315,9 +316,8 @@ body {
 
 .footer-contact-text {
   color: #002a7a;
-  font-family: "Times New Roman", Times, serif;
   font-size: 12px;
-  line-height: 1.16;
+  line-height: 1.15;
 }
 
 .footer-contact-text p {
@@ -360,7 +360,6 @@ body {
   margin: 3px 0 0;
   color: #000;
   font-size: 12px;
-  font-family: "Times New Roman", Times, serif;
 }
 
 .footer-bar {
