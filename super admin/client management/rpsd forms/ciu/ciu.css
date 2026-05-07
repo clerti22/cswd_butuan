@@ -372,7 +372,7 @@ button:hover {
     font-size: 16px;
 }
 
-.modal-content button {
+.modal-footer .submit-btn {
     width: 100%;
 }
 
