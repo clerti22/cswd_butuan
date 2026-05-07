@@ -40,7 +40,6 @@ body {
 
 .print-page {
   width: var(--page-width);
-  min-height: 297mm;
   margin: 0 auto 16px;
   background: #fff;
   padding: 10mm 8mm 6mm;
