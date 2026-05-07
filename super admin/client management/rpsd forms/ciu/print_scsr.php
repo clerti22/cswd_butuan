@@ -128,15 +128,21 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
         <tr>
           <td>
             <header class="print-page-header">
-              <div class="scsr-header">
-                <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="scsr-header__seal" />
-                <div class="scsr-header__text">
-                  <p>Republic of the Philippines</p>
-                  <p>CITY GOVERNMENT OF <span class="scsr-header__city">BUTUAN</span></p>
-                  <p class="scsr-header__department">City Social Welfare and Development Department</p>
-                  <p>Butuan City</p>
-                </div>
-              </div>
+              <table class="scsr-header" role="presentation">
+                <tr>
+                  <td class="scsr-header__seal-cell">
+                    <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="scsr-header__seal" />
+                  </td>
+                  <td class="scsr-header__text-cell">
+                    <div class="scsr-header__text">
+                      <p>Republic of the Philippines</p>
+                      <p>CITY GOVERNMENT OF <span class="scsr-header__city">B<span class="scsr-header__city-accent">U</span>TUAN</span></p>
+                      <p class="scsr-header__department">City Social Welfare and Development Department</p>
+                      <p>Butuan City</p>
+                    </div>
+                  </td>
+                </tr>
+              </table>
               <div class="scsr-header__rule" aria-hidden="true"></div>
             </header>
           </td>
