@@ -117,6 +117,102 @@ if (!empty($client['created_at'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PWD Print Form</title>
   <link rel="stylesheet" href="../../dpsd forms/pwud/print form/print-form.css" />
+  <style>
+    .sheet-footer {
+      position: relative;
+      padding: 8px 0 10px;
+      margin-top: 8px;
+      background: #ececec;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 18px 0 18px;
+    }
+
+    .footer-left {
+      width: 58%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .footer-qr {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border: 4px solid #111;
+      border-radius: 8px;
+    }
+
+    .footer-contact-text {
+      color: #002a7a;
+      font-size: 31px;
+      line-height: 1.15;
+      transform: scale(0.39);
+      transform-origin: left center;
+      width: 670px;
+      font-family: "Times New Roman", serif;
+      margin-left: -6px;
+    }
+
+    .footer-contact-text p { margin: 0; }
+
+    .footer-center {
+      width: 20%;
+      text-align: center;
+      color: #0029b0;
+    }
+
+    .tuv-title {
+      margin: 0;
+      font-size: 41px;
+      line-height: 1;
+      font-weight: 700;
+      transform: scale(0.32);
+      transform-origin: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .tuv-subtitle {
+      margin: -14px 0 0;
+      font-size: 30px;
+      line-height: 1.1;
+      color: #000;
+      transform: scale(0.33);
+      transform-origin: center;
+      font-family: "Times New Roman", serif;
+    }
+
+    .footer-right {
+      width: 22%;
+      text-align: center;
+    }
+
+    .footer-code {
+      margin: 3px 0 0;
+      color: #000;
+      font-size: 30px;
+      transform: scale(0.36);
+      transform-origin: center;
+      font-family: "Times New Roman", serif;
+    }
+
+    .footer-logo {
+      width: 150px;
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .footer-bar {
+      height: 8px;
+      margin-top: 8px;
+      background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+    }
+  </style>
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
@@ -222,15 +318,27 @@ if (!empty($client['created_at'])) {
     <footer class="sheet-footer" aria-label="Contact footer">
       <div class="footer-content">
         <div class="footer-left">
-          <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
-          <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
-          <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+          <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
+          <div class="footer-contact-text">
+            <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+            <p>Email: cswdd@butuan.gov.ph</p>
+            <p>Phone: 0956-224-1679</p>
+            <p>www.butuan.gov.ph</p>
+          </div>
         </div>
+
+        <div class="footer-center">
+          <p class="tuv-title">TUVNORD</p>
+          <p class="tuv-subtitle">Certificate Registration No. PHP</p>
+          <p class="tuv-subtitle">QMS 23 95 0116</p>
+        </div>
+
         <div class="footer-right">
-          <p class="footer-code">CSWDO.T.002.REV00</p>
-          <img src="../../dpsd forms/pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
         </div>
       </div>
+      <div class="footer-bar" aria-hidden="true"></div>
     </footer>
   </main>
 
