@@ -129,10 +129,9 @@ body {
 }
 
 .header-rule-wrap {
-  height: 0;
+  height: 8px;
   margin-top: 8px;
-  border-top: 4px solid #36afe7;
-  border-bottom: 4px solid #0d4a84;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
   display: block;
   width: 100%;
   -webkit-print-color-adjust: exact;
@@ -343,12 +342,14 @@ body {
   border-right: none !important;
   border-bottom: none !important;
   padding: 0 !important;
+  line-height: 0 !important;
 }
 
 .sheet-footer {
   position: relative;
   padding: 8px 0 0;
   margin-top: 8px;
+  margin-bottom: 0;
 }
 
 .footer-content {
@@ -422,10 +423,9 @@ body {
 }
 
 .footer-bar {
-  height: 0;
-  margin-top: 8px;
-  border-top: 4px solid #36afe7;
-  border-bottom: 4px solid #0d4a84;
+  height: 8px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
   display: block;
   width: 100%;
   -webkit-print-color-adjust: exact;
@@ -440,6 +440,8 @@ body {
 @media print {
   body {
     background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .print-toolbar {
