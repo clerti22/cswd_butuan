@@ -531,6 +531,27 @@ button:hover {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
+.field input.invalid-input,
+.field select.invalid-input,
+.form-textarea.invalid-input,
+.description-field textarea.invalid-input,
+.radio-option.invalid-input {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12);
+}
+
+.family-table.invalid-input {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12);
+}
+
+.inline-error {
+    margin-top: 2px;
+    font-size: 11px;
+    color: #dc2626;
+    line-height: 1.25;
+}
+
 .input-icon input[type="date"] {
     padding-right: 36px;
 }

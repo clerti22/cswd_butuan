@@ -93,6 +93,79 @@ function setRadioValidity(name, isValid) {
     });
 }
 
+function removeInlineError(target) {
+    if (!target) {
+        return;
+    }
+
+    const fieldContainer = target.closest('.field, .description-field') || target.parentElement;
+    const existingError = fieldContainer?.querySelector('.inline-error');
+    if (existingError) {
+        existingError.remove();
+    }
+}
+
+function setInlineError(target, message) {
+    if (!target) {
+        return;
+    }
+
+    removeInlineError(target);
+
+    const fieldContainer = target.closest('.field, .description-field') || target.parentElement;
+    if (!fieldContainer) {
+        return;
+    }
+
+    const errorMessage = document.createElement('small');
+    errorMessage.className = 'inline-error';
+    errorMessage.textContent = message;
+    fieldContainer.appendChild(errorMessage);
+}
+
+function setFieldError(id, message, isValid) {
+    const field = document.getElementById(id);
+    if (!field) {
+        return;
+    }
+
+    markFieldValidity(id, isValid);
+    if (isValid) {
+        removeInlineError(field);
+        return;
+    }
+
+    setInlineError(field, message);
+}
+
+function setTextareaError(name, message, isValid) {
+    const field = document.querySelector(`textarea[name="${name}"]`);
+    if (!field) {
+        return;
+    }
+
+    field.classList.toggle('invalid-input', !isValid);
+    if (isValid) {
+        removeInlineError(field);
+        return;
+    }
+
+    setInlineError(field, message);
+}
+
+function setFamilySectionValidity(isValid, message = 'Please add at least one family composition row.') {
+    const table = document.querySelector('.family-table');
+    if (!table) {
+        return;
+    }
+
+    table.classList.toggle('invalid-input', !isValid);
+    removeInlineError(table);
+    if (!isValid) {
+        setInlineError(table, message);
+    }
+}
+
 function setMessage(message, type) {
     if (!message) {
         return;
@@ -313,15 +386,35 @@ function validateForm() {
     ];
 
     requiredFieldIds.forEach((id) => {
-        const fieldIsValid = getFieldValue(id) !== '';
-        markFieldValidity(id, fieldIsValid);
+        const value = getFieldValue(id);
+        let fieldIsValid = value !== '';
+        let errorMessage = 'This field is required.';
+
+        if (fieldIsValid && id === 'age') {
+            fieldIsValid = Number.isFinite(Number(value)) && Number(value) > 0;
+            errorMessage = 'Please enter a valid age.';
+        }
+
+        if (fieldIsValid && id === 'contact-number') {
+            const digitsOnly = value.replace(/\D/g, '');
+            fieldIsValid = digitsOnly.length >= 7;
+            errorMessage = 'Please provide a valid value.';
+        }
+
+        if (fieldIsValid && ['sex'].includes(id) && !value) {
+            fieldIsValid = false;
+        }
+
+        setFieldError(id, errorMessage, fieldIsValid);
         if (!fieldIsValid) {
             isValid = false;
         }
     });
 
     const presentingProblem = getTextareaValue('presenting-problem');
-    if (!presentingProblem) {
+    const hasPresentingProblem = presentingProblem !== '';
+    setTextareaError('presenting-problem', 'This field is required.', hasPresentingProblem);
+    if (!hasPresentingProblem) {
         isValid = false;
     }
 
@@ -331,11 +424,25 @@ function validateForm() {
     setRadioValidity('4ps', fourPs !== '');
     setRadioValidity('philhealth', philhealth !== '');
 
+    if (!fourPs) {
+        setInlineError(document.querySelector('input[name="4ps"]')?.closest('.field'), 'Please provide a valid value.');
+    } else {
+        removeInlineError(document.querySelector('input[name="4ps"]')?.closest('.field'));
+    }
+
+    if (!philhealth) {
+        setInlineError(document.querySelector('input[name="philhealth"]')?.closest('.field'), 'Please provide a valid value.');
+    } else {
+        removeInlineError(document.querySelector('input[name="philhealth"]')?.closest('.field'));
+    }
+
     if (!fourPs || !philhealth) {
         isValid = false;
     }
 
-    if (!familyMembers.length) {
+    const hasFamilyRows = familyMembers.length > 0;
+    setFamilySectionValidity(hasFamilyRows);
+    if (!hasFamilyRows) {
         isValid = false;
     }
 
@@ -362,17 +469,49 @@ function resetMainForm() {
         }
 
         field.classList.remove('invalid-input');
+        removeInlineError(field);
     });
 
     document.querySelectorAll('.radio-option').forEach((option) => {
         option.classList.remove('invalid-input');
     });
+    document.querySelectorAll('.inline-error').forEach((error) => error.remove());
+    setFamilySectionValidity(true);
 
     familyMembers.length = 0;
     treatmentPlans.length = 0;
     resetTableBody(familyTableBody, 'family-table__row', 6);
     resetTableBody(treatmentTableBody, 'treatment-table__row', 5);
 }
+
+document.querySelectorAll('input, select, textarea').forEach((field) => {
+    field.addEventListener('input', () => {
+        if (field.type === 'radio') {
+            return;
+        }
+
+        const hasValue = field.value.trim() !== '';
+        if (hasValue) {
+            field.classList.remove('invalid-input');
+            removeInlineError(field);
+        }
+    });
+
+    field.addEventListener('change', () => {
+        if (field.type === 'radio') {
+            const name = field.name;
+            setRadioValidity(name, true);
+            removeInlineError(field.closest('.field'));
+            return;
+        }
+
+        const hasValue = field.value.trim() !== '';
+        if (hasValue) {
+            field.classList.remove('invalid-input');
+            removeInlineError(field);
+        }
+    });
+});
 
 if (openFamilyModal) {
     openFamilyModal.addEventListener('click', () => toggleModal(familyModal, true));
