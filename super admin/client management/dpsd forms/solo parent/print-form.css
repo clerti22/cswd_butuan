@@ -453,5 +453,24 @@ body {
     min-height: auto;
     margin: 0;
     padding: 0;
+    position: relative;
+  }
+
+  .sheet-footer {
+    position: fixed;
+    left: 8mm;
+    right: 8mm;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  .footer-content {
+    padding-bottom: 0;
+  }
+
+  .footer-bar {
+    margin-top: 4px;
   }
 }
