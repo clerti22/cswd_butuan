@@ -250,39 +250,66 @@ h1 {
 .footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 0 22px 0 26px;
+  align-items: center;
+  padding: 2px 20px 0 22px;
 }
 
-.footer-left { width: 58%; }
-
-.footer-row {
+.footer-left {
+  width: 58%;
   display: flex;
-  align-items: baseline;
-  gap: 9px;
-  margin-bottom: 2px;
-  color: #5b74a1;
-  font-size: 11px;
-  line-height: 1.04;
+  align-items: center;
+  gap: 14px;
 }
 
-.footer-label { width: 110px; }
-.footer-value { color: #4f6ca0; }
-.underline { text-decoration: underline; text-underline-offset: 2px; }
+.footer-qr {
+  width: 78px;
+  height: 78px;
+  object-fit: cover;
+  border: 4px solid #111;
+  border-radius: 8px;
+}
+
+.footer-contact-text {
+  color: #002a7a;
+  font-size: 32px;
+  line-height: 1.22;
+}
+
+.footer-contact-text p { margin: 0; }
+
+.footer-center {
+  width: 20%;
+  text-align: center;
+  color: #0029b0;
+}
+
+.tuv-title {
+  margin: 0;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.tuv-subtitle {
+  margin: 1px 0 0;
+  font-size: 21px;
+  line-height: 1.1;
+  color: #000;
+}
 
 .footer-right {
-  width: 34%;
+  width: 22%;
   text-align: center;
 }
 
 .footer-code {
-  margin: 0 0 4px;
-  color: #5e78a5;
-  font-size: 11px;
+  margin: 3px 0 0;
+  color: #000;
+  font-size: 26px;
 }
 
 .footer-logo {
-  width: 165px;
+  width: 200px;
   max-width: 100%;
   display: block;
   margin: 0 auto;
@@ -290,8 +317,8 @@ h1 {
 
 .footer-bar {
   height: 8px;
-  margin-top: 4px;
-  background: linear-gradient(90deg, #37ace0 0%, #1587c5 33%, #0d6296 65%, #0a3f73 100%);
+  margin-top: 8px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
 }
 
 
