@@ -125,7 +125,16 @@ if (!empty($client['created_at'])) {
   </div>
 
   <main class="print-page" id="printPage">
-    <img src="../../dpsd forms/pwud/print form/header.png" alt="CSWD Header" class="header-image" />
+    <header class="pwud-header" aria-label="PWUD form header">
+      <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="pwud-header__seal" />
+      <div class="pwud-header__text">
+        <p class="pwud-header__line pwud-header__line--small">Republic of the Philippines</p>
+        <p class="pwud-header__line pwud-header__line--city">CITY GOVERNMENT OF <span>BUTUAN</span></p>
+        <p class="pwud-header__line pwud-header__line--dept">City Social Welfare and Development Department</p>
+        <p class="pwud-header__line pwud-header__line--place">Butuan City</p>
+      </div>
+    </header>
+    <div class="pwud-header__rule" aria-hidden="true"></div>
 
     <section class="meta-row">
       <div></div>
