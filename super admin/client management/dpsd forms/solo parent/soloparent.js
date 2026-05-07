@@ -114,6 +114,7 @@ const householdTableBody = document.getElementById('householdTableBody');
 const soloParentForm = document.getElementById('soloParentForm');
 const householdPayloadInput = document.getElementById('household-members-payload');
 const submitFormButton = document.getElementById('submitSoloParent');
+const householdSection = document.querySelector('.household-table')?.closest('.form-section') || null;
 const recordId = window.clientRecordMode?.getRecordId() ?? null;
 
 const householdMembers = [];
@@ -302,6 +303,7 @@ if (submitHouseholdButton) {
         }
 
         householdMembers.push(householdEntry);
+        householdSection?.classList.remove('section--invalid');
         syncHouseholdPayload();
 
         renderHouseholdTable();
@@ -316,14 +318,28 @@ const clearInvalidStates = (elements) => {
         if (wrapper) {
             wrapper.classList.remove('field--invalid');
         }
+        element.removeAttribute('aria-invalid');
+
+        const existingError = wrapper?.querySelector('.field-error-message');
+        if (existingError) {
+            existingError.remove();
+        }
     });
 };
 
-const markInvalid = (element) => {
+const markInvalid = (element, message = 'This field is required.') => {
     const wrapper = element.closest('.field');
     if (wrapper) {
         wrapper.classList.add('field--invalid');
+        let errorNode = wrapper.querySelector('.field-error-message');
+        if (!errorNode) {
+            errorNode = document.createElement('small');
+            errorNode.className = 'field-error-message';
+            wrapper.appendChild(errorNode);
+        }
+        errorNode.textContent = message;
     }
+    element.setAttribute('aria-invalid', 'true');
 };
 
 const validateSoloParentForm = () => {
@@ -358,9 +374,30 @@ const validateSoloParentForm = () => {
     let isValid = true;
 
     nonRadioFields.forEach((field) => {
-        if (!field.value.trim()) {
+        const value = field.value.trim();
+
+        if (!value) {
             isValid = false;
-            markInvalid(field);
+            let message = 'This field is required.';
+            if (field.name === 'age') {
+                message = 'Please enter a valid age.';
+            } else if (field.name === 'solo_needs') {
+                message = 'Please complete this field.';
+            } else if (field.name === 'address' || field.name === 'contact_number') {
+                message = 'Please complete this field.';
+            } else if (field.tagName.toLowerCase() === 'select') {
+                message = 'Please select an option.';
+            }
+            markInvalid(field, message);
+            if (!firstInvalidField) {
+                firstInvalidField = field;
+            }
+            return;
+        }
+
+        if (field.name === 'age' && (!/^\d+$/.test(value) || Number(value) <= 0 || Number(value) > 130)) {
+            isValid = false;
+            markInvalid(field, 'Please enter a valid age.');
             if (!firstInvalidField) {
                 firstInvalidField = field;
             }
@@ -379,13 +416,16 @@ const validateSoloParentForm = () => {
 
     if (householdMembers.length === 0) {
         isValid = false;
+        householdSection?.classList.add('section--invalid');
         if (!firstInvalidField && openHouseholdModalButton) {
             firstInvalidField = openHouseholdModalButton;
         }
+    } else {
+        householdSection?.classList.remove('section--invalid');
     }
 
     if (!isValid) {
-        alert('Please fill out all required fields, including at least one household member, before submitting.');
+        alert('Please review the highlighted solo parent fields and add at least one household member before submitting.');
         if (firstInvalidField) {
             firstInvalidField.focus();
         }
@@ -395,6 +435,37 @@ const validateSoloParentForm = () => {
 };
 
 if (soloParentForm) {
+    soloParentForm.addEventListener('input', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+        if (!(target.matches('input, select, textarea'))) {
+            return;
+        }
+
+        const wrapper = target.closest('.field');
+        if (!wrapper || !wrapper.classList.contains('field--invalid')) {
+            return;
+        }
+
+        if (target instanceof HTMLInputElement && target.type === 'radio') {
+            const group = soloParentForm.querySelectorAll(`input[type="radio"][name="${target.name}"]`);
+            const hasChecked = Array.from(group).some((radio) => radio.checked);
+            if (hasChecked) {
+                clearInvalidStates([target]);
+            }
+            return;
+        }
+
+        const value = target.value.trim();
+        if (value) {
+            if (!(target instanceof HTMLInputElement && target.name === 'age') || (/^\d+$/.test(value) && Number(value) > 0 && Number(value) <= 130)) {
+                clearInvalidStates([target]);
+            }
+        }
+    });
+
     soloParentForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
