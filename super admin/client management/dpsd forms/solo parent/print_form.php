@@ -179,8 +179,20 @@ $householdRows = max(4, count($householdMembers));
   <main class="print-page" id="printPage">
     <table class="document-table" aria-label="Solo Parent application form">
       <tr>
-        <td colspan="12" class="header-cell header-image-cell no-border-bottom">
-          <img src="../pwud/print form/header.png" alt="CSWD Header" class="header-image" />
+        <td colspan="12" class="header-cell custom-header-cell no-border-bottom">
+          <div class="solo-print-header" aria-label="City government header">
+            <img src="../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
+            <div class="government-text-block">
+              <div class="gov-line gov-line-1">Republic of the Philippines</div>
+              <div class="gov-line gov-line-2">CITY GOVERNMENT OF <span class="city-name-highlight">BUTUAN</span></div>
+              <div class="gov-line gov-line-3">City Social Welfare and Development Department</div>
+              <div class="gov-line gov-line-4">Butuan City</div>
+            </div>
+          </div>
+          <div class="header-rule-wrap" aria-hidden="true">
+            <span class="header-rule-primary"></span>
+            <span class="header-rule-secondary"></span>
+          </div>
         </td>
       </tr>
       <tr>
