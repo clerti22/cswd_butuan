@@ -252,7 +252,7 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
             <footer class="print-page-footer sheet-footer" aria-label="Contact footer">
               <div class="footer-content">
                 <div class="footer-left">
-                  <img src="../../../images-logo/d6f0fc2d-e45d-4c22-9aac-c585faf5e803.jpg" alt="CSWDO QR Code" class="footer-qr" />
+                  <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
                   <div class="footer-contact-text">
                     <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
                     <p>Email: cswdd@butuan.gov.ph</p>
