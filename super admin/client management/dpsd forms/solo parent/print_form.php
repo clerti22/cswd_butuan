@@ -181,7 +181,7 @@ $householdRows = max(4, count($householdMembers));
       <tr>
         <td colspan="12" class="header-cell custom-header-cell no-border-bottom">
           <div class="solo-print-header" aria-label="City government header">
-            <img src="../../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
+            <img src="../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
             <div class="government-text-block">
               <div class="gov-line gov-line-1">Republic of the Philippines</div>
               <div class="gov-line gov-line-2">CITY GOVERNMENT OF <span class="city-name-highlight">BUTUAN</span></div>
