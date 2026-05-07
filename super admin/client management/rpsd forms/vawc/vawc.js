@@ -83,6 +83,97 @@ function markFieldValidity(id, isValid) {
     field.classList.toggle('invalid-input', !isValid);
 }
 
+function getErrorNodeKey(target, key = 'fieldErrorNode') {
+    const datasetKey = `__${key}`;
+    return target[datasetKey] || null;
+}
+
+function setErrorNodeKey(target, node, key = 'fieldErrorNode') {
+    const datasetKey = `__${key}`;
+    target[datasetKey] = node;
+}
+
+function setFieldErrorMessage(field, message) {
+    if (!field) {
+        return;
+    }
+
+    const isInvalid = Boolean(message);
+    field.classList.toggle('invalid-input', isInvalid);
+
+    let errorNode = getErrorNodeKey(field);
+    if (!isInvalid) {
+        if (errorNode) {
+            errorNode.remove();
+            setErrorNodeKey(field, null);
+        }
+        return;
+    }
+
+    if (!errorNode) {
+        errorNode = document.createElement('small');
+        errorNode.className = 'field-error-message';
+        field.insertAdjacentElement('afterend', errorNode);
+        setErrorNodeKey(field, errorNode);
+    }
+    errorNode.textContent = message;
+}
+
+function setRadioErrorMessage(name, message) {
+    const radioOptions = document.querySelectorAll(`input[name="${name}"]`);
+    if (!radioOptions.length) {
+        return;
+    }
+
+    setRadioValidity(name, !message);
+    const radioGroup = radioOptions[0].closest('.clientele-item');
+    if (!radioGroup) {
+        return;
+    }
+
+    let errorNode = getErrorNodeKey(radioGroup, 'radioErrorNode');
+    if (!message) {
+        if (errorNode) {
+            errorNode.remove();
+            setErrorNodeKey(radioGroup, null, 'radioErrorNode');
+        }
+        return;
+    }
+
+    if (!errorNode) {
+        errorNode = document.createElement('small');
+        errorNode.className = 'field-error-message';
+        radioGroup.appendChild(errorNode);
+        setErrorNodeKey(radioGroup, errorNode, 'radioErrorNode');
+    }
+    errorNode.textContent = message;
+}
+
+function setSectionErrorMessage(section, message) {
+    if (!section) {
+        return;
+    }
+
+    section.classList.toggle('invalid-section', Boolean(message));
+    const parent = section.parentElement;
+    let errorNode = getErrorNodeKey(section, 'sectionErrorNode');
+    if (!message) {
+        if (errorNode) {
+            errorNode.remove();
+            setErrorNodeKey(section, null, 'sectionErrorNode');
+        }
+        return;
+    }
+
+    if (!errorNode) {
+        errorNode = document.createElement('small');
+        errorNode.className = 'field-error-message section-error-message';
+        parent?.insertBefore(errorNode, section.nextSibling);
+        setErrorNodeKey(section, errorNode, 'sectionErrorNode');
+    }
+    errorNode.textContent = message;
+}
+
 function setRadioValidity(name, isValid) {
     document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
         const option = input.closest('.radio-option');
@@ -279,15 +370,35 @@ function validateMainForm() {
     ];
 
     requiredFieldIds.forEach((id) => {
-        const valid = getFieldValue(id) !== '';
-        markFieldValidity(id, valid);
-        if (!valid) {
+        const field = document.getElementById(id);
+        const value = getFieldValue(id);
+        let message = '';
+
+        if (!value) {
+            if (id === 'civil-status') {
+                message = 'Please select this field.';
+            } else if (id === 'age') {
+                message = 'Please enter a valid age.';
+            } else if (id === 'contact') {
+                message = 'Please complete contact information.';
+            } else {
+                message = 'This field is required.';
+            }
+        } else if (id === 'age' && (!/^\d+$/.test(value) || Number(value) <= 0)) {
+            message = 'Please enter a valid age.';
+        }
+
+        setFieldErrorMessage(field, message);
+        if (message) {
             isValid = false;
         }
     });
 
+    const presentingProblemField = document.querySelector('textarea[name="presenting-problem"]');
     const presentingProblem = getTextareaValue('presenting-problem');
-    if (!presentingProblem) {
+    const presentingProblemMessage = presentingProblem ? '' : 'Please complete this field.';
+    setFieldErrorMessage(presentingProblemField, presentingProblemMessage);
+    if (presentingProblemMessage) {
         isValid = false;
     }
 
@@ -295,15 +406,18 @@ function validateMainForm() {
     const uct = getCheckedRadioValue('uct');
     const nhts = getCheckedRadioValue('nhts');
 
-    setRadioValidity('4ps', fourPs !== '');
-    setRadioValidity('uct', uct !== '');
-    setRadioValidity('nhts', nhts !== '');
+    setRadioErrorMessage('4ps', fourPs ? '' : 'Please select a value.');
+    setRadioErrorMessage('uct', uct ? '' : 'Please select a value.');
+    setRadioErrorMessage('nhts', nhts ? '' : 'Please select a value.');
 
     if (!fourPs || !uct || !nhts) {
         isValid = false;
     }
 
-    if (!familyMembers.length) {
+    const familyTable = document.querySelector('.family-table');
+    const familyErrorMessage = familyMembers.length ? '' : 'Please add at least one family information row.';
+    setSectionErrorMessage(familyTable, familyErrorMessage);
+    if (familyErrorMessage) {
         isValid = false;
     }
 
@@ -325,11 +439,16 @@ function resetMainForm() {
         }
 
         field.classList.remove('invalid-input');
+        setFieldErrorMessage(field, '');
     });
 
     document.querySelectorAll('.radio-option').forEach((option) => {
         option.classList.remove('invalid-input');
     });
+    setRadioErrorMessage('4ps', '');
+    setRadioErrorMessage('uct', '');
+    setRadioErrorMessage('nhts', '');
+    setSectionErrorMessage(document.querySelector('.family-table'), '');
 
     familyMembers.length = 0;
     treatmentPlans.length = 0;
@@ -391,6 +510,7 @@ familyForm?.addEventListener('submit', (event) => {
     }
 
     familyForm.reset();
+    setSectionErrorMessage(document.querySelector('.family-table'), '');
     toggleModal(familyModal, false);
 });
 
@@ -442,7 +562,7 @@ submitButton?.addEventListener('click', async () => {
     const { isValid, fourPs, uct, nhts, presentingProblem } = validateMainForm();
 
     if (!isValid) {
-        showMessage('Please complete all required VAWC fields and add at least one family information row.');
+        showMessage('Please review the highlighted fields and correct the errors before submitting.');
         return;
     }
 
@@ -517,3 +637,28 @@ submitButton?.addEventListener('click', async () => {
 });
 
 loadRecordForViewMode();
+
+document.addEventListener('input', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+        return;
+    }
+
+    if (target.matches('input, textarea, select')) {
+        const value = target.value?.trim?.() ?? '';
+        if (value) {
+            setFieldErrorMessage(target, '');
+        }
+    }
+});
+
+document.addEventListener('change', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    if (target.type === 'radio' && target.name) {
+        setRadioErrorMessage(target.name, '');
+    }
+});
