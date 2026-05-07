@@ -434,7 +434,7 @@ body {
 
 @page {
   size: A4 portrait;
-  margin: 8mm;
+  margin: 8mm 8mm 0 8mm;
 }
 
 @media print {
