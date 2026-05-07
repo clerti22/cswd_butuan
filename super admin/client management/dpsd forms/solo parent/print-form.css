@@ -42,7 +42,7 @@ body {
   width: var(--page-width);
   margin: 0 auto 16px;
   background: #fff;
-  padding: 10mm 8mm 6mm;
+  padding: 10mm 8mm 0;
 }
 
 .document-table,
