@@ -189,10 +189,7 @@ $householdRows = max(4, count($householdMembers));
               <div class="gov-line gov-line-4">Butuan City</div>
             </div>
           </div>
-          <div class="header-rule-wrap" aria-hidden="true">
-            <span class="header-rule-primary"></span>
-            <span class="header-rule-secondary"></span>
-          </div>
+          <div class="header-rule-wrap" aria-hidden="true"></div>
         </td>
       </tr>
       <tr>
