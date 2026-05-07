@@ -40,7 +40,6 @@ body {
 
 .print-page {
   width: var(--page-width);
-  min-height: 297mm;
   margin: 0 auto 16px;
   background: #fff;
   padding: 10mm 8mm 6mm;
@@ -279,77 +278,93 @@ body {
   padding-top: 4px !important;
 }
 
-.footer-main-cell,
-.footer-bar-cell {
+.footer-main-cell {
   border-left: none !important;
   border-right: none !important;
   border-bottom: none !important;
+  padding: 0 !important;
 }
 
-.footer-main-cell {
-  padding: 8px 0 6px !important;
+.sheet-footer {
+  position: relative;
+  padding: 8px 0 10px;
+  margin-top: 8px;
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 0 22px 0 26px;
+  align-items: center;
+  padding: 2px 18px 0 18px;
 }
 
 .footer-left {
   width: 58%;
-}
-
-.footer-row {
   display: flex;
-  align-items: baseline;
-  gap: 9px;
-  margin-bottom: 2px;
-  color: #5b74a1;
-  font-size: 14px;
-  line-height: 1.04;
+  align-items: center;
+  gap: 14px;
 }
 
-.footer-label {
-  width: 70px;
+.footer-qr {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 4px solid #111;
+  border-radius: 8px;
 }
 
-.footer-value {
-  color: #4f6ca0;
+.footer-contact-text {
+  color: #002a7a;
+  font-size: 12px;
+  line-height: 1.15;
 }
 
-.underline {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.footer-contact-text p {
+  margin: 0;
+}
+
+.footer-center {
+  width: 20%;
+  text-align: center;
+  color: #0029b0;
+}
+
+.tuv-title {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.tuv-subtitle {
+  margin: 1px 0 0;
+  font-size: 12px;
+  line-height: 1.1;
+  color: #000;
 }
 
 .footer-right {
-  width: 34%;
+  width: 22%;
   text-align: center;
-  padding-top: 0;
-}
-
-.footer-code {
-  margin: 0 0 4px;
-  color: #5e78a5;
-  font-size: 14px;
 }
 
 .footer-logo {
-  width: 200px;
+  width: 150px;
   max-width: 100%;
   display: block;
   margin: 0 auto;
 }
 
-.footer-bar-cell {
-  padding: 0 !important;
+.footer-code {
+  margin: 3px 0 0;
+  color: #000;
+  font-size: 12px;
 }
 
 .footer-bar {
-  height: 16px;
-  background: linear-gradient(90deg, #37ace0 0%, #1587c5 33%, #0d6296 65%, #0a3f73 100%);
+  height: 8px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
 }
 
 @page {
