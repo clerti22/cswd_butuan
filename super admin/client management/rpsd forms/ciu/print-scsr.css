@@ -46,11 +46,52 @@ body {
   flex-direction: column;
 }
 
-.header-image { width: 100%; display: block; }
+.print-page-header {
+  padding: 4px 0 2px;
+}
 
-.print-page-header .header-image {
-  height: 24mm;
-  object-fit: cover;
+.scsr-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scsr-header__seal {
+  width: 91.84px;
+  height: auto;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.scsr-header__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  min-height: 91.84px;
+}
+
+.scsr-header__text p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.16;
+  color: #0a1f52;
+}
+
+.scsr-header__city {
+  letter-spacing: 0.2px;
+}
+
+.scsr-header__department {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.scsr-header__rule {
+  height: 4px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #0b2d76 0%, #1f8de0 100%);
 }
 
 .print-template td {
