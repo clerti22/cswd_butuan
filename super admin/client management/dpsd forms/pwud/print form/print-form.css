@@ -82,6 +82,10 @@ body {
 .pwud-header__line {
   margin: 0;
   color: #0a2353;
+  background: linear-gradient(90deg, #062a63 0%, #1c5fb8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .pwud-header__line--small {
@@ -96,7 +100,7 @@ body {
 }
 
 .pwud-header__line--city span {
-  color: #9c4e2c;
+  color: #1c5fb8;
 }
 
 .pwud-header__line--dept {
@@ -114,7 +118,7 @@ body {
 .pwud-header__rule {
   width: 100%;
   height: 11px;
-  background: #4daed2;
+  background: linear-gradient(90deg, #062a63 0%, #3aa4df 100%);
   margin-top: 8px;
 }
 
