@@ -129,7 +129,7 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
           <td>
             <header class="print-page-header">
               <div class="scsr-header">
-                <img src="../../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="scsr-header__seal" />
+                <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="scsr-header__seal" />
                 <div class="scsr-header__text">
                   <p>Republic of the Philippines</p>
                   <p>CITY GOVERNMENT OF <span class="scsr-header__city">BUTUAN</span></p>
