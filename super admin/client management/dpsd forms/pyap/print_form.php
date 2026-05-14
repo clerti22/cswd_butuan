@@ -184,23 +184,16 @@ $currentDate = date('F d, Y');
   </div>
 
   <main class="print-page" id="printPage">
-    <header class="header-wrap">
-      <div class="logo-side">
-        <img src="../../../images-logo/butuanseal.png" alt="Butuan Seal" />
-      </div>
-      <div class="header-text">
-        <p class="small">Republic of the Philippines</p>
-        <h1>CITY SOCIAL WELFARE AND DEVELOPMENT OFFICE</h1>
-        <p class="small">J. Rosales Avenue, Tandang Sora, Butuan City</p>
-        <h2>PAG-ASA YOUTH ASSOCIATION OF THE PHILIPPINES</h2>
-        <p class="city">Butuan City</p>
-        <h3>MEMBERSHIP INFORMATION SHEET</h3>
-      </div>
-      <div class="logo-side logo-right">
-        <img src="../../../images-logo/cswd-logo.png" alt="CSWD Logo" />
-        <img src="pyap logo/logo 2.png" alt="PYAP Logo" />
+    <header class="pyap-header" aria-label="PYAP form header">
+      <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="pyap-header__seal" />
+      <div class="pyap-header__text">
+        <p class="pyap-header__line pyap-header__line--small">Republic of the Philippines</p>
+        <p class="pyap-header__line pyap-header__line--city">CITY GOVERNMENT OF <span>BUTUAN</span></p>
+        <p class="pyap-header__line pyap-header__line--dept">City Social Welfare and Development Department</p>
+        <p class="pyap-header__line pyap-header__line--place">Butuan City</p>
       </div>
     </header>
+    <div class="pyap-header__rule" aria-hidden="true"></div>
 
     <section class="section">
       <h4>I. PERSONAL DATA:</h4>

@@ -41,23 +41,61 @@ body {
   flex-direction: column;
 }
 
-.header-wrap {
-  display: grid;
-  grid-template-columns: 82px 1fr 132px;
+.pyap-header {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  margin: 0;
+  padding: 2px 0 4px;
 }
 
-.logo-side img { width: 82px; height: 82px; object-fit: contain; }
-.logo-right { display: flex; justify-content: flex-end; gap: 4px; }
-.logo-right img { width: 70px; height: 70px; object-fit: contain; }
+.pyap-header__seal {
+  width: 91.84px;
+  height: auto;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
 
-.header-text { text-align: center; }
-.header-text .small { margin: 0; font-size: 14px; }
-.header-text h1 { margin: 0; font-size: 29px; letter-spacing: 0.2px; }
-.header-text h2 { margin: 2px 0 0; font-size: 18px; text-decoration: underline; }
-.header-text .city { margin: 0; color: #bf0000; font-size: 14px; font-weight: 700; }
-.header-text h3 { margin: 4px 0 0; font-size: 16px; }
+.pyap-header__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  line-height: 1.12;
+}
+
+.pyap-header__line {
+  margin: 0;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.pyap-header__line--small {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.pyap-header__line--city {
+  font-size: 37px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.pyap-header__line--city span {
+  color: #8b1a1a;
+}
+
+.pyap-header__line--dept,
+.pyap-header__line--place {
+  font-size: 40px;
+  font-weight: 700;
+  color: #001d5f;
+}
+
+.pyap-header__rule {
+  margin-top: 4px;
+  height: 10px;
+  background: #5ca8d2;
+}
 
 .section { margin-top: 6px; }
 .section h4 { margin: 0 0 3px; font-size: 13px; }
