@@ -100,7 +100,7 @@ body {
 .pyap-header__department {
   font-size: 13px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .pyap-header__rule {
@@ -174,7 +174,7 @@ body {
   margin: 2px 0;
   font-size: 11.8px;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .consent .youth-name {
@@ -203,7 +203,7 @@ body {
 .signatories .name {
   margin: 0 auto;
   border-bottom: 1px solid #000;
-  width: 190px;
+  width: 150px;
   font-weight: 700;
 }
 .signatories p { margin: 0; }
@@ -233,8 +233,8 @@ body {
 }
 
 .footer-qr {
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
   object-fit: cover;
   border: 4px solid #111;
   border-radius: 8px;
@@ -243,8 +243,8 @@ body {
 .footer-contact-text {
   color: #002a7a;
   font-family: "Times New Roman", Times, serif;
-  font-size: 31px;
-  line-height: 1.2;
+  font-size: 12px;
+  line-height: 1.15;
 }
 
 .footer-contact-text p { margin: 0; }
@@ -258,14 +258,14 @@ body {
 
 .tuv-title {
   margin: 0;
-  font-size: 46px;
+  font-size: 13px;
   line-height: 1;
   font-weight: 700;
 }
 
 .tuv-subtitle {
-  margin: 3px 0 0;
-  font-size: 20px;
+  margin: 1px 0 0;
+  font-size: 12px;
   line-height: 1.1;
   color: #000;
 }
@@ -276,17 +276,17 @@ body {
 }
 
 .footer-logo {
-  width: 190px;
+  width: 150px;
   max-width: 100%;
   display: block;
   margin: 0 auto;
 }
 
 .footer-code {
-  margin: 6px 0 0;
+  margin: 3px 0 0;
   color: #000;
   font-family: "Times New Roman", Times, serif;
-  font-size: 32px;
+  font-size: 12px;
 }
 
 .footer-bar {
