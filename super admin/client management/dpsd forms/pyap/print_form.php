@@ -184,14 +184,23 @@ $currentDate = date('F d, Y');
   </div>
 
   <main class="print-page" id="printPage">
-    <header class="pyap-header" aria-label="PYAP form header">
-      <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="pyap-header__seal" />
-      <div class="pyap-header__text">
-        <p class="pyap-header__line pyap-header__line--small">Republic of the Philippines</p>
-        <p class="pyap-header__line pyap-header__line--city">CITY GOVERNMENT OF <span>BUTUAN</span></p>
-        <p class="pyap-header__line pyap-header__line--dept">City Social Welfare and Development Department</p>
-        <p class="pyap-header__line pyap-header__line--place">Butuan City</p>
-      </div>
+    <header class="print-page-header" aria-label="PYAP form header">
+      <table class="pyap-header" role="presentation">
+        <tr>
+          <td class="pyap-header__seal-cell">
+            <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="pyap-header__seal" />
+          </td>
+          <td class="pyap-header__text-cell">
+            <div class="pyap-header__text">
+              <p>Republic of the Philippines</p>
+              <p>CITY GOVERNMENT OF <span class="pyap-header__city">B<span class="pyap-header__city-accent">U</span>TUAN</span></p>
+              <p class="pyap-header__department">City Social Welfare and Development Department</p>
+              <p>Butuan City</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div class="pyap-header__rule" aria-hidden="true"></div>
     </header>
     <div class="pyap-header__rule" aria-hidden="true"></div>
 
