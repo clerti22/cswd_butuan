@@ -202,6 +202,7 @@ $currentDate = date('F d, Y');
       </table>
       <div class="pyap-header__rule" aria-hidden="true"></div>
     </header>
+    <div class="pyap-header__rule" aria-hidden="true"></div>
 
     <section class="section">
       <h4>I. PERSONAL DATA:</h4>
