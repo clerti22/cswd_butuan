@@ -104,9 +104,12 @@ body {
 }
 
 .pyap-header__rule {
-  height: 5px;
+  height: 0;
   margin-top: 8px;
-  background: linear-gradient(90deg, #16336f 0%, #1b4f95 55%, #29a1e2 100%);
+  border-top: 2px solid #1c4f95;
+  border-bottom: 2px solid #29a1e2;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
 .section { margin-top: 6px; }
