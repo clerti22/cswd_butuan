@@ -184,22 +184,23 @@ $currentDate = date('F d, Y');
   </div>
 
   <main class="print-page" id="printPage">
-    <header class="header-wrap">
-      <div class="logo-side">
-        <img src="../../../images-logo/butuanseal.png" alt="Butuan Seal" />
-      </div>
-      <div class="header-text">
-        <p class="small">Republic of the Philippines</p>
-        <h1>CITY SOCIAL WELFARE AND DEVELOPMENT OFFICE</h1>
-        <p class="small">J. Rosales Avenue, Tandang Sora, Butuan City</p>
-        <h2>PAG-ASA YOUTH ASSOCIATION OF THE PHILIPPINES</h2>
-        <p class="city">Butuan City</p>
-        <h3>MEMBERSHIP INFORMATION SHEET</h3>
-      </div>
-      <div class="logo-side logo-right">
-        <img src="../../../images-logo/cswd-logo.png" alt="CSWD Logo" />
-        <img src="pyap logo/logo 2.png" alt="PYAP Logo" />
-      </div>
+    <header class="print-page-header" aria-label="PYAP form header">
+      <table class="pyap-header" role="presentation">
+        <tr>
+          <td class="pyap-header__seal-cell">
+            <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="pyap-header__seal" />
+          </td>
+          <td class="pyap-header__text-cell">
+            <div class="pyap-header__text">
+              <p>Republic of the Philippines</p>
+              <p>CITY GOVERNMENT OF <span class="pyap-header__city">B<span class="pyap-header__city-accent">U</span>TUAN</span></p>
+              <p class="pyap-header__department">City Social Welfare and Development Department</p>
+              <p>Butuan City</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div class="pyap-header__rule" aria-hidden="true"></div>
     </header>
 
     <section class="section">
