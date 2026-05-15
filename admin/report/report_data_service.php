@@ -354,6 +354,8 @@ function build_households_with_multiple_interventions(array $records): array
                 'suffix' => (string) ($row['suffix'] ?? ''),
                 'birthday' => $birthday,
                 'age' => $row['age'] ?? null,
+                'barangay' => trim((string) ($row['barangay'] ?? '')),
+                'sex' => trim((string) ($row['sex'] ?? '')),
                 'programs' => [],
             ];
         }
@@ -375,7 +377,8 @@ function build_households_with_multiple_interventions(array $records): array
         }
 
         $entry['intervention_count'] = $count;
-        $entry['interventions_received'] = implode(', ', $programs);
+        $entry['programs_availed'] = implode(', ', $programs);
+        $entry['interventions_received'] = $entry['programs_availed'];
         $entry['status'] = 'Interventions Needed';
         unset($entry['programs']);
 
