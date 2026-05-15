@@ -162,16 +162,16 @@ function renderTable(rows) {
 
 function renderHouseholds(rows) {
     if (!rows.length) {
-        householdTableBody.innerHTML = '<tr><td colspan="6">No household has 2 or more interventions in this filter set.</td></tr>';
+        householdTableBody.innerHTML = '<tr><td colspan="6">No client has availed 2 or more distinct CSWD programs in this filter set.</td></tr>';
         return;
     }
 
     householdTableBody.innerHTML = rows.map((row) => `
         <tr>
-            <td>${row.household_head || '-'}</td>
-            <td>${row.control_number || '-'}</td>
-            <td>${row.barangay || '-'}</td>
-            <td>${row.household || '-'}</td>
+            <td>${row.client_name || '-'}</td>
+            <td>${row.birthday || '-'}</td>
+            <td>${row.age ?? '-'}</td>
+            <td>${row.suffix || '-'}</td>
             <td>${row.intervention_count || 0}</td>
             <td>${row.interventions_received || '-'}</td>
         </tr>
