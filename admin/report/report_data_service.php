@@ -34,6 +34,7 @@ final class ReportDataService
         'suffix' => ['suffix'],
         'sex' => ['sex', 'gender'],
         'age' => ['age'],
+        'birthday' => ['birthday', 'birthdate', 'date_of_birth', 'dob'],
         'barangay' => ['barangay'],
         'contact_details' => ['contact_number', 'contact_details', 'phone_number', 'mobile_number'],
         'sector' => ['sector'],
@@ -144,6 +145,7 @@ final class ReportDataService
         $middleName = trim((string) ($row['middle_name'] ?? ''));
         $lastName = trim((string) ($row['last_name'] ?? ''));
         $suffix = trim((string) ($row['suffix'] ?? ''));
+        $birthday = $this->normalizeBirthday((string) ($row['birthday'] ?? ''));
 
         $fullName = trim(implode(' ', array_values(array_filter([$firstName, $middleName, $lastName, $suffix], static fn(string $part): bool => $part !== ''))));
         $controlNumber = trim((string) ($row['control_number'] ?? ''));
@@ -158,6 +160,10 @@ final class ReportDataService
             'control_number' => $controlNumber,
             'full_name' => $fullName,
             'sex' => $sex,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'suffix' => $suffix,
+            'birthday' => $birthday,
             'age' => $age,
             'age_bracket' => $this->deriveAgeBracket($age),
             'barangay' => trim((string) ($row['barangay'] ?? '')),
@@ -172,6 +178,22 @@ final class ReportDataService
             'source_table' => (string) ($row['source_table'] ?? ''),
             'unique_key' => $controlNumber !== '' ? $controlNumber : ((string) ($row['source_table'] ?? '') . '#' . (string) ($row['id'] ?? '')),
         ];
+    }
+
+
+    private function normalizeBirthday(string $value): string
+    {
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return '';
+        }
+
+        $timestamp = strtotime($trimmed);
+        if ($timestamp === false) {
+            return $trimmed;
+        }
+
+        return date('Y-m-d', (int) $timestamp);
     }
 
     private function normalizeSex(string $value): string
@@ -312,43 +334,54 @@ function build_households_with_multiple_interventions(array $records): array
     $grouped = [];
 
     foreach ($records as $row) {
-        $household = trim((string) ($row['household'] ?? ''));
-        $control = trim((string) ($row['control_number'] ?? ''));
-        $fallback = trim((string) ($row['full_name'] ?? ''));
-        $groupKey = $household !== '' ? $household : ($control !== '' ? $control : $fallback);
+        $firstName = strtolower(trim((string) ($row['first_name'] ?? '')));
+        $lastName = strtolower(trim((string) ($row['last_name'] ?? '')));
+        $suffix = strtolower(trim((string) ($row['suffix'] ?? '')));
+        $birthday = trim((string) ($row['birthday'] ?? ''));
+        $age = isset($row['age']) && $row['age'] !== '' ? (string) ((int) $row['age']) : '';
 
-        if ($groupKey === '') {
+        if ($firstName === '' || $lastName === '' || $birthday === '' || $age === '') {
             continue;
         }
 
+        $groupKey = implode('|', [$firstName, $lastName, $suffix, $birthday, $age]);
+
         if (!isset($grouped[$groupKey])) {
             $grouped[$groupKey] = [
-                'household' => $household !== '' ? $household : $groupKey,
-                'control_number' => $control,
-                'household_head' => (string) ($row['full_name'] ?? ''),
-                'barangay' => (string) ($row['barangay'] ?? ''),
-                'interventions' => [],
-                'intervention_count' => 0,
+                'client_name' => trim((string) ($row['full_name'] ?? '')),
+                'first_name' => (string) ($row['first_name'] ?? ''),
+                'last_name' => (string) ($row['last_name'] ?? ''),
+                'suffix' => (string) ($row['suffix'] ?? ''),
+                'birthday' => $birthday,
+                'age' => $row['age'] ?? null,
+                'barangay' => trim((string) ($row['barangay'] ?? '')),
+                'sex' => trim((string) ($row['sex'] ?? '')),
+                'programs' => [],
             ];
         }
 
-        $items = array_filter(array_map('trim', explode(',', (string) ($row['interventions'] ?? ''))), static fn(string $value): bool => $value !== '');
-        foreach ($items as $item) {
-            $grouped[$groupKey]['interventions'][$item] = true;
+        $program = trim((string) ($row['program'] ?? ''));
+        if ($program !== '') {
+            $grouped[$groupKey]['programs'][$program] = true;
         }
     }
 
     $results = [];
     foreach ($grouped as $entry) {
-        $interventions = array_keys($entry['interventions']);
-        $count = count($interventions);
+        $programs = array_keys($entry['programs']);
+        sort($programs);
+        $count = count($programs);
+
         if ($count < 2) {
             continue;
         }
 
         $entry['intervention_count'] = $count;
-        $entry['interventions_received'] = implode(', ', $interventions);
-        unset($entry['interventions']);
+        $entry['programs_availed'] = implode(', ', $programs);
+        $entry['interventions_received'] = $entry['programs_availed'];
+        $entry['status'] = 'Interventions Needed';
+        unset($entry['programs']);
+
         $results[] = $entry;
     }
 
