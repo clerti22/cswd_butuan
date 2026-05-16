@@ -254,204 +254,105 @@ tbody td {
 
 .sheet-footer {
   margin-top: auto;
-  position: relative;
-  padding: 8px 0 10px;
+  background: #f1f1f1;
+  padding: 0;
 }
 
-.footer-content {
+.footer-top-rule {
+  width: 100%;
+  height: 5px;
+  background: #24a4db;
+}
+
+.footer-layout {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
-  padding: 0 22px 0 26px;
+  min-height: 136px;
+  padding: 12px 22px 10px 22px;
+  column-gap: 18px;
 }
 
 .footer-left {
-  width: 58%;
-}
-
-.footer-row {
   display: flex;
-  align-items: baseline;
-  gap: 9px;
-  margin-bottom: 2px;
-  color: #5b74a1;
-  font-size: 14px;
-  line-height: 1.04;
+  align-items: flex-start;
+  gap: 14px;
+  width: 55%;
 }
 
-.footer-label {
-  width: 70px;
+.footer-contact p {
+  margin: 0;
+  color: #07276f;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 31px;
+  line-height: 1.17;
 }
 
-.footer-value {
-  color: #4f6ca0;
-}
-
-.underline {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.footer-center {
+  width: 23%;
+  display: flex;
+  justify-content: center;
+  padding-top: 13px;
 }
 
 .footer-right {
-  width: 34%;
-  text-align: center;
-  padding-top: 0;
+  width: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 11px;
 }
 
 .footer-code {
-  margin: 0 0 4px;
-  color: #5e78a5;
-  font-size: 14px;
+  margin: 2px 0 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 30px;
+  color: #000;
 }
 
-.footer-logo {
-  width: 200px;
-  max-width: 100%;
-  display: block;
-  margin: 0 auto;
+.footer-qr-crop,
+.footer-tuv-crop,
+.footer-butuanon-crop {
+  position: relative;
+  overflow: hidden;
 }
 
-.footer-bar {
-  height: 16px;
-  margin-top: 6px;
-  background: linear-gradient(90deg, #37ace0 0%, #1587c5 33%, #0d6296 65%, #0a3f73 100%);
+.footer-qr-crop {
+  width: 82px;
+  height: 83px;
+  border-radius: 2px;
 }
 
-.meta-row,
-.title-row,
-.identifying-data,
-.family-section,
-table,
-thead,
-tbody,
-tr,
-td,
-th {
-  break-inside: avoid;
-  page-break-inside: avoid;
+.footer-tuv-crop {
+  width: 180px;
+  height: 69px;
 }
 
-@media (max-width: 920px) {
-  :root {
-    --sheet-padding-x: 12px;
-  }
-
-  .print-toolbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .title-row {
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .signatures {
-    margin-top: 48px;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding: 0;
-  }
-
-  .sign-block {
-    width: 100%;
-  }
-
-  .footer-content {
-    gap: 8px;
-  }
-
-  .footer-left {
-    width: 60%;
-  }
-
-  .footer-right {
-    width: 36%;
-    text-align: center;
-  }
+.footer-butuanon-crop {
+  width: 158px;
+  height: 66px;
 }
 
-@media print {
-  @page {
-    size: auto;
-    margin: 0;
-  }
-
-  body {
-    background: #fff;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .print-toolbar {
-    display: none;
-  }
-
-  .print-page {
-    margin: 0;
-    width: 100%;
-    min-height: 100vh;
-    padding: var(--sheet-padding-top) var(--sheet-padding-x) 0;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .page-content {
-    flex: 1 1 auto;
-  }
-
-  .family-section {
-    margin-top: 54px;
-  }
-
-  .signatures {
-    margin-top: 54px;
-    padding: 0 12px;
-    font-size: 16px;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  .sign-block {
-    width: 43%;
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  .sign-block .line-name {
-    margin-top: 20px !important;
-    width: 138px;
-  }
-
-  .sheet-footer {
-    margin-top: auto;
-    break-inside: avoid;
-    page-break-inside: avoid;
-    padding: 8px 0 10px;
-  }
-
-  .footer-content {
-    flex-wrap: nowrap;
-  }
-
-  .footer-left {
-    width: 58%;
-  }
-
-  .footer-right {
-    width: 34%;
-    text-align: center;
-  }
-
-  .footer-logo {
-    margin: 0 0 0 auto;
-  }
+.footer-sprite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1152px;
+  height: 164px;
+  max-width: none;
 }
 
+.footer-sprite--qr {
+  left: -111px;
+  top: -33px;
+}
+
+.footer-sprite--tuv {
+  left: -780px;
+  top: -43px;
+}
+
+.footer-sprite--butuanon {
+  left: -992px;
+  top: -46px;
+}

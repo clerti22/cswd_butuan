@@ -220,15 +220,31 @@ if (!empty($client['created_at'])) {
     </section>
 
     <footer class="sheet-footer" aria-label="Contact footer">
-      <div class="footer-content">
+      <div class="footer-top-rule" aria-hidden="true"></div>
+      <div class="footer-layout">
         <div class="footer-left">
-          <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
-          <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
-          <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+          <div class="footer-qr-crop" aria-hidden="true">
+            <img src="../../../../reference screenshots/screenshot 1.png" alt="" class="footer-sprite footer-sprite--qr" />
+          </div>
+          <div class="footer-contact">
+            <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+            <p>Email: cswdd@butuan.gov.ph</p>
+            <p>Phone: 0956-224-1679</p>
+            <p>www.butuan.gov.ph</p>
+          </div>
         </div>
+
+        <div class="footer-center">
+          <div class="footer-tuv-crop" aria-hidden="true">
+            <img src="../../../../reference screenshots/screenshot 1.png" alt="" class="footer-sprite footer-sprite--tuv" />
+          </div>
+        </div>
+
         <div class="footer-right">
-          <p class="footer-code">CSWDO.T.002.REV00</p>
-          <img src="../../dpsd forms/pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <div class="footer-butuanon-crop" aria-hidden="true">
+            <img src="../../../../reference screenshots/screenshot 1.png" alt="" class="footer-sprite footer-sprite--butuanon" />
+          </div>
+          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
         </div>
       </div>
     </footer>
