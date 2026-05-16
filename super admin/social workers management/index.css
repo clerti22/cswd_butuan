@@ -613,6 +613,7 @@ button:hover {
     justify-content: center;
     z-index: 1200;
     padding: 20px;
+    overflow-y: auto;
 }
 
 .custom-modal-content {
@@ -620,6 +621,8 @@ button:hover {
     background: #ffffff;
     border-radius: 12px;
     padding: 18px 30px 26px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
 }
 
 .custom-modal-compact {
@@ -728,6 +731,16 @@ button:hover {
 }
 
 @media (max-width: 900px) {
+    .custom-modal {
+        align-items: flex-start;
+    }
+
+    .custom-modal-content {
+        width: 100%;
+        max-height: calc(100vh - 32px);
+        margin: 0 auto;
+    }
+
     .user-details-grid {
         grid-template-columns: 1fr;
     }
