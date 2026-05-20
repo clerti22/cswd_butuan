@@ -242,6 +242,7 @@ if (!empty($client['created_at'])) {
           <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
         </div>
       </div>
+      <div class="footer-bar" aria-hidden="true"></div>
     </footer>
   </main>
 
