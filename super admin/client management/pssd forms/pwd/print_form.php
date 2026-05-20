@@ -220,7 +220,6 @@ if (!empty($client['created_at'])) {
     </section>
 
     <footer class="sheet-footer" aria-label="Contact footer">
-      <div class="footer-bar" aria-hidden="true"></div>
       <div class="footer-content">
         <div class="footer-left">
           <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
