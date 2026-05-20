@@ -253,106 +253,88 @@ tbody td {
 }
 
 .sheet-footer {
-  margin-top: auto;
-  background: #f1f1f1;
-  padding: 0;
+  position: relative;
+  padding: 8px 0 0;
+  margin-top: 8px;
+  margin-bottom: 0;
 }
 
-.footer-top-rule {
-  width: 100%;
-  height: 5px;
-  background: #24a4db;
-}
-
-.footer-layout {
+.footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  min-height: 136px;
-  padding: 12px 22px 10px 22px;
-  column-gap: 18px;
+  align-items: center;
+  padding: 2px 18px 0 18px;
 }
 
 .footer-left {
+  width: 58%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
-  width: 55%;
 }
 
-.footer-contact p {
+.footer-qr {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 4px solid #111;
+  border-radius: 8px;
+}
+
+.footer-contact-text {
+  color: #002a7a;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.footer-contact-text p {
   margin: 0;
-  color: #07276f;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 31px;
-  line-height: 1.17;
 }
 
 .footer-center {
-  width: 23%;
-  display: flex;
-  justify-content: center;
-  padding-top: 13px;
+  width: 20%;
+  text-align: center;
+  color: #0029b0;
+}
+
+.tuv-title {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.tuv-subtitle {
+  margin: 1px 0 0;
+  font-size: 12px;
+  line-height: 1.1;
+  color: #000;
 }
 
 .footer-right {
   width: 22%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 11px;
+  text-align: center;
+}
+
+.footer-logo {
+  width: 150px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
 .footer-code {
-  margin: 2px 0 0;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 30px;
+  margin: 3px 0 0;
   color: #000;
+  font-size: 12px;
 }
 
-.footer-qr-crop,
-.footer-tuv-crop,
-.footer-butuanon-crop {
-  position: relative;
-  overflow: hidden;
-}
-
-.footer-qr-crop {
-  width: 82px;
-  height: 83px;
-  border-radius: 2px;
-}
-
-.footer-tuv-crop {
-  width: 180px;
-  height: 69px;
-}
-
-.footer-butuanon-crop {
-  width: 158px;
-  height: 66px;
-}
-
-.footer-sprite {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1152px;
-  height: 164px;
-  max-width: none;
-}
-
-.footer-sprite--qr {
-  left: -111px;
-  top: -33px;
-}
-
-.footer-sprite--tuv {
-  left: -780px;
-  top: -43px;
-}
-
-.footer-sprite--butuanon {
-  left: -992px;
-  top: -46px;
+.footer-bar {
+  height: 8px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+  display: block;
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
