@@ -327,12 +327,12 @@ tbody td {
 
 .footer-tuv-crop {
   width: 146px;
-  height: 56px;
+  height: 64px;
 }
 
 .footer-butuanon-crop {
   width: 132px;
-  height: 54px;
+  height: 60px;
 }
 
 .footer-sprite {
@@ -351,10 +351,10 @@ tbody td {
 
 .footer-sprite--tuv {
   left: -650px;
-  top: -35px;
+  top: -31px;
 }
 
 .footer-sprite--butuanon {
   left: -827px;
-  top: -38px;
+  top: -34px;
 }
