@@ -214,9 +214,16 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
   <main class="print-document" id="printPage">
     <section class="sheet-page">
       <div class="sheet-page-content">
-        <header class="sheet-branding sheet-branding--compact">
-          <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
+        <header class="solo-print-header" aria-label="City government header">
+          <img src="../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
+          <div class="government-text-block">
+            <div class="gov-line gov-line-1">Republic of the Philippines</div>
+            <div class="gov-line gov-line-2">CITY GOVERNMENT OF <span class="city-name-highlight">BUTUAN</span></div>
+            <div class="gov-line gov-line-3">City Social Welfare and Development Department</div>
+            <div class="gov-line gov-line-4">Butuan City</div>
+          </div>
         </header>
+        <div class="header-rule-wrap" aria-hidden="true"></div>
 
         <div class="title-area">
           <div class="title-area__date">Date: <span><?= escape_html($createdDate) ?></span></div>
@@ -279,25 +286,45 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
         </section>
       </div>
 
-      <footer class="sheet-footer">
-        <div class="footer-left">
-          <div>Phone: +639562241679 / +639816016317</div>
-          <div>Email: cswdobutuan@gmail.com</div>
-          <div>Website: http://www.butuan.gov.ph</div>
+      <footer class="sheet-footer" aria-label="Contact footer">
+        <div class="footer-content">
+          <div class="footer-left">
+            <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
+            <div class="footer-contact-text">
+              <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+              <p>Email: cswdd@butuan.gov.ph</p>
+              <p>Phone: 0956-224-1679</p>
+              <p>www.butuan.gov.ph</p>
+            </div>
+          </div>
+
+          <div class="footer-center">
+            <p class="tuv-title">TUVNORD</p>
+            <p class="tuv-subtitle">Certificate Registration No. PHP</p>
+            <p class="tuv-subtitle">QMS 23 95 0116</p>
+          </div>
+
+          <div class="footer-right">
+            <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+            <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
+          </div>
         </div>
-        <div class="footer-right">
-          <img src="../../../images-logo/footer.png" alt="ButuanOn logo" />
-          <div>CSWDD.F.053.REV01</div>
-        </div>
+        <div class="footer-bar" aria-hidden="true"></div>
       </footer>
-      <div class="sheet-footer-band"></div>
     </section>
 
     <section class="sheet-page">
       <div class="sheet-page-content">
-        <header class="sheet-branding sheet-branding--compact">
-          <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
+        <header class="solo-print-header" aria-label="City government header">
+          <img src="../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
+          <div class="government-text-block">
+            <div class="gov-line gov-line-1">Republic of the Philippines</div>
+            <div class="gov-line gov-line-2">CITY GOVERNMENT OF <span class="city-name-highlight">BUTUAN</span></div>
+            <div class="gov-line gov-line-3">City Social Welfare and Development Department</div>
+            <div class="gov-line gov-line-4">Butuan City</div>
+          </div>
         </header>
+        <div class="header-rule-wrap" aria-hidden="true"></div>
 
         <section class="section-block">
           <h2>I. PRESENTING PROBLEM</h2>
@@ -326,25 +353,45 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
         </section>
       </div>
 
-      <footer class="sheet-footer">
-        <div class="footer-left">
-          <div>Phone: +639562241679 / +639816016317</div>
-          <div>Email: cswdobutuan@gmail.com</div>
-          <div>Website: http://www.butuan.gov.ph</div>
+      <footer class="sheet-footer" aria-label="Contact footer">
+        <div class="footer-content">
+          <div class="footer-left">
+            <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
+            <div class="footer-contact-text">
+              <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+              <p>Email: cswdd@butuan.gov.ph</p>
+              <p>Phone: 0956-224-1679</p>
+              <p>www.butuan.gov.ph</p>
+            </div>
+          </div>
+
+          <div class="footer-center">
+            <p class="tuv-title">TUVNORD</p>
+            <p class="tuv-subtitle">Certificate Registration No. PHP</p>
+            <p class="tuv-subtitle">QMS 23 95 0116</p>
+          </div>
+
+          <div class="footer-right">
+            <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+            <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
+          </div>
         </div>
-        <div class="footer-right">
-          <img src="../../../images-logo/footer.png" alt="ButuanOn logo" />
-          <div>CSWDD.F.053.REV01</div>
-        </div>
+        <div class="footer-bar" aria-hidden="true"></div>
       </footer>
-      <div class="sheet-footer-band"></div>
     </section>
 
     <section class="sheet-page">
       <div class="sheet-page-content">
-        <header class="sheet-branding sheet-branding--compact">
-          <img src="../../../images-logo/header.png" alt="CSWD header" class="sheet-banner" />
+        <header class="solo-print-header" aria-label="City government header">
+          <img src="../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
+          <div class="government-text-block">
+            <div class="gov-line gov-line-1">Republic of the Philippines</div>
+            <div class="gov-line gov-line-2">CITY GOVERNMENT OF <span class="city-name-highlight">BUTUAN</span></div>
+            <div class="gov-line gov-line-3">City Social Welfare and Development Department</div>
+            <div class="gov-line gov-line-4">Butuan City</div>
+          </div>
         </header>
+        <div class="header-rule-wrap" aria-hidden="true"></div>
 
         <section class="section-block">
           <h2>VII. TREATMENT PLAN</h2>
@@ -405,18 +452,31 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
         </section>
       </div>
 
-      <footer class="sheet-footer">
-        <div class="footer-left">
-          <div>Phone: +639562241679 / +639816016317</div>
-          <div>Email: cswdobutuan@gmail.com</div>
-          <div>Website: http://www.butuan.gov.ph</div>
+      <footer class="sheet-footer" aria-label="Contact footer">
+        <div class="footer-content">
+          <div class="footer-left">
+            <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
+            <div class="footer-contact-text">
+              <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+              <p>Email: cswdd@butuan.gov.ph</p>
+              <p>Phone: 0956-224-1679</p>
+              <p>www.butuan.gov.ph</p>
+            </div>
+          </div>
+
+          <div class="footer-center">
+            <p class="tuv-title">TUVNORD</p>
+            <p class="tuv-subtitle">Certificate Registration No. PHP</p>
+            <p class="tuv-subtitle">QMS 23 95 0116</p>
+          </div>
+
+          <div class="footer-right">
+            <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+            <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
+          </div>
         </div>
-        <div class="footer-right">
-          <img src="../../../images-logo/footer.png" alt="ButuanOn logo" />
-          <div>CSWDD.F.053.REV01</div>
-        </div>
+        <div class="footer-bar" aria-hidden="true"></div>
       </footer>
-      <div class="sheet-footer-band"></div>
     </section>
   </main>
 
