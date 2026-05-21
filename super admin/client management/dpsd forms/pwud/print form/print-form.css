@@ -340,19 +340,23 @@ tbody td {
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
   body {
     background: #fff;
   }
 
   .print-page {
     width: 100% !important;
-    min-height: 297mm !important;
-    height: 297mm !important;
+    min-height: calc(297mm - 20mm) !important;
+    height: calc(297mm - 20mm) !important;
     margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    break-inside: avoid-page;
-    page-break-inside: avoid;
+    padding-bottom: 0 !important;
   }
 
   .print-toolbar {
@@ -374,7 +378,7 @@ tbody td {
 
   .sheet-footer {
     margin-top: auto !important;
-    break-inside: avoid-page;
+    break-inside: avoid;
     page-break-inside: avoid;
   }
 }
