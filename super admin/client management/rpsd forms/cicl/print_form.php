@@ -15,4 +15,4 @@ $printConfig = [
     'formCode' => 'CSWDD.F.053.REV01',
 ];
 
-require __DIR__ . '/../shared/intake_print_template.php';
+require __DIR__ . '/intake_print_template.php';

@@ -116,7 +116,7 @@ if (!empty($client['created_at'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Senior Citizen Print Form</title>
-  <link rel="stylesheet" href="../../dpsd forms/pwud/print form/print-form.css" />
+  <link rel="stylesheet" href="print-form.css" />
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
@@ -125,16 +125,16 @@ if (!empty($client['created_at'])) {
   </div>
 
   <main class="print-page" id="printPage">
-    <header class="pwud-header" aria-label="PWUD form header">
-      <img src="../../../images-logo/butuanseal.png" alt="Butuan City Seal" class="pwud-header__seal" />
-      <div class="pwud-header__text">
-        <p class="pwud-header__line pwud-header__line--small">Republic of the Philippines</p>
-        <p class="pwud-header__line pwud-header__line--city">CITY GOVERNMENT OF <span>BUTUAN</span></p>
-        <p class="pwud-header__line pwud-header__line--dept">City Social Welfare and Development Department</p>
-        <p class="pwud-header__line pwud-header__line--place">Butuan City</p>
+    <header class="solo-print-header" aria-label="City government header">
+      <img src="../../../images-logo/cswd-logo.png" alt="City of Butuan Official Seal" class="city-seal-logo" />
+      <div class="government-text-block">
+        <div class="gov-line gov-line-1">Republic of the Philippines</div>
+        <div class="gov-line gov-line-2">CITY GOVERNMENT OF <span class="city-name-highlight">BUTUAN</span></div>
+        <div class="gov-line gov-line-3">City Social Welfare and Development Department</div>
+        <div class="gov-line gov-line-4">Butuan City</div>
       </div>
     </header>
-    <div class="pwud-header__rule" aria-hidden="true"></div>
+    <div class="header-rule-wrap" aria-hidden="true"></div>
 
     <section class="meta-row">
       <div></div>
@@ -222,15 +222,27 @@ if (!empty($client['created_at'])) {
     <footer class="sheet-footer" aria-label="Contact footer">
       <div class="footer-content">
         <div class="footer-left">
-          <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
-          <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
-          <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+          <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
+          <div class="footer-contact-text">
+            <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+            <p>Email: cswdd@butuan.gov.ph</p>
+            <p>Phone: 0956-224-1679</p>
+            <p>www.butuan.gov.ph</p>
+          </div>
         </div>
+
+        <div class="footer-center">
+          <p class="tuv-title">TUVNORD</p>
+          <p class="tuv-subtitle">Certificate Registration No. PHP</p>
+          <p class="tuv-subtitle">QMS 23 95 0116</p>
+        </div>
+
         <div class="footer-right">
-          <p class="footer-code">CSWDO.T.002.REV00</p>
-          <img src="../../dpsd forms/pwud/print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
         </div>
       </div>
+      <div class="footer-bar" aria-hidden="true"></div>
     </footer>
   </main>
 
