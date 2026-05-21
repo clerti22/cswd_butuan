@@ -338,3 +338,25 @@ tbody td {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .print-toolbar {
+    display: none !important;
+  }
+
+  .pwud-header__line {
+    color: #0a2353 !important;
+    background: none !important;
+    -webkit-text-fill-color: #0a2353 !important;
+  }
+
+  .pwud-header__rule {
+    height: 0 !important;
+    border-top: 11px solid #0d4a84 !important;
+    background: none !important;
+  }
+}
