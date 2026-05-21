@@ -67,10 +67,45 @@ body {
   flex-direction: column;
 }
 
-.sheet-header-image {
-  width: 100%;
-  display: block;
+
+.solo-print-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+.city-seal-logo {
+  width: 91.84px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.government-text-block {
+  padding-top: 3px;
+  line-height: 1.08;
+}
+
+.gov-line {
+  color: #001a4d;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.gov-line-1 { font-size: 13px; }
+.gov-line-2 { font-size: 16px; margin-top: 1px; letter-spacing: 0.1px; }
+.city-name-highlight { color: #7a0d0d; }
+.gov-line-3 { font-size: 15px; font-weight: 700; margin-top: 1px; }
+.gov-line-4 { font-size: 13px; font-weight: 700; margin-top: 1px; }
+
+.header-rule-wrap {
+  height: 8px;
+  margin-top: 2px;
   margin-bottom: 10px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 .title-area {
@@ -330,35 +365,91 @@ body {
   padding-top: 6px;
 }
 
-.sheet-footer {
+ .sheet-footer {
+  position: relative;
+  padding: 8px 0 0;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 12px;
-  padding-top: 6px;
-  font-size: 8.1px;
+  align-items: center;
+  padding: 2px 18px 0 18px;
 }
 
 .footer-left {
-  display: grid;
-  gap: 1px;
+  width: 58%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-qr {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 4px solid #111;
+  border-radius: 8px;
+}
+
+.footer-contact-text {
+  color: #002a7a;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.footer-contact-text p {
+  margin: 0;
+}
+
+.footer-center {
+  width: 20%;
+  text-align: center;
+  color: #0029b0;
+}
+
+.tuv-title {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.tuv-subtitle {
+  margin: 1px 0 0;
+  font-size: 12px;
+  line-height: 1.1;
+  color: #000;
 }
 
 .footer-right {
-  text-align: right;
+  width: 22%;
+  text-align: center;
 }
 
-.footer-right img {
-  width: 110px;
+.footer-logo {
+  width: 150px;
+  max-width: 100%;
   display: block;
-  margin-left: auto;
-  margin-bottom: 4px;
+  margin: 0 auto;
 }
 
-.sheet-footer-band {
-  height: 5px;
-  margin-top: 4px;
-  background: var(--blue-band);
+.footer-code {
+  margin: 3px 0 0;
+  color: #000;
+  font-size: 12px;
+}
+
+.footer-bar {
+  height: 8px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+  display: block;
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 @media print {

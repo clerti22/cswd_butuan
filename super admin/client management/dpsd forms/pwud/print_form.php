@@ -216,15 +216,27 @@ if (!empty($client['created_at'])) {
     <footer class="sheet-footer" aria-label="Contact footer">
       <div class="footer-content">
         <div class="footer-left">
-          <div class="footer-row"><span class="footer-label">Phone:</span><span class="footer-value">+639562241679 / +639816016317</span></div>
-          <div class="footer-row"><span class="footer-label">Email:</span><span class="footer-value underline">cswdobutuan@gmail.com</span></div>
-          <div class="footer-row"><span class="footer-label">Website:</span><span class="footer-value underline">http://www.butuan.gov.ph</span></div>
+          <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
+          <div class="footer-contact-text">
+            <p>Jose Rosales Ave. Brgy. Tandang Sora, Butuan City</p>
+            <p>Email: cswdd@butuan.gov.ph</p>
+            <p>Phone: 0956-224-1679</p>
+            <p>www.butuan.gov.ph</p>
+          </div>
         </div>
+
+        <div class="footer-center">
+          <p class="tuv-title">TUVNORD</p>
+          <p class="tuv-subtitle">Certificate Registration No. PHP</p>
+          <p class="tuv-subtitle">QMS 23 95 0116</p>
+        </div>
+
         <div class="footer-right">
-          <p class="footer-code">CSWDO.T.002.REV00</p>
-          <img src="print form/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
+          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
         </div>
       </div>
+      <div class="footer-bar" aria-hidden="true"></div>
     </footer>
   </main>
 
