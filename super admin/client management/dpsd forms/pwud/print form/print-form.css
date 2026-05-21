@@ -338,3 +338,47 @@ tbody td {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .print-page {
+    width: 100% !important;
+    min-height: calc(297mm - 20mm) !important;
+    height: calc(297mm - 20mm) !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+
+  .print-toolbar {
+    display: none !important;
+  }
+
+  .pwud-header__line {
+    color: #0a2353 !important;
+    background: none !important;
+    -webkit-text-fill-color: #0a2353 !important;
+  }
+
+  .pwud-header__rule {
+    height: 0 !important;
+    border-top: 11px solid transparent !important;
+    border-image: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%) 1 !important;
+    background: none !important;
+  }
+
+  .sheet-footer {
+    margin-top: auto !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
