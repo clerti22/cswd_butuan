@@ -1,0 +1,425 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ececec;
+  color: #000;
+}
+
+:root {
+  --sheet-width: min(210mm, calc(100vw - 32px));
+  --sheet-padding-x: 16px;
+  --sheet-padding-top: 8px;
+}
+
+.print-toolbar {
+  width: var(--sheet-width);
+  margin: 12px auto 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.print-btn {
+  border: 1px solid #1e6cb3;
+  background: #1e6cb3;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.print-btn:hover {
+  background: #135389;
+}
+
+.print-hint {
+  margin: 0;
+  font-size: 12px;
+  color: #222;
+}
+
+.print-page {
+  width: var(--sheet-width);
+  min-height: 297mm;
+  margin: 0 auto 16px;
+  background: #fff;
+  padding: var(--sheet-padding-top) var(--sheet-padding-x) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pwud-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.pwud-header__seal {
+  width: 91.84px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.pwud-header__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  line-height: 1.1;
+}
+
+.pwud-header__line {
+  margin: 0;
+  color: #0a2353;
+  background: linear-gradient(90deg, #062a63 0%, #1c5fb8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pwud-header__line--small {
+  font-size: 13px;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.pwud-header__line--city {
+  font-size: 13px;
+  font-family: "Times New Roman", Times, serif;
+  letter-spacing: 0.2px;
+}
+
+.pwud-header__line--city span {
+  color: #1c5fb8;
+}
+
+.pwud-header__line--dept {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.pwud-header__line--place {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.pwud-header__rule {
+  width: 100%;
+  height: 11px;
+  background: linear-gradient(90deg, #062a63 0%, #3aa4df 100%);
+  margin-top: 8px;
+}
+
+
+.solo-print-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 2px;
+  padding: 0 4px;
+}
+
+.city-seal-logo {
+  width: 91.84px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.government-text-block {
+  padding-top: 3px;
+  line-height: 1.08;
+}
+
+.gov-line {
+  color: #001a4d;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.gov-line-1 { font-size: 13px; }
+.gov-line-2 { font-size: 16px; margin-top: 1px; letter-spacing: 0.1px; }
+.city-name-highlight { color: #7a0d0d; }
+.gov-line-3 { font-size: 15px; font-weight: 700; margin-top: 1px; }
+.gov-line-4 { font-size: 13px; font-weight: 700; margin-top: 1px; }
+
+.header-rule-wrap {
+  width: 100%;
+  height: 8px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.meta-boxes {
+  width: 40%;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+.box {
+  width: 34px;
+  height: 14px;
+  border: 1px solid #000;
+  margin-right: 6px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 70px;
+  margin-top: 18px;
+}
+
+.title-row h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.title-row p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.identifying-data {
+  margin-top: 20px;
+}
+
+.identifying-data h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info-grid p,
+.services {
+  margin: 2px 0;
+  font-size: 18px;
+  line-height: 1.08;
+}
+
+.label {
+  display: inline-block;
+  min-width: 124px;
+}
+
+.colon {
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+}
+
+.family-section {
+  margin-top: 54px;
+}
+
+.family-section h2 {
+  font-size: 20px;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #000;
+  padding: 2px 6px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+th {
+  text-align: left;
+}
+
+th:nth-child(4) {
+  text-align: center;
+}
+
+tbody td {
+  height: 22px;
+}
+
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 54px;
+  padding: 0 12px;
+  font-size: 16px;
+}
+
+.sign-block {
+  width: 43%;
+}
+
+.sign-block p {
+  margin: 0;
+}
+
+.line-name {
+  margin: 20px 0 3px !important;
+  border-bottom: 1px solid #000;
+  width: 138px;
+  padding-bottom: 1px;
+}
+
+.sheet-footer {
+  position: relative;
+  padding: 8px 0 0;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 18px 0 18px;
+}
+
+.footer-left {
+  width: 58%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-qr {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 4px solid #111;
+  border-radius: 8px;
+}
+
+.footer-contact-text {
+  color: #002a7a;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.footer-contact-text p {
+  margin: 0;
+}
+
+.footer-center {
+  width: 20%;
+  text-align: center;
+  color: #0029b0;
+}
+
+.tuv-title {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.tuv-subtitle {
+  margin: 1px 0 0;
+  font-size: 12px;
+  line-height: 1.1;
+  color: #000;
+}
+
+.footer-right {
+  width: 22%;
+  text-align: center;
+}
+
+.footer-logo {
+  width: 150px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.footer-code {
+  margin: 3px 0 0;
+  color: #000;
+  font-size: 12px;
+}
+
+.footer-bar {
+  height: 8px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #36afe7 0%, #0d4a84 100%);
+  display: block;
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 8mm 8mm 0 8mm;
+}
+
+@media print {
+  body {
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-toolbar {
+    display: none !important;
+  }
+
+  .print-page {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .pwud-header__line {
+    color: #0a2353 !important;
+    background: none !important;
+    -webkit-text-fill-color: #0a2353 !important;
+  }
+
+  .sheet-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 8mm;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  .footer-content {
+    padding-bottom: 0;
+  }
+
+  .footer-bar {
+    margin-top: 4px;
+  }
+}
