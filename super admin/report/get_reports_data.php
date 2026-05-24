@@ -123,6 +123,18 @@ try {
     ksort($monthCounts);
 
     $householdInterventions = build_households_with_multiple_interventions($filtered);
+    $personProgramCounts = build_person_program_counts($filtered);
+
+    foreach ($rows as &$row) {
+        $personKey = implode('|', [
+            strtolower(trim((string) ($row['full_name'] ?? ''))),
+            trim((string) ($row['birthday'] ?? '')),
+            strtolower(trim((string) ($row['sex'] ?? ''))),
+        ]);
+
+        $row['interventions_count'] = $personProgramCounts[$personKey] ?? 0;
+    }
+    unset($row);
 
     $filterOptions = [
         'programs' => array_values(array_unique(array_map(static fn(array $row): string => (string) ($row['program'] ?? ''), $allRecords))),
