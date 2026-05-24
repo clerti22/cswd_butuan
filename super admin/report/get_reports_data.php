@@ -11,6 +11,7 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     $service = new ReportDataService();
     $allRecords = $service->getAllRecords();
+    $globalPersonProgramCounts = build_person_program_counts($allRecords);
 
     $filters = [
         'program' => trim((string) ($_GET['program'] ?? '')),
@@ -123,7 +124,7 @@ try {
     ksort($monthCounts);
 
     $householdInterventions = build_households_with_multiple_interventions($filtered);
-    $personProgramCounts = build_person_program_counts($filtered);
+    $personProgramCounts = $globalPersonProgramCounts;
 
     foreach ($rows as &$row) {
         $personKey = implode('|', [
