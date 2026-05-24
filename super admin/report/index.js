@@ -464,11 +464,11 @@ async function exportPdf() {
     const appliedFilters = getFilterValues();
 
     doc.setFontSize(14);
-    doc.text('CSWDD Reports and Analytics', 14, 34);
+    doc.text('CSWDD Reports and Analytics', 14, 48);
     doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 40);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 54);
 
-    let y = 46;
+    let y = 60;
     doc.text('Applied Filters:', 14, y);
     y += 5;
 
@@ -502,7 +502,7 @@ async function exportPdf() {
         startY: y,
         head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Age Bracket', 'Date']],
         body: rows,
-        margin: { top: 32, bottom: 22 },
+        margin: { top: 44, bottom: 22 },
         styles: { fontSize: 8 }
     });
 
