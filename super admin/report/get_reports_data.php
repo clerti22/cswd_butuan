@@ -128,7 +128,9 @@ try {
 
     foreach ($rows as &$row) {
         $personKey = implode('|', [
-            strtolower(trim((string) ($row['full_name'] ?? ''))),
+            strtolower(trim((string) ($row['first_name'] ?? ''))),
+            strtolower(trim((string) ($row['last_name'] ?? ''))),
+            strtolower(trim((string) ($row['suffix'] ?? ''))),
             trim((string) ($row['birthday'] ?? '')),
             strtolower(trim((string) ($row['sex'] ?? ''))),
         ]);

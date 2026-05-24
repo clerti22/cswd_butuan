@@ -339,15 +339,17 @@ function build_person_program_counts(array $records): array
     $personPrograms = [];
 
     foreach ($records as $row) {
-        $fullName = strtolower(trim((string) ($row['full_name'] ?? '')));
+        $firstName = strtolower(trim((string) ($row['first_name'] ?? '')));
+        $lastName = strtolower(trim((string) ($row['last_name'] ?? '')));
+        $suffix = strtolower(trim((string) ($row['suffix'] ?? '')));
         $birthday = trim((string) ($row['birthday'] ?? ''));
         $sex = strtolower(trim((string) ($row['sex'] ?? '')));
 
-        if ($fullName === '' || $birthday === '' || $sex === '') {
+        if ($firstName === '' || $lastName === '' || $birthday === '' || $sex === '') {
             continue;
         }
 
-        $personKey = implode('|', [$fullName, $birthday, $sex]);
+        $personKey = implode('|', [$firstName, $lastName, $suffix, $birthday, $sex]);
         if (!isset($personPrograms[$personKey])) {
             $personPrograms[$personKey] = [];
         }

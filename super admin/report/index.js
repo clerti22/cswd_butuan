@@ -151,7 +151,7 @@ function renderTable(rows) {
             <td>${row.sex || '-'}</td>
             <td>${row.age ?? '-'}</td>
             <td>${row.age_bracket || '-'}</td>
-            <td>${Number(row.interventions_count || 0)} program${Number(row.interventions_count || 0) === 1 ? '' : 's'}</td>
+            <td>${Number(row.interventions_count || 0)}</td>
             <td>${row.created_at || '-'}</td>
         </tr>
     `).join('');
