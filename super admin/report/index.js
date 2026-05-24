@@ -42,6 +42,10 @@ const householdView = document.getElementById('householdView');
 
 const tabButtons = document.querySelectorAll('.tab-btn');
 const sortHeaders = document.querySelectorAll('th[data-sort]');
+const pdfPreviewModal = document.getElementById('pdfPreviewModal');
+const pdfPreviewFrame = document.getElementById('pdfPreviewFrame');
+const pdfDownloadBtn = document.getElementById('pdfDownloadBtn');
+const pdfCloseBtn = document.getElementById('pdfCloseBtn');
 
 const state = {
     page: 1,
@@ -51,6 +55,10 @@ const state = {
     sort_dir: 'desc',
     data: null
 };
+
+let previewPdfBlobUrl = null;
+let previewPdfFilename = '';
+
 
 const charts = {};
 
@@ -302,6 +310,51 @@ function switchView(view) {
     householdView.classList.toggle('hidden', view !== 'household');
 }
 
+
+function closePdfPreview() {
+    pdfPreviewModal?.classList.add('hidden');
+    if (pdfPreviewFrame) {
+        pdfPreviewFrame.src = 'about:blank';
+    }
+
+    if (previewPdfBlobUrl) {
+        URL.revokeObjectURL(previewPdfBlobUrl);
+        previewPdfBlobUrl = null;
+    }
+
+    previewPdfFilename = '';
+}
+
+function openPdfPreview(blob, filename) {
+    if (!pdfPreviewModal || !pdfPreviewFrame) {
+        throw new Error('PDF preview UI is missing.');
+    }
+
+    if (previewPdfBlobUrl) {
+        URL.revokeObjectURL(previewPdfBlobUrl);
+    }
+
+    previewPdfBlobUrl = URL.createObjectURL(blob);
+    previewPdfFilename = filename;
+
+    // Works both for frontend-generated PDFs and backend PDF endpoints.
+    // If integrating with a backend endpoint, set iframe src to endpoint URL
+    // (for example: /report/export_pdf.php?...query) and keep this same UI.
+    pdfPreviewFrame.src = previewPdfBlobUrl;
+    pdfPreviewModal.classList.remove('hidden');
+}
+
+function downloadPreviewPdf() {
+    if (!previewPdfBlobUrl) return;
+
+    const link = document.createElement('a');
+    link.href = previewPdfBlobUrl;
+    link.download = previewPdfFilename || `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
 async function exportPdf() {
     if (!state.data || !window.jspdf) return;
 
@@ -351,7 +404,9 @@ async function exportPdf() {
         styles: { fontSize: 8 }
     });
 
-    doc.save(`cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+    const filename = `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    const pdfBlob = doc.output('blob');
+    openPdfPreview(pdfBlob, filename);
 }
 
 document.getElementById('generateReportBtn')?.addEventListener('click', () => {
@@ -367,6 +422,19 @@ document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
     state.search = '';
     tableSearchInput.value = '';
     loadReports().catch(console.error);
+});
+
+pdfCloseBtn?.addEventListener('click', closePdfPreview);
+pdfDownloadBtn?.addEventListener('click', downloadPreviewPdf);
+pdfPreviewModal?.addEventListener('click', (event) => {
+    if (event.target === pdfPreviewModal) {
+        closePdfPreview();
+    }
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && pdfPreviewModal && !pdfPreviewModal.classList.contains('hidden')) {
+        closePdfPreview();
+    }
 });
 
 document.getElementById('exportPdfBtn')?.addEventListener('click', () => {
