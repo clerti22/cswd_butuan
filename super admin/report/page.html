@@ -123,10 +123,6 @@
                             <h3>Age Bracket Distribution</h3>
                             <div id="chartAge" class="chart-canvas"></div>
                         </article>
-                        <article class="panel chart-panel">
-                            <h3>Sector Distribution</h3>
-                            <div id="chartSector" class="chart-canvas"></div>
-                        </article>
                     </div>
                 </section>
 
@@ -145,10 +141,7 @@
                                     <th data-sort="sex">Sex</th>
                                     <th data-sort="age">Age</th>
                                     <th>Age Bracket</th>
-                                    <th data-sort="sector">Sector</th>
-                                    <th>Household</th>
-                                    <th>Interventions</th>
-                                    <th data-sort="created_at">Date</th>
+                                                                        <th data-sort="created_at">Date</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody"></tbody>
@@ -177,6 +170,22 @@
 
                 <p id="emptyState" class="empty-state hidden">No data found for the selected filters.</p>
             </main>
+        </div>
+    </div>
+
+
+    <div class="pdf-preview-modal hidden" id="pdfPreviewModal" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+        <div class="pdf-preview-dialog">
+            <div class="pdf-preview-header">
+                <h3 id="pdfPreviewTitle">PDF Preview</h3>
+                <div class="pdf-preview-actions">
+                    <button type="button" id="pdfDownloadBtn" class="btn btn-success">Download</button>
+                    <button type="button" id="pdfCloseBtn" class="btn btn-muted">Close</button>
+                </div>
+            </div>
+            <div class="pdf-preview-body">
+                <iframe id="pdfPreviewFrame" title="Report PDF Preview"></iframe>
+            </div>
         </div>
     </div>
 

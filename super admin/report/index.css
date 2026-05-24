@@ -208,3 +208,49 @@ th { background: #f9fafb; color: #374151; cursor: pointer; }
         display: block;
     }
 }
+
+
+.pdf-preview-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.72);
+    z-index: 1300;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-preview-dialog {
+    width: min(1100px, 100%);
+    height: min(88vh, 900px);
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.pdf-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.pdf-preview-actions { display: flex; gap: 8px; }
+
+.pdf-preview-body {
+    flex: 1;
+    min-height: 0;
+    background: #f3f4f6;
+}
+
+#pdfPreviewFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
