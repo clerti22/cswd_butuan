@@ -58,6 +58,7 @@ const state = {
 
 let previewPdfBlobUrl = null;
 let previewPdfFilename = '';
+const pdfAssetCache = new Map();
 
 
 const charts = {};
@@ -356,42 +357,91 @@ function downloadPreviewPdf() {
 }
 
 
-function drawReportHeaderAndFooter(doc, pageNumber, pageCount) {
+
+async function loadImageDataUrl(path) {
+    if (pdfAssetCache.has(path)) return pdfAssetCache.get(path);
+
+    try {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Failed to load image: ${path}`);
+        const blob = await response.blob();
+        const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+        pdfAssetCache.set(path, dataUrl);
+        return dataUrl;
+    } catch (error) {
+        console.warn('PDF asset load failed:', path, error);
+        pdfAssetCache.set(path, null);
+        return null;
+    }
+}
+
+async function drawReportHeaderAndFooter(doc, pageNumber, pageCount) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
-    // Header (adapted from Solo Parent Form print header)
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text('Republic of the Philippines', pageWidth / 2, 10, { align: 'center' });
+    const headerImagePath = '../client management/dpsd forms/pwud/print form/header.png';
+    const qrImagePath = '../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg';
+    const footerLogoPath = '../client management/dpsd forms/pwud/print form/footer.png';
 
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('CITY GOVERNMENT OF BUTUAN', pageWidth / 2, 15, { align: 'center' });
+    const headerImageData = await loadImageDataUrl(headerImagePath);
+    if (headerImageData) {
+        doc.addImage(headerImageData, 'PNG', 12, 6, pageWidth - 24, 24);
+    } else {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('CITY GOVERNMENT OF BUTUAN', pageWidth / 2, 15, { align: 'center' });
+    }
 
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text('City Social Welfare and Development Department', pageWidth / 2, 20, { align: 'center' });
-    doc.text('Butuan City', pageWidth / 2, 24, { align: 'center' });
+    doc.setDrawColor(15, 82, 146);
+    doc.setFillColor(80, 195, 245);
+    doc.rect(12, 29, pageWidth - 24, 1.3, 'F');
+    doc.setFillColor(11, 61, 110);
+    doc.rect(pageWidth * 0.58, 29, (pageWidth - 24) * 0.42, 1.3, 'F');
 
-    doc.setDrawColor(31, 41, 55);
-    doc.setLineWidth(0.4);
-    doc.line(12, 27, pageWidth - 12, 27);
-
-    // Footer (adapted from Solo Parent Form print footer)
     const footerTop = pageHeight - 16;
-    doc.setDrawColor(209, 213, 219);
-    doc.setLineWidth(0.3);
-    doc.line(12, footerTop - 4, pageWidth - 12, footerTop - 4);
+    doc.setFillColor(11, 61, 110);
+    doc.rect(12, footerTop - 7.5, pageWidth - 24, 1.5, 'F');
+
+    const qrImageData = await loadImageDataUrl(qrImagePath);
+    if (qrImageData) {
+        doc.addImage(qrImageData, 'JPEG', 16, footerTop - 5, 12, 12);
+    } else {
+        doc.rect(16, footerTop - 5, 12, 12);
+    }
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.text('Jose Rosales Ave. Brgy. Tandang Sora, Butuan City', 12, footerTop);
-    doc.text('Email: cswdd@butuan.gov.ph | Phone: 0956-224-1679 | www.butuan.gov.ph', 12, footerTop + 4);
+    doc.setTextColor(0, 51, 153);
+    doc.setFontSize(7);
+    doc.text('Jose Rosales Ave. Brgy. Tandang Sora, Butuan City', 31, footerTop - 0.5);
+    doc.text('Email: cswdd@butuan.gov.ph', 31, footerTop + 2.5);
+    doc.text('Phone: 0956-224-1679', 31, footerTop + 5.5);
+    doc.text('www.butuan.gov.ph', 31, footerTop + 8.5);
 
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(8);
-    doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth - 12, footerTop + 4, { align: 'right' });
-    doc.text('CSWDD.RSPD.R.017.REV02', pageWidth - 12, footerTop, { align: 'right' });
+    doc.text('TUVNORD', pageWidth - 66, footerTop + 1, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.text('Certificate Registration', pageWidth - 66, footerTop + 4, { align: 'center' });
+    doc.text('No. PHP', pageWidth - 66, footerTop + 7, { align: 'center' });
+    doc.text('QMS 23 95 0116', pageWidth - 66, footerTop + 10, { align: 'center' });
+
+    const footerLogoData = await loadImageDataUrl(footerLogoPath);
+    if (footerLogoData) {
+        doc.addImage(footerLogoData, 'PNG', pageWidth - 46, footerTop - 2.5, 30, 10);
+    }
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(70, 70, 70);
+    doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth - 12, pageHeight - 2.5, { align: 'right' });
+    doc.setTextColor(0, 0, 0);
 }
 
 async function exportPdf() {
@@ -447,7 +497,7 @@ async function exportPdf() {
     const pageCount = doc.internal.getNumberOfPages();
     for (let page = 1; page <= pageCount; page += 1) {
         doc.setPage(page);
-        drawReportHeaderAndFooter(doc, page, pageCount);
+        await drawReportHeaderAndFooter(doc, page, pageCount);
     }
 
     const filename = `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
