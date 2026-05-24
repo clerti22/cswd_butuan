@@ -384,24 +384,36 @@ async function drawReportHeaderAndFooter(doc, pageNumber, pageCount) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
-    const headerImagePath = '../client management/dpsd forms/pwud/print form/header.png';
+    const sealImagePath = '../images-logo/butuanseal.png';
     const qrImagePath = '../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg';
     const footerLogoPath = '../client management/dpsd forms/pwud/print form/footer.png';
 
-    const headerImageData = await loadImageDataUrl(headerImagePath);
-    if (headerImageData) {
-        doc.addImage(headerImageData, 'PNG', 12, 6, pageWidth - 24, 24);
-    } else {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('CITY GOVERNMENT OF BUTUAN', pageWidth / 2, 15, { align: 'center' });
+    // Exact PWUD print-form header structure (seal + 4 text lines + blue rule)
+    const sealImageData = await loadImageDataUrl(sealImagePath);
+    if (sealImageData) {
+        doc.addImage(sealImageData, 'PNG', 12, 7, 20, 20);
     }
 
-    doc.setDrawColor(15, 82, 146);
-    doc.setFillColor(80, 195, 245);
-    doc.rect(12, 29, pageWidth - 24, 1.3, 'F');
-    doc.setFillColor(11, 61, 110);
-    doc.rect(pageWidth * 0.58, 29, (pageWidth - 24) * 0.42, 1.3, 'F');
+    doc.setFont('times', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(10, 35, 83);
+    doc.text('Republic of the Philippines', 36, 12);
+
+    doc.setFontSize(14);
+    doc.text('CITY GOVERNMENT OF ', 36, 17);
+    doc.setTextColor(165, 42, 42);
+    doc.text('BUTUAN', 83.5, 17);
+
+    doc.setTextColor(10, 35, 83);
+    doc.setFont('times', 'bold');
+    doc.setFontSize(12);
+    doc.text('City Social Welfare and Development Department', 36, 22.5);
+    doc.text('Butuan City', 36, 27.5);
+
+    doc.setFillColor(71, 187, 236);
+    doc.rect(12, 30, pageWidth - 24, 1.8, 'F');
+    doc.setFillColor(17, 73, 136);
+    doc.rect(pageWidth * 0.63, 30, (pageWidth - 24) * 0.37, 1.8, 'F');
 
     const footerTop = pageHeight - 16;
     doc.setFillColor(11, 61, 110);
