@@ -42,6 +42,10 @@ const householdView = document.getElementById('householdView');
 
 const tabButtons = document.querySelectorAll('.tab-btn');
 const sortHeaders = document.querySelectorAll('th[data-sort]');
+const pdfPreviewModal = document.getElementById('pdfPreviewModal');
+const pdfPreviewFrame = document.getElementById('pdfPreviewFrame');
+const pdfDownloadBtn = document.getElementById('pdfDownloadBtn');
+const pdfCloseBtn = document.getElementById('pdfCloseBtn');
 
 const state = {
     page: 1,
@@ -51,6 +55,10 @@ const state = {
     sort_dir: 'desc',
     data: null
 };
+
+let previewPdfBlobUrl = null;
+let previewPdfFilename = '';
+
 
 const charts = {};
 
@@ -138,7 +146,7 @@ function fillSelectOptions(selectElement, values, defaultLabel) {
 
 function renderTable(rows) {
     if (!rows.length) {
-        tableBody.innerHTML = '<tr><td colspan="11">No records found.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
         return;
     }
 
@@ -151,9 +159,6 @@ function renderTable(rows) {
             <td>${row.sex || '-'}</td>
             <td>${row.age ?? '-'}</td>
             <td>${row.age_bracket || '-'}</td>
-            <td>${row.sector || '-'}</td>
-            <td>${row.household || '-'}</td>
-            <td>${row.interventions || '-'}</td>
             <td>${row.created_at || '-'}</td>
         </tr>
     `).join('');
@@ -305,6 +310,90 @@ function switchView(view) {
     householdView.classList.toggle('hidden', view !== 'household');
 }
 
+
+function closePdfPreview() {
+    pdfPreviewModal?.classList.add('hidden');
+    if (pdfPreviewFrame) {
+        pdfPreviewFrame.src = 'about:blank';
+    }
+
+    if (previewPdfBlobUrl) {
+        URL.revokeObjectURL(previewPdfBlobUrl);
+        previewPdfBlobUrl = null;
+    }
+
+    previewPdfFilename = '';
+}
+
+function openPdfPreview(blob, filename) {
+    if (!pdfPreviewModal || !pdfPreviewFrame) {
+        throw new Error('PDF preview UI is missing.');
+    }
+
+    if (previewPdfBlobUrl) {
+        URL.revokeObjectURL(previewPdfBlobUrl);
+    }
+
+    previewPdfBlobUrl = URL.createObjectURL(blob);
+    previewPdfFilename = filename;
+
+    // Works both for frontend-generated PDFs and backend PDF endpoints.
+    // If integrating with a backend endpoint, set iframe src to endpoint URL
+    // (for example: /report/export_pdf.php?...query) and keep this same UI.
+    pdfPreviewFrame.src = previewPdfBlobUrl;
+    pdfPreviewModal.classList.remove('hidden');
+}
+
+function downloadPreviewPdf() {
+    if (!previewPdfBlobUrl) return;
+
+    const link = document.createElement('a');
+    link.href = previewPdfBlobUrl;
+    link.download = previewPdfFilename || `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
+
+function drawReportHeaderAndFooter(doc, pageNumber, pageCount) {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    // Header (adapted from Solo Parent Form print header)
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Republic of the Philippines', pageWidth / 2, 10, { align: 'center' });
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CITY GOVERNMENT OF BUTUAN', pageWidth / 2, 15, { align: 'center' });
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('City Social Welfare and Development Department', pageWidth / 2, 20, { align: 'center' });
+    doc.text('Butuan City', pageWidth / 2, 24, { align: 'center' });
+
+    doc.setDrawColor(31, 41, 55);
+    doc.setLineWidth(0.4);
+    doc.line(12, 27, pageWidth - 12, 27);
+
+    // Footer (adapted from Solo Parent Form print footer)
+    const footerTop = pageHeight - 16;
+    doc.setDrawColor(209, 213, 219);
+    doc.setLineWidth(0.3);
+    doc.line(12, footerTop - 4, pageWidth - 12, footerTop - 4);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.text('Jose Rosales Ave. Brgy. Tandang Sora, Butuan City', 12, footerTop);
+    doc.text('Email: cswdd@butuan.gov.ph | Phone: 0956-224-1679 | www.butuan.gov.ph', 12, footerTop + 4);
+
+    doc.setFontSize(8);
+    doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth - 12, footerTop + 4, { align: 'right' });
+    doc.text('CSWDD.RSPD.R.017.REV02', pageWidth - 12, footerTop, { align: 'right' });
+}
+
 async function exportPdf() {
     if (!state.data || !window.jspdf) return;
 
@@ -313,11 +402,11 @@ async function exportPdf() {
     const appliedFilters = getFilterValues();
 
     doc.setFontSize(14);
-    doc.text('CSWDD Reports and Analytics', 14, 14);
+    doc.text('CSWDD Reports and Analytics', 14, 34);
     doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 20);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 40);
 
-    let y = 26;
+    let y = 46;
     doc.text('Applied Filters:', 14, y);
     y += 5;
 
@@ -351,10 +440,19 @@ async function exportPdf() {
         startY: y,
         head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Age Bracket', 'Date']],
         body: rows,
+        margin: { top: 32, bottom: 22 },
         styles: { fontSize: 8 }
     });
 
-    doc.save(`cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        drawReportHeaderAndFooter(doc, page, pageCount);
+    }
+
+    const filename = `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    const pdfBlob = doc.output('blob');
+    openPdfPreview(pdfBlob, filename);
 }
 
 document.getElementById('generateReportBtn')?.addEventListener('click', () => {
@@ -370,6 +468,19 @@ document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
     state.search = '';
     tableSearchInput.value = '';
     loadReports().catch(console.error);
+});
+
+pdfCloseBtn?.addEventListener('click', closePdfPreview);
+pdfDownloadBtn?.addEventListener('click', downloadPreviewPdf);
+pdfPreviewModal?.addEventListener('click', (event) => {
+    if (event.target === pdfPreviewModal) {
+        closePdfPreview();
+    }
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && pdfPreviewModal && !pdfPreviewModal.classList.contains('hidden')) {
+        closePdfPreview();
+    }
 });
 
 document.getElementById('exportPdfBtn')?.addEventListener('click', () => {
