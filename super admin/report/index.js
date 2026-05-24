@@ -138,7 +138,7 @@ function fillSelectOptions(selectElement, values, defaultLabel) {
 
 function renderTable(rows) {
     if (!rows.length) {
-        tableBody.innerHTML = '<tr><td colspan="11">No records found.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="9">No records found.</td></tr>';
         return;
     }
 
@@ -151,9 +151,7 @@ function renderTable(rows) {
             <td>${row.sex || '-'}</td>
             <td>${row.age ?? '-'}</td>
             <td>${row.age_bracket || '-'}</td>
-            <td>${row.sector || '-'}</td>
-            <td>${row.household || '-'}</td>
-            <td>${row.interventions || '-'}</td>
+            <td>${Number(row.interventions_count || 0)}</td>
             <td>${row.created_at || '-'}</td>
         </tr>
     `).join('');
