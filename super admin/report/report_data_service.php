@@ -329,6 +329,43 @@ function apply_report_filters(array $records, array $filters): array
  * @param array<int, array<string, mixed>> $records
  * @return array<int, array<string, mixed>>
  */
+
+/**
+ * @param array<int, array<string, mixed>> $records
+ * @return array<string, int>
+ */
+function build_person_program_counts(array $records): array
+{
+    $personPrograms = [];
+
+    foreach ($records as $row) {
+        $fullName = strtolower(trim((string) ($row['full_name'] ?? '')));
+        $birthday = trim((string) ($row['birthday'] ?? ''));
+        $sex = strtolower(trim((string) ($row['sex'] ?? '')));
+
+        if ($fullName === '' || $birthday === '' || $sex === '') {
+            continue;
+        }
+
+        $personKey = implode('|', [$fullName, $birthday, $sex]);
+        if (!isset($personPrograms[$personKey])) {
+            $personPrograms[$personKey] = [];
+        }
+
+        $program = trim((string) ($row['program'] ?? ''));
+        if ($program !== '') {
+            $personPrograms[$personKey][strtolower($program)] = true;
+        }
+    }
+
+    $programCounts = [];
+    foreach ($personPrograms as $personKey => $programs) {
+        $programCounts[$personKey] = count($programs);
+    }
+
+    return $programCounts;
+}
+
 function build_households_with_multiple_interventions(array $records): array
 {
     $grouped = [];
