@@ -630,7 +630,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .radio-group {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   align-items: center;
   padding-top: 6px;
   flex-wrap: wrap;
@@ -639,9 +639,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .radio-option {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 4px;
+  font-size: 11px;
   color: #2a2a2a;
+  white-space: nowrap;
+  line-height: 1.1;
 }
 
 .radio-option input {
