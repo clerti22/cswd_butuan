@@ -360,7 +360,7 @@ $currentDate = date('F d, Y');
 
         <div class="footer-right">
           <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
-          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
+          <p class="footer-code">CSWDD.DPSD.F.014.REV00</p>
         </div>
       </div>
       <div class="footer-bar" aria-hidden="true"></div>
