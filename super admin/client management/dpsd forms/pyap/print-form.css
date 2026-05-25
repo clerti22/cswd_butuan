@@ -19,6 +19,12 @@ body {
   align-items: center;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .print-btn {
   border: 1px solid #1e6cb3;
   background: #1e6cb3;
@@ -29,7 +35,63 @@ body {
   cursor: pointer;
 }
 
+.print-btn--secondary {
+  background: #fff;
+  color: #1e6cb3;
+}
+
+.print-btn--secondary:hover {
+  background: #e8f1fb;
+}
+
 .print-hint { margin: 0; font-size: 12px; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.modal-overlay.is-open {
+  display: flex;
+}
+
+.modal {
+  width: min(520px, calc(100vw - 24px));
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.modal h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.modal-field input {
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
 
 .print-page {
   width: var(--page-width);
@@ -305,6 +367,7 @@ body {
   @page { size: legal portrait; margin: 0.22in; }
   body { background: #fff; }
   .print-toolbar { display: none; }
+  .modal-overlay { display: none !important; }
   .print-page {
     margin: 0;
     width: 100%;
