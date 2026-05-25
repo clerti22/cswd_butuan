@@ -633,6 +633,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 16px;
   align-items: center;
   padding-top: 6px;
+  flex-wrap: wrap;
 }
 
 .radio-option {
