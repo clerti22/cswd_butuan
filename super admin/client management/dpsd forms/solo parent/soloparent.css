@@ -630,21 +630,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .radio-group {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   align-items: center;
   padding-top: 6px;
+  flex-wrap: wrap;
 }
 
 .radio-option {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 4px;
+  font-size: 11px;
   color: #2a2a2a;
+  white-space: nowrap;
+  line-height: 1.1;
 }
 
 .radio-option input {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  padding: 0;
   accent-color: #2b3ea8;
+  box-shadow: none;
+  flex: 0 0 auto;
 }
 
 .eligibility-section {
