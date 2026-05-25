@@ -114,7 +114,10 @@ if (!empty($client['created_at'])) {
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <button type="button" id="editSocialWorkerButton" class="print-btn print-btn--secondary">Edit Social Worker</button>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -208,7 +211,7 @@ if (!empty($client['created_at'])) {
       </div>
       <div class="sign-block">
         <p>Reviewed by:</p>
-        <p class="line-name"></p>
+        <p class="line-name" id="socialWorkerName"></p>
         <p>Social Worker</p>
       </div>
     </section>
