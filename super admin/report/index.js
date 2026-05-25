@@ -493,13 +493,12 @@ async function exportPdf() {
         row.barangay || '-',
         row.sex || '-',
         String(row.age ?? '-'),
-        row.age_bracket || '-',
         row.created_at || '-'
     ]);
 
     doc.autoTable({
         startY: y,
-        head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Age Bracket', 'Date']],
+        head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Date']],
         body: rows,
         margin: { top: 44, bottom: 22 },
         styles: { fontSize: 8 }
