@@ -645,7 +645,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .radio-option input {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  padding: 0;
   accent-color: #2b3ea8;
+  box-shadow: none;
+  flex: 0 0 auto;
 }
 
 .eligibility-section {
