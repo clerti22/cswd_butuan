@@ -9,96 +9,96 @@ require_login(['super admin', 'admin']);
 
 function escape_html(string $value): string
 {
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+  return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
 function build_full_name(array $record): string
 {
-    $parts = [
-        trim((string) ($record['first_name'] ?? '')),
-        trim((string) ($record['middle_name'] ?? '')),
-        trim((string) ($record['last_name'] ?? '')),
-        trim((string) ($record['suffix'] ?? '')),
-    ];
+  $parts = [
+    trim((string) ($record['first_name'] ?? '')),
+    trim((string) ($record['middle_name'] ?? '')),
+    trim((string) ($record['last_name'] ?? '')),
+    trim((string) ($record['suffix'] ?? '')),
+  ];
 
-    return trim(implode(' ', array_values(array_filter($parts, static fn(string $part): bool => $part !== ''))));
+  return trim(implode(' ', array_values(array_filter($parts, static fn(string $part): bool => $part !== ''))));
 }
 
 function format_date_value(?string $value, string $format = 'm/d/Y'): string
 {
-    $rawValue = trim((string) $value);
-    if ($rawValue === '' || $rawValue === '0000-00-00') {
-        return '';
-    }
+  $rawValue = trim((string) $value);
+  if ($rawValue === '' || $rawValue === '0000-00-00') {
+    return '';
+  }
 
-    $timestamp = strtotime($rawValue);
-    if ($timestamp === false) {
-        return '';
-    }
+  $timestamp = strtotime($rawValue);
+  if ($timestamp === false) {
+    return '';
+  }
 
-    return date($format, $timestamp);
+  return date($format, $timestamp);
 }
 
 function format_currency($value): string
 {
-    $numericValue = is_numeric($value) ? (float) $value : 0.0;
-    if (abs($numericValue) < 0.00001) {
-        return '';
-    }
+  $numericValue = is_numeric($value) ? (float) $value : 0.0;
+  if (abs($numericValue) < 0.00001) {
+    return '';
+  }
 
-    return number_format($numericValue, 2);
+  return number_format($numericValue, 2);
 }
 
 function normalize_yes_no(?string $value): string
 {
-    $normalized = strtolower(trim((string) $value));
-    return $normalized === 'yes' ? 'yes' : 'no';
+  $normalized = strtolower(trim((string) $value));
+  return $normalized === 'yes' ? 'yes' : 'no';
 }
 
 function render_yes_no(string $value): string
 {
-    $normalized = normalize_yes_no($value);
+  $normalized = normalize_yes_no($value);
 
-    return sprintf(
-        'Y <span class="inline-choice">%s</span>&nbsp;&nbsp;&nbsp;N <span class="inline-choice">%s</span>',
-        $normalized === 'yes' ? '/' : '',
-        $normalized === 'no' ? '/' : ''
-    );
+  return sprintf(
+    'Y <span class="inline-choice">%s</span>&nbsp;&nbsp;&nbsp;N <span class="inline-choice">%s</span>',
+    $normalized === 'yes' ? '/' : '',
+    $normalized === 'no' ? '/' : ''
+  );
 }
 
 function render_employment_status(?string $value): string
 {
-    $normalized = strtolower(trim((string) $value));
-    $options = [
-        'employed' => 'Employed',
-        'self-employed' => 'Self-employed',
-        'not employed' => 'Not employed',
-    ];
+  $normalized = strtolower(trim((string) $value));
+  $options = [
+    'employed' => 'Employed',
+    'self-employed' => 'Self-employed',
+    'not employed' => 'Not employed',
+  ];
 
-    $parts = [];
-    foreach ($options as $key => $label) {
-        $marker = $normalized === $key ? '/' : '';
-        $parts[] = sprintf('%s <span class="inline-choice">%s</span>', $label, $marker);
-    }
+  $parts = [];
+  foreach ($options as $key => $label) {
+    $marker = $normalized === $key ? '/' : '';
+    $parts[] = sprintf('%s <span class="inline-choice">%s</span>', $label, $marker);
+  }
 
-    return implode('&nbsp;&nbsp;&nbsp;', $parts);
+  return implode('&nbsp;&nbsp;&nbsp;', $parts);
 }
 
 $clientId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 if ($clientId === false || $clientId === null) {
-    http_response_code(400);
-    echo 'Invalid or missing client id.';
-    exit;
+  http_response_code(400);
+  echo 'Invalid or missing client id.';
+  exit;
 }
 
 $client = null;
 $householdMembers = [];
 
 try {
-    $connection = get_database_connection();
+  $connection = get_database_connection();
 
-    $clientQuery = $connection->prepare(
-        'SELECT key_id, control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
+  $clientQuery = $connection->prepare(
+    'SELECT key_id, control_number, first_name, middle_name, last_name, suffix, date_of_birth, place_of_birth, age,
                 division, program, address, barangay, religion, sex, educational_attainment, occupation, company_agency,
                 civil_status, employment_status, contact_number, monthly_income, philsys_card_number, email_address,
                 pantawid_beneficiary, pantawid_household_id, indigenous_person, indigenous_affiliation_name, lgbtq_plus,
@@ -106,70 +106,72 @@ try {
          FROM soloparent_info_table
          WHERE key_id = ?
          LIMIT 1'
-    );
+  );
 
-    if (!$clientQuery) {
-        throw new RuntimeException('Failed to prepare client query.');
-    }
+  if (!$clientQuery) {
+    throw new RuntimeException('Failed to prepare client query.');
+  }
 
-    $clientQuery->bind_param('i', $clientId);
-    $clientQuery->execute();
-    $clientResult = $clientQuery->get_result();
-    $client = $clientResult ? $clientResult->fetch_assoc() : null;
-    $clientQuery->close();
+  $clientQuery->bind_param('i', $clientId);
+  $clientQuery->execute();
+  $clientResult = $clientQuery->get_result();
+  $client = $clientResult ? $clientResult->fetch_assoc() : null;
+  $clientQuery->close();
 
-    if (!$client) {
-        http_response_code(404);
-        echo 'Solo Parent record not found.';
-        exit;
-    }
+  if (!$client) {
+    http_response_code(404);
+    echo 'Solo Parent record not found.';
+    exit;
+  }
 
-    $householdQuery = $connection->prepare(
-        'SELECT household_name, household_sex, household_relationship, household_age, household_birthdate,
+  $householdQuery = $connection->prepare(
+    'SELECT household_name, household_sex, household_relationship, household_age, household_birthdate,
                 household_civil_status, household_educational, household_occupation, household_monthly_income
          FROM household_members_soloparent
          WHERE solo_parent_id = ?
          ORDER BY id ASC'
-    );
+  );
 
-    if (!$householdQuery) {
-        throw new RuntimeException('Failed to prepare household query.');
+  if (!$householdQuery) {
+    throw new RuntimeException('Failed to prepare household query.');
+  }
+
+  $householdQuery->bind_param('i', $clientId);
+  $householdQuery->execute();
+  $householdResult = $householdQuery->get_result();
+
+  if ($householdResult) {
+    while ($row = $householdResult->fetch_assoc()) {
+      $householdMembers[] = $row;
     }
+  }
 
-    $householdQuery->bind_param('i', $clientId);
-    $householdQuery->execute();
-    $householdResult = $householdQuery->get_result();
-
-    if ($householdResult) {
-        while ($row = $householdResult->fetch_assoc()) {
-            $householdMembers[] = $row;
-        }
-    }
-
-    $householdQuery->close();
-    $connection->close();
+  $householdQuery->close();
+  $connection->close();
 } catch (Throwable $exception) {
-    http_response_code(500);
-    echo 'Unable to load print form data.';
-    exit;
+  http_response_code(500);
+  echo 'Unable to load print form data.';
+  exit;
 }
 
 $fullName = build_full_name($client);
 $fullAddress = trim(implode(', ', array_values(array_filter([
-    trim((string) ($client['address'] ?? '')),
-    trim((string) ($client['barangay'] ?? '')),
+  trim((string) ($client['address'] ?? '')),
+  trim((string) ($client['barangay'] ?? '')),
 ], static fn(string $part): bool => $part !== ''))));
 
 $householdRows = max(4, count($householdMembers));
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solo Parent Print Form</title>
   <link rel="stylesheet" href="print-form.css" />
 </head>
+
 <body>
   <div class="print-toolbar" aria-label="Print controls">
     <button type="button" id="printFormButton" class="print-btn">Print Form</button>
@@ -205,7 +207,9 @@ $householdRows = max(4, count($householdMembers));
         </td>
       </tr>
 
-      <tr><td colspan="12" class="section-heading">I. IDENTIFYING INFORMATION</td></tr>
+      <tr>
+        <td colspan="12" class="section-heading">I. IDENTIFYING INFORMATION</td>
+      </tr>
       <tr>
         <td colspan="4" class="label-cell"><strong>Full Name:</strong> <span class="value-text"><?= escape_html($fullName) ?></span></td>
         <td colspan="8" class="label-cell centered"><strong>Philsys Card Number:</strong> <span class="value-text"><?= escape_html((string) ($client['philsys_card_number'] ?? '')) ?></span></td>
@@ -250,7 +254,9 @@ $householdRows = max(4, count($householdMembers));
         <td colspan="2" class="subnote-cell"></td>
       </tr>
 
-      <tr><td colspan="12" class="section-heading">II. HOUSEHOLD COMPOSITION</td></tr>
+      <tr>
+        <td colspan="12" class="section-heading">II. HOUSEHOLD COMPOSITION</td>
+      </tr>
       <tr class="table-header-row">
         <td colspan="2" class="centered"><strong>Name</strong></td>
         <td colspan="1" class="centered"><strong>Sex</strong></td>
@@ -280,17 +286,23 @@ $householdRows = max(4, count($householdMembers));
         <td colspan="12" class="note-row"><em>NOTE: Include family member and other members of the household especially minor children. Use back side for additional members.</em></td>
       </tr>
 
-      <tr><td colspan="12" class="section-heading">III. Classification/Circumstances of being a solo parent (Dahilan bakit naging solo parent)?</td></tr>
+      <tr>
+        <td colspan="12" class="section-heading">III. Classification/Circumstances of being a solo parent (Dahilan bakit naging solo parent)?</td>
+      </tr>
       <tr>
         <td colspan="12" class="text-area-cell multiline"><?= nl2br(escape_html((string) ($client['solo_classification'] ?? ''))) ?></td>
       </tr>
 
-      <tr><td colspan="12" class="section-heading">IV. Needs/Problems of being a solo parent (Kinakailangan/Problema ng isang solo parent)?</td></tr>
+      <tr>
+        <td colspan="12" class="section-heading">IV. Needs/Problems of being a solo parent (Kinakailangan/Problema ng isang solo parent)?</td>
+      </tr>
       <tr>
         <td colspan="12" class="text-area-cell multiline"><?= nl2br(escape_html((string) ($client['solo_needs'] ?? ''))) ?></td>
       </tr>
 
-      <tr><td colspan="12" class="section-heading">V. IN CASE OF EMERGENCY</td></tr>
+      <tr>
+        <td colspan="12" class="section-heading">V. IN CASE OF EMERGENCY</td>
+      </tr>
       <tr>
         <td colspan="6" class="label-cell"><strong>Name:</strong> <span class="value-text placeholder-line">&nbsp;</span></td>
         <td colspan="6" class="label-cell"><strong>Relationship:</strong> <span class="value-text placeholder-line">&nbsp;</span></td>
@@ -308,10 +320,12 @@ $householdRows = max(4, count($householdMembers));
       <tr>
         <td colspan="4" class="signature-cell centered"><span class="signature-line"></span><br />Signature/Thumbmark over Printed Name</td>
         <td colspan="4" class="signature-cell centered"><span class="signature-line date-line"></span><br />Date</td>
-        <td colspan="4" class="signature-cell"></td>
+     
       </tr>
 
-      <tr><td colspan="12" class="for-office-heading">FOR SPD/SPO USE ONLY</td></tr>
+      <tr>
+        <td colspan="12" class="for-office-heading">FOR SPD/SPO USE ONLY</td>
+      </tr>
       <tr>
         <td colspan="12" class="office-use-cell">
           <table class="office-table">
@@ -340,6 +354,7 @@ $householdRows = max(4, count($householdMembers));
       <tr>
         <td colspan="12" class="footer-main-cell">
           <footer class="sheet-footer" aria-label="Contact footer">
+            <div class="footer-bar" aria-hidden="true"></div>
             <div class="footer-content">
               <div class="footer-left">
                 <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
@@ -361,7 +376,7 @@ $householdRows = max(4, count($householdMembers));
                 <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
               </div>
             </div>
-            <div class="footer-bar" aria-hidden="true"></div>
+            
           </footer>
         </td>
       </tr>
@@ -370,4 +385,5 @@ $householdRows = max(4, count($householdMembers));
 
   <script src="print-form.js"></script>
 </body>
+
 </html>

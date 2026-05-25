@@ -208,7 +208,7 @@ if (!empty($client['created_at'])) {
       </div>
       <div class="sign-block">
         <p>Reviewed by:</p>
-        <p class="line-name"><?= escape_html((string) ($client['served_by'] ?? '')) ?></p>
+        <p class="line-name"></p>
         <p>Social Worker</p>
       </div>
     </section>
@@ -234,7 +234,7 @@ if (!empty($client['created_at'])) {
 
         <div class="footer-right">
           <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
-          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
+          
         </div>
       </div>
       
