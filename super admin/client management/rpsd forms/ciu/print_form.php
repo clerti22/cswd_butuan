@@ -181,7 +181,10 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <button type="button" id="editClerkButton" class="print-btn print-btn--secondary">Edit Clerk</button>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -319,7 +322,7 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
         </div>
         <div class="signature-block">
           <div class="signature-label">Received by:</div>
-          <div class="signature-line"><?= escape_html($receivedBy) ?></div>
+          <div class="signature-line" id="clerkName"><?= escape_html($receivedBy) ?></div>
           <div class="signature-caption">CIU Clerk</div>
         </div>
       </footer>
@@ -361,6 +364,6 @@ $serviceOtherText = trim((string) ($client['service_others'] ?? ''));
     </table>
   </main>
 
-  <script src="../shared/print-form.js"></script>
+  <script src="print-form.js"></script>
 </body>
 </html>
