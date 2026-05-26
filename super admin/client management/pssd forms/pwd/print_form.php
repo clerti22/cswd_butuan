@@ -243,7 +243,7 @@ if (!empty($client['created_at'])) {
 
         <div class="footer-right">
           <img src="../../../images-logo/footer.png" alt="ButuanOn Logo" class="footer-logo" />
-          <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
+          
         </div>
       </div>
       
