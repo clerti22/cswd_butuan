@@ -207,7 +207,10 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <button type="button" id="editSignatoriesButton" class="print-btn print-btn--secondary">Edit Signatories</button>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -419,7 +422,7 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
         <section class="signature-grid">
           <div class="signature-card">
             <div class="signature-card__label">Prepared by:</div>
-            <div class="signature-card__line"><?= escape_html($preparedBy) ?></div>
+            <div class="signature-card__line" id="preparedByName"><?= escape_html($preparedBy) ?></div>
             <div class="signature-card__role">Social Welfare Officer / Staff</div>
           </div>
           <div class="signature-card">
@@ -429,10 +432,29 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
           </div>
           <div class="signature-card signature-card--centered">
             <div class="signature-card__label">Noted by:</div>
-            <div class="signature-card__line"></div>
+            <div class="signature-card__line" id="notedByName"></div>
             <div class="signature-card__role">Supervising Social Worker</div>
           </div>
         </section>
+        <div class="modal-overlay" id="signatoriesModal" aria-hidden="true">
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signatoriesModalTitle">
+            <h3 id="signatoriesModalTitle">Edit CSAE Signatories</h3>
+            <form id="signatoriesForm">
+              <label class="modal-field">
+                Prepared By
+                <input type="text" id="preparedByNameInput" />
+              </label>
+              <label class="modal-field">
+                Noted By
+                <input type="text" id="notedByNameInput" />
+              </label>
+              <div class="modal-actions">
+                <button type="button" id="cancelSignatoriesButton" class="print-btn print-btn--secondary">Cancel</button>
+                <button type="submit" class="print-btn">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
 
         <section class="privacy-consent">
           <div class="privacy-consent__title">DATA PRIVACY CONSENT</div>
@@ -480,6 +502,6 @@ $philhealth = normalize_yes_no((string) ($client['philhealth'] ?? ''));
     </section>
   </main>
 
-  <script src="../shared/print-form.js"></script>
+  <script src="print-form.js"></script>
 </body>
 </html>
