@@ -187,7 +187,10 @@ $address = trim(implode(', ', array_filter([
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <button type="button" id="editSignatoriesButton" class="print-btn print-btn--secondary">Edit Signatories</button>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -387,15 +390,34 @@ $address = trim(implode(', ', array_filter([
         <section class="signature-section">
           <div class="signature-block">
             <div class="signature-title">Prepared by:</div>
-            <div class="signature-line"><?= escape_html($preparedBy) ?></div>
+            <div class="signature-line" id="preparedByName"><?= escape_html($preparedBy) ?></div>
             <div class="signature-role">VAWC Focal/Worker</div>
           </div>
           <div class="signature-block">
             <div class="signature-title">Noted by:</div>
-            <div class="signature-line"><?= escape_html($notedBy) ?></div>
+            <div class="signature-line" id="notedByName"><?= escape_html($notedBy) ?></div>
             <div class="signature-role">Social Worker</div>
           </div>
         </section>
+        <div class="modal-overlay" id="signatoriesModal" aria-hidden="true">
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signatoriesModalTitle">
+            <h3 id="signatoriesModalTitle">Edit VAWC Signatories</h3>
+            <form id="signatoriesForm">
+              <label class="modal-field">
+                Prepared By
+                <input type="text" id="preparedByNameInput" />
+              </label>
+              <label class="modal-field">
+                Noted By
+                <input type="text" id="notedByNameInput" />
+              </label>
+              <div class="modal-actions">
+                <button type="button" id="cancelSignatoriesButton" class="print-btn print-btn--secondary">Cancel</button>
+                <button type="submit" class="print-btn">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
 
         <section class="consent-box">
           <div class="consent-title">Data Privacy Consent</div>
@@ -437,6 +459,6 @@ $address = trim(implode(', ', array_filter([
     </section>
   </main>
 
-  <script src="../shared/print-form.js"></script>
+  <script src="print-form.js"></script>
 </body>
 </html>

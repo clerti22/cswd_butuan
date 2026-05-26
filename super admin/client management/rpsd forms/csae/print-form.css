@@ -28,6 +28,12 @@ body {
   gap: 8px;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .print-btn {
   border: 1px solid #000;
   background: #fff;
@@ -37,13 +43,68 @@ body {
   cursor: pointer;
 }
 
+.print-btn--secondary {
+  background: #fff;
+  color: #000;
+}
+
 .print-btn:hover {
   background: #f3f3f3;
+}
+
+.print-btn--secondary:hover {
+  background: #ececec;
 }
 
 .print-hint {
   margin: 0;
   font-size: 8.4px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.modal-overlay.is-open {
+  display: flex;
+}
+
+.modal {
+  width: min(460px, calc(100vw - 24px));
+  background: #fff;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.modal h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.modal-field input {
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+  padding: 7px 9px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .print-document {
@@ -423,6 +484,10 @@ body {
 
   .print-toolbar {
     display: none;
+  }
+
+  .modal-overlay {
+    display: none !important;
   }
 
   .print-document,
