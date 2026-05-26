@@ -96,6 +96,13 @@ body {
   gap: 8px;
 }
 
+.modal-error {
+  min-height: 14px;
+  margin: 0 0 8px;
+  color: #b00020;
+  font-size: 12px;
+}
+
 .print-page {
   position: relative;
   width: var(--sheet-width);

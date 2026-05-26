@@ -121,6 +121,7 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
     <div class="toolbar-actions">
       <button type="button" id="printFormButton" class="print-btn">Print Form</button>
       <button type="button" id="editPreparedByButton" class="print-btn print-btn--secondary">Edit Prepared By</button>
+      <button type="button" id="editNotedByButton" class="print-btn print-btn--secondary">Edit Noted By</button>
     </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
@@ -228,8 +229,9 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
                 <p id="preparedByLicense">License Number and Validity</p>
                 <br>
                 <p>Noted by:</p>
-                <p><strong>GOLDA V. VERGARA-POCON, RSW, MSSW, CESE</strong></p>
-                <p>CGDH-II/CSWDO</p>
+                <p id="notedByName"><strong>GOLDA V. VERGARA-POCON, RSW, MSSW, CESE</strong></p>
+                <p id="notedByPosition">CGDH-II/CSWDO</p>
+                <p id="notedByLicense">License Number and Validity</p>
               </section>
               <div class="modal-overlay" id="preparedByModal" aria-hidden="true">
                 <div class="modal" role="dialog" aria-modal="true" aria-labelledby="preparedByModalTitle">
@@ -249,6 +251,30 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
                     </label>
                     <div class="modal-actions">
                       <button type="button" id="cancelPreparedByButton" class="print-btn print-btn--secondary">Cancel</button>
+                      <button type="submit" class="print-btn">Save</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-overlay" id="notedByModal" aria-hidden="true">
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="notedByModalTitle">
+                  <h3 id="notedByModalTitle">Edit Noted By</h3>
+                  <form id="notedByForm">
+                    <label class="modal-field">Name
+                      <input type="text" id="notedByNameInput" />
+                    </label>
+                    <label class="modal-field">Position
+                      <input type="text" id="notedByPositionInput" />
+                    </label>
+                    <label class="modal-field">License Number
+                      <input type="text" id="notedByLicenseNumberInput" />
+                    </label>
+                    <label class="modal-field">Validity
+                      <input type="date" id="notedByValidityInput" />
+                    </label>
+                    <p class="modal-error" id="notedByErrorMessage" aria-live="polite"></p>
+                    <div class="modal-actions">
+                      <button type="button" id="cancelNotedByButton" class="print-btn print-btn--secondary">Cancel</button>
                       <button type="submit" class="print-btn">Save</button>
                     </div>
                   </form>
