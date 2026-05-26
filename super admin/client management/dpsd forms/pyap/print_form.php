@@ -179,7 +179,10 @@ $currentDate = date('F d, Y');
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <button type="button" id="editSignatoriesButton" class="print-btn print-btn--secondary">Edit Signatories</button>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -328,17 +331,45 @@ $currentDate = date('F d, Y');
     <section class="signature-section">
       <div class="signatories">
         <div>
-          <p class="name">ARIEL JOY J. TANSO</p>
-          <p>Youth Service Provider</p>
+          <p class="name" id="signatoryOneName">ARIEL JOY J. TANSO</p>
+          <p id="signatoryOneTitle">Youth Service Provider</p>
           <p class="date">Date: <?= escape_html($currentDate) ?></p>
         </div>
         <div>
-          <p class="name">FE C. BALASON, RSW</p>
-          <p>SWO IV / DPSD Chief</p>
+          <p class="name" id="signatoryTwoName">FE C. BALASON, RSW</p>
+          <p id="signatoryTwoTitle">SWO IV / DPSD Chief</p>
           <p class="date">Date: <?= escape_html($currentDate) ?></p>
         </div>
       </div>
     </section>
+
+    <div class="modal-overlay" id="signatoriesModal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signatoriesModalTitle">
+        <h3 id="signatoriesModalTitle">Edit PYAP Signatories</h3>
+        <form id="signatoriesForm">
+          <label class="modal-field">
+            First Name
+            <input type="text" id="signatoryOneNameInput" />
+          </label>
+          <label class="modal-field">
+            First Title
+            <input type="text" id="signatoryOneTitleInput" />
+          </label>
+          <label class="modal-field">
+            Second Name
+            <input type="text" id="signatoryTwoNameInput" />
+          </label>
+          <label class="modal-field">
+            Second Title
+            <input type="text" id="signatoryTwoTitleInput" />
+          </label>
+          <div class="modal-actions">
+            <button type="button" id="cancelSignatoriesButton" class="print-btn print-btn--secondary">Cancel</button>
+            <button type="submit" class="print-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <footer class="sheet-footer" aria-label="Contact footer">
       <div class="footer-content">

@@ -13,6 +13,8 @@ $printConfig = [
     'notFoundMessage' => 'CICL record not found.',
     'preparedBy' => '',
     'formCode' => 'CSWDD.F.053.REV01',
+    'enableSignatoryEditor' => true,
+    'printScript' => 'print-form.js',
 ];
 
 require __DIR__ . '/intake_print_template.php';
