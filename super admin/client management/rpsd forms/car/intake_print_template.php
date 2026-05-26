@@ -241,6 +241,8 @@ $preparedBy = trim((string) ($printConfig['preparedBy'] ?? ''));
 $notedBy = trim((string) ($client['served_by'] ?? ''));
 $formLabel = (string) ($printConfig['formLabel'] ?? 'General Intake Sheet');
 $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
+$enableSignatoryEditor = (bool) ($printConfig['enableSignatoryEditor'] ?? false);
+$printScript = (string) ($printConfig['printScript'] ?? '../shared/print-form.js');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -252,7 +254,12 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <?php if ($enableSignatoryEditor): ?>
+        <button type="button" id="editSignatoriesButton" class="print-btn print-btn--secondary">Edit Signatories</button>
+      <?php endif; ?>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -473,15 +480,36 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
       <section class="signature-section">
         <div class="signature-block">
           <div class="signature-title">Prepared by:</div>
-          <div class="signature-line"><?= escape_html($preparedBy) ?></div>
+          <div class="signature-line" id="clerkName"><?= escape_html($preparedBy) ?></div>
           <div class="signature-role">Clerk</div>
         </div>
         <div class="signature-block">
           <div class="signature-title">Noted by:</div>
-          <div class="signature-line"><?= escape_html($notedBy) ?></div>
+          <div class="signature-line" id="socialWorkerName"><?= escape_html($notedBy) ?></div>
           <div class="signature-role">Social worker</div>
         </div>
       </section>
+      <?php if ($enableSignatoryEditor): ?>
+        <div class="modal-overlay" id="signatoriesModal" aria-hidden="true">
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signatoriesModalTitle">
+            <h3 id="signatoriesModalTitle">Edit CAR Signatories</h3>
+            <form id="signatoriesForm">
+              <label class="modal-field">
+                Clerk Name
+                <input type="text" id="clerkNameInput" />
+              </label>
+              <label class="modal-field">
+                Social Worker Name
+                <input type="text" id="socialWorkerNameInput" />
+              </label>
+              <div class="modal-actions">
+                <button type="button" id="cancelSignatoriesButton" class="print-btn print-btn--secondary">Cancel</button>
+                <button type="submit" class="print-btn">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      <?php endif; ?>
 
       <section class="consent-box">
         <div class="consent-title">Data Privacy Consent</div>
@@ -522,6 +550,6 @@ $formCode = (string) ($printConfig['formCode'] ?? 'CSWDD.F.053.REV01');
     </section>
   </main>
 
-  <script src="../shared/print-form.js"></script>
+  <script src="<?= escape_html($printScript) ?>"></script>
 </body>
 </html>
