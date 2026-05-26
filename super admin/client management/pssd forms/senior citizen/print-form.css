@@ -24,6 +24,12 @@ body {
   gap: 12px;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .print-btn {
   border: 1px solid #1e6cb3;
   background: #1e6cb3;
@@ -34,8 +40,17 @@ body {
   cursor: pointer;
 }
 
+.print-btn--secondary {
+  background: #fff;
+  color: #1e6cb3;
+}
+
 .print-btn:hover {
   background: #135389;
+}
+
+.print-btn--secondary:hover {
+  background: #e8f1fb;
 }
 
 .print-hint {

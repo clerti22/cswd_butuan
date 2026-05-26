@@ -118,7 +118,10 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
 </head>
 <body>
   <div class="print-toolbar" aria-label="Print controls">
-    <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+    <div class="toolbar-actions">
+      <button type="button" id="printFormButton" class="print-btn">Print Form</button>
+      <button type="button" id="editPreparedByButton" class="print-btn print-btn--secondary">Edit Prepared By</button>
+    </div>
     <p class="print-hint">Shortcut: <strong>Ctrl + P</strong> / <strong>⌘ + P</strong></p>
   </div>
 
@@ -220,14 +223,37 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
 
               <section class="signature-block">
                 <p>Prepared by:</p>
-                <p>Name and signature of registered social worker</p>
-                <p>Position</p>
-                <p>License Number and Validity</p>
+                <p id="preparedByName">Name and signature of registered social worker</p>
+                <p id="preparedByPosition">Position</p>
+                <p id="preparedByLicense">License Number and Validity</p>
                 <br>
                 <p>Noted by:</p>
                 <p><strong>GOLDA V. VERGARA-POCON, RSW, MSSW, CESE</strong></p>
                 <p>CGDH-II/CSWDO</p>
               </section>
+              <div class="modal-overlay" id="preparedByModal" aria-hidden="true">
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="preparedByModalTitle">
+                  <h3 id="preparedByModalTitle">Edit Prepared By</h3>
+                  <form id="preparedByForm">
+                    <label class="modal-field">Name and Signature
+                      <input type="text" id="preparedByNameInput" />
+                    </label>
+                    <label class="modal-field">Position
+                      <input type="text" id="preparedByPositionInput" />
+                    </label>
+                    <label class="modal-field">License Number
+                      <input type="text" id="preparedByLicenseNumberInput" />
+                    </label>
+                    <label class="modal-field">Validity
+                      <input type="date" id="preparedByValidityInput" />
+                    </label>
+                    <div class="modal-actions">
+                      <button type="button" id="cancelPreparedByButton" class="print-btn print-btn--secondary">Cancel</button>
+                      <button type="submit" class="print-btn">Save</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
 
               <section class="privacy-consent privacy-consent--page-two">
                 <div class="privacy-title">Data Privacy Consent</div>
@@ -280,6 +306,6 @@ $recommendation = trim((string) ($client['recommendation'] ?? ''));
     </table>
   </main>
 
-  <script src="../shared/print-form.js"></script>
+  <script src="print-scsr.js"></script>
 </body>
 </html>
