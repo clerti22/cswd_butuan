@@ -156,12 +156,14 @@ $assistanceOptions = [
     'Mental Health Awareness',
     'Leadership Training',
     'Summer Job',
+    'Teenage Pregnancy',
     'Others / Please Specify',
 ];
 
 $interventionOptions = [
     'Skills Training',
     'Livelihood',
+    'Teenage Pregnancy',
     'Others / Please Specify',
 ];
 
