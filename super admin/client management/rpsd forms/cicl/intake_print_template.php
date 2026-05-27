@@ -398,6 +398,7 @@ $printScript = (string) ($printConfig['printScript'] ?? '../shared/print-form.js
       </div>
 
       <footer class="sheet-footer" aria-label="Contact footer">
+        <div class="footer-bar" aria-hidden="true"></div>
         <div class="footer-content">
           <div class="footer-left">
             <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
@@ -420,7 +421,7 @@ $printScript = (string) ($printConfig['printScript'] ?? '../shared/print-form.js
             <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
           </div>
         </div>
-        <div class="footer-bar" aria-hidden="true"></div>
+        
       </footer>
     </section>
 
@@ -523,6 +524,7 @@ $printScript = (string) ($printConfig['printScript'] ?? '../shared/print-form.js
       </div>
 
       <footer class="sheet-footer" aria-label="Contact footer">
+        <div class="footer-bar" aria-hidden="true"></div>
         <div class="footer-content">
           <div class="footer-left">
             <img src="../../../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg" alt="CSWDO QR Code" class="footer-qr" />
@@ -545,7 +547,7 @@ $printScript = (string) ($printConfig['printScript'] ?? '../shared/print-form.js
             <p class="footer-code">CSWDD.RSPD.R.017.REV02</p>
           </div>
         </div>
-        <div class="footer-bar" aria-hidden="true"></div>
+        
       </footer>
     </section>
   </main>
