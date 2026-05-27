@@ -76,7 +76,7 @@ $emptyRows = max(12 - count($familyRows), 0);
   <main class="sheet">
     <header class="faced-header">
       <div class="faced-header__left">
-        <div class="logo-box"></div>
+        <img class="logo-box" src="../../../images-logo/cswd-logo.png" alt="CSWD logo">
         <div class="header-copy">
           <p>Republic of the Philippines</p>
           <p>Department of Social Welfare and Development</p>
