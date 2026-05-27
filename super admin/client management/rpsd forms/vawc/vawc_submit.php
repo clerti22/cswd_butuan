@@ -142,6 +142,7 @@ try {
     $birthPlace = trim((string) $_POST['birth_place']);
     $birthDate = trim((string) $_POST['birth_date']);
     $age = trim((string) $_POST['age']);
+    $sex = 'Female';
     $division = 'RPSD';
     $program = 'VAWC';
     $education = trim((string) $_POST['education']);
@@ -179,10 +180,10 @@ try {
             $connection,
             'UPDATE `vawc_table` SET
                 first_name = ?, middle_name = ?, last_name = ?, suffix = ?, birth_place = ?, birth_date = ?, age = ?, division = ?, program = ?,
-                education = ?, religion = ?, address = ?, barangay = ?, occupation = ?, monthly_income = ?, contact_number = ?,
+                sex = ?, education = ?, religion = ?, address = ?, barangay = ?, occupation = ?, monthly_income = ?, contact_number = ?,
                 civil_status = ?, is_4ps = ?, is_uct = ?, is_nhts = ?, presenting_problem = ?, family_environment = ?, community = ?, family_history = ?, recommendation = ?, served_by = ?
              WHERE key_id = ?',
-            [$firstName, $middleName, $lastName, $suffix, $birthPlace, $birthDate, $age, $division, $program, $education, $religion, $address, $barangay, $occupation, $monthlyIncome, $contactNumber, $civilStatus, $is4ps, $isUct, $isNhts, $presentingProblem, $familyEnvironment, $community, $familyHistory, $recommendation, $served, (string) $recordId]
+            [$firstName, $middleName, $lastName, $suffix, $birthPlace, $birthDate, $age, $division, $program, $sex, $education, $religion, $address, $barangay, $occupation, $monthlyIncome, $contactNumber, $civilStatus, $is4ps, $isUct, $isNhts, $presentingProblem, $familyEnvironment, $community, $familyHistory, $recommendation, $served, (string) $recordId]
         );
         $updateMain->close();
         insert_client_update_notification($connection, $fullname, $userRole, $userProgram, $userDivision);
@@ -211,10 +212,10 @@ try {
             $connection,
             'INSERT INTO `vawc_table` (
                 control_number, first_name, middle_name, last_name, suffix, birth_place, birth_date, age, division, program,
-                education, religion, address, barangay, occupation, monthly_income, contact_number,
+                sex, education, religion, address, barangay, occupation, monthly_income, contact_number,
                 civil_status, is_4ps, is_uct, is_nhts, presenting_problem, family_environment, community, family_history, recommendation, served_by
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [$controlNumber, $firstName, $middleName, $lastName, $suffix, $birthPlace, $birthDate, $age, $division, $program, $education, $religion, $address, $barangay, $occupation, $monthlyIncome, $contactNumber, $civilStatus, $is4ps, $isUct, $isNhts, $presentingProblem, $familyEnvironment, $community, $familyHistory, $recommendation, $served]
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [$controlNumber, $firstName, $middleName, $lastName, $suffix, $birthPlace, $birthDate, $age, $division, $program, $sex, $education, $religion, $address, $barangay, $occupation, $monthlyIncome, $contactNumber, $civilStatus, $is4ps, $isUct, $isNhts, $presentingProblem, $familyEnvironment, $community, $familyHistory, $recommendation, $served]
         );
         $vawcId = (string) $connection->insert_id;
 
