@@ -184,13 +184,21 @@ function getShowRoute(client, variant = 'ciu') {
 }
 
 function getPrintRoute(client, variant = 'ciu') {
+    const sourceTable = String(client.source_table || '');
+
+    if (sourceTable === 'faced_table') {
+        const controlNumber = String(client.control_number || '').trim();
+        return controlNumber
+            ? `cod forms/faced/print_form.php?control_number=${encodeURIComponent(controlNumber)}`
+            : '#';
+    }
+
     const keyId = Number(client.key_id);
 
     if (!Number.isInteger(keyId) || keyId <= 0) {
         return '#';
     }
 
-    const sourceTable = String(client.source_table || '');
     const routesByTable = {
         pwud_table: 'dpsd forms/pwud/print_form.php',
         pyap_table: 'dpsd forms/pyap/print_form.php',
@@ -201,7 +209,8 @@ function getPrintRoute(client, variant = 'ciu') {
         cicl_table: 'rpsd forms/cicl/print_form.php',
         ciu_table: 'rpsd forms/ciu/print_form.php',
         csae_table: 'rpsd forms/csae/print_form.php',
-        vawc_table: 'rpsd forms/vawc/print_form.php'
+        vawc_table: 'rpsd forms/vawc/print_form.php',
+        faced_table: 'cod forms/faced/print_form.php'
     };
 
     let baseRoute = routesByTable[sourceTable] || '';
@@ -220,7 +229,6 @@ function createClientRow(client) {
     const showRoute = getShowRoute(client);
     const printRoute = getPrintRoute(client);
     const sourceTable = String(client.source_table || '');
-    const isCodRecord = sourceTable === 'faced_table';
     const ciuFormRoute = getShowRoute(client, 'ciu');
     const scsrFormRoute = getShowRoute(client, 'scsr');
     const ciuPrintRoute = getPrintRoute(client, 'ciu');
@@ -273,7 +281,7 @@ function createClientRow(client) {
             <td>${escapeHtml(client.contact_number)}</td>
             <td>${escapeHtml(client.created_at)}</td>
             <td>
-                <div class="client-action-buttons">${isCodRecord ? `${showButton}${scanButton}` : `${showButton}${printButton}${scanButton}`}</div>
+                <div class="client-action-buttons">${showButton}${printButton}${scanButton}</div>
             </td>
         </tr>
     `;
