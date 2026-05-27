@@ -113,7 +113,7 @@ require_login(['super admin', 'admin']);
                         <fieldset><legend>Shelter Damage Classification</legend><label><input type="radio" name="shelter_damage" value="Partially Damaged"> Partially Damaged</label><label><input type="radio" name="shelter_damage" value="Totally Damaged"> Totally Damaged</label></fieldset>
                     </div>
 
-                    <div class="form-actions"><button class="form-submit-btn" id="submitBtn" type="button">Submit</button></div>
+                    <div class="form-actions"><button class="form-submit-btn" id="submitBtn" type="button">Submit</button><button class="form-submit-btn secondary" id="printBtn" type="button">Print Form</button></div>
                 </section>
             </div>
         </main>
