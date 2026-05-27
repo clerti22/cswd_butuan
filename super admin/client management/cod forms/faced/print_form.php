@@ -62,6 +62,13 @@ try {
 }
 
 $emptyRows = max(12 - count($familyRows), 0);
+$headOfFamilyNameParts = [
+    trim((string) ($record['first_name'] ?? '')),
+    trim((string) ($record['middle_name'] ?? '')),
+    trim((string) ($record['last_name'] ?? '')),
+    trim((string) ($record['suffix'] ?? '')),
+];
+$headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, static fn(string $part): bool => $part !== '')));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,7 +79,7 @@ $emptyRows = max(12 - count($familyRows), 0);
   <link rel="stylesheet" href="print-form.css">
 </head>
 <body>
-  <div class="toolbar"><button type="button" id="printFormButton">Print Form</button><button type="button" id="editSerialButton">Edit Serial Number</button></div>
+  <div class="toolbar"><button type="button" id="printFormButton">Print Form</button><button type="button" id="editSerialButton">Edit Serial Number</button><button type="button" id="editSignatoriesButton">Edit Signatories</button></div>
   <main class="sheet">
     <header class="faced-header">
       <div class="faced-header__left">
@@ -144,7 +151,60 @@ $emptyRows = max(12 - count($familyRows), 0);
       <div>27. HOUSE OWNERSHIP [<?= yes_mark((string) ($record['house_ownership'] ?? ''), 'Owner') ?>] Owner [<?= yes_mark((string) ($record['house_ownership'] ?? ''), 'Renter') ?>] Renter [<?= yes_mark((string) ($record['house_ownership'] ?? ''), 'Sharer') ?>] Sharer</div>
       <div>28. SHELTER DAMAGE CLASSIFICATION [<?= yes_mark((string) ($record['shelter_damage'] ?? ''), 'Partially Damaged') ?>] Partially Damaged [<?= yes_mark((string) ($record['shelter_damage'] ?? ''), 'Totally Damaged') ?>] Totally Damaged</div>
     </div>
+
+    <section class="faced-signatories">
+      <div class="thumbmark-box">
+        <span>RIGHT THUMBMARK</span>
+      </div>
+      <div class="signatory-fields">
+        <div class="signatory-row">
+          <div class="signatory-cell signatory-cell--family-head">
+            <div class="signatory-name"><?= e($headOfFamilyName) ?></div>
+            <div class="signatory-line"></div>
+            <div class="signatory-label">Signature/Thumbmark of Family Head</div>
+          </div>
+          <div class="signatory-cell signatory-cell--formal">
+            <div class="signatory-name" id="brgyCaptainName"></div>
+            <div class="signatory-line"></div>
+            <div class="signatory-label">Name/Signature of Brgy. Captain</div>
+          </div>
+        </div>
+        <div class="signatory-row">
+          <div class="signatory-cell">Date Registered</div>
+          <div class="signatory-cell signatory-cell--formal">
+            <div class="signatory-name" id="lswdoName"></div>
+            <div class="signatory-line"></div>
+            <div class="signatory-label">Name/Signature of LSWDO</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy-declaration">
+      <p><strong>29. DATA PRIVACY DECLARATION</strong></p>
+      <p>All data and information indicated herein shall be used for verification purposes for the implementation of disaster risk reduction and management (DRRM) programs, projects and activities and its disclosure shall be in compliance to Republic Act 10173 (Data Privacy Act of 2012).</p>
+    </section>
   </main>
+
+  <div class="modal-overlay" id="signatoriesModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signatoriesModalTitle">
+      <h3 id="signatoriesModalTitle">Edit FACED Signatories</h3>
+      <form id="signatoriesForm">
+        <label class="modal-field">
+          Name/Signature of Brgy. Captain
+          <input type="text" id="brgyCaptainNameInput" />
+        </label>
+        <label class="modal-field">
+          Name/Signature of LSWDO
+          <input type="text" id="lswdoNameInput" />
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="cancelSignatoriesButton">Cancel</button>
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script src="print-form.js"></script>
 </body>
 </html>
