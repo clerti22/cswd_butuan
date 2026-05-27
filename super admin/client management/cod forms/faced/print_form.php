@@ -79,7 +79,7 @@ $headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, stati
   <link rel="stylesheet" href="print-form.css">
 </head>
 <body>
-  <div class="toolbar"><button type="button" id="printFormButton">Print Form</button><button type="button" id="editSerialButton">Edit Serial Number</button></div>
+  <div class="toolbar"><button type="button" id="printFormButton">Print Form</button><button type="button" id="editSerialButton">Edit Serial Number</button><button type="button" id="editSignatoriesButton">Edit Signatories</button></div>
   <main class="sheet">
     <header class="faced-header">
       <div class="faced-header__left">
@@ -163,11 +163,19 @@ $headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, stati
             <div class="signatory-line"></div>
             <div class="signatory-label">Signature/Thumbmark of Family Head</div>
           </div>
-          <div class="signatory-cell">Name/Signature of Brgy. Captain</div>
+          <div class="signatory-cell">
+            <div class="signatory-name" id="brgyCaptainName"></div>
+            <div class="signatory-line"></div>
+            <div class="signatory-label">Name/Signature of Brgy. Captain</div>
+          </div>
         </div>
         <div class="signatory-row">
           <div class="signatory-cell">Date Registered</div>
-          <div class="signatory-cell">Name/Signature of LSWDO</div>
+          <div class="signatory-cell">
+            <div class="signatory-name" id="lswdoName"></div>
+            <div class="signatory-line"></div>
+            <div class="signatory-label">Name/Signature of LSWDO</div>
+          </div>
         </div>
       </div>
     </section>
