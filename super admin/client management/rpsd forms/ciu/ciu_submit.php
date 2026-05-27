@@ -213,18 +213,19 @@ try {
         $deleteFamily = execute_statement($connection, 'DELETE FROM `ciu_family_composition_table` WHERE `ciu_id` = ?', [$ciuId]);
         $deleteFamily->close();
     } else {
-        $rowCountResult = $connection->query('SELECT COUNT(*) AS row_count FROM `ciu_table`');
-        if (!$rowCountResult) {
-            throw new Exception('Failed to get existing CIU row count.');
-        }
-        $rowCountData = $rowCountResult->fetch_assoc();
-        $rowCountResult->free();
-        $rowCount = (int) ($rowCountData['row_count'] ?? 0);
         $currentYear = date('Y');
-        $currentMonth = date('m');
-        $sequelNumber = $rowCount;
+        $maxIncrementResult = $connection->query("SELECT MAX(CAST(SUBSTRING_INDEX(control_number, '-', 1) AS UNSIGNED)) AS max_increment FROM `ciu_table` WHERE control_number REGEXP '^[0-9]+-{$currentYear}$'");
+        if (!$maxIncrementResult) {
+            throw new Exception('Failed to determine next CIU control number increment.');
+        }
+
+        $maxIncrementRow = $maxIncrementResult->fetch_assoc();
+        $maxIncrementResult->free();
+
+        $sequelNumber = ((int) ($maxIncrementRow['max_increment'] ?? 0)) + 1;
+
         do {
-            $controlNumber = sprintf('CSWD-CIU-%s-%s-%d', $currentYear, $currentMonth, $sequelNumber);
+            $controlNumber = sprintf('%d-%s', $sequelNumber, $currentYear);
             $check = execute_statement($connection, 'SELECT 1 FROM `ciu_table` WHERE control_number = ? LIMIT 1', [$controlNumber]);
             $check->store_result();
             $controlExists = $check->num_rows > 0;
