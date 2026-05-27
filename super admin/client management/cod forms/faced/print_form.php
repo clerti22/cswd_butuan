@@ -62,6 +62,13 @@ try {
 }
 
 $emptyRows = max(12 - count($familyRows), 0);
+$headOfFamilyNameParts = [
+    trim((string) ($record['first_name'] ?? '')),
+    trim((string) ($record['middle_name'] ?? '')),
+    trim((string) ($record['last_name'] ?? '')),
+    trim((string) ($record['suffix'] ?? '')),
+];
+$headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, static fn(string $part): bool => $part !== '')));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -151,7 +158,10 @@ $emptyRows = max(12 - count($familyRows), 0);
       </div>
       <div class="signatory-fields">
         <div class="signatory-row">
-          <div class="signatory-cell">Signature/Thumbmark of Family Head</div>
+          <div class="signatory-cell">
+            <div class="signatory-name"><?= e($headOfFamilyName) ?></div>
+            <div class="signatory-label">Signature/Thumbmark of Family Head</div>
+          </div>
           <div class="signatory-cell">Name/Signature of Brgy. Captain</div>
         </div>
         <div class="signatory-row">
