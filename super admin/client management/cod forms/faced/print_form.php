@@ -158,8 +158,9 @@ $headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, stati
       </div>
       <div class="signatory-fields">
         <div class="signatory-row">
-          <div class="signatory-cell">
+          <div class="signatory-cell signatory-cell--family-head">
             <div class="signatory-name"><?= e($headOfFamilyName) ?></div>
+            <div class="signatory-line"></div>
             <div class="signatory-label">Signature/Thumbmark of Family Head</div>
           </div>
           <div class="signatory-cell">Name/Signature of Brgy. Captain</div>
