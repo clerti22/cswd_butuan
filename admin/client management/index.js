@@ -420,14 +420,14 @@ async function renderScanModal(client, forceQrView = false) {
 }
 
 function getActiveTabKey() {
-    const activeTab = document.querySelector('.tab.active');
-    if (activeTab?.dataset?.tab) {
-        return activeTab.dataset.tab;
-    }
-
     const division = String(window.adminDivision || '').trim().toLowerCase();
     if (division && Object.prototype.hasOwnProperty.call(tabPaginationState, division)) {
         return division;
+    }
+
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab?.dataset?.tab) {
+        return activeTab.dataset.tab;
     }
 
     return 'dpsd';
