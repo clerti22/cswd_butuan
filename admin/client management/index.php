@@ -20,5 +20,12 @@ $sidebarMarkup = render_admin_sidebar('clients', '..');
 $renderedPage = preg_replace('/<nav class="sidebar" id="sidebar">.*?<\/nav>/s', $sidebarMarkup, $pageHtml, 1);
 
 $resultPage = $renderedPage === null ? $pageHtml : $renderedPage;
-$resultPage = str_replace('</body>', '    <script>window.adminDivision = ' . json_encode($adminDivision) . ';</script>' . PHP_EOL . '</body>', $resultPage);
+$divisionScript = '    <script>window.adminDivision = ' . json_encode($adminDivision) . ';</script>' . PHP_EOL;
+
+if (str_contains($resultPage, '<script src="index.js"></script>')) {
+    $resultPage = str_replace('<script src="index.js"></script>', $divisionScript . '    <script src="index.js"></script>', $resultPage);
+} else {
+    $resultPage = str_replace('</body>', $divisionScript . '</body>', $resultPage);
+}
+
 echo $resultPage;
