@@ -163,7 +163,7 @@ $headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, stati
             <div class="signatory-line"></div>
             <div class="signatory-label">Signature/Thumbmark of Family Head</div>
           </div>
-          <div class="signatory-cell">
+          <div class="signatory-cell signatory-cell--formal">
             <div class="signatory-name" id="brgyCaptainName"></div>
             <div class="signatory-line"></div>
             <div class="signatory-label">Name/Signature of Brgy. Captain</div>
@@ -171,7 +171,7 @@ $headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, stati
         </div>
         <div class="signatory-row">
           <div class="signatory-cell">Date Registered</div>
-          <div class="signatory-cell">
+          <div class="signatory-cell signatory-cell--formal">
             <div class="signatory-name" id="lswdoName"></div>
             <div class="signatory-line"></div>
             <div class="signatory-label">Name/Signature of LSWDO</div>

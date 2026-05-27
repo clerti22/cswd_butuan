@@ -16,6 +16,7 @@ table{width:100%;border-collapse:collapse;font-size:10px}th,td{border:1px solid 
 .signatory-cell{display:flex;align-items:flex-end;justify-content:center;padding:6px 8px;border-right:1px solid #111;font-size:10px;text-align:center}
 .signatory-cell:last-child{border-right:none}
 .signatory-cell--family-head{flex-direction:column;align-items:center;justify-content:center}
+.signatory-cell--formal{flex-direction:column;align-items:center;justify-content:center}
 .signatory-name{font-size:12px;font-weight:700;line-height:1.2;min-height:15px}
 .signatory-line{width:78%;border-top:1px solid #111;margin:3px auto 2px}
 .signatory-label{margin-top:1px}
