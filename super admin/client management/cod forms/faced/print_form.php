@@ -62,6 +62,13 @@ try {
 }
 
 $emptyRows = max(12 - count($familyRows), 0);
+$headOfFamilyNameParts = [
+    trim((string) ($record['first_name'] ?? '')),
+    trim((string) ($record['middle_name'] ?? '')),
+    trim((string) ($record['last_name'] ?? '')),
+    trim((string) ($record['suffix'] ?? '')),
+];
+$headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, static fn(string $part): bool => $part !== '')));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,6 +151,31 @@ $emptyRows = max(12 - count($familyRows), 0);
       <div>27. HOUSE OWNERSHIP [<?= yes_mark((string) ($record['house_ownership'] ?? ''), 'Owner') ?>] Owner [<?= yes_mark((string) ($record['house_ownership'] ?? ''), 'Renter') ?>] Renter [<?= yes_mark((string) ($record['house_ownership'] ?? ''), 'Sharer') ?>] Sharer</div>
       <div>28. SHELTER DAMAGE CLASSIFICATION [<?= yes_mark((string) ($record['shelter_damage'] ?? ''), 'Partially Damaged') ?>] Partially Damaged [<?= yes_mark((string) ($record['shelter_damage'] ?? ''), 'Totally Damaged') ?>] Totally Damaged</div>
     </div>
+
+    <section class="faced-signatories">
+      <div class="thumbmark-box">
+        <span>RIGHT THUMBMARK</span>
+      </div>
+      <div class="signatory-fields">
+        <div class="signatory-row">
+          <div class="signatory-cell signatory-cell--family-head">
+            <div class="signatory-name"><?= e($headOfFamilyName) ?></div>
+            <div class="signatory-line"></div>
+            <div class="signatory-label">Signature/Thumbmark of Family Head</div>
+          </div>
+          <div class="signatory-cell">Name/Signature of Brgy. Captain</div>
+        </div>
+        <div class="signatory-row">
+          <div class="signatory-cell">Date Registered</div>
+          <div class="signatory-cell">Name/Signature of LSWDO</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy-declaration">
+      <p><strong>29. DATA PRIVACY DECLARATION</strong></p>
+      <p>All data and information indicated herein shall be used for verification purposes for the implementation of disaster risk reduction and management (DRRM) programs, projects and activities and its disclosure shall be in compliance to Republic Act 10173 (Data Privacy Act of 2012).</p>
+    </section>
   </main>
   <script src="print-form.js"></script>
 </body>
