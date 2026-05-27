@@ -23,4 +23,12 @@ table{width:100%;border-collapse:collapse;font-size:10px}th,td{border:1px solid 
 .privacy-declaration{border:1px solid #111;border-top:none;padding:5px 6px 6px;text-align:center;font-size:9px;line-height:1.25}
 .privacy-declaration p{margin:0}
 .privacy-declaration p+p{margin-top:3px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:1000}
+.modal-overlay.is-open{display:flex}
+.modal{width:min(460px,92vw);background:#fff;border:1px solid #111;padding:14px}
+.modal h3{margin:0 0 10px;font-size:16px}
+.modal-field{display:flex;flex-direction:column;gap:4px;font-size:13px;margin-bottom:10px}
+.modal-field input{border:1px solid #111;padding:7px 8px;font-size:14px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px}
+.modal-actions button{padding:6px 12px;border:1px solid #111;background:#fff;cursor:pointer}
 @media print{body{background:#fff}.toolbar{display:none}.sheet{margin:0;border:none}}

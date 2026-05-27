@@ -185,6 +185,26 @@ $headOfFamilyName = trim(implode(' ', array_filter($headOfFamilyNameParts, stati
       <p>All data and information indicated herein shall be used for verification purposes for the implementation of disaster risk reduction and management (DRRM) programs, projects and activities and its disclosure shall be in compliance to Republic Act 10173 (Data Privacy Act of 2012).</p>
     </section>
   </main>
+
+  <div class="modal-overlay" id="signatoriesModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signatoriesModalTitle">
+      <h3 id="signatoriesModalTitle">Edit FACED Signatories</h3>
+      <form id="signatoriesForm">
+        <label class="modal-field">
+          Name/Signature of Brgy. Captain
+          <input type="text" id="brgyCaptainNameInput" />
+        </label>
+        <label class="modal-field">
+          Name/Signature of LSWDO
+          <input type="text" id="lswdoNameInput" />
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="cancelSignatoriesButton">Cancel</button>
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script src="print-form.js"></script>
 </body>
 </html>
