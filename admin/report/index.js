@@ -206,7 +206,6 @@ function renderAll(data) {
     renderChart('chartMonth', 'line', asDataPoints(data.charts.beneficiaries_per_month), '#f97316');
     renderPie('chartSex', asDataPoints(data.charts.by_sex));
     renderPie('chartAge', asDataPoints(data.charts.by_age_bracket));
-    renderPie('chartSector', asDataPoints(data.charts.by_sector));
 
     renderTable(data.table.rows || []);
     renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
