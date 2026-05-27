@@ -112,7 +112,6 @@ function renderPie(containerId, data) {
 function renderSummary(summary) {
     const cards = [
         ['Total Beneficiaries', summary.total_beneficiaries, '#2563eb'],
-        ['Total Households Served', summary.total_households_served, '#059669'],
         ['Total Programs', summary.total_programs, '#f97316'],
         ['Total Male', summary.total_male, '#1d4ed8'],
         ['Total Female', summary.total_female, '#db2777'],
