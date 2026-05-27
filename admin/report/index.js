@@ -25,8 +25,6 @@ const filters = {
     month: document.getElementById('filterMonth'),
     sex: document.getElementById('filterSex'),
     age_bracket: document.getElementById('filterAgeBracket'),
-    sector: document.getElementById('filterSector'),
-    household: document.getElementById('filterHousehold'),
     date_from: document.getElementById('filterDateFrom'),
     date_to: document.getElementById('filterDateTo')
 };
@@ -112,7 +110,6 @@ function renderPie(containerId, data) {
 function renderSummary(summary) {
     const cards = [
         ['Total Beneficiaries', summary.total_beneficiaries, '#2563eb'],
-        ['Total Households Served', summary.total_households_served, '#059669'],
         ['Total Programs', summary.total_programs, '#f97316'],
         ['Total Male', summary.total_male, '#1d4ed8'],
         ['Total Female', summary.total_female, '#db2777'],
@@ -141,7 +138,7 @@ function fillSelectOptions(selectElement, values, defaultLabel) {
 
 function renderTable(rows) {
     if (!rows.length) {
-        tableBody.innerHTML = '<tr><td colspan="11">No records found.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8">No records found.</td></tr>';
         return;
     }
 
@@ -154,9 +151,6 @@ function renderTable(rows) {
             <td>${row.sex || '-'}</td>
             <td>${row.age ?? '-'}</td>
             <td>${row.age_bracket || '-'}</td>
-            <td>${row.sector || '-'}</td>
-            <td>${row.household || '-'}</td>
-            <td>${row.interventions || '-'}</td>
             <td>${row.created_at || '-'}</td>
         </tr>
     `).join('');
@@ -207,7 +201,6 @@ function renderAll(data) {
     renderChart('chartMonth', 'line', asDataPoints(data.charts.beneficiaries_per_month), '#f97316');
     renderPie('chartSex', asDataPoints(data.charts.by_sex));
     renderPie('chartAge', asDataPoints(data.charts.by_age_bracket));
-    renderPie('chartSector', asDataPoints(data.charts.by_sector));
 
     renderTable(data.table.rows || []);
     renderPagination(data.table.pagination || { page: 1, total_pages: 1 });
@@ -218,7 +211,6 @@ function renderAll(data) {
     fillSelectOptions(filters.year, data.filter_options.years || [], 'All Years');
     fillSelectOptions(filters.sex, data.filter_options.sexes || [], 'All');
     fillSelectOptions(filters.age_bracket, data.filter_options.age_brackets || [], 'All Age Brackets');
-    fillSelectOptions(filters.sector, data.filter_options.sectors || [], 'All Sectors');
 
     emptyState.classList.toggle('hidden', Number(data.table.pagination?.total_rows || 0) > 0);
 }

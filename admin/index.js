@@ -135,7 +135,7 @@ function renderRecentActivities() {
   recentActivitiesContainer.innerHTML = '';
 
   if (seeAllNotificationsLink) {
-    seeAllNotificationsLink.hidden = true;
+    seeAllNotificationsLink.hidden = totalNotifications <= 3;
   }
 
   if (!recentActivities.length) {

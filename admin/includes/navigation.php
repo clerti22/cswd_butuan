@@ -52,6 +52,15 @@ HTML,
 </svg>
 HTML,
         ],
+        'notifications' => [
+            'label' => 'Notifications',
+            'href' => 'notifications/index.php',
+            'icon' => <<<'HTML'
+<svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M8 16a2 2 0 0 0 1.985-1.75h-3.97A2 2 0 0 0 8 16m.104-14.804A1 1 0 0 0 6.896 1.2a5 5 0 0 0-3.07 4.64v2.517l-.867 1.735A1 1 0 0 0 3.854 11h8.292a1 1 0 0 0 .895-1.447l-.867-1.734V5.84A5 5 0 0 0 9.104 1.196"/>
+</svg>
+HTML,
+        ],
         'profile' => [
             'label' => 'View Profile',
             'href' => 'profile/index.php',
