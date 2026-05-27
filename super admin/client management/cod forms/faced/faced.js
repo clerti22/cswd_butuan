@@ -39,6 +39,7 @@ const closeFamilyModal = document.getElementById('closeFamilyModal');
 const familyForm = document.getElementById('familyForm');
 const familyTableBody = document.getElementById('familyTableBody');
 const submitBtn = document.getElementById('submitBtn');
+const printBtn = document.getElementById('printBtn');
 const alertBox = document.getElementById('alertBox');
 const modalAlert = document.getElementById('modalAlert');
 
@@ -304,3 +305,13 @@ submitBtn?.addEventListener('click', async () => {
 
 renderFamilyRows();
 loadRecord();
+
+
+printBtn?.addEventListener('click', () => {
+  const target = controlNumber || new URLSearchParams(window.location.search).get('control_number') || '';
+  if (!target) {
+    showAlert('Save this record first before printing.');
+    return;
+  }
+  window.open(`print_form.php?control_number=${encodeURIComponent(target)}`, '_blank');
+});
