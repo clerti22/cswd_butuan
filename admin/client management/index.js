@@ -123,13 +123,26 @@ const addClientRoutes = {
 };
 const formRoutePrefix = '../../super admin/client management/';
 
+
+function getScopedDivisionKey() {
+    const division = String(window.adminDivision || '').trim().toLowerCase();
+    if (division && Object.prototype.hasOwnProperty.call(addClientOptions, division)) {
+        return division;
+    }
+
+    return '';
+}
+
+
 function buildFormRoute(path) {
     return `${formRoutePrefix}${path}`;
 }
 
 function setAddClientMenu(tabKey) {
-    const options = addClientOptions[tabKey] || [];
-    const routes = addClientRoutes[tabKey] || {};
+    const scopedDivisionKey = getScopedDivisionKey();
+    const menuKey = scopedDivisionKey || tabKey;
+    const options = addClientOptions[menuKey] || [];
+    const routes = addClientRoutes[menuKey] || {};
 
     addClientMenu.innerHTML = options
         .map(option => {
