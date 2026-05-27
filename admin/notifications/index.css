@@ -1,0 +1,112 @@
+@import url('../index.css');
+
+/* Notifications page-specific styles only.
+   Core layout/sidebar styling comes from ../index.css to keep parity with other Super Admin pages. */
+
+.content {
+  padding: 1.5rem;
+}
+
+.notifications-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.06);
+  padding: 1.2rem;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.page-subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.total-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+}
+
+.notification-group {
+  margin-top: 1.1rem;
+}
+
+.group-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #334155;
+  margin-bottom: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.notification-item {
+  display: flex;
+  gap: 0.8rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 0.85rem;
+  margin-bottom: 0.65rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.notification-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-size: 0.95rem;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.notification-meta {
+  margin-top: 0.45rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.3rem 0.8rem;
+  color: #475569;
+  font-size: 0.78rem;
+}
+
+.notification-time {
+  margin-top: 0.5rem;
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
+.empty-state {
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 1.1rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .notification-meta {
+    grid-template-columns: 1fr;
+  }
+}
