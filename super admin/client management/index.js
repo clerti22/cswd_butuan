@@ -184,13 +184,21 @@ function getShowRoute(client, variant = 'ciu') {
 }
 
 function getPrintRoute(client, variant = 'ciu') {
+    const sourceTable = String(client.source_table || '');
+
+    if (sourceTable === 'faced_table') {
+        const controlNumber = String(client.control_number || '').trim();
+        return controlNumber
+            ? `cod forms/faced/print_form.php?control_number=${encodeURIComponent(controlNumber)}`
+            : '#';
+    }
+
     const keyId = Number(client.key_id);
 
     if (!Number.isInteger(keyId) || keyId <= 0) {
         return '#';
     }
 
-    const sourceTable = String(client.source_table || '');
     const routesByTable = {
         pwud_table: 'dpsd forms/pwud/print_form.php',
         pyap_table: 'dpsd forms/pyap/print_form.php',
