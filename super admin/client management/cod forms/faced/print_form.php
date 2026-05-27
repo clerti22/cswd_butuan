@@ -72,7 +72,7 @@ $emptyRows = max(12 - count($familyRows), 0);
   <link rel="stylesheet" href="print-form.css">
 </head>
 <body>
-  <div class="toolbar"><button type="button" id="printFormButton">Print Form</button></div>
+  <div class="toolbar"><button type="button" id="printFormButton">Print Form</button><button type="button" id="editSerialButton">Edit Serial Number</button></div>
   <main class="sheet">
     <header class="faced-header">
       <div class="faced-header__left">
@@ -85,7 +85,7 @@ $emptyRows = max(12 - count($familyRows), 0);
       </div>
       <div class="serial-box">
         <p>THIS CARD IS NOT FOR SALE</p><p>SOCIAL WORKER'S COPY</p><p>OFFICIAL USE ONLY</p>
-        <span>SERIAL NUMBER</span>
+        <span>SERIAL NUMBER</span><div id="serialNumberValue" class="serial-number-value"></div>
       </div>
     </header>
 
