@@ -42,6 +42,10 @@ const householdView = document.getElementById('householdView');
 
 const tabButtons = document.querySelectorAll('.tab-btn');
 const sortHeaders = document.querySelectorAll('th[data-sort]');
+const pdfPreviewModal = document.getElementById('pdfPreviewModal');
+const pdfPreviewFrame = document.getElementById('pdfPreviewFrame');
+const pdfDownloadBtn = document.getElementById('pdfDownloadBtn');
+const pdfCloseBtn = document.getElementById('pdfCloseBtn');
 
 const state = {
     page: 1,
@@ -51,6 +55,11 @@ const state = {
     sort_dir: 'desc',
     data: null
 };
+
+let previewPdfBlobUrl = null;
+let previewPdfFilename = '';
+const pdfAssetCache = new Map();
+
 
 const charts = {};
 
@@ -301,6 +310,144 @@ function switchView(view) {
     householdView.classList.toggle('hidden', view !== 'household');
 }
 
+function closePdfPreview() {
+    pdfPreviewModal?.classList.add('hidden');
+    if (pdfPreviewFrame) {
+        pdfPreviewFrame.src = 'about:blank';
+    }
+
+    if (previewPdfBlobUrl) {
+        URL.revokeObjectURL(previewPdfBlobUrl);
+        previewPdfBlobUrl = null;
+    }
+
+    previewPdfFilename = '';
+}
+
+function openPdfPreview(blob, filename) {
+    if (!pdfPreviewModal || !pdfPreviewFrame) {
+        throw new Error('PDF preview UI is missing.');
+    }
+
+    if (previewPdfBlobUrl) {
+        URL.revokeObjectURL(previewPdfBlobUrl);
+    }
+
+    previewPdfBlobUrl = URL.createObjectURL(blob);
+    previewPdfFilename = filename;
+
+    pdfPreviewFrame.src = previewPdfBlobUrl;
+    pdfPreviewModal.classList.remove('hidden');
+}
+
+function downloadPreviewPdf() {
+    if (!previewPdfBlobUrl) return;
+
+    const link = document.createElement('a');
+    link.href = previewPdfBlobUrl;
+    link.download = previewPdfFilename || `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
+async function loadImageDataUrl(path) {
+    if (pdfAssetCache.has(path)) return pdfAssetCache.get(path);
+
+    try {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Failed to load image: ${path}`);
+        const blob = await response.blob();
+        const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+        pdfAssetCache.set(path, dataUrl);
+        return dataUrl;
+    } catch (error) {
+        console.warn('PDF asset load failed:', path, error);
+        pdfAssetCache.set(path, null);
+        return null;
+    }
+}
+
+async function drawReportHeaderAndFooter(doc, pageNumber, pageCount) {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    const sealImagePath = '../images-logo/butuanseal.png';
+    const qrImagePath = '../../super admin/images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg';
+    const footerLogoPath = '../../super admin/client management/dpsd forms/pwud/print form/footer.png';
+
+    const sealImageData = await loadImageDataUrl(sealImagePath);
+    if (sealImageData) {
+        doc.addImage(sealImageData, 'PNG', 12, 7, 20, 20);
+    }
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(10, 35, 83);
+    doc.text('Republic of the Philippines', 36, 12);
+
+    doc.setFontSize(14);
+    doc.text('CITY GOVERNMENT OF ', 36, 17);
+    doc.setTextColor(165, 42, 42);
+    doc.text('BUTUAN', 83.5, 17);
+
+    doc.setTextColor(10, 35, 83);
+    doc.setFont('times', 'bold');
+    doc.setFontSize(12);
+    doc.text('City Social Welfare and Development Department', 36, 22.5);
+    doc.text('Butuan City', 36, 27.5);
+
+    doc.setFillColor(71, 187, 236);
+    doc.rect(12, 30, pageWidth - 24, 1.8, 'F');
+    doc.setFillColor(17, 73, 136);
+    doc.rect(pageWidth * 0.63, 30, (pageWidth - 24) * 0.37, 1.8, 'F');
+
+    const footerTop = pageHeight - 16;
+    doc.setFillColor(11, 61, 110);
+    doc.rect(12, footerTop - 7.5, pageWidth - 24, 1.5, 'F');
+
+    const qrImageData = await loadImageDataUrl(qrImagePath);
+    if (qrImageData) {
+        doc.addImage(qrImageData, 'JPEG', 16, footerTop - 5, 12, 12);
+    } else {
+        doc.rect(16, footerTop - 5, 12, 12);
+    }
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 51, 153);
+    doc.setFontSize(7);
+    doc.text('Jose Rosales Ave. Brgy. Tandang Sora, Butuan City', 31, footerTop - 0.5);
+    doc.text('Email: cswdd@butuan.gov.ph', 31, footerTop + 2.5);
+    doc.text('Phone: 0956-224-1679', 31, footerTop + 5.5);
+    doc.text('www.butuan.gov.ph', 31, footerTop + 8.5);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text('TUVNORD', pageWidth - 66, footerTop + 1, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.text('Certificate Registration', pageWidth - 66, footerTop + 4, { align: 'center' });
+    doc.text('No. PHP', pageWidth - 66, footerTop + 7, { align: 'center' });
+    doc.text('QMS 23 95 0116', pageWidth - 66, footerTop + 10, { align: 'center' });
+
+    const footerLogoData = await loadImageDataUrl(footerLogoPath);
+    if (footerLogoData) {
+        doc.addImage(footerLogoData, 'PNG', pageWidth - 46, footerTop - 2.5, 30, 10);
+    }
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(70, 70, 70);
+    doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth - 12, pageHeight - 2.5, { align: 'right' });
+    doc.setTextColor(0, 0, 0);
+}
+
 async function exportPdf() {
     if (!state.data || !window.jspdf) return;
 
@@ -309,11 +456,11 @@ async function exportPdf() {
     const appliedFilters = getFilterValues();
 
     doc.setFontSize(14);
-    doc.text('CSWDD Reports and Analytics', 14, 14);
+    doc.text('CSWDD Reports and Analytics', 14, 48);
     doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 20);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 54);
 
-    let y = 26;
+    let y = 60;
     doc.text('Applied Filters:', 14, y);
     y += 5;
 
@@ -339,18 +486,26 @@ async function exportPdf() {
         row.barangay || '-',
         row.sex || '-',
         String(row.age ?? '-'),
-        row.age_bracket || '-',
         row.created_at || '-'
     ]);
 
     doc.autoTable({
         startY: y,
-        head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Age Bracket', 'Date']],
+        head: [['Control #', 'Name', 'Program', 'Barangay', 'Sex', 'Age', 'Date']],
         body: rows,
+        margin: { top: 44, bottom: 22 },
         styles: { fontSize: 8 }
     });
 
-    doc.save(`cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        await drawReportHeaderAndFooter(doc, page, pageCount);
+    }
+
+    const filename = `cswdd-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    const pdfBlob = doc.output('blob');
+    openPdfPreview(pdfBlob, filename);
 }
 
 document.getElementById('generateReportBtn')?.addEventListener('click', () => {
@@ -366,6 +521,19 @@ document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
     state.search = '';
     tableSearchInput.value = '';
     loadReports().catch(console.error);
+});
+
+pdfCloseBtn?.addEventListener('click', closePdfPreview);
+pdfDownloadBtn?.addEventListener('click', downloadPreviewPdf);
+pdfPreviewModal?.addEventListener('click', (event) => {
+    if (event.target === pdfPreviewModal) {
+        closePdfPreview();
+    }
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && pdfPreviewModal && !pdfPreviewModal.classList.contains('hidden')) {
+        closePdfPreview();
+    }
 });
 
 document.getElementById('exportPdfBtn')?.addEventListener('click', () => {
