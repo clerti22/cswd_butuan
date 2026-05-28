@@ -62,7 +62,7 @@ function build_public_origin(): string
         return rtrim($configuredOrigin, '/');
     }
 
-    $preferredDefaultOrigin = 'http://192.168.254.107';
+    $preferredDefaultOrigin = 'http://192.168.254.101';
     if ($preferredDefaultOrigin !== '') {
         return rtrim($preferredDefaultOrigin, '/');
     }
