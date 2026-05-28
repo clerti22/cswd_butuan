@@ -378,8 +378,8 @@ async function drawReportHeaderAndFooter(doc, pageNumber, pageCount) {
     const pageHeight = doc.internal.pageSize.getHeight();
 
     const sealImagePath = '../images-logo/butuanseal.png';
-    const qrImagePath = '../images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg';
-    const footerLogoPath = '../client management/dpsd forms/pwud/print form/footer.png';
+    const qrImagePath = '../../super admin/images-logo/4ea40ea1-15b1-44ac-b015-6fab929d199e.jpg';
+    const footerLogoPath = '../../super admin/client management/dpsd forms/pwud/print form/footer.png';
 
     const sealImageData = await loadImageDataUrl(sealImagePath);
     if (sealImageData) {
