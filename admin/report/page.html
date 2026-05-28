@@ -173,6 +173,22 @@
         </div>
     </div>
 
+
+    <div class="pdf-preview-modal hidden" id="pdfPreviewModal" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+        <div class="pdf-preview-dialog">
+            <div class="pdf-preview-header">
+                <h3 id="pdfPreviewTitle">PDF Preview</h3>
+                <div class="pdf-preview-actions">
+                    <button type="button" id="pdfDownloadBtn" class="btn btn-success">Download</button>
+                    <button type="button" id="pdfCloseBtn" class="btn btn-muted">Close</button>
+                </div>
+            </div>
+            <div class="pdf-preview-body">
+                <iframe id="pdfPreviewFrame" title="Report PDF Preview"></iframe>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
