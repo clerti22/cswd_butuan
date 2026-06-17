@@ -43,10 +43,11 @@ body {
     padding: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
 }
-
 .sidebar-title {
     font-size: 1.1rem;
     font-weight: 700;
@@ -73,6 +74,26 @@ body {
     transition: all 0.2s;
     position: relative;
     overflow: hidden;
+}
+
+.user-info {
+  margin-top: 0;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+.user-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 0.25rem 0;
+}
+
+.user-role,.user-division {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    text-transform: capitalize;
 }
 
 .nav-item::before {

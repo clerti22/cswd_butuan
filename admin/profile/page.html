@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCIMS Dashboard</title>
+    <title>CCIMS Admin Profile</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="index.css">
@@ -14,7 +14,23 @@
     <div class="overlay" id="overlay"></div>
 
     <div class="container">
-        <nav class="sidebar" id="sidebar"></nav>
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../images-logo/cswd-logo.png" alt="" width="130" height="110">
+                <p class="sidebar-title">CCIMS Dashboard</p>
+                <button class="close-btn" id="closeSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="user-info">
+                <p class="user-name">Benjamin Scott</p>
+                <p class="user-role">Admin</p>
+                <p class="user-division">PSSD</p>
+            </div>
+        </nav>
 
         <div class="main-content">
             <header class="topbar">
@@ -25,7 +41,7 @@
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <h3 class="topbar-title">Super Admin Profile</h3>
+                <h3 class="topbar-title">Admin Profile</h3>
             </header>
 
             <main class="form-page">

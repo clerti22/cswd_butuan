@@ -77,6 +77,10 @@ HTML,
     $logoutModalStylesPath = admin_sidebar_path($basePrefix, 'includes/logout-confirmation.css');
     $logoutModalScriptPath = admin_sidebar_path($basePrefix, 'includes/logout-confirmation.js');
 
+    $fullName = (string) ($_SESSION['full_name'] ?? 'User');
+    $userRole = (string) ($_SESSION['role'] ?? 'unknown');
+    $userDivision = (string) ($_SESSION['division'] ?? 'N/A');
+
     ob_start();
     ?>
 <nav class="sidebar" id="sidebar">
@@ -84,6 +88,12 @@ HTML,
         <img src="<?= htmlspecialchars(admin_sidebar_path($basePrefix, 'images-logo/cswd-logo.png'), ENT_QUOTES, 'UTF-8') ?>" alt="" width="130" height="110">
         <p class="sidebar-title">CCIMS Dashboard</p>
         <button class="close-btn" id="closeSidebar">✕</button>
+    </div>
+
+    <div class="user-info">
+        <p class="user-name"><?= htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') ?></p>
+        <p class="user-role"><?= htmlspecialchars(ucfirst($userRole), ENT_QUOTES, 'UTF-8') ?></p>
+        <p class="user-division"><?= htmlspecialchars($userDivision, ENT_QUOTES, 'UTF-8') ?></p>
     </div>
     <div class="nav-menu">
         <?php foreach ($items as $key => $item): ?>

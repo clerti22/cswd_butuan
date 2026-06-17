@@ -42,20 +42,56 @@ body {
     padding: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
 }
 
 .sidebar-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    background: linear-gradient(45deg, #fff, #e2e8f0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+     font-size: 1.1rem;
+     font-weight: 700;
+     background: linear-gradient(45deg, #fff, #e2e8f0);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     background-clip: text;
+ }
 
-.nav-menu {
+ .user-info {
+     margin-top: 0;
+     padding: 1rem 1.5rem;
+     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+     text-align: center;
+     display: flex;
+     flex-direction: column;
+     gap: 0.25rem;
+ }
+
+ .user-name {
+     font-size: 0.95rem;
+     font-weight: 600;
+     color: #ffffff;
+     margin: 0;
+     line-height: 1.2;
+ }
+
+ .user-role {
+     font-size: 0.8rem;
+     color: rgba(255, 255, 255, 0.7);
+     margin: 0;
+     text-transform: capitalize;
+     line-height: 1.2;
+ }
+
+ .user-division {
+     font-size: 0.8rem;
+     color: rgba(255, 255, 255, 0.7);
+     margin: 0;
+     text-transform: uppercase;
+     line-height: 1.2;
+ }
+ 
+ .nav-menu {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;

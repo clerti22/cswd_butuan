@@ -64,16 +64,6 @@ HTML,
 </svg>
 HTML,
         ],
-        'feedback' => [
-            'label' => 'Feedback',
-            'href' => 'feedback/index.php',
-            'icon' => <<<'HTML'
-<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-  <polyline points="22,6 12,13 2,6"></polyline>
-</svg>
-HTML,
-        ],
         'notifications' => [
             'label' => 'Notifications',
             'href' => 'notifications/index.php',
@@ -100,6 +90,9 @@ HTML,
     $logoutModalStylesPath = super_admin_sidebar_path($basePrefixToSuperAdmin, 'includes/logout-confirmation.css');
     $logoutModalScriptPath = super_admin_sidebar_path($basePrefixToSuperAdmin, 'includes/logout-confirmation.js');
 
+    $fullName = (string) ($_SESSION['full_name'] ?? 'User');
+    $userRole = (string) ($_SESSION['role'] ?? 'unknown');
+    
     ob_start();
     ?>
 <nav class="sidebar" id="sidebar">
@@ -112,6 +105,11 @@ HTML,
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
         </button>
+    </div>
+
+    <div class="user-info">
+        <p class="user-name"><?= htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') ?></p>
+        <p class="user-role"><?= htmlspecialchars(ucfirst($userRole), ENT_QUOTES, 'UTF-8') ?></p>
     </div>
 
     <div class="nav-menu">
