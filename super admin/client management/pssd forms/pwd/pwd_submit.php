@@ -81,11 +81,11 @@ if (count($householdMembers) === 0) {
 
 $connection = new mysqli('localhost', 'root', '', 'cswd_db');
 
-if ($connection->connect_error) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $connection->connect_error]);
-    exit;
-}
+// if ($connection->connect_error) {
+//     http_response_code(500);
+//     echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $connection->connect_error]);
+//     exit;
+// }
 
 $connection->begin_transaction();
 $recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
