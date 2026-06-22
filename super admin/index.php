@@ -17,4 +17,4 @@ if ($pageHtml === false) {
 $sidebarMarkup = render_super_admin_sidebar('dashboard', '.');
 $renderedPage = preg_replace('/<nav class="sidebar" id="sidebar">.*?<\/nav>/s', $sidebarMarkup, $pageHtml, 1);
 
-echo $renderedPage === null ? $pageHtml : $renderedPage;
+ echo $renderedPage === null ? $pageHtml : $renderedPage;
