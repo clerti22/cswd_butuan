@@ -64,8 +64,6 @@ const showAge = document.getElementById('showAge');
 const showRole = document.getElementById('showRole');
 const showEmail = document.getElementById('showEmail');
 
-const SECRET_CODE = 'cswd2026';
-
 let activeRole = 'encoder';
 let currentPage = 1;
 let totalPages = 1;
@@ -413,24 +411,46 @@ document.querySelectorAll('.custom-modal').forEach((modal) => {
 });
 
 if (verifySecretCodeButton) {
-    verifySecretCodeButton.addEventListener('click', () => {
+    verifySecretCodeButton.addEventListener('click', async () => {
         if (!secretCodeInput || !secretCodeError) {
             return;
         }
 
-        if (secretCodeInput.value.trim() !== SECRET_CODE) {
-            secretCodeError.textContent = 'Incorrect secret code. Please try again.';
+        if (!secretCodeInput.value.trim()) {
+            secretCodeError.textContent = 'Please enter the secret code.';
             return;
         }
 
+        verifySecretCodeButton.disabled = true;
         secretCodeError.textContent = '';
 
-        if (selectedUser) {
-            applyAccountActionModalCopy(selectedAction, String(selectedUser.full_name ?? 'this user'));
-        }
+        try {
+            const response = await fetch('verify_secret_code.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: secretCodeInput.value.trim() }),
+            });
 
-        closeModal(disableCodeModal);
-        openModal(disableConfirmModal);
+            const result = await response.json();
+
+            if (!response.ok || !result.valid) {
+                secretCodeError.textContent = result.message || 'Incorrect secret code. Please try again.';
+                return;
+            }
+
+            if (selectedUser) {
+                applyAccountActionModalCopy(selectedAction, String(selectedUser.full_name ?? 'this user'));
+            }
+
+            closeModal(disableCodeModal);
+            openModal(disableConfirmModal);
+        } catch (error) {
+            secretCodeError.textContent = 'Unable to verify secret code right now. Please try again.';
+        } finally {
+            verifySecretCodeButton.disabled = false;
+        }
     });
 }
 

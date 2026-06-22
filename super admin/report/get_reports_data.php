@@ -146,7 +146,7 @@ try {
             return $row['created_at'] !== '' ? substr((string) $row['created_at'], 0, 4) : '';
         }, $allRecords), static fn(string $val): bool => $val !== ''))),
         'sexes' => array_values(array_unique(array_map(static fn(array $row): string => (string) ($row['sex'] ?? 'Unspecified'), $allRecords))),
-        'age_brackets' => ['0-12', '13-17', '18-24', '25-39', '40-59', '60+', 'Unknown'],
+        'age_brackets' => ['0-12', '13-17', '18-24', '25-39', '40-59', '60+'],
         'sectors' => array_values(array_unique(array_filter(array_map(static fn(array $row): string => (string) ($row['sector'] ?? ''), $allRecords), static fn(string $val): bool => $val !== ''))),
     ];
 
