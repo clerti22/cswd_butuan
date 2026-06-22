@@ -49,7 +49,9 @@ $infoMessages = [
                 </label>
                 <button class="login-button" type="submit">Login</button>
             </form>
+            
         </section>
+        <footer style="margin-top: 10rem; color: gray;">© 2026 SMCC College of Computing and Information Sciences. Developed by Dizon et al.</footer>
     </main>
 </body>
 </html>

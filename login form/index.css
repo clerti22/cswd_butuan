@@ -12,9 +12,11 @@ body {
 }
 
 .login-page {
+ 
     min-height: 100vh;
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     padding: 32px 16px;
 }
