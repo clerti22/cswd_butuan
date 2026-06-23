@@ -51,7 +51,7 @@ $infoMessages = [
             </form>
             
         </section>
-        <footer style="margin-top: 10rem; color: gray;">© 2026 SMCC College of Computing and Information Sciences. Developed by Dizon et al.</footer>
+        <footer style="margin-top: 7rem; color: gray;">© 2026 SMCC College of Computing and Information Sciences. Developed by Dizon et al.</footer>
     </main>
 </body>
 </html>
