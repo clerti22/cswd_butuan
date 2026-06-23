@@ -46,6 +46,7 @@ const paginationInfo = document.getElementById('paginationInfo');
 const disableCodeModal = document.getElementById('disableCodeModal');
 const disableConfirmModal = document.getElementById('disableConfirmModal');
 const showUserModal = document.getElementById('showUserModal');
+const setSecretCodeModal = document.getElementById('setSecretCodeModal');
 const secretCodeInput = document.getElementById('secretCodeInput');
 const secretCodeError = document.getElementById('secretCodeError');
 const verifySecretCodeButton = document.getElementById('verifySecretCodeButton');
@@ -53,6 +54,12 @@ const confirmDisableButton = document.getElementById('confirmDisableButton');
 const disableConfirmMessage = document.getElementById('disableConfirmMessage');
 const disableCodeTitle = document.getElementById('disableCodeTitle');
 const disableConfirmTitle = document.getElementById('disableConfirmTitle');
+const setSecretCodeButton = document.getElementById('setSecretCodeButton');
+const newSecretCodeInput = document.getElementById('newSecretCodeInput');
+const verifyNewSecretCodeInput = document.getElementById('verifyNewSecretCodeInput');
+const currentSecretCodeInput = document.getElementById('currentSecretCodeInput');
+const setSecretCodeError = document.getElementById('setSecretCodeError');
+const updateSecretCodeButton = document.getElementById('updateSecretCodeButton');
 const showFullName = document.getElementById('showFullName');
 const showUsername = document.getElementById('showUsername');
 const showAssignmentLabel = document.getElementById('showAssignmentLabel');
@@ -108,6 +115,13 @@ function closeModal(modal) {
     if (modal === disableCodeModal && secretCodeInput && secretCodeError) {
         secretCodeInput.value = '';
         secretCodeError.textContent = '';
+    }
+
+    if (modal === setSecretCodeModal && newSecretCodeInput && verifyNewSecretCodeInput && currentSecretCodeInput && setSecretCodeError) {
+        newSecretCodeInput.value = '';
+        verifyNewSecretCodeInput.value = '';
+        currentSecretCodeInput.value = '';
+        setSecretCodeError.textContent = '';
     }
 
     if (!document.querySelector('.custom-modal:not([hidden])')) {
@@ -490,6 +504,74 @@ if (confirmDisableButton) {
             alert(error.message || 'Unable to disable account right now.');
         } finally {
             confirmDisableButton.disabled = false;
+        }
+    });
+}
+
+if (setSecretCodeButton) {
+    setSecretCodeButton.addEventListener('click', () => {
+        if (setSecretCodeModal) {
+            openModal(setSecretCodeModal);
+            if (currentSecretCodeInput) {
+                currentSecretCodeInput.focus();
+            }
+        }
+    });
+}
+
+if (updateSecretCodeButton) {
+    updateSecretCodeButton.addEventListener('click', async () => {
+        if (!newSecretCodeInput || !verifyNewSecretCodeInput || !currentSecretCodeInput || !setSecretCodeError) {
+            return;
+        }
+
+        const newCode = newSecretCodeInput.value.trim();
+        const verifyCode = verifyNewSecretCodeInput.value.trim();
+        const currentCode = currentSecretCodeInput.value.trim();
+
+        if (!newCode || !verifyCode || !currentCode) {
+            setSecretCodeError.textContent = 'All fields are required.';
+            return;
+        }
+
+        if (newCode !== verifyCode) {
+            setSecretCodeError.textContent = 'New secret code and verify secret code do not match.';
+            return;
+        }
+
+        if (newCode.length < 4) {
+            setSecretCodeError.textContent = 'Secret code must be at least 4 characters long.';
+            return;
+        }
+
+        updateSecretCodeButton.disabled = true;
+        setSecretCodeError.textContent = '';
+
+        try {
+            const response = await fetch('update_secret_code.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    current_code: currentCode,
+                    new_code: newCode,
+                    verify_code: verifyCode,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.ok) {
+                setSecretCodeError.textContent = result.message || 'Unable to update secret code.';
+                return;
+            }
+
+            closeModal(setSecretCodeModal);
+        } catch (error) {
+            setSecretCodeError.textContent = 'Unable to update secret code right now. Please try again.';
+        } finally {
+            updateSecretCodeButton.disabled = false;
         }
     });
 }

@@ -107,6 +107,11 @@
                                 Search
                             </button>
 
+                            <button type="button" class="control-button" id="setSecretCodeButton">
+                                <i class="bi bi-shield-lock"></i>
+                                Set Secret Code
+                            </button>
+
                             <a href="admin register/index.php" id="addUserButton" class="control-button">
                                 <i class="bi bi-plus-lg"></i>
                                 Add User
@@ -220,6 +225,26 @@
             <div class="custom-modal-actions custom-modal-actions-center">
                 <button type="button" class="action-btn action-btn-danger"
                     data-close-modal="showUserModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="setSecretCodeModal" class="custom-modal" hidden>
+        <div class="custom-modal-content custom-modal-compact" role="dialog" aria-modal="true"
+            aria-labelledby="setSecretCodeTitle">
+            <h2 id="setSecretCodeTitle">Set Secret Code</h2>
+            <p class="custom-modal-subtitle">Enter your current secret code and set a new one.</p>
+            <label for="newSecretCodeInput" class="info-label">New Secret Code</label>
+            <input type="password" id="newSecretCodeInput" class="info-input" autocomplete="off" />
+            <label for="verifyNewSecretCodeInput" class="info-label">Verify Secret Code</label>
+            <input type="password" id="verifyNewSecretCodeInput" class="info-input" autocomplete="off" />
+            <label for="currentSecretCodeInput" class="info-label">Current Secret Code</label>
+            <input type="password" id="currentSecretCodeInput" class="info-input" autocomplete="off" />
+            <p id="setSecretCodeError" class="modal-error" aria-live="polite"></p>
+            <div class="custom-modal-actions">
+                <button type="button" class="action-btn action-btn-secondary"
+                    data-close-modal="setSecretCodeModal">Cancel</button>
+                <button type="button" id="updateSecretCodeButton" class="action-btn action-btn-danger">Update</button>
             </div>
         </div>
     </div>

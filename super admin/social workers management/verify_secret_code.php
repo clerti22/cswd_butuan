@@ -48,7 +48,9 @@ try {
 
     $storedCode = (string) ($row['code'] ?? '');
 
-    if ($code !== $storedCode) {
+    $isValid = str_starts_with($storedCode, '$2y$') ? password_verify($code, $storedCode) : $code === $storedCode;
+
+    if (!$isValid) {
         echo json_encode(['valid' => false, 'message' => 'Incorrect secret code. Please try again.']);
         exit;
     }
