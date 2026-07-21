@@ -110,6 +110,10 @@ try {
                 ],
             ],
         ],
+        'pwd-2' => [
+            'table' => 'pwd_table2',
+            'related' => [],
+        ],
         'senior-citizen' => [
             'table' => 'snr_table',
             'related' => [

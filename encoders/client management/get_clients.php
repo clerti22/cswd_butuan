@@ -91,6 +91,7 @@ $programToTable = [
     'PYAP' => 'pyap_table',
     'SOLO PARENT' => 'soloparent_info_table',
     'PWD' => 'pwd_table',
+    'PWD-2' => 'pwd_table2',
     'SENIOR CITIZEN' => 'snr_table',
     'CAR' => 'car_table',
     'CICL' => 'cicl_table',
