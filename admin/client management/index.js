@@ -95,7 +95,7 @@ const nextButton = document.querySelector('.pagination .pager-btn:last-child');
 
 const addClientOptions = {
     dpsd: ['PYAP', 'Solo Parent', 'PWUD'],
-    pssd: ['Senior Citizen', 'PWD'],
+    pssd: ['Senior Citizen', 'PWD', 'PWD-2'],
     rpsd: ['VAWC', 'CSAE', 'CAR', 'CICL', 'CIU'],
     cod: ['FACED']
 };
@@ -108,7 +108,8 @@ const addClientRoutes = {
     },
     pssd: {
         'Senior Citizen': 'pssd forms/senior citizen/index.php',
-        'PWD': 'pssd forms/pwd/index.php'
+        'PWD': 'pssd forms/pwd/index.php',
+        'PWD-2': 'pssd forms/pwd2/index.php'
     },
     rpsd: {
         'VAWC': 'rpsd forms/vawc/index.php',
@@ -180,6 +181,7 @@ function getShowRoute(client, variant = 'ciu') {
         soloparent_info_table: 'dpsd forms/solo parent/index.php',
         snr_table: 'pssd forms/senior citizen/index.php',
         pwd_table: 'pssd forms/pwd/index.php',
+        pwd_table2: 'pssd forms/pwd2/index.php',
         car_table: 'rpsd forms/car/index.php',
         cicl_table: 'rpsd forms/cicl/index.php',
         ciu_table: 'rpsd forms/ciu/index.php',
@@ -215,6 +217,7 @@ function getPrintRoute(client, variant = 'ciu') {
         soloparent_info_table: 'dpsd forms/solo parent/print_form.php',
         snr_table: 'pssd forms/senior citizen/print_form.php',
         pwd_table: 'pssd forms/pwd/print_form.php',
+        pwd_table2: 'pssd forms/pwd2/print_form.php',
         car_table: 'rpsd forms/car/print_form.php',
         cicl_table: 'rpsd forms/cicl/print_form.php',
         ciu_table: 'rpsd forms/ciu/print_form.php',

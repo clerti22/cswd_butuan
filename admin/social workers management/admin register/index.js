@@ -48,7 +48,7 @@ const programAssignedField = document.getElementById('program_assigned');
 
 const divisionPrograms = {
     DPSD: ['PWUD', 'SOLO PARENT', 'PYAP'],
-    PSSD: ['PWD', 'SENIOR CITIZEN'],
+    PSSD: ['PWD', 'PWD-2', 'SENIOR CITIZEN'],
     RPSD: ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 };
 const allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];

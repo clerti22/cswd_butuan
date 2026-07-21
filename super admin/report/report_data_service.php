@@ -16,6 +16,7 @@ final class ReportDataService
         'PYAP' => 'pyap_table',
         'SENIOR CITIZEN' => 'snr_table',
         'PWD' => 'pwd_table',
+        'PWD-2' => 'pwd_table2',
         'CAR' => 'car_table',
         'CIU' => 'ciu_table',
         'VAWC' => 'vawc_table',
