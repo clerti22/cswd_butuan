@@ -86,7 +86,7 @@ function resolve_age_bracket($age): string
 $tab = strtolower(trim((string) ($_GET['tab'] ?? '')));
 $tablesByTab = [
     'dpsd' => ['pwud_table', 'pyap_table', 'soloparent_info_table'],
-    'pssd' => ['pwd_table', 'snr_table'],
+    'pssd' => ['pwd_table', 'pwd_table2', 'snr_table'],
     'rpsd' => ['car_table', 'cicl_table', 'ciu_table', 'csae_table', 'vawc_table'],
     'cod' => ['faced_table'],
 ];
@@ -132,6 +132,10 @@ try {
     foreach ($tablesByTab[$tab] as $tableName) {
         $columnsResult = $connection->query('SHOW COLUMNS FROM `' . $connection->real_escape_string($tableName) . '`');
         if (!$columnsResult) {
+            if ($connection->errno === 1146) {
+                continue;
+            }
+
             throw new RuntimeException('Could not inspect table columns.');
         }
 
@@ -145,7 +149,7 @@ try {
 
         foreach ($requiredColumns as $requiredColumn) {
             if (!isset($availableColumns[$requiredColumn])) {
-                throw new RuntimeException('Missing required column: ' . $requiredColumn);
+                continue 2;
             }
         }
 

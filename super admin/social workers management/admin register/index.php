@@ -27,7 +27,7 @@ $formState = [
 
 $encoderProgramsByDivision = [
     'DPSD' => ['PWUD', 'Solo Parent', 'PYAP'],
-    'PSSD' => ['PWD', 'Senior Citizen'],
+    'PSSD' => ['PWD', 'PWD-2', 'Senior Citizen'],
     'RPSD' => ['VAWC', 'CSAE', 'CICL', 'CAR', 'CIU'],
 ];
 $allowedPositions = ['SWO I', 'SWO II', 'SWO III', 'SWO IV'];
