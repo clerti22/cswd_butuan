@@ -13,6 +13,7 @@ $tables = [
     'pyap_table',
     'snr_table',
     'pwd_table',
+    'pwd_table2',
     'car_table',
     'ciu_table',
     'vawc_table',

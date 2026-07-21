@@ -13,6 +13,7 @@ $programTables = [
     'SOLO PARENT' => 'soloparent_info_table',
     'SENIOR CITIZEN' => 'snr_table',
     'PWD' => 'pwd_table',
+        'PWD-2' => 'pwd_table2',
     'VAWC' => 'vawc_table',
     'CIU' => 'ciu_table',
     'CAR' => 'car_table',

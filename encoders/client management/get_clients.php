@@ -91,6 +91,7 @@ $programToTable = [
     'PYAP' => 'pyap_table',
     'SOLO PARENT' => 'soloparent_info_table',
     'PWD' => 'pwd_table',
+    'PWD-2' => 'pwd_table2',
     'SENIOR CITIZEN' => 'snr_table',
     'CAR' => 'car_table',
     'CICL' => 'cicl_table',
@@ -144,6 +145,10 @@ try {
     foreach ($tablesByTab[$tab] as $tableName) {
         $columnsResult = $connection->query('SHOW COLUMNS FROM `' . $connection->real_escape_string($tableName) . '`');
         if (!$columnsResult) {
+            if ($connection->errno === 1146) {
+                continue;
+            }
+
             throw new RuntimeException('Could not inspect table columns.');
         }
 
@@ -157,7 +162,7 @@ try {
 
         foreach ($requiredColumns as $requiredColumn) {
             if (!isset($availableColumns[$requiredColumn])) {
-                throw new RuntimeException('Missing required column: ' . $requiredColumn);
+                continue 2;
             }
         }
 
