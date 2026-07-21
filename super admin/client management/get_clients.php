@@ -132,6 +132,10 @@ try {
     foreach ($tablesByTab[$tab] as $tableName) {
         $columnsResult = $connection->query('SHOW COLUMNS FROM `' . $connection->real_escape_string($tableName) . '`');
         if (!$columnsResult) {
+            if ($connection->errno === 1146) {
+                continue;
+            }
+
             throw new RuntimeException('Could not inspect table columns.');
         }
 
@@ -145,7 +149,7 @@ try {
 
         foreach ($requiredColumns as $requiredColumn) {
             if (!isset($availableColumns[$requiredColumn])) {
-                throw new RuntimeException('Missing required column: ' . $requiredColumn);
+                continue 2;
             }
         }
 
