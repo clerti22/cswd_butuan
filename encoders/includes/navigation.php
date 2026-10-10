@@ -106,6 +106,7 @@ HTML,
     </div>
 </div>
 <script src="<?= htmlspecialchars($logoutModalScriptPath, ENT_QUOTES, 'UTF-8') ?>"></script>
+<script src="<?= htmlspecialchars(encoder_sidebar_path($basePrefix, '../auth/session_timeout.js'), ENT_QUOTES, 'UTF-8') ?>"></script>
 <?php
     return (string) ob_get_clean();
 }

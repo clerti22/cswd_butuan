@@ -57,12 +57,22 @@ HTML,
         ],
         'report' => [
             'label' => 'Report',
-            'href' => 'report/index.php',
+            'href' => '#',
             'icon' => <<<'HTML'
 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
   <path fill="#ffffff" d="M12 6a1 1 0 0 0-1 1v10a1 1 0 0 0 2 0V7a1 1 0 0 0-1-1Zm-5 6a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0v-4a1 1 0 0 0-1-1Zm10-2a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1Zm2-8H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3Zm1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z"/>
 </svg>
 HTML,
+            'children' => [
+                'divisions' => [
+                    'label' => 'Divisions',
+                    'href' => 'report/index.php'
+                ],
+                'pwd' => [
+                    'label' => 'PWD',
+                    'href' => 'report/pwd.php'
+                ]
+            ]
         ],
         'notifications' => [
             'label' => 'Notifications',
@@ -112,19 +122,57 @@ HTML,
         <p class="user-role"><?= htmlspecialchars(ucfirst($userRole), ENT_QUOTES, 'UTF-8') ?></p>
     </div>
 
+    <style>
+        .nav-item-wrapper { position: relative; }
+        .nav-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        .nav-submenu.open { max-height: 200px; }
+        .nav-submenu-item {
+            display: block;
+            padding: 10px 15px 10px 45px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        .nav-submenu-item:hover { color: #fff; background-color: rgba(255, 255, 255, 0.1); }
+        .nav-arrow { margin-left: auto; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .nav-item-wrapper.open .nav-arrow { transform: rotate(180deg); }
+    </style>
     <div class="nav-menu">
         <?php foreach ($items as $key => $item): ?>
             <?php
             $isActive = $key === $activeSection;
-            $itemClasses = 'nav-item' . ($isActive ? ' active' : '');
-            $activeAttributes = $isActive
+            $hasChildren = isset($item['children']);
+            $itemClasses = 'nav-item' . ($isActive && !$hasChildren ? ' active' : '');
+            $activeAttributes = ($isActive && !$hasChildren)
                 ? ' style="color: #fff; background-color: rgba(255, 255, 255, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);" aria-current="page"'
                 : '';
             ?>
-            <a href="<?= htmlspecialchars(super_admin_sidebar_path($basePrefixToSuperAdmin, $item['href']), ENT_QUOTES, 'UTF-8') ?>" class="<?= $itemClasses ?>"<?= $activeAttributes ?>>
-                <?= $item['icon'] ?>
-                <span class="nav-text"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
-            </a>
+            <?php if ($hasChildren): ?>
+                <div class="nav-item-wrapper <?= $isActive ? 'open' : '' ?>">
+                    <a href="javascript:void(0)" class="nav-item" onclick="this.parentElement.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+                        <?= $item['icon'] ?>
+                        <span class="nav-text"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                    </a>
+                    <div class="nav-submenu <?= $isActive ? 'open' : '' ?>">
+                        <?php foreach ($item['children'] as $childKey => $child): ?>
+                            <a href="<?= htmlspecialchars(super_admin_sidebar_path($basePrefixToSuperAdmin, $child['href']), ENT_QUOTES, 'UTF-8') ?>" class="nav-submenu-item">
+                                <?= htmlspecialchars($child['label'], ENT_QUOTES, 'UTF-8') ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="<?= htmlspecialchars(super_admin_sidebar_path($basePrefixToSuperAdmin, $item['href']), ENT_QUOTES, 'UTF-8') ?>" class="<?= $itemClasses ?>"<?= $activeAttributes ?>>
+                    <?= $item['icon'] ?>
+                    <span class="nav-text"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
+                </a>
+            <?php endif; ?>
         <?php endforeach; ?>
     </div>
 
@@ -158,6 +206,7 @@ HTML,
     </div>
 </div>
 <script src="<?= htmlspecialchars($logoutModalScriptPath, ENT_QUOTES, 'UTF-8') ?>"></script>
+<script src="<?= htmlspecialchars(super_admin_sidebar_path($basePrefixToSuperAdmin, '../auth/session_timeout.js'), ENT_QUOTES, 'UTF-8') ?>"></script>
 <?php
     return (string) ob_get_clean();
 }

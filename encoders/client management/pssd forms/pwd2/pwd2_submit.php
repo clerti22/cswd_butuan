@@ -14,7 +14,7 @@ if ($isEncoderArea) {
 }
 start_auth_session();
 header('Content-Type: application/json; charset=utf-8');
-$fields = ['application_type', 'date_issued', 'first_name', 'middle_name', 'last_name', 'suffix', 'birth_date', 'civil_status', 'pwd_number', 'age', 'disability_types_primary', 'disability_causes_left', 'disability_causes_right', 'house_no_street', 'barangay', 'city', 'province', 'region', 'landline_no', 'mobile_no', 'email_address', 'educational_attainment', 'status_of_employment', 'category_of_employment', 'types_of_employment', 'occupation', 'occupation_others', 'skills', 'organization_affiliated', 'organization_contact_person', 'office_address', 'telephone_nos', 'sss_no', 'gsis_no', 'philhealth_no', 'pagibig_no', 'psn_no', 'father_last_name', 'father_first_name', 'father_middle_name', 'mother_last_name', 'mother_first_name', 'mother_middle_name', 'guardian_name_contact_person', 'guardian_contact_no', 'accomplished_by', 'accomplished_last_name', 'accomplished_first_name', 'accomplished_middle_name', 'certifying_physician_name', 'physician_license_no', 'processing_officer', 'approving_officer', 'encoder', 'reporting_unit', 'control_no'];
+$fields = ['application_type', 'date_issued', 'first_name', 'middle_name', 'last_name', 'suffix', 'birth_date', 'civil_status', 'pwd_number', 'age', 'blood_type', 'disability_types_primary', 'disability_causes_left', 'disability_causes_right', 'house_no_street', 'barangay', 'city', 'province', 'region', 'landline_no', 'mobile_no', 'email_address', 'educational_attainment', 'status_of_employment', 'category_of_employment', 'types_of_employment', 'occupation', 'occupation_others', 'skills', 'organization_affiliated', 'organization_contact_person', 'office_address', 'telephone_nos', 'sss_no', 'gsis_no', 'philhealth_no', 'pagibig_no', 'psn_no', 'father_last_name', 'father_first_name', 'father_middle_name', 'mother_last_name', 'mother_first_name', 'mother_middle_name', 'guardian_name_contact_person', 'guardian_contact_no', 'accomplished_by', 'accomplished_last_name', 'accomplished_first_name', 'accomplished_middle_name', 'certifying_physician_name', 'physician_license_no', 'processing_officer', 'approving_officer', 'encoder', 'reporting_unit', 'control_no'];
 $connection = get_database_connection();
 function pwd2_value(string $field): string {
     $value = $_POST[$field] ?? '';
@@ -36,7 +36,7 @@ $recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT, ['options
 $values=[]; foreach($fields as $field) { $values[$field]=pwd2_value($field); }
 $values['division']='PSSD'; $values['program']='PWD-2';
 $values['contact_number']=$values['mobile_no'] !== '' ? $values['mobile_no'] : $values['landline_no'];
-$values['sex']='';
+$values['sex']=pwd2_value('sex');
 $values['date_of_birth']=$values['birth_date'];
 if ($values['control_no']==='') {
     $count=(int)($connection->query('SELECT COUNT(*) AS c FROM pwd_table2')->fetch_assoc()['c'] ?? 0);

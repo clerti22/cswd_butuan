@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-const SESSION_TIMEOUT_SECONDS = 1800;
+const SESSION_TIMEOUT_SECONDS = 900;
 
 function start_auth_session(): void
 {
@@ -11,7 +11,7 @@ function start_auth_session(): void
     }
 
     session_set_cookie_params([
-        'lifetime' => SESSION_TIMEOUT_SECONDS,
+        'lifetime' => 0,
         'path' => '/',
         'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
         'httponly' => true,
@@ -27,7 +27,7 @@ function start_auth_session(): void
 
     if ((time() - (int) $_SESSION['last_activity']) > SESSION_TIMEOUT_SECONDS) {
         logout_user();
-        header('Location: /login form/index.php?error=session_expired');
+        header('Location: /cswd_project/cswd/cswd_butuan/login form/index.php?error=session_expired');
         exit;
     }
 
@@ -72,7 +72,7 @@ function require_login(array $allowedRoles): void
    
 
     if (!$username || !$role) {
-        header('Location: /login form/index.php?error=unauthorized');
+        header('Location: /cswd_project/cswd/cswd_butuan/login form/index.php?error=unauthorized');
         exit;
     }
 

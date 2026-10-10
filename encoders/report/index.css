@@ -142,7 +142,7 @@ body { font-family: 'Poppins', sans-serif; background: #e5e7eb; height: 100vh; o
 }
 .overlay.active { opacity: 1; visibility: visible; }
 
-.report-page { flex: 1; overflow-y: auto; padding: 16px; display: grid; gap: 14px; }
+.report-page { flex: 1; overflow-y: auto; padding: 16px; display: grid; gap: 14px; align-content: start; }
 .panel { background: #fff; border-radius: 12px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 .panel-heading p { color: #6b7280; font-size: 0.9rem; margin-top: 4px; }
 

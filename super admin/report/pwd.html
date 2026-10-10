@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSWDD PWD Report</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <nav class="sidebar" id="sidebar"></nav>
+
+        <div class="main-content">
+            <header class="topbar">
+                <button class="menu-btn" id="openSidebar" aria-label="Open sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h3 class="topbar-title">PWD Reports & Analytics</h3>
+            </header>
+
+            <main class="report-page" style="align-content: start;">
+                <section class="panel filter-panel" aria-label="Report filters">
+                    <div class="panel-heading">
+                        <h2>Filter PWD Reports</h2>
+                        <p>Use filters to update charts and records list.</p>
+                    </div>
+
+                    <div class="filter-grid">
+                        <label>Disability Type
+                            <select id="filterDisability">
+                                <option value="">All Types</option>
+                                <option value="Deaf or Hard of Hearing">Deaf or Hard of Hearing</option>
+                                <option value="Intellectual Disability">Intellectual Disability</option>
+                                <option value="Learning Disability">Learning Disability</option>
+                                <option value="Mental/Psychosocial Disability">Mental/Psychosocial Disability</option>
+                                <option value="Orthopedic/Physical Disability">Orthopedic/Physical Disability</option>
+                                <option value="Speech and Language Impairment">Speech and Language Impairment</option>
+                                <option value="Visual Disability">Visual Disability</option>
+                                <option value="Cancer (RA11215)">Cancer (RA11215)</option>
+                                <option value="Rare Disease">Rare Disease</option>
+                                <option value="Multiple Disabilities">Multiple Disabilities</option>
+                            </select>
+                        </label>
+                        <label>Barangay
+                            <select id="filterBarangay">
+                                <option value="">All Barangays</option>
+                            </select>
+                        </label>
+                        <label>Gender
+                            <select id="filterSex">
+                                <option value="">All Genders</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </label>
+                        <label>Year
+                            <select id="filterYear">
+                                <option value="">All Years</option>
+                            </select>
+                        </label>
+                        <label>Month
+                            <select id="filterMonth">
+                                <option value="">All Months</option>
+                                <option value="01">January</option><option value="02">February</option>
+                                <option value="03">March</option><option value="04">April</option>
+                                <option value="05">May</option><option value="06">June</option>
+                                <option value="07">July</option><option value="08">August</option>
+                                <option value="09">September</option><option value="10">October</option>
+                                <option value="11">November</option><option value="12">December</option>
+                            </select>
+                        </label>
+                        <label>Date From
+                            <input type="date" id="filterDateFrom">
+                        </label>
+                        <label>Date To
+                            <input type="date" id="filterDateTo">
+                        </label>
+                    </div>
+
+                    <div class="filter-actions" style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-start; align-items: center;">
+                        <button class="btn btn-muted" id="resetFiltersBtn">Reset Filters</button>
+                        <button id="exportPdfBtn" class="btn btn-primary">Export PDF</button>
+                        <a id="exportExcelBtn" class="btn btn-success" href="#">Export Excel</a>
+                    </div>
+                </section>
+
+                <section class="summary-grid" id="summaryCards" aria-label="Summary cards"></section>
+
+                <section class="panel view-switcher" aria-label="View switcher">
+                    <button class="tab-btn active" data-target="dashboardView">Dashboard Overview</button>
+                    <button class="tab-btn" data-target="tableView">Data Table</button>
+                </section>
+
+                <section class="dashboard-view" id="dashboardView">
+
+                    <div class="chart-grid">
+                        <article class="panel chart-panel">
+                            <h3>Types of Disabilities</h3>
+                            <div id="chartDisability" class="chart-canvas"></div>
+                        </article>
+                        <article class="panel chart-panel">
+                            <h3>Total Beneficiaries per Barangay</h3>
+                            <div id="chartBarangay" class="chart-canvas"></div>
+                        </article>
+                        <article class="panel chart-panel">
+                            <h3>Total Beneficiaries per Year</h3>
+                            <div id="chartYear" class="chart-canvas"></div>
+                        </article>
+                        <article class="panel chart-panel">
+                            <h3>Total Beneficiaries per Month</h3>
+                            <div id="chartMonth" class="chart-canvas"></div>
+                        </article>
+                        <article class="panel chart-panel">
+                            <h3>Sex Distribution</h3>
+                            <div id="chartSex" class="chart-canvas"></div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="panel table-view hidden" id="tableView">
+                    <div class="table-toolbar">
+                        <input id="tableSearchInput" type="search" placeholder="Search records...">
+                    </div>
+
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-sort="control_number">Control No. <span class="sort-icon"></span></th>
+                                    <th data-sort="full_name">Full Name <span class="sort-icon"></span></th>
+                                    <th data-sort="barangay">Barangay <span class="sort-icon"></span></th>
+                                    <th data-sort="sex">Gender <span class="sort-icon"></span></th>
+                                    <th data-sort="age">Age <span class="sort-icon"></span></th>
+                                    <th data-sort="disability_types_primary">Disability <span class="sort-icon"></span></th>
+                                    <th data-sort="date_issued">Date Issued <span class="sort-icon"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="tablePagination"></div>
+                </section>
+
+                <p id="emptyState" class="empty-state hidden">No data found for the selected filters.</p>
+            </main>
+        </div>
+    </div>
+
+
+    <div class="pdf-preview-modal hidden" id="pdfPreviewModal" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+        <div class="pdf-preview-dialog">
+            <div class="pdf-preview-header">
+                <h3 id="pdfPreviewTitle">PDF Preview</h3>
+                <div class="pdf-preview-actions">
+                    <button type="button" id="pdfDownloadBtn" class="btn btn-success">Download</button>
+                    <button type="button" id="pdfCloseBtn" class="btn btn-muted">Close</button>
+                </div>
+            </div>
+            <div class="pdf-preview-body">
+                <iframe id="pdfPreviewFrame" title="Report PDF Preview"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="pwd.js"></script>
+</body>
+
+</html>
+
